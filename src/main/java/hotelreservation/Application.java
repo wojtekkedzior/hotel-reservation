@@ -26,21 +26,21 @@ public class Application {
 //  @Value("${c3p0.testCheckin:true}")
 //  private boolean testCheckin;
   
-  @Value("${spring.datasource.dbHostname}")
-  private String dbHostname;
-  
-  @Value("${spring.datasource.dbName}")
-  private String dbName;
-  
-  @Value("${spring.datasource.username}")
-  private String dbUsername;
-  
-  @Value("${spring.datasource.password}")
-  private String dbPassword;
-  
-  @Value("spring.datasource.driver-class-nam")
-  private String dbDriver;
-  
+//  @Value("${spring.datasource.dbHostname}" )
+//  private String dbHostname;
+//  
+//  @Value("${spring.datasource.dbName}")
+//  private String dbName;
+//  
+//  @Value("${spring.datasource.username}")
+//  private String dbUsername;
+//  
+//  @Value("${spring.datasource.password}")
+//  private String dbPassword;
+//  
+//  @Value("spring.datasource.driver-class-nam")
+//  private String dbDriver;
+   
   public static void main(final String[] args) {
     SpringApplication.run(Application.class, args);
   }
