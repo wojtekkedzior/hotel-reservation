@@ -18,6 +18,8 @@ public class UserType {
 	private String name;
 	private String description;
 	private boolean enabled;
+	
+	public UserType() {}
 
 	public UserType(String name, String description, boolean enabled) {
 		this.name = name;

@@ -1,0 +1,64 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+<title>Getting Started: Serving Web Content</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+</head>
+<body>
+
+<p th:text="adada"/>
+
+	<p th:text="'Number of URLS: ' + ${numberOfUrls}" />
+
+	<table width="1000">
+		<tr>
+			<td><label>ID</label></td>
+			<td><label>Name</label></td>
+			<td><label>Description</label></td>
+			<td><label>Enabled</label></td>
+		</tr>
+		<tr th:each="data, iterstat: ${userTypes}">
+			<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
+			<td th:text="${data.name}" th:id="|td${iterstat.index}|"></td>
+			<td th:text="${data.description}" th:id="|td${iterstat.index}|"></td>
+			<td th:text="${data.enabled}" th:id="|td${iterstat.index}|"></td>
+		</tr>
+	</table>
+	
+	<a th:href="@{/hello}">adasdad</a>
+
+	<p th:text="'Total Checks: ' + ${totalChecks}" />
+	<p th:text="'Current IP: ' + ${myIp}" />
+
+	<div>
+		<table width="1000">
+			<tr> 
+				<td><label>IP</label></td>
+				<td><label>Last Checked</label></td>
+				<td><label>Checks</label></td>
+				<td><label>Failed Checks</label></td>
+				<td><label>Changed on</label></td>
+			</tr>
+			
+			<tr th:each="data, iterstat: ${allCheckedIPs}">
+				<td th:text="${data.ip}" th:id="|td${iterstat.index}|"></td>
+				<td th:text="${data.lastChecked}" th:id="|td${iterstat.index}|"></td>
+				<td th:text="${data.checks}" th:id="|td${iterstat.index}|"></td>
+				<td th:text="${data.failures}" th:id="|td${iterstat.index}|"></td>
+				<td th:text="${data.changeDate}" th:id="|td${iterstat.index}|"></td>
+			</tr>
+		</table>
+	</div>
+	
+	 <button th:onclick="'javascript:sayHello(\'hello\')'">Say Hello</button>
+</body>
+
+<script>
+    function sayHello(text) {
+        alert(text);
+    }
+</script>
+
+</html>

@@ -26,6 +26,13 @@ public class UserService {
 		return userRepo.save(user);
 	}
 	
+	//TODO remove as the super admin user should be added by an sql script
+	public User createUser(User user) {
+//		UserType userType = userTypeRepo.findOne(userTypeId);
+//		user.setUserType(userType);
+		return userRepo.save(user);
+	}
+	
 	public UserType createUserType(UserType userType) {
 		return userTypeRepo.save(userType);
 	}

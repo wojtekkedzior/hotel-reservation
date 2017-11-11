@@ -1,19 +1,25 @@
 package hotelreservation.controller;
 
+import java.net.UnknownHostException;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import hotelreservation.model.UserType;
 import hotelreservation.repository.UserRepo;
+import hotelreservation.service.UserService;
 
 @Controller
-public class GreetingController {
+public class AdminController {
 
   @Autowired
-  private UserRepo repo;
-
+  private UserService userService;
   
 
-//  @RequestMapping(method = RequestMethod.GET, value = "/stats")
+//  @RequestMapping(method = RequestMethod.GET, value = "/admin")
 //  @ResponseBody
 //  public ResponseEntity<?> getstats() throws FileNotFoundException, UnknownHostException {
 //
@@ -27,8 +33,8 @@ public class GreetingController {
 //    return new ResponseEntity<String>(res.toString(), HttpStatus.OK);
 //  }
 //  
-//  @RequestMapping("/hello")
-//  public String hello(@RequestParam(value="name", required=false, defaultValue="World") String name, Model model) throws UnknownHostException {
+  @RequestMapping("/admin")
+  public String hello(Model model) {
 //      String hostName = InetAddress.getLocalHost().getHostName();
 //      
 //      Ip myIp = repo.findByHostname(hostName);
@@ -42,12 +48,14 @@ public class GreetingController {
 //      
 //      long numberOfUrls = urlCheckRepo.count();
 //      model.addAttribute("numberOfUrls", numberOfUrls);
-//      
-//      Iterable<URLHealthCheck> allUrls = urlCheckRepo.findAll();
-//      model.addAttribute("urls", allUrls);
-//       
-//      return "hello";
-//  }
+	  
+	  
+	  List<UserType> allUserTypes = userService.getAllUserTypes();
+	  
+      model.addAttribute("userTypes", allUserTypes);
+       
+      return "admin";
+  }
 //  
 //  @RequestMapping("/greeting")
 //  public String greeting(@RequestParam(value="name", required=false, defaultValue="World") String name, Model model) throws UnknownHostException {

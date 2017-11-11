@@ -1,7 +1,6 @@
 package hotelreservation;
 
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
@@ -9,7 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableScheduling
 @SpringBootApplication
-@ComponentScan("hotelreservation.service")
+@ComponentScan({"hotelreservation"})
 //@EnableJpaRepositories("hotelreservation.repository")
 public class Application {
 
@@ -45,6 +44,12 @@ public class Application {
     SpringApplication.run(Application.class, args);
   }
 
+  
+//  @EventListener(ApplicationReadyEvent.class)
+//  public void doSomethingAfterStartup() {
+//      System.err.println("hello world, I have just started up");
+//  }
+  
 //  private String getDataSourceURL() throws ClassNotFoundException {
 //      Class.forName("com.mysql.jdbc.Driver");
 //      final StringBuilder builder = new StringBuilder("jdbc:mysql://");

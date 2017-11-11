@@ -44,6 +44,27 @@ public class User {
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastloggedOn;
+	
+	public User() {}
+
+	public User(String usernName, UserType userType, String name) {
+		this.usernName = usernName;
+		this.userType = userType;
+		this.name = name;
+		
+		createdOn = new Date();
+		enabled = true;
+	}
+	
+	public User(String usernName, UserType userType, String name, User createdBy) {
+		this.usernName = usernName;
+		this.userType = userType;
+		this.name = name;
+		this.createdBy = createdBy;
+		
+		createdOn = new Date();
+		enabled = true;
+	}
 
 	
 	
