@@ -21,7 +21,7 @@ public class User {
 	private long id;
 
 
-	private String usernName;
+	private String userName;
 	private String password;
 
 	@OneToOne
@@ -42,13 +42,13 @@ public class User {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date disabledOn;
 	
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.TIMESTAMP) 
 	private Date lastloggedOn;
 	
 	public User() {}
 
 	public User(String usernName, UserType userType, String name) {
-		this.usernName = usernName;
+		this.userName = usernName;
 		this.userType = userType;
 		this.name = name;
 		
@@ -57,7 +57,7 @@ public class User {
 	}
 	
 	public User(String usernName, UserType userType, String name, User createdBy) {
-		this.usernName = usernName;
+		this.userName = usernName;
 		this.userType = userType;
 		this.name = name;
 		this.createdBy = createdBy;
