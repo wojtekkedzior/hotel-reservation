@@ -14,5 +14,14 @@ public class AmmenityType {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
+	
+	private String name;
+	private String description;
+	
+	public AmmenityType() {}
 
+	public AmmenityType(String name, String description) {
+		this.name = name;
+		this.description = description;
+	} 
 }

@@ -17,6 +17,8 @@ public class Status {
 
 	private String name;
 	private String description;
+	
+	public Status() {}
 
 	public Status(String name, String description) {
 		this.name = name;
