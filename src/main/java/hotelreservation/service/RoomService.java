@@ -100,4 +100,13 @@ public class RoomService {
 	public void createAmenity(Amenity ammenity) {
 		ammenityRepo.save(ammenity);
 	}
+
+	public List<AmenityType> getAllAmenityTypes() {
+		Iterable<AmenityType> findAll = amenityTypeRepo.findAll();
+
+		List<AmenityType> target = new ArrayList<AmenityType>();
+		findAll.forEach(target::add);
+
+		return target;
+	}
 }

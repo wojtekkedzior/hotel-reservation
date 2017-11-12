@@ -1,6 +1,5 @@
 package hotelreservation.controller;
 
-import java.net.UnknownHostException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +7,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import hotelreservation.model.AmenityType;
+import hotelreservation.model.RoomType;
 import hotelreservation.model.UserType;
-import hotelreservation.repository.UserRepo;
+import hotelreservation.service.RoomService;
 import hotelreservation.service.UserService;
 
 @Controller
@@ -18,6 +19,8 @@ public class AdminController {
   @Autowired
   private UserService userService;
   
+  @Autowired 
+  private RoomService roomService;
 
 //  @RequestMapping(method = RequestMethod.GET, value = "/admin")
 //  @ResponseBody
@@ -35,28 +38,18 @@ public class AdminController {
 //  
   @RequestMapping("/admin")
   public String hello(Model model) {
-//      String hostName = InetAddress.getLocalHost().getHostName();
-//      
-//      Ip myIp = repo.findByHostname(hostName);
-//      model.addAttribute("myIp", myIp.getIp());
-//      
-//      Iterable<Ip> allCheckedIPs = repo.findAll();
-//      model.addAttribute("allCheckedIPs", allCheckedIPs);
-//      
-//      History history = historyRepo.findOne(1l);
-//      model.addAttribute("totalChecks", history.getChecks());
-//      
-//      long numberOfUrls = urlCheckRepo.count();
-//      model.addAttribute("numberOfUrls", numberOfUrls);
-	  
-	  
-	  List<UserType> allUserTypes = userService.getAllUserTypes();
-	  
-      model.addAttribute("userTypes", allUserTypes);
+	  List<UserType> userTypes = userService.getAllUserTypes();
+      model.addAttribute("userTypes", userTypes);
+      
+	  List<RoomType> roomTypes = roomService.getAllRoomTypes();
+      model.addAttribute("roomTypes", roomTypes);
+      
+	  List<AmenityType> amenityTypes = roomService.getAllAmenityTypes();
+      model.addAttribute("amenityTypes", amenityTypes);
        
       return "admin";
   }
-//  
+
 //  @RequestMapping("/greeting")
 //  public String greeting(@RequestParam(value="name", required=false, defaultValue="World") String name, Model model) throws UnknownHostException {
 //      String hostName = InetAddress.getLocalHost().getHostName();
