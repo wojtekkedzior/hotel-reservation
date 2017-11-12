@@ -1,6 +1,8 @@
 package hotelreservation;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -8,8 +10,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import hotelreservation.model.Ammenity;
-import hotelreservation.model.AmmenityType;
+import hotelreservation.model.Amenity;
+import hotelreservation.model.AmenityType;
 import hotelreservation.model.Room;
 import hotelreservation.model.RoomType;
 import hotelreservation.model.Status;
@@ -39,9 +41,34 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	private Status underConstruction;
 	private Status notOperational;
 
-	private AmmenityType ammenityTypeRoomBasic;
-	private AmmenityType ammenityTypeRoomLuxury;
-	private AmmenityType ammenityTypeHotel;
+	private AmenityType amenityTypeRoomBasic;
+	private AmenityType amenityTypeRoomLuxury;
+	private AmenityType amenityTypeHotel;
+	
+	//Standard room amenities
+	private Amenity pillow;
+	private Amenity phone;
+	private Amenity blanket;
+	private Amenity safebox;
+	private Amenity tv;
+	
+	//Standard room amenities
+	private Amenity hairDryer;
+	private Amenity miniBar;
+	private Amenity internet;
+	private Amenity rainShower;
+	private Amenity bathtub;
+	
+	//Hotel amenities
+	private Amenity wifi;
+	private Amenity spaPool;
+	private Amenity pool;
+	private Amenity sauna;
+	private Amenity conferenceRoom;
+	
+	
+	private RoomType roomTypeStandard;
+	private RoomType roomTypeLuxury;
 
 	@Autowired
 	private UserService userService;
@@ -56,65 +83,66 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 
 		addStatuses();
 
-		addAmmenityTypes();
-		addAmmenities();
+		addAmenityTypes();
+		addamenities();
 
+		addRoomTypes();
 		addRooms();
 	}
 
-	private void addAmmenities() {
-		addHotelAmmenitites();
-		addRoomAmmenitites();
+	private void addamenities() {
+		addHotelamenitites();
+		addRoomamenitites();
 	}
 
-	private void addRoomAmmenitites() {
-		Ammenity pillow = new Ammenity("pillow", "pillow", ammenityTypeRoomBasic);
-		Ammenity phone = new Ammenity("phone", "phone", ammenityTypeRoomBasic);
-		Ammenity blanket = new Ammenity("blanket", "blanket", ammenityTypeRoomBasic);
-		Ammenity safebox = new Ammenity("safebox", "safebox", ammenityTypeRoomBasic);
-		Ammenity tv = new Ammenity("tv", "tv", ammenityTypeRoomBasic);
+	private void addRoomamenitites() {
+		pillow = new Amenity("pillow", "pillow", amenityTypeRoomBasic);
+		phone = new Amenity("phone", "phone", amenityTypeRoomBasic);
+		blanket = new Amenity("blanket", "blanket", amenityTypeRoomBasic);
+		safebox = new Amenity("safebox", "safebox", amenityTypeRoomBasic);
+		tv = new Amenity("tv", "tv", amenityTypeRoomBasic);
 
-		Ammenity hairDryer = new Ammenity("hairDryer", "hairDryer", ammenityTypeRoomLuxury);
-		Ammenity miniBar = new Ammenity("miniBar", "miniBar", ammenityTypeRoomLuxury);
-		Ammenity internet = new Ammenity("internet", "internet", ammenityTypeRoomLuxury);
-		Ammenity rainShower = new Ammenity("rainShower", "rainShower", ammenityTypeRoomLuxury);
-		Ammenity bathtub = new Ammenity("bathtub", "bathtub", ammenityTypeRoomLuxury);
+		hairDryer = new Amenity("hairDryer", "hairDryer", amenityTypeRoomLuxury);
+		miniBar = new Amenity("miniBar", "miniBar", amenityTypeRoomLuxury);
+		internet = new Amenity("internet", "internet", amenityTypeRoomLuxury);
+		rainShower = new Amenity("rainShower", "rainShower", amenityTypeRoomLuxury);
+		bathtub = new Amenity("bathtub", "bathtub", amenityTypeRoomLuxury);
 
-		roomService.createAmmenity(pillow);
-		roomService.createAmmenity(phone);
-		roomService.createAmmenity(blanket);
-		roomService.createAmmenity(safebox);
-		roomService.createAmmenity(tv);
+		roomService.createAmenity(pillow);
+		roomService.createAmenity(phone);
+		roomService.createAmenity(blanket);
+		roomService.createAmenity(safebox);
+		roomService.createAmenity(tv);
 
-		roomService.createAmmenity(hairDryer);
-		roomService.createAmmenity(miniBar);
-		roomService.createAmmenity(internet);
-		roomService.createAmmenity(rainShower);
-		roomService.createAmmenity(bathtub);
+		roomService.createAmenity(hairDryer);
+		roomService.createAmenity(miniBar);
+		roomService.createAmenity(internet);
+		roomService.createAmenity(rainShower);
+		roomService.createAmenity(bathtub);
 	}
 
-	private void addHotelAmmenitites() {
-		Ammenity wifi = new Ammenity("wifi", "wifi", ammenityTypeHotel);
-		Ammenity spaPool = new Ammenity("spaPool", "spaPool", ammenityTypeHotel);
-		Ammenity pool = new Ammenity("pool", "pool", ammenityTypeHotel);
-		Ammenity sauna = new Ammenity("sauna", "sauna", ammenityTypeHotel);
-		Ammenity conferenceRoom = new Ammenity("conferenceRoom", "conferenceRoom", ammenityTypeHotel);
+	private void addHotelamenitites() {
+		wifi = new Amenity("wifi", "wifi", amenityTypeHotel);
+		spaPool = new Amenity("spaPool", "spaPool", amenityTypeHotel);
+		pool = new Amenity("pool", "pool", amenityTypeHotel);
+		sauna = new Amenity("sauna", "sauna", amenityTypeHotel);
+		conferenceRoom = new Amenity("conferenceRoom", "conferenceRoom", amenityTypeHotel);
 
-		roomService.createAmmenity(wifi);
-		roomService.createAmmenity(spaPool);
-		roomService.createAmmenity(pool);
-		roomService.createAmmenity(sauna);
-		roomService.createAmmenity(conferenceRoom);
+		roomService.createAmenity(wifi);
+		roomService.createAmenity(spaPool);
+		roomService.createAmenity(pool);
+		roomService.createAmenity(sauna);
+		roomService.createAmenity(conferenceRoom);
 	}
 
-	private void addAmmenityTypes() {
-		ammenityTypeRoomBasic = new AmmenityType("Basic", "Basic Room Ammenity Type");
-		ammenityTypeRoomLuxury = new AmmenityType("Luxury", "Luxury Room Ammenity Type");
-		ammenityTypeHotel = new AmmenityType("Hotel", "Hotel Ammenity Type");
+	private void addAmenityTypes() {
+		amenityTypeRoomBasic = new AmenityType("Basic", "Basic Room amenity Type");
+		amenityTypeRoomLuxury = new AmenityType("Luxury", "Luxury Room amenity Type");
+		amenityTypeHotel = new AmenityType("Hotel", "Hotel amenity Type");
 
-		roomService.createAmmenityType(ammenityTypeRoomBasic);
-		roomService.createAmmenityType(ammenityTypeRoomLuxury);
-		roomService.createAmmenityType(ammenityTypeHotel);
+		roomService.createAmenityType(amenityTypeRoomBasic);
+		roomService.createAmenityType(amenityTypeRoomLuxury);
+		roomService.createAmenityType(amenityTypeHotel);
 	}
 
 	private void addUserTypes() {
@@ -132,17 +160,17 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	}
 
 	private void addUsers() {
+		//SuperAdmin will be added by a script in the future
 		superAdmin = new User("superadmin", superAdminUserType, "Mr Super Admin");
-
+		
 		admin = new User("admin", adminUserType, "Mr Admin");
-		admin.setCreatedBy(superAdmin);
-
 		manager = new User("manager", managerUserType, "Mr Manager");
-		manager.setCreatedBy(admin);
-
 		receptionistOne = new User("receptionistOne", receptionUserType, "Mr Receptionist One");
-		receptionistOne.setCreatedBy(admin);
 		receptionistTwo = new User("receptionistTwo", receptionUserType, "Mr Receptionist Two");
+
+		admin.setCreatedBy(superAdmin);
+		manager.setCreatedBy(admin);
+		receptionistOne.setCreatedBy(admin);
 		receptionistTwo.setCreatedBy(admin);
 
 		userService.createUser(superAdmin);
@@ -164,23 +192,62 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		roomService.createStatus(underConstruction);
 		roomService.createStatus(notOperational);
 	} 
+	
+	private void addRoomTypes() {
+		roomTypeStandard = new RoomType("Standard", "Standard room");
+		roomTypeLuxury = new RoomType("Luxury", "Luxury room");
+
+		roomService.createRoomType(roomTypeStandard);
+		roomService.createRoomType(roomTypeLuxury);
+	}
 
 	private void addRooms() {
-		RoomType roomType = new RoomType("Standard", "Standard room");
-		roomService.createRoomType(roomType);
-
-		UserType managerUserType = new UserType("manager", "manager desc", true);
-		userService.createUserType(managerUserType);
-
-		Room room = new Room();
-		room.setRoomNumber(1);
-		room.setName("Room 1");
-		room.setDescription("The Best Room Description");
-		room.setStatus(operational);
-		room.setRoomType(roomType);
-		room.setCreatedBy(admin);
-		room.setCreatedOn(new Date());
-		roomService.createRoom(room);
+		Room standardRoomOne = new Room(1, operational, roomTypeStandard, new Date(), admin);
+		standardRoomOne.setName("Room 1");
+		standardRoomOne.setDescription("The Best Room Description");
+		List<Amenity> standardRoomOneAmenitites = new ArrayList<>();
+		standardRoomOneAmenitites.add(pillow);
+		standardRoomOneAmenitites.add(phone);
+		standardRoomOneAmenitites.add(blanket);
+		standardRoomOne.setRoomAmenities(standardRoomOneAmenitites);
+		roomService.createRoom(standardRoomOne); 
+	
+		
+		Room standardRoomTwo = new Room(2, operational, roomTypeStandard, new Date(), admin);
+		standardRoomTwo.setName("Room 2");
+		standardRoomTwo.setDescription("The Second Best Room Description");
+		List<Amenity> standardRoomTwoAmenitites = new ArrayList<>();
+		standardRoomTwoAmenitites.add(pillow);
+		standardRoomTwoAmenitites.add(safebox);
+		standardRoomTwoAmenitites.add(blanket);
+		standardRoomTwo.setRoomAmenities(standardRoomTwoAmenitites);
+		roomService.createRoom(standardRoomTwo);
+		 
+		
+		//Luxury Rooms
+		Room luxuryRoomOne = new Room(11, operational, roomTypeLuxury, new Date(), admin);
+		luxuryRoomOne.setName("Room 11");
+		luxuryRoomOne.setDescription("The Best Luxury Room Description");
+		List<Amenity> luxuryRoomOneAmenitites = new ArrayList<>();
+		luxuryRoomOneAmenitites.add(pillow);
+		luxuryRoomOneAmenitites.add(phone);
+		luxuryRoomOneAmenitites.add(blanket);
+		luxuryRoomOneAmenitites.add(internet);
+		luxuryRoomOneAmenitites.add(rainShower);
+		luxuryRoomOne.setRoomAmenities(luxuryRoomOneAmenitites); 
+		roomService.createRoom(luxuryRoomOne);
+	
+		Room luxuryRoomTwo = new Room(22, operational, roomTypeLuxury, new Date(), admin);
+		luxuryRoomTwo.setName("Room 22");
+		luxuryRoomTwo.setDescription("The Second Best Luxury Room Description");
+		List<Amenity> luxuryRoomTwoAmenitites = new ArrayList<>();
+		luxuryRoomTwoAmenitites.add(pillow);
+		luxuryRoomTwoAmenitites.add(safebox);
+		luxuryRoomTwoAmenitites.add(blanket);
+		luxuryRoomTwoAmenitites.add(bathtub);
+		luxuryRoomTwoAmenitites.add(miniBar);
+		luxuryRoomTwo.setRoomAmenities(luxuryRoomTwoAmenitites);
+		roomService.createRoom(luxuryRoomTwo);
 	}
 
 }

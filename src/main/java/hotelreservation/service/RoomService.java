@@ -6,13 +6,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import hotelreservation.model.Ammenity;
-import hotelreservation.model.AmmenityType;
+import hotelreservation.model.Amenity;
+import hotelreservation.model.AmenityType;
 import hotelreservation.model.Room;
 import hotelreservation.model.RoomType;
 import hotelreservation.model.Status;
 import hotelreservation.repository.AmmenityRepo;
-import hotelreservation.repository.AmmenityTypeRepo;
+import hotelreservation.repository.AmenityTypeRepo;
 import hotelreservation.repository.RoomRepo;
 import hotelreservation.repository.RoomTypeRepo;
 import hotelreservation.repository.StatusRepo;
@@ -30,7 +30,7 @@ public class RoomService {
 	private StatusRepo statusRepo;
 
 	@Autowired
-	private AmmenityTypeRepo ammenityTypeRepo;
+	private AmenityTypeRepo amenityTypeRepo;
 	
 	@Autowired
 	private AmmenityRepo ammenityRepo;
@@ -93,11 +93,11 @@ public class RoomService {
 		
 	}
 
-	public void createAmmenityType(AmmenityType ammenityType) {
-		ammenityTypeRepo.save(ammenityType);
+	public void createAmenityType(AmenityType amenityType) {
+		amenityTypeRepo.save(amenityType);
 	}
 	
-	public void createAmmenity(Ammenity ammenity) {
+	public void createAmenity(Amenity ammenity) {
 		ammenityRepo.save(ammenity);
 	}
 }

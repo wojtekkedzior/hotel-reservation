@@ -7,8 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -24,21 +24,34 @@ public class Room {
 	
 	private int roomNumber;
 	
-	@OneToOne
+	@ManyToOne
 	private Status status; //as in 'in operation' 'in maintenace' etc
+	
 	private String name;
 	private String description;
 	
-	@OneToMany
-	private List<Ammenity> roomAmmenities;
+	@ManyToMany
+	private List<Amenity> roomAmenities;
 	
-	@OneToOne
+	@ManyToOne
 	private RoomType roomType;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdOn; 
 	
-	@OneToOne
+	@ManyToOne
 	private User createdBy;
+
+	public Room() {}
+	
+	public Room(int roomNumber, Status status, RoomType roomType, Date createdOn, User createdBy) {
+		this.roomNumber = roomNumber;
+		this.status = status;
+		this.roomType = roomType;
+		this.createdOn = createdOn;
+		this.createdBy = createdBy;
+	}
+	
+	
 	
 }
