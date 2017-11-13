@@ -9,7 +9,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 import hotelreservation.model.User;
 import hotelreservation.model.UserType;
@@ -40,7 +39,7 @@ public class UsersController {
 //	        mav.addObject("employee", employee);
 //	        mav.addObject("date", mediumDateFormat.format(date));
 //	        mav.addObject("task", new Tasks());
-	        return "admin";
+	        return "/admin";
 	        
 	    }
 }

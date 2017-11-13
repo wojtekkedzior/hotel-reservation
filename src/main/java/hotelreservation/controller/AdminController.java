@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import hotelreservation.model.AmenityType;
 import hotelreservation.model.RoomType;
+import hotelreservation.model.User;
 import hotelreservation.model.UserType;
 import hotelreservation.service.RoomService;
 import hotelreservation.service.UserService;
@@ -46,6 +47,9 @@ public class AdminController {
       
 	  List<AmenityType> amenityTypes = roomService.getAllAmenityTypes();
       model.addAttribute("amenityTypes", amenityTypes);
+      
+	  List<User> users = userService.getUsers();
+      model.addAttribute("users", users);
        
       return "admin";
   }
