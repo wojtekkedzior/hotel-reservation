@@ -1,6 +1,7 @@
 package hotelreservation.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ public class UserService {
 	public User createUser(User user) {
 //		UserType userType = userTypeRepo.findOne(userTypeId);
 //		user.setUserType(userType);
+		
+		user.setCreatedOn(new Date());
 		return userRepo.save(user);
 	}
 	

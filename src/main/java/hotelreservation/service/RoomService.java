@@ -1,6 +1,7 @@
 package hotelreservation.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +10,12 @@ import org.springframework.stereotype.Service;
 import hotelreservation.model.Amenity;
 import hotelreservation.model.AmenityType;
 import hotelreservation.model.Room;
+import hotelreservation.model.RoomRate;
 import hotelreservation.model.RoomType;
 import hotelreservation.model.Status;
-import hotelreservation.repository.AmmenityRepo;
+import hotelreservation.repository.AmenityRepo;
 import hotelreservation.repository.AmenityTypeRepo;
+import hotelreservation.repository.RoomRateRepo;
 import hotelreservation.repository.RoomRepo;
 import hotelreservation.repository.RoomTypeRepo;
 import hotelreservation.repository.StatusRepo;
@@ -33,7 +36,11 @@ public class RoomService {
 	private AmenityTypeRepo amenityTypeRepo;
 	
 	@Autowired
-	private AmmenityRepo ammenityRepo;
+	private AmenityRepo amenityRepo;
+
+	@Autowired
+	private RoomRateRepo roomRateRepo;
+
 	
 	public RoomType createRoomType(RoomType roomType) {
 		return roomTypeRepo.save(roomType);
@@ -80,6 +87,7 @@ public class RoomService {
 	}
 
 	public Room createRoom(Room room) {
+		room.setCreatedOn(new Date());
 		return roomRepo.save(room);
 		
 	}
@@ -98,7 +106,7 @@ public class RoomService {
 	}
 	
 	public void createAmenity(Amenity ammenity) {
-		ammenityRepo.save(ammenity);
+		amenityRepo.save(ammenity);
 	}
 
 	public List<AmenityType> getAllAmenityTypes() {
@@ -108,5 +116,30 @@ public class RoomService {
 		findAll.forEach(target::add);
 
 		return target;
+	}
+
+	public List<Amenity> getAllAmenities() {
+		Iterable<Amenity> findAll = amenityRepo.findAll();
+
+		List<Amenity> target = new ArrayList<Amenity>();
+		findAll.forEach(target::add);
+
+		return target;
+	}
+	
+	public List<Amenity> getRoomAmenities() {
+		List<Amenity> roomAmenities = new ArrayList<>();
+		
+		for (AmenityType amenityType : amenityTypeRepo.findAll()) {
+			if(!amenityType.getName().equals("Hotel")) {
+				roomAmenities.addAll(amenityRepo.findByAmenityType(amenityType));
+			}
+		}
+
+		return roomAmenities;
+	}
+
+	public void createRoomRate(RoomRate roomRate) {
+		roomRateRepo.save(roomRate);
 	}
 }

@@ -1,0 +1,49 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+<title>Getting Started: Serving Web Content</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+</head>
+<body>
+
+	<form action="#" th:action="@{/addRoom}" th:object="${room}"
+		method="post">
+		<p>
+			Name: <input type="text" th:field="*{name}" />
+		</p>
+		<p>
+			Description: <input type="text" th:field="*{description}" />
+		</p>
+		<p>
+			Room Number: <input type="text" th:field="*{roomNumber}" />
+		</p>
+		
+		<select class="form-control" th:field="${room.roomAmenities}" multiple="multiple"
+			id="dropOperator">
+			<!-- <option value="0" th:text="selectoperator"></option> -->
+			<option th:each="amenity : ${amenities}" th:value="${amenity.id}"
+				th:text="${amenity.name}"></option>
+		</select>
+		
+		<select class="form-control" th:field="${room.roomType}"
+			id="dropOperator">
+			<option th:each="roomType : ${roomTypes}" th:value="${roomType.id}"
+				th:text="${roomType.name}"></option>
+		</select>
+		
+		<select class="form-control" th:field="${room.status}"
+			id="dropOperator">
+			<option th:each="status : ${statuses}" th:value="${status.id}"
+				th:text="${status.name}"></option>
+		</select>
+		
+		
+		<p>
+			<input type="submit" value="Submit" /> 
+		</p>
+	</form>
+</body>
+
+</html>

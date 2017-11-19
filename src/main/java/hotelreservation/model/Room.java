@@ -44,14 +44,11 @@ public class Room {
 
 	public Room() {}
 	
-	public Room(int roomNumber, Status status, RoomType roomType, Date createdOn, User createdBy) {
+	public Room(int roomNumber, Status status, RoomType roomType, User createdBy) {
 		this.roomNumber = roomNumber;
 		this.status = status;
 		this.roomType = roomType;
-		this.createdOn = createdOn;
 		this.createdBy = createdBy;
 	}
-	
-	
 	
 }

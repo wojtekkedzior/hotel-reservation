@@ -12,7 +12,9 @@ import org.springframework.stereotype.Component;
 
 import hotelreservation.model.Amenity;
 import hotelreservation.model.AmenityType;
+import hotelreservation.model.Currency;
 import hotelreservation.model.Room;
+import hotelreservation.model.RoomRate;
 import hotelreservation.model.RoomType;
 import hotelreservation.model.Status;
 import hotelreservation.model.User;
@@ -69,6 +71,13 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	
 	private RoomType roomTypeStandard;
 	private RoomType roomTypeLuxury;
+	
+	//Rooms
+	private Room standardRoomOne;
+	private Room standardRoomTwo;
+	private Room luxuryRoomOne;
+	private Room luxuryRoomTwo;
+	
 
 	@Autowired
 	private UserService userService;
@@ -88,6 +97,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 
 		addRoomTypes();
 		addRooms();
+		
+		addRoomRate();
 	}
 
 	private void addamenities() {
@@ -200,9 +211,9 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		roomService.createRoomType(roomTypeStandard);
 		roomService.createRoomType(roomTypeLuxury);
 	}
-
+	
 	private void addRooms() {
-		Room standardRoomOne = new Room(1, operational, roomTypeStandard, new Date(), admin);
+		standardRoomOne = new Room(1, operational, roomTypeStandard, admin);
 		standardRoomOne.setName("Room 1");
 		standardRoomOne.setDescription("The Best Room Description");
 		List<Amenity> standardRoomOneAmenitites = new ArrayList<>();
@@ -211,9 +222,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		standardRoomOneAmenitites.add(blanket);
 		standardRoomOne.setRoomAmenities(standardRoomOneAmenitites);
 		roomService.createRoom(standardRoomOne); 
-	
 		
-		Room standardRoomTwo = new Room(2, operational, roomTypeStandard, new Date(), admin);
+		standardRoomTwo = new Room(2, operational, roomTypeStandard, admin);
 		standardRoomTwo.setName("Room 2");
 		standardRoomTwo.setDescription("The Second Best Room Description");
 		List<Amenity> standardRoomTwoAmenitites = new ArrayList<>();
@@ -225,7 +235,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		 
 		
 		//Luxury Rooms
-		Room luxuryRoomOne = new Room(11, operational, roomTypeLuxury, new Date(), admin);
+		luxuryRoomOne = new Room(11, operational, roomTypeLuxury, admin);
 		luxuryRoomOne.setName("Room 11");
 		luxuryRoomOne.setDescription("The Best Luxury Room Description");
 		List<Amenity> luxuryRoomOneAmenitites = new ArrayList<>();
@@ -237,7 +247,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		luxuryRoomOne.setRoomAmenities(luxuryRoomOneAmenitites); 
 		roomService.createRoom(luxuryRoomOne);
 	
-		Room luxuryRoomTwo = new Room(22, operational, roomTypeLuxury, new Date(), admin);
+		luxuryRoomTwo = new Room(22, operational, roomTypeLuxury, admin);
 		luxuryRoomTwo.setName("Room 22");
 		luxuryRoomTwo.setDescription("The Second Best Luxury Room Description");
 		List<Amenity> luxuryRoomTwoAmenitites = new ArrayList<>();
@@ -248,6 +258,11 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		luxuryRoomTwoAmenitites.add(miniBar);
 		luxuryRoomTwo.setRoomAmenities(luxuryRoomTwoAmenitites);
 		roomService.createRoom(luxuryRoomTwo);
+	}
+	
+	private void addRoomRate() {
+		RoomRate roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, new Date(), new Date());
+		roomService.createRoomRate(roomRateOne);
 	}
 
 }
