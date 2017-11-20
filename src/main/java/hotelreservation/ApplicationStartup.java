@@ -261,7 +261,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	}
 	
 	private void addRoomRate() {
-		RoomRate roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, new Date(), new Date());
+		RoomRate roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, new Date(), new Date());
 		roomService.createRoomRate(roomRateOne);
 	}
 

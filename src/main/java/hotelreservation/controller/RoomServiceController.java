@@ -11,7 +11,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import hotelreservation.model.Amenity;
 import hotelreservation.model.AmenityType;
+import hotelreservation.model.Currency;
 import hotelreservation.model.Room;
+import hotelreservation.model.RoomRate;
 import hotelreservation.model.RoomType;
 import hotelreservation.service.RoomService;
 
@@ -49,6 +51,13 @@ public class RoomServiceController {
 		return "addRoom";
 	}
 	
+	@RequestMapping("/addRoomRate")
+	public String addRoomRateModel(Model model) {
+		model.addAttribute("roomRate", new RoomRate());
+		model.addAttribute("rooms", roomService.getAllRooms());
+		model.addAttribute("currencies", Currency.values());
+		return "addRoomRate";
+	}
 
 	@PostMapping("/addAmenityType")
 	public ModelAndView addAmenityType(@ModelAttribute AmenityType amenityType, BindingResult bindingResult) {
@@ -73,6 +82,12 @@ public class RoomServiceController {
 	@PostMapping("/addRoom") 
 	public ModelAndView addRoom(@ModelAttribute Room room, BindingResult bindingResult) {
 		roomService.createRoom(room);
+		return new ModelAndView("redirect:/admin");
+	}
+	
+	@PostMapping("/addRoomRate") 
+	public ModelAndView addRoomRate(@ModelAttribute RoomRate roomRate, BindingResult bindingResult) {
+		roomService.createRoomRate(roomRate);
 		return new ModelAndView("redirect:/admin");
 	}
 }
