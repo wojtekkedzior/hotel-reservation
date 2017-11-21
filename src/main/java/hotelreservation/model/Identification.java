@@ -1,16 +1,18 @@
 package hotelreservation.model;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 
+import hotelreservation.model.enums.IdType;
 import lombok.Data;
 
 @Entity
 @Data
-public class Guest {
+public class Identification {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
@@ -18,21 +20,18 @@ public class Guest {
 	private String name;
 	private String description;
 	
-	@OneToOne
-	private Contact contact;
+	@Enumerated(EnumType.STRING)
+	private IdType idType;
 	
-	@OneToOne
-	private Identification identification;
 	
-	public Guest() {}
+	public Identification() {}
 
-	public Guest(String name, String description, Contact contact, Identification identification) {
+
+	public Identification(String name, String description, IdType idType) {
+		super();
 		this.name = name;
 		this.description = description;
-		this.contact = contact;
-		this.identification = identification;
+		this.idType = idType;
 	}
-	
-	
 
 }

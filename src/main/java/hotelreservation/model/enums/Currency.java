@@ -1,4 +1,4 @@
-package hotelreservation.model;
+package hotelreservation.model.enums;
 
 public enum Currency {
 	

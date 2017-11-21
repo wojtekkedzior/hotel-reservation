@@ -12,13 +12,18 @@ import org.springframework.stereotype.Component;
 
 import hotelreservation.model.Amenity;
 import hotelreservation.model.AmenityType;
-import hotelreservation.model.Currency;
+import hotelreservation.model.Contact;
+import hotelreservation.model.Guest;
+import hotelreservation.model.Identification;
 import hotelreservation.model.Room;
 import hotelreservation.model.RoomRate;
 import hotelreservation.model.RoomType;
 import hotelreservation.model.Status;
 import hotelreservation.model.User;
 import hotelreservation.model.UserType;
+import hotelreservation.model.enums.Currency;
+import hotelreservation.model.enums.IdType;
+import hotelreservation.service.BookingService;
 import hotelreservation.service.RoomService;
 import hotelreservation.service.UserService;
 
@@ -78,12 +83,32 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	private Room luxuryRoomOne;
 	private Room luxuryRoomTwo;
 	
-
+	//Contacts
+	private Contact contactOne;
+	private Contact contactTwo;
+	private Contact contactThree;
+	private Contact contactFour;
+	
+	//Identifications
+	private Identification idOne;
+	private Identification idTwo;
+	private Identification idThree;
+	private Identification idFour;
+	
+	//Guests
+	private Guest guestOne;
+	private Guest guestTwo;
+	private Guest guestThree;
+	private Guest guestFour;
+	
 	@Autowired
 	private UserService userService;
 
 	@Autowired
 	private RoomService roomService;
+	
+	@Autowired
+	private BookingService bookingService;
 
 	@Override
 	public void onApplicationEvent(final ApplicationReadyEvent event) {
@@ -99,6 +124,10 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		addRooms();
 		
 		addRoomRate();
+		addContacts();
+		addIdentifications();
+		addGuests();
+	
 	}
 
 	private void addamenities() {
@@ -264,5 +293,42 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		RoomRate roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, new Date(), new Date());
 		roomService.createRoomRate(roomRateOne);
 	}
+	
+	private void addContacts() {
+		contactOne = new Contact();
+		contactTwo = new Contact();
+		contactThree = new Contact();
+		contactFour = new Contact();
+		
+		bookingService.createContact(contactOne);
+		bookingService.createContact(contactTwo);
+		bookingService.createContact(contactThree);
+		bookingService.createContact(contactFour);
+	}
+	
+	private void addIdentifications() {
+		idOne = new Identification("IdOne Name", "IdOne Description", IdType.IDCard);
+		idTwo = new Identification("IdTwo Name", "IdTwo Description", IdType.DriversLicense);
+		idThree = new Identification("IdThree Name", "IdThree Description", IdType.Passport);
+		idFour = new Identification("IdFour Name", "IdFour Description", IdType.IDCard);
+		
+		bookingService.createIdentification(idOne);
+		bookingService.createIdentification(idTwo);
+		bookingService.createIdentification(idThree);
+		bookingService.createIdentification(idFour);
+	}
+	
+	private void addGuests() {
+		guestOne = new Guest("GuestOne Name", "GuestOne Description", contactOne, idOne);
+		guestTwo = new Guest("GuestTWo Name", "GuestTwo Description", contactTwo, idTwo);
+		guestThree = new Guest("GuestThree Name", "GuestThree Description", contactThree, idThree);
+		guestFour = new Guest("GuestFour Name", "GuestFour Description", contactFour, idFour);
+		
+		bookingService.createGuest(guestOne);
+		bookingService.createGuest(guestTwo);
+		bookingService.createGuest(guestThree);
+		bookingService.createGuest(guestFour);
+	}
+	
 
 }

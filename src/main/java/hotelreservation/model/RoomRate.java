@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import hotelreservation.model.enums.Currency;
 import lombok.Data;
 
 @Entity

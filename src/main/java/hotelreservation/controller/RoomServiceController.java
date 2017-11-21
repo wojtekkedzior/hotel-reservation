@@ -11,10 +11,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import hotelreservation.model.Amenity;
 import hotelreservation.model.AmenityType;
-import hotelreservation.model.Currency;
 import hotelreservation.model.Room;
 import hotelreservation.model.RoomRate;
 import hotelreservation.model.RoomType;
+import hotelreservation.model.enums.Currency;
 import hotelreservation.service.RoomService;
 
 @Controller

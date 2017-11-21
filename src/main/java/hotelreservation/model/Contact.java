@@ -17,6 +17,8 @@ public class Contact {
 	private String name;
 	private String description;
 	
+	private String address;
+	
 	public Contact() {}
 
 }
