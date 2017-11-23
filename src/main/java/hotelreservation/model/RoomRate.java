@@ -1,6 +1,6 @@
 package hotelreservation.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -29,13 +29,14 @@ public class RoomRate {
 	private Currency currency;
 
 	private double value;
-	private Date startDate;
-	private Date endDate;
+	
+	private LocalDate startDate;
+	private LocalDate endDate;
 
-	public RoomRate() {
+	public RoomRate() { 
 	}
 
-	public RoomRate(Room room, Currency currency, double value, Date startDate, Date endDate) {
+	public RoomRate(Room room, Currency currency, double value, LocalDate startDate, LocalDate endDate) {
 		super();
 		this.room = room;
 		this.currency = currency;
@@ -43,5 +44,5 @@ public class RoomRate {
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
-	
+	 
 }

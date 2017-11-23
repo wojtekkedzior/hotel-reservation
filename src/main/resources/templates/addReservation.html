@@ -1,0 +1,36 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+<title>Getting Started: Serving Web Content</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+</head>
+<body>
+
+	<form action="#" th:action="@{/addReservation}" th:object="${reservation}"
+		method="post">
+		<!-- <p>
+			userName: <input type="text" th:field="*{userName}" />
+		</p>
+		<p>
+			userName: <input type="text" th:field="*{password}" />
+		</p> -->
+		
+
+		<p>
+			Room Rates: <select class="form-control"
+				th:field="${reservation.roomRates}" id="dropOperator">
+				<option th:each="roomRate : ${roomRates}"
+					th:value="${roomRate.id}" th:text="${roomRate.id}"></option>
+			</select>
+		</p>
+
+
+		<p>
+			<input type="submit" value="Submit" /> >
+		</p>
+	</form>
+</body>
+
+</html>

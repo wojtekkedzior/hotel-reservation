@@ -1,5 +1,6 @@
 package hotelreservation.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,10 +23,10 @@ import hotelreservation.repository.StatusRepo;
 
 @Service
 public class RoomService {
-	
+
 	@Autowired
 	private RoomRepo roomRepo;
-	
+
 	@Autowired
 	private RoomTypeRepo roomTypeRepo;
 
@@ -34,14 +35,13 @@ public class RoomService {
 
 	@Autowired
 	private AmenityTypeRepo amenityTypeRepo;
-	
+
 	@Autowired
 	private AmenityRepo amenityRepo;
 
 	@Autowired
 	private RoomRateRepo roomRateRepo;
 
-	
 	public RoomType createRoomType(RoomType roomType) {
 		return roomTypeRepo.save(roomType);
 	}
@@ -83,13 +83,13 @@ public class RoomService {
 
 	public void deleteRoomType(RoomType roomType) {
 		roomTypeRepo.delete(roomType);
-		
+
 	}
 
 	public Room createRoom(Room room) {
 		room.setCreatedOn(new Date());
 		return roomRepo.save(room);
-		
+
 	}
 
 	public Room getRoomById(long id) {
@@ -98,13 +98,13 @@ public class RoomService {
 
 	public void deleteRoom(Room room) {
 		roomRepo.delete(room);
-		
+
 	}
 
 	public void createAmenityType(AmenityType amenityType) {
 		amenityTypeRepo.save(amenityType);
 	}
-	
+
 	public void createAmenity(Amenity ammenity) {
 		amenityRepo.save(ammenity);
 	}
@@ -126,12 +126,12 @@ public class RoomService {
 
 		return target;
 	}
-	
+
 	public List<Amenity> getRoomAmenities() {
 		List<Amenity> roomAmenities = new ArrayList<>();
-		
+
 		for (AmenityType amenityType : amenityTypeRepo.findAll()) {
-			if(!amenityType.getName().equals("Hotel")) {
+			if (!amenityType.getName().equals("Hotel")) {
 				roomAmenities.addAll(amenityRepo.findByAmenityType(amenityType));
 			}
 		}
@@ -141,5 +141,14 @@ public class RoomService {
 
 	public void createRoomRate(RoomRate roomRate) {
 		roomRateRepo.save(roomRate);
+	}
+
+	public List<RoomRate> getAvailableRoomRatesForRoom(LocalDate start, LocalDate end) {
+
+		List<RoomRate> findByStartDateBetween = roomRateRepo.findByStartDateBetween(start, end);
+		System.err.println(findByStartDateBetween);
+		System.err.println("size: " + findByStartDateBetween.size());
+
+		return findByStartDateBetween;
 	}
 }
