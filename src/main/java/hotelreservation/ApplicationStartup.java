@@ -91,9 +91,9 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	private RoomRate roomRateThree;
 	private RoomRate roomRateFour;
 	private RoomRate roomRateFive;
-	private RoomRate roomRateSix;
-	private RoomRate roomRateSeven;
-	private RoomRate roomRateEight;
+//	private RoomRate roomRateSix;
+//	private RoomRate roomRateSeven;
+//	private RoomRate roomRateEight;
 	
 
 	// Contacts
@@ -306,35 +306,22 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	}
 
 	private void addRoomRate() {
+		//TODO
 		//-|--|
 		//-|------|
 		//-|-----------------|
-		//
-		//----|----|
-		//----|---------------|
-		//--------------|----------|
-		//-|-------------------------|
-		//---------------------------|--|
 		
-		roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2017, Month.JANUARY, 2), LocalDate.of(2017, Month.JANUARY, 3));
-		roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2017, Month.JANUARY, 2), LocalDate.of(2017, Month.JANUARY, 8));
-		roomRateThree = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2017, Month.JANUARY, 2), LocalDate.of(2017, Month.JANUARY, 20));
-		
-		roomRateFour = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2017, Month.JANUARY, 5), LocalDate.of(2017, Month.JANUARY, 10));
-		roomRateFive = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2017, Month.JANUARY, 5), LocalDate.of(2017, Month.JANUARY, 21));
-		
-		roomRateSix = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2017, Month.JANUARY, 15), LocalDate.of(2017, Month.JANUARY, 26));
-		roomRateSeven = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2017, Month.JANUARY, 2), LocalDate.of(2017, Month.JANUARY, 28));
-		roomRateEight = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2017, Month.JANUARY, 28), LocalDate.of(2017, Month.JANUARY, 31));
+		roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2017, Month.JANUARY, 2));
+		roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2017, Month.JANUARY, 4));
+		roomRateThree = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2017, Month.JANUARY, 5));
+		roomRateFour = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2017, Month.JANUARY,10));
+		roomRateFive = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2017, Month.JANUARY, 20));
 		
 		roomService.createRoomRate(roomRateOne);
 		roomService.createRoomRate(roomRateTwo);
 		roomService.createRoomRate(roomRateThree);
 		roomService.createRoomRate(roomRateFour);
 		roomService.createRoomRate(roomRateFive);
-		roomService.createRoomRate(roomRateSix);
-		roomService.createRoomRate(roomRateSeven);
-		roomService.createRoomRate(roomRateEight);
 	}
 
 	private void addContacts() {

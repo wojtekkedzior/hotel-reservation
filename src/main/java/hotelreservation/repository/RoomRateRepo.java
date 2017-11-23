@@ -9,9 +9,9 @@ import hotelreservation.model.RoomRate;
 
 public interface RoomRateRepo extends CrudRepository<RoomRate, Long> {
 	
-	List<RoomRate> findByStartDateBetween(LocalDate start, LocalDate end);
+	List<RoomRate> findByDayBetween(LocalDate start, LocalDate end);
 	
-	List<RoomRate> findByStartDateAfterAndEndDateBefore(LocalDate start, LocalDate end);
+//	List<RoomRate> findByDayAfterAndEndDateBefore(LocalDate start, LocalDate end);
 	
-	List<RoomRate> findByStartDateAfter (LocalDate start);
+	List<RoomRate> findByDayAfter (LocalDate start);
 }

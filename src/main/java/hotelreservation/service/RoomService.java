@@ -140,12 +140,14 @@ public class RoomService {
 	}
 
 	public void createRoomRate(RoomRate roomRate) {
+		//check for overlap
+		
 		roomRateRepo.save(roomRate);
 	}
 
 	public List<RoomRate> getAvailableRoomRatesForRoom(LocalDate start, LocalDate end) {
 
-		List<RoomRate> findByStartDateBetween = roomRateRepo.findByStartDateBetween(start, end);
+		List<RoomRate> findByStartDateBetween = roomRateRepo.findByDayBetween(start, end);
 		System.err.println(findByStartDateBetween);
 		System.err.println("size: " + findByStartDateBetween.size());
 

@@ -9,15 +9,19 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import hotelreservation.model.enums.Currency;
 import lombok.Data;
 
 @Entity
 @Data
+@Table(uniqueConstraints={@UniqueConstraint(columnNames = {"room_id" , "day"})})
 public class RoomRate {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	
 	private long id;
 
 	private String description;
@@ -30,19 +34,17 @@ public class RoomRate {
 
 	private double value;
 	
-	private LocalDate startDate;
-	private LocalDate endDate;
+	private LocalDate day;
 
 	public RoomRate() { 
 	}
 
-	public RoomRate(Room room, Currency currency, double value, LocalDate startDate, LocalDate endDate) {
+	public RoomRate(Room room, Currency currency, double value, LocalDate day) {
 		super();
 		this.room = room;
 		this.currency = currency;
 		this.value = value;
-		this.startDate = startDate;
-		this.endDate = endDate;
+		this.day = day;
 	}
 	 
 }
