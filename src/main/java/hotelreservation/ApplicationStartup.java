@@ -1,9 +1,13 @@
 package hotelreservation;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -305,27 +309,42 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		roomService.createRoom(luxuryRoomTwo);
 	}
 
+	  public Date asDate(LocalDate localDate) {
+		    return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+		  }
+
+		  public static Date asDate(LocalDateTime localDateTime) {
+		    return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+		  }
+
+		  public static LocalDate asLocalDate(Date date) {
+		    return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+		  }
+
+		  public static LocalDateTime asLocalDateTime(Date date) {
+		    return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+		  }
+		  
+		  
 	private void addRoomRate() {
-		//TODO
-		//-|--|
-		//-|------|
-		//-|-----------------|
+		//-|-||----|---------|-----------
 		
-		roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2017, Month.JANUARY, 2));
-		roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2017, Month.JANUARY, 4));
-		roomRateThree = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2017, Month.JANUARY, 5));
-		roomRateFour = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2017, Month.JANUARY,10));
-		roomRateFive = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2017, Month.JANUARY, 20));
+		roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2017, Month.JANUARY, 2)));
+		roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2017, Month.JANUARY, 4)));
+		roomRateThree = new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2017, Month.JANUARY, 5)));
+		roomRateFour = new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2017, Month.JANUARY,10)));
+		roomRateFive = new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2017, Month.JANUARY, 20)));
 		
 		roomService.createRoomRate(roomRateOne);
 		roomService.createRoomRate(roomRateTwo);
 		roomService.createRoomRate(roomRateThree);
 		roomService.createRoomRate(roomRateFour);
 		roomService.createRoomRate(roomRateFive);
+//		roomService.createRoomRate(new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2017, Month.JANUARY, 20))));
 	}
 
 	private void addContacts() {
-		contactOne = new Contact();
+		contactOne = new Contact(); 
 		contactTwo = new Contact();
 		contactThree = new Contact();
 		contactFour = new Contact();

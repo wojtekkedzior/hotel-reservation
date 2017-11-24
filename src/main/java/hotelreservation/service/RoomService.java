@@ -1,12 +1,17 @@
 package hotelreservation.service;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import hotelreservation.model.Amenity;
 import hotelreservation.model.AmenityType;
@@ -139,6 +144,7 @@ public class RoomService {
 		return roomAmenities;
 	}
 
+	@Transactional
 	public void createRoomRate(RoomRate roomRate) {
 		//check for overlap
 		
@@ -146,11 +152,32 @@ public class RoomService {
 	}
 
 	public List<RoomRate> getAvailableRoomRatesForRoom(LocalDate start, LocalDate end) {
+		LocalDate d = LocalDate.of(2017, Month.JANUARY, 2);
+		RoomRate r = roomRateRepo.findByDay(asDate(d));
+		System.err.println(r);
+		
 
-		List<RoomRate> findByStartDateBetween = roomRateRepo.findByDayBetween(start, end);
+		List<RoomRate> findByStartDateBetween = roomRateRepo.findByDayBetween(asDate(start) , asDate(end));
 		System.err.println(findByStartDateBetween);
 		System.err.println("size: " + findByStartDateBetween.size());
 
 		return findByStartDateBetween;
 	}
+	
+	
+	  public Date asDate(LocalDate localDate) {
+		    return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+		  }
+
+		  public static Date asDate(LocalDateTime localDateTime) {
+		    return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+		  }
+
+		  public static LocalDate asLocalDate(Date date) {
+		    return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+		  }
+
+		  public static LocalDateTime asLocalDateTime(Date date) {
+		    return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+		  }
 }
