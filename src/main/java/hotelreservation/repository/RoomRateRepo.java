@@ -16,4 +16,6 @@ public interface RoomRateRepo extends CrudRepository<RoomRate, Long> {
 	List<RoomRate> findByDayAfter (Date start);
 	
 	RoomRate findByDay(Date day);
+	
+	List<RoomRate> findByRoomId(long roomId);
 }

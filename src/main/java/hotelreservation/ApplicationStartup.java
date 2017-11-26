@@ -95,10 +95,9 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	private RoomRate roomRateThree;
 	private RoomRate roomRateFour;
 	private RoomRate roomRateFive;
-//	private RoomRate roomRateSix;
-//	private RoomRate roomRateSeven;
-//	private RoomRate roomRateEight;
-	
+	// private RoomRate roomRateSix;
+	// private RoomRate roomRateSeven;
+	// private RoomRate roomRateEight;
 
 	// Contacts
 	private Contact contactOne;
@@ -144,6 +143,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		addRooms();
 
 		addRoomRate();
+		addAdditionalRoomRates();
 		addContacts();
 		addIdentifications();
 		addGuests();
@@ -309,42 +309,56 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		roomService.createRoom(luxuryRoomTwo);
 	}
 
-	  public Date asDate(LocalDate localDate) {
-		    return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-		  }
+	public Date asDate(LocalDate localDate) {
+		return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+	}
 
-		  public static Date asDate(LocalDateTime localDateTime) {
-		    return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-		  }
+	public static Date asDate(LocalDateTime localDateTime) {
+		return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+	}
 
-		  public static LocalDate asLocalDate(Date date) {
-		    return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
-		  }
+	public static LocalDate asLocalDate(Date date) {
+		return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+	}
 
-		  public static LocalDateTime asLocalDateTime(Date date) {
-		    return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
-		  }
-		  
-		  
+	public static LocalDateTime asLocalDateTime(Date date) {
+		return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+	}
+
 	private void addRoomRate() {
-		//-|-||----|---------|-----------
-		
+		// -|-||----|---------|-----------
+
 		roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2017, Month.JANUARY, 2)));
 		roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2017, Month.JANUARY, 4)));
 		roomRateThree = new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2017, Month.JANUARY, 5)));
-		roomRateFour = new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2017, Month.JANUARY,10)));
+		roomRateFour = new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2017, Month.JANUARY, 10)));
 		roomRateFive = new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2017, Month.JANUARY, 20)));
-		
+
 		roomService.createRoomRate(roomRateOne);
 		roomService.createRoomRate(roomRateTwo);
 		roomService.createRoomRate(roomRateThree);
 		roomService.createRoomRate(roomRateFour);
 		roomService.createRoomRate(roomRateFive);
-//		roomService.createRoomRate(new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2017, Month.JANUARY, 20))));
+	}
+
+	private void addAdditionalRoomRates() {
+		// Aiming for March
+		for (int i = 1; i < 31; i++) {
+
+			int value = 1000;
+
+			//Fridays and Saturdays in March
+			if (i == 2 || i == 3 || i == 9 || i == 10 || i == 16 || i == 17 || i == 23 || i == 24 || i == 30) {
+				value = 1999;
+			}
+
+			roomService.createRoomRate(
+					new RoomRate(standardRoomOne, Currency.CZK, value, asDate(LocalDate.of(2017, Month.MARCH, i))));
+		}
 	}
 
 	private void addContacts() {
-		contactOne = new Contact(); 
+		contactOne = new Contact();
 		contactTwo = new Contact();
 		contactThree = new Contact();
 		contactFour = new Contact();
@@ -368,10 +382,10 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	}
 
 	private void addGuests() {
-		guestOne = new Guest("GuestOne Name", "GuestOne Description", contactOne, idOne);
-		guestTwo = new Guest("GuestTWo Name", "GuestTwo Description", contactTwo, idTwo);
-		guestThree = new Guest("GuestThree Name", "GuestThree Description", contactThree, idThree);
-		guestFour = new Guest("GuestFour Name", "GuestFour Description", contactFour, idFour);
+		guestOne = new Guest("GuestOne First Name", "GuestOne Last Name", "GuestOne Description", contactOne, idOne);
+		guestTwo = new Guest("GuestTWo First Name", "GuestTwo Last Name", "GuestTwo Description", contactTwo, idTwo);
+		guestThree = new Guest("GuestThree First Name", "GuestThree Last Name", "GuestThree Description", contactThree, idThree);
+		guestFour = new Guest("GuestFour First Name", "GuestFour Last Name", "GuestFour Description", contactFour, idFour);
 
 		bookingService.createGuest(guestOne);
 		bookingService.createGuest(guestTwo);
@@ -385,6 +399,6 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		reservationOne.setOccupants(Arrays.asList(guestTwo, guestThree));
 		reservationOne.setRoomRates(Arrays.asList(roomRateOne, roomRateTwo));
 
-		bookingService.createReservation(reservationOne); 
+		bookingService.createReservation(reservationOne);
 	}
 }

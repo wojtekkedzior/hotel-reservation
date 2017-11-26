@@ -15,7 +15,8 @@ public class Guest {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
-	private String name;
+	private String firstName;
+	private String lastName;
 	private String description;
 	
 	@OneToOne
@@ -26,8 +27,9 @@ public class Guest {
 	
 	public Guest() {}
 
-	public Guest(String name, String description, Contact contact, Identification identification) {
-		this.name = name;
+	public Guest(String firstName, String lastName, String description, Contact contact, Identification identification) {
+		this.firstName = firstName;
+		this.lastName = lastName;
 		this.description = description;
 		this.contact = contact;
 		this.identification = identification;

@@ -14,22 +14,22 @@ import hotelreservation.repository.ReservationRepo;
 
 @Service
 public class BookingService {
-	
+
 	@Autowired
 	private GuestRepo guestRepo;
-	
+
 	@Autowired
 	private ContactRepo contactRepo;
-	
+
 	@Autowired
 	private IdentificationRepo identificationRepo;
-	
+
 	@Autowired
 	private ReservationRepo reservationRepo;
-	
+
 	public void getRoomStatus(long roomId) {
-		
-	}
+
+	} 
 
 	public void createContact(Contact contact) {
 		contactRepo.save(contact);
@@ -44,6 +44,12 @@ public class BookingService {
 	}
 
 	public void createReservation(Reservation reservation) {
+		// createGuest(reservation.getMainGuest());
+
+		if (reservation.getMainGuest().getId() == 0) {
+			guestRepo.save(reservation.getMainGuest());
+		}
+
 		reservationRepo.save(reservation);
 	}
 

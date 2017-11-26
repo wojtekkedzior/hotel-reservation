@@ -151,33 +151,41 @@ public class RoomService {
 		roomRateRepo.save(roomRate);
 	}
 
-	public List<RoomRate> getAvailableRoomRatesForRoom(LocalDate start, LocalDate end) {
-		LocalDate d = LocalDate.of(2017, Month.JANUARY, 2);
-		RoomRate r = roomRateRepo.findByDay(asDate(d));
-		System.err.println(r);
-		
+	public List<RoomRate> getAvailableRoomRatesForRoom(Date start, Date end) {
+//		LocalDate d = LocalDate.of(2017, Month.JANUARY, 2);
+//		RoomRate r = roomRateRepo.findByDay(asDate(d));
+//		System.err.println(r);
 
-		List<RoomRate> findByStartDateBetween = roomRateRepo.findByDayBetween(asDate(start) , asDate(end));
-		System.err.println(findByStartDateBetween);
+//		List<RoomRate> findByStartDateBetween = roomRateRepo.findByDayBetween(asDate(start) , asDate(end));
+		List<RoomRate> findByStartDateBetween = roomRateRepo.findByDayBetween(start, end);
+//		System.err.println(findByStartDateBetween);
 		System.err.println("size: " + findByStartDateBetween.size());
+		
+		
+//		findByStartDateBetween = roomRateRepo.findByDayAfter(asDate(start));
+//		System.err.println("size: " + findByStartDateBetween.size());
+		
+		
+//		findByStartDateBetween = roomRateRepo.findByRoomId(1);
+//		System.err.println("size: " + findByStartDateBetween.size());
+		
 
 		return findByStartDateBetween;
 	}
 	
-	
-	  public Date asDate(LocalDate localDate) {
-		    return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-		  }
+	public Date asDate(LocalDate localDate) {
+		return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+	}
 
-		  public static Date asDate(LocalDateTime localDateTime) {
-		    return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-		  }
+	public static Date asDate(LocalDateTime localDateTime) {
+		return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+	}
 
-		  public static LocalDate asLocalDate(Date date) {
-		    return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
-		  }
+	public static LocalDate asLocalDate(Date date) {
+		return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+	}
 
-		  public static LocalDateTime asLocalDateTime(Date date) {
-		    return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
-		  }
+	public static LocalDateTime asLocalDateTime(Date date) {
+		return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+	}
 }

@@ -6,24 +6,57 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 </head>
-<body>
 
-	<form action="#" th:action="@{/addReservation}" th:object="${reservation}"
-		method="post">
+<!--  (${user.isAdmin()} ? 'Administrator' : (${user.type} ?: 'Unknown')) -->
+ 
+ 
+<body>
+	<form action="#" th:action="@{/addReservation/withDates}" method="post">
+		<p>
+		<!-- th:value="${startDate}" -->
+			Start Date: <input type="date" name="startDate"  th:value="2017-03-09"/> <!-- 2017-3-9 -->
+			End Date: <input type="date" name="endDate" th:value="2017-03-20" />
+			
+			 <input type="checkbox" name="covered" />
+			 
+		</p>
+		<p>
+			<input type="submit" value="Submit" /> >
+		</p>
+	</form>
+
+	<!--<form th:action="@{/users/doDelete}" th:object="${customer}" method="post">
+            <input type="hidden" th:field="${id}" />
+            <button type="submit">Delete</button>
+        </form> -->
+
+	<form action="#" th:action="@{/addReservation}"
+		th:object="${reservation}" method="post">
 		<!-- <p>
 			userName: <input type="text" th:field="*{userName}" />
 		</p>
 		<p>
 			userName: <input type="text" th:field="*{password}" />
 		</p> -->
-		
 
+<!-- 		<select class="form-control" th:field="${room.roomAmenities}" multiple="multiple"
+			id="dropOperator">
+			<option value="0" th:text="selectoperator"></option>
+			<option th:each="amenity : ${amenities}" th:value="${amenity.id}"
+				th:text="${amenity.name}"></option>
+		</select> -->
+		
 		<p>
-			Room Rates: <select class="form-control"
+			Room Rates: <select class="form-control" multiple="multiple"
 				th:field="${reservation.roomRates}" id="dropOperator">
-				<option th:each="roomRate : ${roomRates}"
-					th:value="${roomRate.id}" th:text="${roomRate.id}"></option>
+				<option th:each="roomRate : ${roomRates}" th:value="${roomRate.id}"
+					th:text="${roomRate.day} + ' - ' + ${roomRate.value}"></option>
 			</select>
+		</p>
+		
+		<p>
+			Guest First Name: <input type="text" th:field="${reservation.mainGuest.firstName}"/>
+			Guest Last Name: <input type="text" th:field="${reservation.mainGuest.lastName}"/>
 		</p>
 
 
