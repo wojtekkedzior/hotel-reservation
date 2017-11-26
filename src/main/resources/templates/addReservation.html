@@ -46,11 +46,12 @@
 				th:text="${amenity.name}"></option>
 		</select> -->
 		
+		<!-- need a table or filter by room -->
 		<p>
 			Room Rates: <select class="form-control" multiple="multiple"
 				th:field="${reservation.roomRates}" id="dropOperator">
 				<option th:each="roomRate : ${roomRates}" th:value="${roomRate.id}"
-					th:text="${roomRate.day} + ' - ' + ${roomRate.value}"></option>
+					th:text="${roomRate.day} + ' - ' + ${roomRate.value} + ' - ' + ${roomRate.room.description} + ' - ' + ${roomRate.room.roomNumber}"></option>
 			</select>
 		</p>
 		

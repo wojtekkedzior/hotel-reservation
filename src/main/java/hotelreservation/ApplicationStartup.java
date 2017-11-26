@@ -352,6 +352,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 				value = 1999;
 			}
 
+			//TODO add MORE room rates for differnt rooms
 			roomService.createRoomRate(
 					new RoomRate(standardRoomOne, Currency.CZK, value, asDate(LocalDate.of(2017, Month.MARCH, i))));
 		}
