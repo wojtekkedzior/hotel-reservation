@@ -347,14 +347,17 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 
 			int value = 1000;
 
-			//Fridays and Saturdays in March
+			// Fridays and Saturdays in March
 			if (i == 2 || i == 3 || i == 9 || i == 10 || i == 16 || i == 17 || i == 23 || i == 24 || i == 30) {
 				value = 1999;
 			}
 
-			//TODO add MORE room rates for differnt rooms
-			roomService.createRoomRate(
-					new RoomRate(standardRoomOne, Currency.CZK, value, asDate(LocalDate.of(2017, Month.MARCH, i))));
+			// TODO add MORE room rates for differnt rooms
+			roomService.createRoomRate(new RoomRate(standardRoomOne, Currency.CZK, value, asDate(LocalDate.of(2017, Month.MARCH, i))));
+			roomService.createRoomRate(new RoomRate(standardRoomTwo, Currency.CZK, value, asDate(LocalDate.of(2017, Month.MARCH, i))));
+			
+			roomService.createRoomRate(new RoomRate(luxuryRoomOne, Currency.CZK, value*2, asDate(LocalDate.of(2017, Month.MARCH, i))));
+			roomService.createRoomRate(new RoomRate(luxuryRoomTwo, Currency.CZK, value*2, asDate(LocalDate.of(2017, Month.MARCH, i))));
 		}
 	}
 

@@ -7,7 +7,9 @@ import java.time.Month;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -88,13 +90,11 @@ public class RoomService {
 
 	public void deleteRoomType(RoomType roomType) {
 		roomTypeRepo.delete(roomType);
-
 	}
 
 	public Room createRoom(Room room) {
 		room.setCreatedOn(new Date());
 		return roomRepo.save(room);
-
 	}
 
 	public Room getRoomById(long id) {
@@ -103,7 +103,6 @@ public class RoomService {
 
 	public void deleteRoom(Room room) {
 		roomRepo.delete(room);
-
 	}
 
 	public void createAmenityType(AmenityType amenityType) {
@@ -161,17 +160,42 @@ public class RoomService {
 //		System.err.println(findByStartDateBetween);
 		System.err.println("size: " + findByStartDateBetween.size());
 		
-		
 //		findByStartDateBetween = roomRateRepo.findByDayAfter(asDate(start));
 //		System.err.println("size: " + findByStartDateBetween.size());
 		
-		
 //		findByStartDateBetween = roomRateRepo.findByRoomId(1);
 //		System.err.println("size: " + findByStartDateBetween.size());
-		
 
 		return findByStartDateBetween;
 	}
+	
+	public Map<Room, List<RoomRate>> getRoomRatesForAllRooms(Date startDate, Date endDate) {
+		Map<Room, List<RoomRate>> ratesForAllRooms = new HashMap<Room, List<RoomRate>>();
+		
+		Iterable<Room> allRooms = roomRepo.findAll();
+		
+		for (Room room : allRooms) {
+			ratesForAllRooms.put(room, roomRateRepo.findByRoomIdAndDayBetween(room.getId(), startDate, endDate));
+		}
+		
+		return ratesForAllRooms;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	public Date asDate(LocalDate localDate) {
 		return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
@@ -188,4 +212,6 @@ public class RoomService {
 	public static LocalDateTime asLocalDateTime(Date date) {
 		return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
 	}
+
+
 }

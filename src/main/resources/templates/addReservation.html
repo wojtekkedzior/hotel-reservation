@@ -47,13 +47,25 @@
 		</select> -->
 		
 		<!-- need a table or filter by room -->
-		<p>
+		
+		<div th:each="room : ${roomRatesPerRoom}">
+			<p>
+			Room: <label th:text="${room.description}"> </label>
+			</p>
+			
+					<p>
 			Room Rates: <select class="form-control" multiple="multiple"
 				th:field="${reservation.roomRates}" id="dropOperator">
 				<option th:each="roomRate : ${roomRates}" th:value="${roomRate.id}"
 					th:text="${roomRate.day} + ' - ' + ${roomRate.value} + ' - ' + ${roomRate.room.description} + ' - ' + ${roomRate.room.roomNumber}"></option>
 			</select>
 		</p>
+			
+<!--    			<span th:text="${str}"/>This will print the index value
+		    <span th:text="${iterStat.index}"/>This will print the Index -->
+		</div> 
+		
+
 		
 		<p>
 			Guest First Name: <input type="text" th:field="${reservation.mainGuest.firstName}"/>

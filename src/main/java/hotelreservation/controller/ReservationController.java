@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -65,7 +66,7 @@ public class ReservationController {
 	@PostMapping("/addReservation/withDates")
 	public String addReservation( Model model, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
 			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate, @RequestParam(defaultValue="false") boolean covered) {
-		System.err.println(startDate);
+		System.err.println(startDate); 
 		System.err.println(endDate);
 		System.err.println(covered);
 		
@@ -82,6 +83,10 @@ public class ReservationController {
 
 		List<RoomRate> availableRoomRatesForRoom = roomService.getAvailableRoomRatesForRoom(startDate, endDate);
 		model.addAttribute("roomRates", availableRoomRatesForRoom);
+		 
+		Map<Room, List<RoomRate>> roomRates = roomService.getRoomRatesForAllRooms(startDate, endDate);
+		model.addAttribute("roomRatesPerRoom", roomRates);
+		
 		// model.addAttribute("currencies", Currency.values());
 
 //		model.addAttribute("rooms", roomService.getAllRooms());
