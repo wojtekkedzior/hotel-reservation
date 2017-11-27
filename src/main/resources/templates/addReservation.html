@@ -8,17 +8,18 @@
 </head>
 
 <!--  (${user.isAdmin()} ? 'Administrator' : (${user.type} ?: 'Unknown')) -->
- 
- 
+
+
 <body>
 	<form action="#" th:action="@{/addReservation/withDates}" method="post">
 		<p>
-		<!-- th:value="${startDate}" -->
-			Start Date: <input type="date" name="startDate"  th:value="2017-03-09"/> <!-- 2017-3-9 -->
+			<!-- th:value="${startDate}" -->
+			Start Date: <input type="date" name="startDate" th:value="2017-03-09" />
+			<!-- 2017-3-9 -->
 			End Date: <input type="date" name="endDate" th:value="2017-03-20" />
-			
-			 <input type="checkbox" name="covered" />
-			 
+
+			<input type="checkbox" name="covered" />
+
 		</p>
 		<p>
 			<input type="submit" value="Submit" /> >
@@ -39,37 +40,39 @@
 			userName: <input type="text" th:field="*{password}" />
 		</p> -->
 
-<!-- 		<select class="form-control" th:field="${room.roomAmenities}" multiple="multiple"
+		<!-- 		<select class="form-control" th:field="${room.roomAmenities}" multiple="multiple"
 			id="dropOperator">
 			<option value="0" th:text="selectoperator"></option>
 			<option th:each="amenity : ${amenities}" th:value="${amenity.id}"
 				th:text="${amenity.name}"></option>
 		</select> -->
-		
-		<!-- need a table or filter by room -->
-		
-		<div th:each="room : ${roomRatesPerRoom}">
-			<p>
-			Room: <label th:text="${room.description}"> </label>
-			</p>
-			
-					<p>
-			Room Rates: <select class="form-control" multiple="multiple"
-				th:field="${reservation.roomRates}" id="dropOperator">
-				<option th:each="roomRate : ${roomRates}" th:value="${roomRate.id}"
-					th:text="${roomRate.day} + ' - ' + ${roomRate.value} + ' - ' + ${roomRate.room.description} + ' - ' + ${roomRate.room.roomNumber}"></option>
-			</select>
-		</p>
-			
-<!--    			<span th:text="${str}"/>This will print the index value
-		    <span th:text="${iterStat.index}"/>This will print the Index -->
-		</div> 
-		
 
-		
+		<!-- need a table or filter by room -->
+
+		<div th:each="roomRateCombo : ${roomRatesPerRoom}">
+			<p>
+				Room: <label th:text="${roomRateCombo.key.description}"> </label>
+			</p>
+
+			<p>
+				<select class="form-control" multiple="multiple"
+					th:field="${reservation.roomRates}" id="dropOperator">
+					<option th:each="roomRate : ${roomRateCombo.value}"
+						th:value="${roomRate.id}"
+						th:text="${roomRate.day} + ' - ' + ${roomRate.value} + ' - ' + ${roomRate.room.description} + ' - ' + ${roomRate.room.roomNumber}"></option>
+				</select>
+			</p>
+
+			<!--    			<span th:text="${str}"/>This will print the index value
+		    <span th:text="${iterStat.index}"/>This will print the Index -->
+		</div>
+
+
+
 		<p>
-			Guest First Name: <input type="text" th:field="${reservation.mainGuest.firstName}"/>
-			Guest Last Name: <input type="text" th:field="${reservation.mainGuest.lastName}"/>
+			Guest First Name: <input type="text"
+				th:field="${reservation.mainGuest.firstName}" /> Guest Last Name: <input
+				type="text" th:field="${reservation.mainGuest.lastName}" />
 		</p>
 
 
