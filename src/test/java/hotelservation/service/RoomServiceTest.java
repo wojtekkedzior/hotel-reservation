@@ -3,6 +3,7 @@ package hotelservation.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.Date;
 import java.util.List;
@@ -17,10 +18,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import hotelreservation.Application;
 import hotelreservation.model.Room;
+import hotelreservation.model.RoomRate;
 import hotelreservation.model.RoomType;
 import hotelreservation.model.Status;
 import hotelreservation.model.User;
 import hotelreservation.model.UserType;
+import hotelreservation.model.enums.Currency;
 import hotelreservation.service.RoomService;
 import hotelreservation.service.UserService;
 
@@ -116,5 +119,46 @@ public class RoomServiceTest {
 
 	@Test
 	public void testAddAllUserTypes() {
+	}
+	
+	@Test
+	public void testAddDuplicateRoomRate() {
+		Status status = new Status("Status name", "Status Description");
+		roomService.createStatus(status);
+		
+		RoomType roomType = new RoomType("Standard", "Standard room");
+		roomService.createRoomType(roomType);
+		
+		UserType managerUserType = new UserType("manager", "manager desc", true);
+		userService.createUserType(managerUserType);
+		
+		Room room = new Room();
+		room.setRoomNumber(1);
+		room.setName("The Best Room");
+		room.setDescription("The Best Room Description");
+		room.setStatus(status);
+		room.setRoomType(roomType);
+		room.setCreatedOn(new Date());
+		roomService.createRoom(room);
+		
+		Date day = new Date(2017, 3, 15);
+		RoomRate roomRate = new RoomRate(room, Currency.CZK, 1000, day);
+		roomService.createRoomRate(roomRate);
+		
+		System.err.println(roomService.getAvailableRoomRates().size());
+		
+		assertTrue(roomService.getAvailableRoomRates().size() == 1);
+		
+		RoomRate roomRate1 = new RoomRate(room, Currency.CZK, 1000, day);
+		
+		try {
+			roomService.createRoomRate(roomRate1);
+			fail();
+		} catch (Exception e) {
+			System.err.println(e);
+			
+		}
+		
+		
 	}
 }

@@ -213,5 +213,14 @@ public class RoomService {
 		return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
 	}
 
+	public List<RoomRate> getAvailableRoomRates() {
+		Iterable<RoomRate> findAll = roomRateRepo.findAll();
+
+		List<RoomRate> target = new ArrayList<RoomRate>();
+		findAll.forEach(target::add);
+
+		return target;
+	}
+
 
 }
