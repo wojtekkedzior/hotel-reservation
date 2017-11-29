@@ -62,7 +62,7 @@
 					<option th:each="roomRate : ${roomRateCombo.value}"
 						th:value="${roomRate.id}" 
 						th:text="${roomRate.day} + ' - ' + ${roomRate.value} + ' - ' + ${roomRate.room.description} + ' - ' + ${roomRate.room.roomNumber}"
-						th:onChange="'javascript:sayHello(\'' + ${roomRate.value} + '\');'"></option>
+						th:onClick="'javascript:sayHello(\'' + ${roomRate.value} + '\');'"></option>
 				</select>
 			</p>
 
@@ -75,6 +75,8 @@
 			Guest First Name: <input type="text"
 				th:field="${reservation.mainGuest.firstName}" /> Guest Last Name: <input
 				type="text" th:field="${reservation.mainGuest.lastName}" />
+				
+				<!-- change param to be the option field and then whatehr it's selected or now add or subtract the number  -->
 		</p>
   
 
@@ -86,6 +88,17 @@
 	</form>
 </body>
 
+<!-- <script th:inline="javascript">
+            /*<![CDATA[*/
+            function showLimits() {
+                var services = /*[[${services}]]*/ null;
+                var selectedIndex = $("#inputService option:selected").index();
+                var service = services[selectedIndex];
+                $("#amountLimits").text("Мин. сумма: " + service.amountMin + ", макс. сумма: " + service.amountMax);
+            }
+            $(function() { showLimits(); });
+            /*]]>*/
+</script> -->
 
 <script>
 	function sayHello(value) {
