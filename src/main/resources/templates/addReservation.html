@@ -53,8 +53,7 @@
 		<div th:each="roomRateCombo : ${roomRatesPerRoom}">
 			<p>
 				Room Number: <label
-					th:text="${roomRateCombo.key.roomNumber} + ' - ' + ${roomRateCombo.key.description}">
-				</label>
+					th:text="${roomRateCombo.key.roomNumber} + ' - ' + ${roomRateCombo.key.description}"></label>
 			</p>
 
 			<p>

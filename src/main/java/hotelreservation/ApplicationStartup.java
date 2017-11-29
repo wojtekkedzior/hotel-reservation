@@ -7,7 +7,9 @@ import java.time.Month;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -142,7 +144,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		addRoomTypes();
 		addRooms();
 
-		addRoomRate();
+//		addRoomRate();
 		addAdditionalRoomRates();
 		addContacts();
 		addIdentifications();
@@ -335,35 +337,39 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		roomRateFive = new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2017, Month.JANUARY, 20)));
 
 		roomService.createRoomRate(roomRateOne);
-		roomService.createRoomRate(roomRateTwo);
+		roomService.createRoomRate(roomRateTwo); 
 		roomService.createRoomRate(roomRateThree);
 		roomService.createRoomRate(roomRateFour);
 		roomService.createRoomRate(roomRateFive);
 	}
 
 	private void addAdditionalRoomRates() {
-		// Aiming for March
-		for (int i = 1; i < 31; i++) {
-
-			int value = 1000;
-
-			// Fridays and Saturdays in March
-			if (i == 2 || i == 3 || i == 9 || i == 10 || i == 16 || i == 17 || i == 23 || i == 24 || i == 30) {
-				value = 1999;
-			}
-
-			// TODO add MORE room rates for differnt rooms
-			roomService.createRoomRate(new RoomRate(standardRoomOne, Currency.CZK, value, asDate(LocalDate.of(2017, Month.MARCH, i))));
-			roomService.createRoomRate(new RoomRate(standardRoomTwo, Currency.CZK, value, asDate(LocalDate.of(2017, Month.MARCH, i))));
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(asDate(LocalDate.of(2017, Month.JANUARY, 1)));
+		
+		for(int days = 1; days <= 365; days++) { 
+			cal.roll(Calendar.DAY_OF_YEAR, true);
 			
-			roomService.createRoomRate(new RoomRate(luxuryRoomOne, Currency.CZK, value*2, asDate(LocalDate.of(2017, Month.MARCH, i))));
-			roomService.createRoomRate(new RoomRate(luxuryRoomTwo, Currency.CZK, value*2, asDate(LocalDate.of(2017, Month.MARCH, i))));
+		    int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+		    int value = 1000;
+	        
+		    if (dayOfWeek == Calendar.FRIDAY || dayOfWeek == Calendar.SATURDAY) { 
+		    	value = 1999;
+	        } else if (dayOfWeek == Calendar.SUNDAY) {
+	        	value = 1500; 
+	        }
+	        
+			roomService.createRoomRate(new RoomRate(standardRoomOne, Currency.CZK, value, cal.getTime()));
+			roomService.createRoomRate(new RoomRate(standardRoomTwo, Currency.CZK, value, cal.getTime()));
+
+			roomService.createRoomRate(new RoomRate(luxuryRoomOne, Currency.CZK, value * 2, cal.getTime()));
+			roomService.createRoomRate(new RoomRate(luxuryRoomTwo, Currency.CZK, value * 2, cal.getTime()));
 		}
-	}
+	} 
 
 	private void addContacts() {
 		contactOne = new Contact();
-		contactTwo = new Contact();
+		contactTwo = new Contact(); 
 		contactThree = new Contact();
 		contactFour = new Contact();
 
