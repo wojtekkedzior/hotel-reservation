@@ -145,8 +145,6 @@ public class RoomServiceTest {
 		RoomRate roomRate = new RoomRate(room, Currency.CZK, 1000, day);
 		roomService.createRoomRate(roomRate);
 		
-		System.err.println(roomService.getAvailableRoomRates().size());
-		
 		assertTrue(roomService.getAvailableRoomRates().size() == 1);
 		
 		RoomRate roomRate1 = new RoomRate(room, Currency.CZK, 1000, day);
@@ -156,9 +154,6 @@ public class RoomServiceTest {
 			fail();
 		} catch (Exception e) {
 			System.err.println(e);
-			
 		}
-		
-		
 	}
 }

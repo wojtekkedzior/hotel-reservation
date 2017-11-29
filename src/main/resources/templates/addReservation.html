@@ -4,7 +4,7 @@
 <head>
 <title>Getting Started: Serving Web Content</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="stylesheet" href="/css/mycss.css"/>
+<link rel="stylesheet" href="/css/mycss.css" />
 
 </head>
 
@@ -52,16 +52,19 @@
 
 		<div th:each="roomRateCombo : ${roomRatesPerRoom}">
 			<p>
-				Room: <label th:text="${roomRateCombo.key.description}"> </label>
+				Room Number: <label
+					th:text="${roomRateCombo.key.roomNumber} + ' - ' + ${roomRateCombo.key.description}">
+				</label>
 			</p>
 
 			<p>
-				<select name="wgtmsr" class="form-control" multiple="multiple" size="12" 
-					th:field="${reservation.roomRates}" id="dropOperator"  > <!-- onChange="showLimits()" -->
-					
+				<select name="wgtmsr" class="form-control" multiple="multiple"
+					size="12" th:field="${reservation.roomRates}" id="dropOperator">
+					<!-- onChange="showLimits()" -->
+
 					<option th:each="roomRate : ${roomRateCombo.value}"
-						th:value="${roomRate.id}" 
-						th:text="${roomRate.day} + ' - ' + ${roomRate.value} + ' - ' + ${roomRate.room.description} + ' - ' + ${roomRate.room.roomNumber}"
+						th:value="${roomRate.id}"
+						th:text="${roomRate.day} + ' - ' + ${roomRate.value} + ' - ' + ${roomRate.room.description}"
 						th:onClick="'javascript:sayHello(\'' + ${roomRate.value} + '\');'"></option>
 				</select>
 			</p>
@@ -75,16 +78,16 @@
 			Guest First Name: <input type="text"
 				th:field="${reservation.mainGuest.firstName}" /> Guest Last Name: <input
 				type="text" th:field="${reservation.mainGuest.lastName}" />
-				
-				<!-- change param to be the option field and then whatehr it's selected or ntw add or subtract the value  -->
+
+			<!-- change param to be the option field and then whatehr it's selected or ntw add or subtract the value  -->
 		</p>
-  
+
 
 		<p>
-			<input type="submit" value="Submit" /> >
-			<input type="number" id="total" value="0" />
+			<input type="submit" value="Submit" /> > <input type="number"
+				id="total" value="0" />
 		</p>
-		
+
 	</form>
 </body>
 
@@ -103,7 +106,7 @@
 <script>
 	function sayHello(value) {
 		var currentTotal = document.getElementById("total").value;
-		document.getElementById("total").value=+currentTotal + +value;
+		document.getElementById("total").value = +currentTotal + +value;
 	}
 </script>
 
