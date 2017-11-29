@@ -4,6 +4,7 @@
 <head>
 <title>Getting Started: Serving Web Content</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="/css/mycss.css"/>
 
 </head>
 
@@ -55,11 +56,13 @@
 			</p>
 
 			<p>
-				<select class="form-control" multiple="multiple"
-					th:field="${reservation.roomRates}" id="dropOperator">
+				<select name="wgtmsr" class="form-control" multiple="multiple" size="12" 
+					th:field="${reservation.roomRates}" id="dropOperator"  > <!-- onChange="showLimits()" -->
+					
 					<option th:each="roomRate : ${roomRateCombo.value}"
-						th:value="${roomRate.id}"
-						th:text="${roomRate.day} + ' - ' + ${roomRate.value} + ' - ' + ${roomRate.room.description} + ' - ' + ${roomRate.room.roomNumber}"></option>
+						th:value="${roomRate.id}" 
+						th:text="${roomRate.day} + ' - ' + ${roomRate.value} + ' - ' + ${roomRate.room.description} + ' - ' + ${roomRate.room.roomNumber}"
+						th:onChange="'javascript:sayHello(\'' + ${roomRate.value} + '\');'"></option>
 				</select>
 			</p>
 
@@ -68,18 +71,30 @@
 		</div>
 
 
-
 		<p>
 			Guest First Name: <input type="text"
 				th:field="${reservation.mainGuest.firstName}" /> Guest Last Name: <input
 				type="text" th:field="${reservation.mainGuest.lastName}" />
 		</p>
-
+  
 
 		<p>
 			<input type="submit" value="Submit" /> >
+			<input type="number" id="total" value="0" />
 		</p>
+		
 	</form>
 </body>
+
+
+<script>
+	function sayHello(value) {
+		var currentTotal = document.getElementById("total").value;
+		document.getElementById("total").value=+currentTotal + +value;
+	}
+</script>
+
+
+
 
 </html>

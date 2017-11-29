@@ -50,5 +50,4 @@ public class Room {
 		this.roomType = roomType;
 		this.createdBy = createdBy;
 	}
-	
 }
