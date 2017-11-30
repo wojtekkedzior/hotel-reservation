@@ -2,8 +2,6 @@ package hotelreservation.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,7 +17,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import hotelreservation.model.Reservation;
 import hotelreservation.model.Room;
-import hotelreservation.model.RoomRate;
 import hotelreservation.service.BookingService;
 import hotelreservation.service.RoomService;
 
@@ -52,12 +49,7 @@ public class ReservationController {
 
 		model.addAttribute("room", new Room());
 		model.addAttribute("reservation", new Reservation());
-
-		// LocalDate start = LocalDate.of(2017, Month.JANUARY, 1);
-		// LocalDate end = LocalDate.of(2017, Month.JANUARY, 6);
-
-		Map<Room, List<RoomRate>> roomRates = roomService.getRoomRatesForAllRooms(startDate, endDate);
-		model.addAttribute("roomRatesPerRoom", roomRates);
+		model.addAttribute("roomRatesPerRoom", roomService.getRoomRatesForAllRooms(startDate, endDate));
 
 		return "addReservation";
 	}

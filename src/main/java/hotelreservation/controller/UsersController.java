@@ -29,14 +29,6 @@ public class UsersController {
 	    public ModelAndView addUser(@ModelAttribute User user, BindingResult bindingResult) {
 	    	System.err.println(user);
 	    	userService.createUser(user);
-//	        return "user";
-	        
-//	        ModelAndView mav = new ModelAndView("addusers");
-//	        mav.addObject("employee", employee);
-//	        mav.addObject("date", mediumDateFormat.format(date));
-//	        mav.addObject("task", new Tasks());
-//	        return "admin";
-	        
 	        return new ModelAndView("redirect:/admin");
 	    }
 	    
