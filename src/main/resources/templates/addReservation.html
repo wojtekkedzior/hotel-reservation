@@ -57,15 +57,19 @@
 			</p>
 
 			<p>
-				<select name="wgtmsr" class="form-control" multiple="multiple"
-					size="12" th:field="${reservation.roomRates}" id="dropOperator">
+				<select name="wgtmsr" class="form-control" multiple="multiple" th:id="'roomRateSelect-' + ${roomRateCombo.key.roomNumber}"
+					size="12" th:field="${reservation.roomRates}" th:onChange="'javascript:subTotal(\'' + ${roomRateCombo.key.roomNumber} + '\');'">
 					<!-- onChange="showLimits()" -->
 
 					<option th:each="roomRate : ${roomRateCombo.value}"
-						th:value="${roomRate.id}"
+						th:value="${roomRate.value}"
 						th:text="${roomRate.day} + ' - ' + ${roomRate.value} + ' - ' + ${roomRate.room.description}"
 						th:onClick="'javascript:sayHello(\'' + ${roomRate.value} + '\');'"></option>
 				</select>
+			</p>
+			
+			<p>
+				<input th:id="'roomRateSelectSubTotal-' + ${roomRateCombo.key.roomNumber}" type="number"/>
 			</p>
 
 			<!--    			<span th:text="${str}"/>This will print the index value
@@ -100,16 +104,40 @@
             }
             $(function() { showLimits(); });
             /*]]>*/
+            
+            /*var currentTotal = document.getElementById("roomRateSelectSubTotal-"+value).value;
+		document.getElementById("total").value = +currentTotal + +value; */
+            
+            /* 		select = document.getElementById("roomRateSelect-"+value); */
+		
+/* 		for (var i=0; i < select.selectedOptions.length; i++) {
+        alert(select.selectedOptions[i]);
+        } */
+            
 </script> -->
 
-<script>
+<script th:inline="javascript">
+/*<![CDATA[*/
 	function sayHello(value) {
 		var currentTotal = document.getElementById("total").value;
 		document.getElementById("total").value = +currentTotal + +value;
 	}
+	
+	function subTotal(value) {
+		var select = document.getElementById("roomRateSelect-"+value);
+		
+		for(i = 0; i < select.length; i++) {
+		       if (select[i].selected) {
+		  /*          alert(select[i].value); */
+		       }
+		     }
+		
+		/* get subtotal box and update it */
+		
+		
+	}
+		
+	/*]]>*/
 </script>
-
-
-
 
 </html>

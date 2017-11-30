@@ -81,8 +81,8 @@ public class ReservationController {
 //		LocalDate start = LocalDate.of(2017, Month.JANUARY, 1);
 //		LocalDate end = LocalDate.of(2017, Month.JANUARY, 6);
 
-		List<RoomRate> availableRoomRatesForRoom = roomService.getAvailableRoomRatesForRoom(startDate, endDate);
-		model.addAttribute("roomRates", availableRoomRatesForRoom);
+//		List<RoomRate> availableRoomRatesForRoom = roomService.getAvailableRoomRatesForRoom(startDate, endDate);
+//		model.addAttribute("roomRates", availableRoomRatesForRoom);
 		 
 		Map<Room, List<RoomRate>> roomRates = roomService.getRoomRatesForAllRooms(startDate, endDate);
 		model.addAttribute("roomRatesPerRoom", roomRates);
