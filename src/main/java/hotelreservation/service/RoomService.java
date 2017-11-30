@@ -130,7 +130,18 @@ public class RoomService {
 
 		return roomAmenities;
 	}
+	
+	public List<Room> getByRoomsByStatus(Status status) {
+		List<Room> target = new ArrayList<Room>();
+		roomRepo.findByStatus(status).forEach(target::add);
 
+		return target;
+	} 
+	
+	public Status getRoomStatus(Room room) {
+		return roomRepo.findOne(room.getId()).getStatus();
+	} 
+	
 	public void createRoomRate(RoomRate roomRate) {
 		roomRateRepo.save(roomRate);
 	}

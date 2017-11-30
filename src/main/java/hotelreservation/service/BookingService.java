@@ -10,10 +10,12 @@ import hotelreservation.model.Contact;
 import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;
 import hotelreservation.model.Reservation;
+import hotelreservation.model.Status;
 import hotelreservation.repository.ContactRepo;
 import hotelreservation.repository.GuestRepo;
 import hotelreservation.repository.IdentificationRepo;
 import hotelreservation.repository.ReservationRepo;
+import hotelreservation.repository.RoomRepo;
 
 @Service
 public class BookingService {
@@ -27,12 +29,9 @@ public class BookingService {
 	@Autowired
 	private IdentificationRepo identificationRepo;
 
+
 	@Autowired
 	private ReservationRepo reservationRepo;
-
-	public void getRoomStatus(long roomId) {
-
-	} 
 
 	public void createContact(Contact contact) {
 		contactRepo.save(contact);
