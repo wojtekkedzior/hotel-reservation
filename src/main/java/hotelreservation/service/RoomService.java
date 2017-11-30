@@ -3,7 +3,6 @@ package hotelreservation.service;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,7 +12,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import hotelreservation.model.Amenity;
 import hotelreservation.model.AmenityType;
@@ -54,10 +52,8 @@ public class RoomService {
 	}
 
 	public List<Room> getAllRooms() {
-		Iterable<Room> findAll = roomRepo.findAll();
-
 		List<Room> target = new ArrayList<Room>();
-		findAll.forEach(target::add);
+		roomRepo.findAll().forEach(target::add);
 
 		return target;
 	}
@@ -67,19 +63,15 @@ public class RoomService {
 	}
 
 	public List<Status> getAllStatuses() {
-		Iterable<Status> findAll = statusRepo.findAll();
-
 		List<Status> target = new ArrayList<Status>();
-		findAll.forEach(target::add);
+		statusRepo.findAll().forEach(target::add);
 
 		return target;
 	}
 
 	public List<RoomType> getAllRoomTypes() {
-		Iterable<RoomType> findAll = roomTypeRepo.findAll();
-
 		List<RoomType> target = new ArrayList<RoomType>();
-		findAll.forEach(target::add);
+		roomTypeRepo.findAll().forEach(target::add);
 
 		return target;
 	}
@@ -114,19 +106,15 @@ public class RoomService {
 	}
 
 	public List<AmenityType> getAllAmenityTypes() {
-		Iterable<AmenityType> findAll = amenityTypeRepo.findAll();
-
 		List<AmenityType> target = new ArrayList<AmenityType>();
-		findAll.forEach(target::add);
+		amenityTypeRepo.findAll().forEach(target::add);
 
 		return target;
 	}
 
 	public List<Amenity> getAllAmenities() {
-		Iterable<Amenity> findAll = amenityRepo.findAll();
-
 		List<Amenity> target = new ArrayList<Amenity>();
-		findAll.forEach(target::add);
+		amenityRepo.findAll().forEach(target::add);
 
 		return target;
 	}
@@ -143,32 +131,18 @@ public class RoomService {
 		return roomAmenities;
 	}
 
-	@Transactional
 	public void createRoomRate(RoomRate roomRate) {
-		//check for overlap
-		
 		roomRateRepo.save(roomRate);
 	}
 
 	public List<RoomRate> getAvailableRoomRatesForRoom(Date start, Date end) {
-//		LocalDate d = LocalDate.of(2017, Month.JANUARY, 2);
-//		RoomRate r = roomRateRepo.findByDay(asDate(d));
-//		System.err.println(r);
-
-//		List<RoomRate> findByStartDateBetween = roomRateRepo.findByDayBetween(asDate(start) , asDate(end));
 		List<RoomRate> findByStartDateBetween = roomRateRepo.findByDayBetween(start, end);
-//		System.err.println(findByStartDateBetween);
 		System.err.println("size: " + findByStartDateBetween.size());
 		
-//		findByStartDateBetween = roomRateRepo.findByDayAfter(asDate(start));
-//		System.err.println("size: " + findByStartDateBetween.size());
-		
-//		findByStartDateBetween = roomRateRepo.findByRoomId(1);
-//		System.err.println("size: " + findByStartDateBetween.size());
-
 		return findByStartDateBetween;
 	}
 	
+	//TODO this needs to check if these rooms are actually available
 	public Map<Room, List<RoomRate>> getRoomRatesForAllRooms(Date startDate, Date endDate) {
 		Map<Room, List<RoomRate>> ratesForAllRooms = new HashMap<Room, List<RoomRate>>();
 		
@@ -181,22 +155,18 @@ public class RoomService {
 		return ratesForAllRooms;
 	}
 	
+	public List<RoomRate> getAvailableRoomRates() {
+		List<RoomRate> target = new ArrayList<RoomRate>();
+		roomRateRepo.findAll().forEach(target::add);
+
+		return target;
+	}
 	
 	
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	//TODO refactor this as its duplicated. some it can also be moved into the sprint properties file
 	public Date asDate(LocalDate localDate) {
 		return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
 	}
@@ -212,15 +182,4 @@ public class RoomService {
 	public static LocalDateTime asLocalDateTime(Date date) {
 		return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
 	}
-
-	public List<RoomRate> getAvailableRoomRates() {
-		Iterable<RoomRate> findAll = roomRateRepo.findAll();
-
-		List<RoomRate> target = new ArrayList<RoomRate>();
-		findAll.forEach(target::add);
-
-		return target;
-	}
-
-
 }

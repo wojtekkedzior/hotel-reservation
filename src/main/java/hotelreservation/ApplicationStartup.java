@@ -144,7 +144,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		addRoomTypes();
 		addRooms();
 
-//		addRoomRate();
+		addRoomRates();
 		addAdditionalRoomRates();
 		addContacts();
 		addIdentifications();
@@ -327,14 +327,14 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
 	}
 
-	private void addRoomRate() {
+	private void addRoomRates() {
 		// -|-||----|---------|-----------
 
-		roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2017, Month.JANUARY, 2)));
-		roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2017, Month.JANUARY, 4)));
-		roomRateThree = new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2017, Month.JANUARY, 5)));
-		roomRateFour = new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2017, Month.JANUARY, 10)));
-		roomRateFive = new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2017, Month.JANUARY, 20)));
+		roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2018, Month.JANUARY, 4)));
+		roomRateThree = new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2018, Month.JANUARY, 5)));
+		roomRateFour = new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2018, Month.JANUARY, 10)));
+		roomRateFive = new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2018, Month.JANUARY, 20)));
 
 		roomService.createRoomRate(roomRateOne);
 		roomService.createRoomRate(roomRateTwo); 
@@ -349,7 +349,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		
 		for(int days = 1; days <= 365; days++) { 
 			cal.roll(Calendar.DAY_OF_YEAR, true);
-			
+			 
 		    int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
 		    int value = 1000;
 	        
