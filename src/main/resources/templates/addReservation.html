@@ -27,28 +27,9 @@
 		</p>
 	</form>
 
-	<!--<form th:action="@{/users/doDelete}" th:object="${customer}" method="post">
-            <input type="hidden" th:field="${id}" />
-            <button type="submit">Delete</button>
-        </form> -->
 
 	<form action="#" th:action="@{/addReservation}"
 		th:object="${reservation}" method="post">
-		<!-- <p>
-			userName: <input type="text" th:field="*{userName}" />
-		</p>
-		<p>
-			userName: <input type="text" th:field="*{password}" />
-		</p> -->
-
-		<!-- 		<select class="form-control" th:field="${room.roomAmenities}" multiple="multiple"
-			id="dropOperator">
-			<option value="0" th:text="selectoperator"></option>
-			<option th:each="amenity : ${amenities}" th:value="${amenity.id}"
-				th:text="${amenity.name}"></option>
-		</select> -->
-
-		<!-- need a table or filter by room -->
 
 		<div th:each="roomRateCombo : ${roomRatesPerRoom}">
 			<p>
@@ -71,24 +52,17 @@
 			</p>
 
 			<p>
-				<input
+				Sub Total: <input
 					th:id="'roomRateSelectSubTotal-' + ${roomRateCombo.key.roomNumber}"
 					type="number" />
 			</p>
-
-			<!--    			<span th:text="${str}"/>This will print the index value
-		    <span th:text="${iterStat.index}"/>This will print the Index -->
 		</div>
-
 
 		<p>
 			Guest First Name: <input type="text"
 				th:field="${reservation.mainGuest.firstName}" /> Guest Last Name: <input
 				type="text" th:field="${reservation.mainGuest.lastName}" />
-
-			<!-- change param to be the option field and then whatehr it's selected or ntw add or subtract the value  -->
 		</p>
-
 
 		<p>
 			<input type="submit" value="Submit" /> > <input type="number"
@@ -97,28 +71,6 @@
 
 	</form>
 </body>
-
-<!-- <script th:inline="javascript">
-            /*<![CDATA[*/
-            function showLimits() {
-                var services = /*[[${services}]]*/ null;
-                var selectedIndex = $("#inputService option:selected").index();
-                var service = services[selectedIndex];
-                $("#amountLimits").text("Мин. сумма: " + service.amountMin + ", макс. сумма: " + service.amountMax);
-            }
-            $(function() { showLimits(); });
-            /*]]>*/
-            
-            /*var currentTotal = document.getElementById("roomRateSelectSubTotal-"+value).value;
-		document.getElementById("total").value = +currentTotal + +value; */
-            
-            /* 		select = document.getElementById("roomRateSelect-"+value); */
-		
-/* 		for (var i=0; i < select.selectedOptions.length; i++) {
-        alert(select.selectedOptions[i]);
-        } */
-            
-</script> -->
 
 <script th:inline="javascript">
 	/*<![CDATA[*/
