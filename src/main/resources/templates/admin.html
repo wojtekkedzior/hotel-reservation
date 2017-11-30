@@ -4,33 +4,77 @@
 <head>
 <title>Getting Started: Serving Web Content</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="stylesheet" href="/css/mycss.css"/>
+<link rel="stylesheet" href="/css/mycss.css" />
 
 </head>
 <body>
 
-	<p>Users Types</p>
+	<p>
+		<a th:href="@{/addAmenity}">Add Amenity</a>
+	</p>
+	<p>
+		<a th:href="@{/addRoom}">Add Room</a>
+	</p>
+	<p>
+		<a th:href="@{/addRoomRate}">Add Room Rate</a>
+	</p>
+	<p>
+		<a th:href="@{/addUsers}">Add Users</a>
+	</p>
 
-	<table width="1000">
-		<tr>
-			<td><label>ID</label></td>
-			<td><label>Name</label></td>
-			<td><label>Description</label></td>
-			<td><label>Enabled</label></td>
-		</tr>
-		<tr th:each="data, iterstat: ${userTypes}">
-			<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
-			<td th:text="${data.name}" th:id="|td${iterstat.index}|"></td>
-			<td th:text="${data.description}" th:id="|td${iterstat.index}|"></td>
-			<td th:text="${data.enabled}" th:id="|td${iterstat.index}|"></td>
-		</tr>
-	</table>
+	<p>
+		<a th:href="@{/addReservation}">Add Reservation</a>
+	</p>
+	<p>
+		<a th:href="@{/addRoomType}">Add Room Type</a>
+	</p>
 
+	<p>
+		<a th:href="@{/addAmenityType}">Add Amenity Type</a>
+	</p>
 
-	<p>Room Types</p>
-	
 
 	<div>
+		<p>Reservtions</p>
+		<table width="1000">
+			<tr>
+				<td><label>Id</label></td>
+				<td><label>Guest First Name</label></td>
+				<td><label>Guest Last Name</label></td>
+			</tr>
+
+			<tr th:each="data, iterstat: ${reservations}">
+				<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
+				<td th:text="${data.mainGuest.firstName}" th:id="|td${iterstat.index}|"></td>
+				<td th:text="${data.mainGuest.lastName}" th:id="|td${iterstat.index}|"></td>
+			</tr>
+		</table>
+		<p>
+			<a th:href="@{/reservation}">Add Users</a>
+		</p>
+	</div>
+
+
+	<div>
+		<p>Users Types</p>
+		<table width="1000">
+			<tr>
+				<td><label>ID</label></td>
+				<td><label>Name</label></td>
+				<td><label>Description</label></td>
+				<td><label>Enabled</label></td>
+			</tr>
+			<tr th:each="data, iterstat: ${userTypes}">
+				<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
+				<td th:text="${data.name}" th:id="|td${iterstat.index}|"></td>
+				<td th:text="${data.description}" th:id="|td${iterstat.index}|"></td>
+				<td th:text="${data.enabled}" th:id="|td${iterstat.index}|"></td>
+			</tr>
+		</table>
+	</div>
+
+	<div>
+		<p>Room Types</p>
 		<table width="1000">
 			<tr>
 				<td><label>Id</label></td>
@@ -44,13 +88,10 @@
 				<td th:text="${data.description}" th:id="|td${iterstat.index}|"></td>
 			</tr>
 		</table>
-		<p><a th:href="@{/addRoomType}">Add Room Type</a></p>
-		
 	</div>
 
-	<p>Amenity Types</p>
-
 	<div>
+		<p>Amenity Types</p>
 		<table width="1000">
 			<tr>
 				<td><label>Id</label></td>
@@ -64,20 +105,10 @@
 				<td th:text="${data.description}" th:id="|td${iterstat.index}|"></td>
 			</tr>
 		</table>
-		<p><a th:href="@{/addAmenityType}">Add Amenity Type</a></p>
 	</div>
 
-
-	<p><a th:href="@{/addAmenity}">Add Amenity</a></p>
-    <p><a th:href="@{/addRoom}">Add Room</a></p>
-    <p><a th:href="@{/addRoomRate}">Add Room Rate</a></p>
-    <p><a th:href="@{/addReservation}">Add Reservation</a></p>
-    
-    
-    
-	<p>Users</p>
-
 	<div>
+		<p>Users</p>
 		<table width="1000">
 			<tr>
 				<td><label>Id</label></td>
@@ -97,10 +128,7 @@
 				<td th:text="${data.createdOn}" th:id="|td${iterstat.index}|"></td>
 			</tr>
 		</table>
-		<p><a th:href="@{/addUsers}">Add Users</a></p>
 	</div>
-
-
 
 
 	<button th:onclick="'javascript:sayHello(\'hello\')'">Say

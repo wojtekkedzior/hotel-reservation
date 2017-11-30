@@ -8,9 +8,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import hotelreservation.model.AmenityType;
+import hotelreservation.model.Reservation;
 import hotelreservation.model.RoomType;
 import hotelreservation.model.User;
 import hotelreservation.model.UserType;
+import hotelreservation.service.BookingService;
 import hotelreservation.service.RoomService;
 import hotelreservation.service.UserService;
 
@@ -22,6 +24,9 @@ public class AdminController {
   
   @Autowired 
   private RoomService roomService;
+  
+  @Autowired
+  private BookingService bookingService;
 
 //  @RequestMapping(method = RequestMethod.GET, value = "/admin")
 //  @ResponseBody
@@ -50,6 +55,9 @@ public class AdminController {
       
 	  List<User> users = userService.getUsers();
       model.addAttribute("users", users);
+      
+	  List<Reservation> reservations = bookingService.getAllReservations();
+      model.addAttribute("reservations", reservations);
        
       return "admin";
   }
