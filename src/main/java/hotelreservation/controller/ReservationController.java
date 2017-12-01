@@ -9,8 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -34,6 +36,15 @@ public class ReservationController {
 		model.addAttribute("reservation", new Reservation());
 		return "addReservation";
 	}
+	
+	@RequestMapping(value = "/addReservation/{id}", method=RequestMethod.GET) 
+	public String getReservationModel(Model model, @PathVariable int id) {
+		model.addAttribute("reservation", new Reservation());
+		 
+		Reservation reservation = bookingService.getReservation(id);
+		model.addAttribute("reservation", reservation);
+		return "addReservation";
+	} 
 
 	@PostMapping("/addReservation/withDates")
 	public String addReservation(Model model, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
@@ -50,12 +61,12 @@ public class ReservationController {
 		model.addAttribute("room", new Room());
 		model.addAttribute("reservation", new Reservation());
 		model.addAttribute("roomRatesPerRoom", roomService.getRoomRatesForAllRooms(startDate, endDate));
-
+ 
 		return "addReservation";
-	}
+	} 
 
 	// //delete user
-	// @RequestMapping(value="users/doDelete", method = RequestMethod.POST)
+	// @RequestMapping(value="users/doDelete", method = RequestMethod.POST) 
 	// public String deleteUser (@RequestParam Long id) {
 	//// customerDAO.delete(id);
 	// return "redirect:/users";
@@ -70,7 +81,7 @@ public class ReservationController {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("redirect:/addReservation");
 		redir.addFlashAttribute("id", 1);
-
+ 
 		bookingService.createReservation(reservation);
 		return modelAndView;
 	}

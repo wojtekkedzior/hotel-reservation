@@ -56,14 +56,15 @@
 		</div>
 
 		<p>
+		<!-- hidden field to make sure the ID gets passed back to the controller when submit is called. -->
+			<input type="number" th:field="${reservation.id}" hidden="true" />
 			Guest First Name: <input type="text"
 				th:field="${reservation.mainGuest.firstName}" /> Guest Last Name: <input
 				type="text" th:field="${reservation.mainGuest.lastName}" />
 		</p>
 
 		<p>
-			<input type="submit" value="Submit" /> > <input type="number"
-				id="total" value="0" />
+			<input type="submit" value="Submit" /> 
 		</p>
 
 	</form>

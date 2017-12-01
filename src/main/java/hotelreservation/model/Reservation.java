@@ -27,6 +27,11 @@ public class Reservation {
 	@ManyToMany
 	private List<RoomRate> roomRates;
 	
+	private double discount;
+	
+	@ManyToOne
+	private User discountAuthorisedBy;
+	
 	public Reservation() {}
 	
 	//should we have start and end date here as well?  It would be useful to do so, so that we don't have to iterate over all the roomrates

@@ -59,4 +59,7 @@ public class BookingService {
 		return target;
 	}
 
+	public Reservation getReservation(int reservationId) {
+		return reservationRepo.findOne(new Long(reservationId));
+	}
 }
