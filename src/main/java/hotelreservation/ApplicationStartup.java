@@ -1,14 +1,10 @@
 package hotelreservation;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Month;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -130,6 +126,9 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 
 	@Autowired
 	private BookingService bookingService;
+	
+	@Autowired 
+	private DateConvertor dateConvertor;
 
 	@Override
 	public void onApplicationEvent(final ApplicationReadyEvent event) {
@@ -311,30 +310,14 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		roomService.createRoom(luxuryRoomTwo);
 	}
 
-	public Date asDate(LocalDate localDate) {
-		return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-	}
-
-	public static Date asDate(LocalDateTime localDateTime) {
-		return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-	}
-
-	public static LocalDate asLocalDate(Date date) {
-		return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
-	}
-
-	public static LocalDateTime asLocalDateTime(Date date) {
-		return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
-	}
-
 	private void addRoomRates() {
 		// -|-||----|---------|-----------
 
-		roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2018, Month.JANUARY, 4)));
-		roomRateThree = new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2018, Month.JANUARY, 5)));
-		roomRateFour = new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2018, Month.JANUARY, 10)));
-		roomRateFive = new RoomRate(standardRoomOne, Currency.CZK, 1000, asDate(LocalDate.of(2018, Month.JANUARY, 20)));
+		roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
+		roomRateThree = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 5)));
+		roomRateFour = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 10)));
+		roomRateFive = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 20)));
 
 		roomService.createRoomRate(roomRateOne);
 		roomService.createRoomRate(roomRateTwo); 
@@ -345,7 +328,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 
 	private void addAdditionalRoomRates() {
 		Calendar cal = new GregorianCalendar();
-		cal.setTime(asDate(LocalDate.of(2017, Month.JANUARY, 1)));
+		cal.setTime(dateConvertor.asDate(LocalDate.of(2017, Month.JANUARY, 1)));
 		
 		for(int days = 1; days <= 365; days++) { 
 			cal.roll(Calendar.DAY_OF_YEAR, true);
