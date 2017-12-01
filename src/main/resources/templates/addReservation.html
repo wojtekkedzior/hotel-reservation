@@ -41,8 +41,10 @@
 					th:onChange="'javascript:subTotal(\'' + ${roomRateCombo.key.roomNumber} + '\');'">
 					<!-- onChange="showLimits()" -->
 
+					<!-- It's odd having the option value set to roomRate.id and the id to roomRate.value, but if the ID is not set than the roomRates are not added to the reservation  -->
 					<option th:each="roomRate : ${roomRateCombo.value}"
-						th:value="${roomRate.value}"
+						th:value="${roomRate.id}"
+						th:id="${roomRate.value}"
 						th:text="${roomRate.day} + ' - ' + ${roomRate.value} + ' - ' + ${roomRate.room.description}"
 						th:onClick="'javascript:sayHello(\'' + ${roomRate.value} + '\');'"></option>
 				</select>
@@ -58,6 +60,8 @@
 		<p>
 		<!-- hidden field to make sure the ID gets passed back to the controller when submit is called. -->
 			<input type="number" th:field="${reservation.id}" hidden="true" />
+			
+			
 			Guest First Name: <input type="text"
 				th:field="${reservation.mainGuest.firstName}" /> Guest Last Name: <input
 				type="text" th:field="${reservation.mainGuest.lastName}" />
@@ -83,7 +87,7 @@
 
 		for (i = 0; i < select.length; i++) {
 			if (select[i].selected) {
-				subTotal = subTotal + +select[i].value;
+				subTotal = subTotal + +select[i].id;
 			}
 		}
 
