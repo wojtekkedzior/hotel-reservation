@@ -36,8 +36,7 @@ public class ReservationController {
 		return "addReservation";
 	}
 	
-	//Rename from add to edit
-	@RequestMapping(value = "/addReservation/{id}") 
+	@RequestMapping(value = "/editReservation/{id}") 
 	public String getReservationModel(Model model, @PathVariable int id) {
 		model.addAttribute("reservation", bookingService.getReservation(id));
 		return "addReservation";
@@ -82,4 +81,11 @@ public class ReservationController {
 		bookingService.createReservation(reservation);
 		return modelAndView;
 	}
+	
+	//could be used to actually start a booking
+//	@RequestMapping(value = "/startBooking/{id}") 
+//	public String startBooking(Model model, @PathVariable int id) {
+//		model.addAttribute("reservation", bookingService.getReservation(id));
+//		return "addReservation";
+//	}
 }

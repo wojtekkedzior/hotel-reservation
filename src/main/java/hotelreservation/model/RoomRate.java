@@ -33,7 +33,7 @@ public class RoomRate {
 	@Enumerated(EnumType.STRING)
 	private Currency currency;
 
-	private double value;
+	private int value;
 	
 	@Temporal(TemporalType.DATE)
 	private Date day;
@@ -41,7 +41,7 @@ public class RoomRate {
 	public RoomRate() { 
 	}
 
-	public RoomRate(Room room, Currency currency, double value, Date day) {
+	public RoomRate(Room room, Currency currency, int value, Date day) {
 		super();
 		this.room = room;
 		this.currency = currency;
