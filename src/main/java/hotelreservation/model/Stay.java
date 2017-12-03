@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -23,7 +24,8 @@ public class Stay {
 	private long id;
 	
 	//Reservation that make up a stay.  This shuld be used to mark a non-consecutive day stay. 
-	private List<Reservation> reservations;
+	@ManyToMany
+	private List<Reservation> reservations; 
 	
 	//number of days spent at the hotel
 	private int duration;
@@ -34,6 +36,4 @@ public class Stay {
 	
 	@Temporal(TemporalType.DATE)
 	private Date endDate;
-	
-	
 }
