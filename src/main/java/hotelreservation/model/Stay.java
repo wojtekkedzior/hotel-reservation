@@ -15,6 +15,8 @@ import lombok.Data;
 @Entity
 @Data
 public class Stay {
+	
+	//TODO don't worry about the stay for now. 
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
