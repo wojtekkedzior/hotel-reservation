@@ -1,6 +1,7 @@
 package hotelreservation.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,6 @@ public class BookingService {
 	@Autowired
 	private IdentificationRepo identificationRepo;
 
-
 	@Autowired
 	private ReservationRepo reservationRepo;
 
@@ -44,8 +44,6 @@ public class BookingService {
 	}
 
 	public void createReservation(Reservation reservation) {
-		// createGuest(reservation.getMainGuest());
-
 		if (reservation.getMainGuest().getId() == 0) {
 			guestRepo.save(reservation.getMainGuest());
 		}
@@ -61,5 +59,9 @@ public class BookingService {
 
 	public Reservation getReservation(int reservationId) {
 		return reservationRepo.findOne(new Long(reservationId));
+	}
+ 
+	public List<Reservation> getReservationsStartingToday() {
+		return reservationRepo.findByStartDate(new Date());
 	}
 }

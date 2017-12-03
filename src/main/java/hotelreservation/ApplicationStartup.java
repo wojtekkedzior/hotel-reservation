@@ -5,6 +5,7 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -388,6 +389,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 
 	private void addReservations() {
 		reservationOne = new Reservation();
+		reservationOne.setStartDate(new Date());
 		reservationOne.setMainGuest(guestOne);
 		reservationOne.setOccupants(Arrays.asList(guestTwo, guestThree));
 		reservationOne.setRoomRates(Arrays.asList(roomRateOne, roomRateTwo));

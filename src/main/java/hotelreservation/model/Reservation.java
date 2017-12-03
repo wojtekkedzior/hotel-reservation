@@ -1,5 +1,6 @@
 package hotelreservation.model;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -8,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import lombok.Data;
 
@@ -33,6 +36,12 @@ public class Reservation {
 	private User discountAuthorisedBy;
 	
 	public Reservation() {}
+	
+	@Temporal(TemporalType.DATE)
+	private Date startDate;
+	
+	@Temporal(TemporalType.DATE)
+	private Date endDate;
 	
 	//should we have start and end date here as well?  It would be useful to do so, so that we don't have to iterate over all the roomrates
 	//but how would having a start and end date help when dealing with a reservation over non-consecutive days?  this will get complicated
