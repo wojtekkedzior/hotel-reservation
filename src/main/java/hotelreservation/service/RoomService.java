@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -93,12 +94,12 @@ public class RoomService {
 		roomRepo.delete(room);
 	}
 
-	public void createAmenityType(AmenityType amenityType) {
-		amenityTypeRepo.save(amenityType);
+	public AmenityType createAmenityType(AmenityType amenityType) {
+		return amenityTypeRepo.save(amenityType);
 	}
 
-	public void createAmenity(Amenity ammenity) {
-		amenityRepo.save(ammenity);
+	public Amenity createAmenity(Amenity ammenity) {
+		return amenityRepo.save(ammenity);
 	}
 
 	public List<AmenityType> getAllAmenityTypes() {
@@ -167,5 +168,13 @@ public class RoomService {
 		roomRateRepo.findAll().forEach(target::add);
 
 		return target;
+	}
+
+	public Amenity getAmenityById(Optional<Integer> id) {
+		return amenityRepo.findOne(new Long(id.get()));
+	}
+
+	public AmenityType getAmenityTypeById(Optional<Integer> id) {
+		return amenityTypeRepo.findOne(new Long(id.get()));
 	}
 }

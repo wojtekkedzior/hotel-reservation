@@ -28,7 +28,6 @@ public class AdminController {
 	public String hello(Model model) {
 		model.addAttribute("userTypes", userService.getAllUserTypes());
 		model.addAttribute("roomTypes", roomService.getAllRoomTypes());
-		model.addAttribute("amenityTypes", roomService.getAllAmenityTypes());
 		model.addAttribute("users", userService.getUsers());
 		model.addAttribute("reservations", bookingService.getAllReservations());
 

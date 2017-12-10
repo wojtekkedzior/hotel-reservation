@@ -1,10 +1,13 @@
 package hotelreservation.controller;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -23,18 +26,46 @@ public class RoomServiceController {
 	@Autowired
 	private RoomService roomService;
 
-	@RequestMapping("/addAmenity")
-	public String addAmenityModel(Model model) {
-		model.addAttribute("amenity", new Amenity());
+	@RequestMapping(value={"/amenity", "/amenity/{id}"} )
+	public String addAmenityModel(Model model, @PathVariable Optional<Integer> id) {
+		if(!id.isPresent()) {
+			model.addAttribute("amenity", new Amenity());
+		} else {
+			Amenity amenityById = roomService.getAmenityById(id);
+			if(amenityById == null) {
+				model.addAttribute("amenity", new Amenity());
+			} else {
+				model.addAttribute("amenity", amenityById);
+			}
+		}
+		
+		model.addAttribute("amenityType", new AmenityType()); 
+		
+		model.addAttribute("amenities", roomService.getAllAmenities());
 		model.addAttribute("amenityTypes", roomService.getAllAmenityTypes());
-		return "addAmenity";
+		return "amenity";
 	}
 
-	@RequestMapping("/addAmenityType")
-	public String addAmenityTypeModel(Model model) {
-		model.addAttribute("amenityType", new AmenityType());
-		return "addAmenityType";
-	}
+	@RequestMapping(value={"/amenityType", "/amenityType/{id}"})
+	public String addAmenityTypeModel(Model model, @PathVariable Optional<Integer> id) {
+		if(!id.isPresent()) {
+			model.addAttribute("amenityType", new AmenityType()); 
+		} else {
+			AmenityType amenityTypeById = roomService.getAmenityTypeById(id);
+			if(amenityTypeById == null) {
+				model.addAttribute("amenityType", new AmenityType()); 
+			} else {
+				model.addAttribute("amenityType", amenityTypeById);
+			}
+		}
+		
+		model.addAttribute("amenity", new Amenity());
+		
+		model.addAttribute("amenities", roomService.getAllAmenities());
+		model.addAttribute("amenityTypes", roomService.getAllAmenityTypes());
+		
+		return "amenity";
+	} 
 
 	@RequestMapping("/addRoomType")
 	public String addRoomTypeModel(Model model) {
@@ -62,15 +93,15 @@ public class RoomServiceController {
 	@PostMapping("/addAmenityType")
 	public ModelAndView addAmenityType(@ModelAttribute AmenityType amenityType, BindingResult bindingResult) {
 		System.err.println(amenityType);
-		roomService.createAmenityType(amenityType);
-		return new ModelAndView("redirect:/admin");
+		AmenityType createAmenityType = roomService.createAmenityType(amenityType);
+		return new ModelAndView("redirect:/amenityType/"+createAmenityType.getId());
 	}
 
 	@PostMapping("/addAmenity")
 	public ModelAndView addAmenity(@ModelAttribute Amenity amenity, BindingResult bindingResult) {
 		System.err.println(amenity);
-		roomService.createAmenity(amenity);
-		return new ModelAndView("redirect:/admin");
+		Amenity createAmenity = roomService.createAmenity(amenity);
+		return new ModelAndView("redirect:/amenity/"+createAmenity.getId());
 	}
 
 	@PostMapping("/addRoomType")
