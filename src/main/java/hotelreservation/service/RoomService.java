@@ -89,13 +89,6 @@ public class RoomService {
 		return roomRepo.findOne(id);
 	}
 
-	public void deleteRoom(Long id) {
-		roomRepo.delete(id);
-	}	
-	
-	public void deleteRoom(Room room) {
-		roomRepo.delete(room);
-	}
 	public AmenityType createAmenityType(AmenityType amenityType) {
 		return amenityTypeRepo.save(amenityType);
 	}
@@ -129,18 +122,18 @@ public class RoomService {
 
 		return roomAmenities;
 	}
-	
+
 	public List<Room> getByRoomsByStatus(Status status) {
 		List<Room> target = new ArrayList<Room>();
 		roomRepo.findByStatus(status).forEach(target::add);
 
 		return target;
-	} 
-	
+	}
+
 	public Status getRoomStatus(Room room) {
 		return roomRepo.findOne(room.getId()).getStatus();
-	} 
-	
+	}
+
 	public void createRoomRate(RoomRate roomRate) {
 		roomRateRepo.save(roomRate);
 	}
@@ -148,23 +141,23 @@ public class RoomService {
 	public List<RoomRate> getAvailableRoomRatesForRoom(Date start, Date end) {
 		List<RoomRate> findByStartDateBetween = roomRateRepo.findByDayBetween(start, end);
 		System.err.println("size: " + findByStartDateBetween.size());
-		
+
 		return findByStartDateBetween;
 	}
-	
-	//TODO this needs to check if these rooms are actually available
+
+	// TODO this needs to check if these rooms are actually available
 	public Map<Room, List<RoomRate>> getRoomRatesForAllRooms(Date startDate, Date endDate) {
 		Map<Room, List<RoomRate>> ratesForAllRooms = new HashMap<Room, List<RoomRate>>();
-		
+
 		Iterable<Room> allRooms = roomRepo.findAll();
-		
+
 		for (Room room : allRooms) {
 			ratesForAllRooms.put(room, roomRateRepo.findByRoomIdAndDayBetween(room.getId(), startDate, endDate));
 		}
-		
+
 		return ratesForAllRooms;
 	}
-	
+
 	public List<RoomRate> getAvailableRoomRates() {
 		List<RoomRate> target = new ArrayList<RoomRate>();
 		roomRateRepo.findAll().forEach(target::add);
@@ -181,7 +174,7 @@ public class RoomService {
 	}
 
 	public void deleteAmenity(Long id) {
-		amenityRepo.delete(id);		
+		amenityRepo.delete(id);
 	}
 
 	public void deleteAmenityType(Long id) {
@@ -194,5 +187,13 @@ public class RoomService {
 
 	public void deleteRoomType(Long id) {
 		roomTypeRepo.delete(id);
+	}
+
+	public void deleteRoom(Long id) {
+		roomRepo.delete(id);
+	}
+
+	public void deleteRoom(Room room) {
+		roomRepo.delete(room);
 	}
 }

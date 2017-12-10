@@ -8,17 +8,41 @@
 </head>
 <body>
 
-	<form action="#" th:action="@{/addRoomType}" th:object="${roomType}"
+	<form action="#" th:action="@{/addRoomRate}" th:object="${roomRate}"
 		method="post">
-		<p>
-			Name: <input type="text" th:field="*{name}" />
-		</p>
 		<p>
 			Description: <input type="text" th:field="*{description}" />
 		</p>
 
 		<p>
-			<input type="submit" value="Submit" /> 
+			Room Number: <select class="form-control" th:field="${roomRate.room}"
+				id="dropOperator">
+				<!-- <option value="0" th:text="selectoperator"></option> -->
+				<option th:each="room : ${rooms}" th:value="${room.id}"
+					th:text="${room.roomNumber}"></option>
+			</select>
+		</p>
+
+		<p>
+
+			Currency: <select class="form-control"
+				th:field="${roomRate.currency}" id="dropOperator">
+				<!-- <option value="0" th:text="selectoperator"></option> -->
+				<option th:each="currency : ${currencies}"
+					th:value="${currency.toString()}" th:text="${currency.toString()}"></option>
+			</select>
+		</p>
+
+		<p>
+			Value: <input type="number" th:field="*{value}" />
+		</p>
+		<p>
+			Date: <input type="date" th:field="*{day}" />
+		</p>
+
+
+		<p>
+			<input type="submit" value="Submit" />
 		</p>
 	</form>
 </body>
