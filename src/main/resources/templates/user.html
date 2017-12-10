@@ -33,29 +33,41 @@
 				</p>
 
 				<p>
-					<input type="submit" value="Submit" /> 
+					<input type="submit" value="Submit" />
 				</p>
-
-				<div>
-					<table width="1000">
-						<tr>
-							<td><label>Id</label></td>
-							<td><label>Name</label></td>
-							<td><label>User Name</label></td>
-							<td><label>Enabled</label></td>
-							<td><label>Created On</label></td>
-						</tr>
-
-						<tr th:each="data, iterstat: ${users}">
-							<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
-							<td th:text="${data.name}" th:id="|td${iterstat.index}|"></td>
-							<td th:text="${data.userName}" th:id="|td${iterstat.index}|"></td>
-							<td th:text="${data.enabled}" th:id="|td${iterstat.index}|"></td>
-							<td th:text="${data.createdOn}" th:id="|td${iterstat.index}|"></td>
-						</tr>
-					</table>
-				</div>
 			</form>
+
+			<div>
+				<table width="1000">
+					<tr>
+						<td><label>Id</label></td>
+						<td><label>Name</label></td>
+						<td><label>User Name</label></td>
+						<td><label>User Type</label></td>
+						<td><label>Enabled</label></td>
+						<td><label>Created On</label></td>
+						<td><label>Delete</label></td>
+					</tr>
+
+					<tr th:each="data, iterstat: ${users}">
+						<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
+						<td th:text="${data.name}" th:id="|td${iterstat.index}|"></td>
+						<td>
+							 <a th:href="@{/user/}+${data.id}" th:text="${data.userName}"> </a>
+						</td>
+						<td th:text="${data.userType.name}" th:id="|td${iterstat.index}|"></td>
+						<td th:text="${data.enabled}" th:id="|td${iterstat.index}|"></td>
+						<td th:text="${data.createdOn}" th:id="|td${iterstat.index}|"></td>
+						<td>
+							<form action="#" th:action="@{/userDelete/}+${data.id}"
+								th:method="delete">
+								<input type="hidden" name="_method" value="delete" />
+								<button type="submit">delete</button>
+							</form>
+						</td>
+					</tr>
+				</table>
+			</div>
 		</div>
 
 		<div class="column">
@@ -73,8 +85,9 @@
 					Enabled: <input type="checkbox" th:field="*{enabled}" />
 				</p>
 				<p>
-					<input type="submit" value="Submit" /> 
+					<input type="submit" value="Submit" />
 				</p>
+				</form>
 
 				<div>
 					<table width="1000">
@@ -83,6 +96,7 @@
 							<td><label>Name</label></td>
 							<td><label>Description</label></td>
 							<td><label>Enabled</label></td>
+							<td><label>Delete</label></td>
 						</tr>
 
 						<tr th:each="data, iterstat: ${userTypes}">
@@ -90,10 +104,16 @@
 							<td th:text="${data.name}" th:id="|td${iterstat.index}|"></td>
 							<td th:text="${data.description}" th:id="|td${iterstat.index}|"></td>
 							<td th:text="${data.enabled}" th:id="|td${iterstat.index}|"></td>
+							<td>
+								<form action="#" th:action="@{/userTypeDelete/}+${data.id}"
+									th:method="delete">
+									<input type="hidden" name="_method" value="delete" />
+									<button type="submit">delete</button>
+								</form>
+							</td>
 						</tr>
 					</table>
 				</div>
-			</form>
 		</div>
 	</div>
 

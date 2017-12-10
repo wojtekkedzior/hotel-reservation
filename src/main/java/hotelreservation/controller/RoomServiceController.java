@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import hotelreservation.model.Amenity;
@@ -26,16 +27,16 @@ public class RoomServiceController {
 	@Autowired
 	private RoomService roomService;
 
-	@RequestMapping(value={"/amenity", "/amenity/{id}"} )
+	@RequestMapping(value={"/amenity", "/amenity/{id}"},  method=RequestMethod.GET )
 	public String addAmenityModel(Model model, @PathVariable Optional<Integer> id) {
 		if(!id.isPresent()) {
 			model.addAttribute("amenity", new Amenity());
 		} else {
-			Amenity amenityById = roomService.getAmenityById(id);
+			Amenity amenityById = roomService.getAmenityById(new Long(id.get()));
 			if(amenityById == null) {
 				model.addAttribute("amenity", new Amenity());
 			} else {
-				model.addAttribute("amenity", amenityById);
+				model.addAttribute("amenity", amenityById); 
 			}
 		}
 		
@@ -51,7 +52,7 @@ public class RoomServiceController {
 		if(!id.isPresent()) {
 			model.addAttribute("amenityType", new AmenityType()); 
 		} else {
-			AmenityType amenityTypeById = roomService.getAmenityTypeById(id);
+			AmenityType amenityTypeById = roomService.getAmenityTypeById(new Long(id.get()));
 			if(amenityTypeById == null) {
 				model.addAttribute("amenityType", new AmenityType()); 
 			} else {
@@ -118,5 +119,21 @@ public class RoomServiceController {
 	public ModelAndView addRoomRate(@ModelAttribute RoomRate roomRate, BindingResult bindingResult) {
 		roomService.createRoomRate(roomRate);
 		return new ModelAndView("redirect:/admin");
+	}
+	
+	@RequestMapping(value="/amenityDelete/{id}", method=RequestMethod.DELETE)
+	public ModelAndView deleteAminity(@PathVariable Optional<Integer> id) {
+		if(id.isPresent()) {
+			roomService.deleteAmenity(new Long(id.get()));
+		} 
+		return new ModelAndView("redirect:/amenity");
+	}
+	
+	@RequestMapping(value="/amenityTypeDelete/{id}", method=RequestMethod.DELETE)
+	public ModelAndView deleteAminityType(@PathVariable Optional<Integer> id) {
+		if(id.isPresent()) {
+			roomService.deleteAmenityType(new Long(id.get()));
+		} 
+		return new ModelAndView("redirect:/amenity");
 	}
 }

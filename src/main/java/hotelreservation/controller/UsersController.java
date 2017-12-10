@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import hotelreservation.model.User;
@@ -73,5 +74,21 @@ public class UsersController {
 	public ModelAndView addAUserType(@ModelAttribute UserType userType, BindingResult bindingResult) {
 		userService.createUserType(userType);
 		return new ModelAndView("redirect:/userType/" + userType.getId());
+	}
+	
+	@RequestMapping(value="/userDelete/{id}", method=RequestMethod.DELETE)
+	public ModelAndView deleteUser(@PathVariable Optional<Integer> id) {
+		if(id.isPresent()) {
+			userService.deleteUser(new Long(id.get()));
+		} 
+		return new ModelAndView("redirect:/user");
+	}
+	
+	@RequestMapping(value="/userTypeDelete/{id}", method=RequestMethod.DELETE)
+	public ModelAndView deleteAminityType(@PathVariable Optional<Integer> id) {
+		if(id.isPresent()) {
+			userService.deleteUserType(new Long(id.get()));
+		} 
+		return new ModelAndView("redirect:/user");
 	}
 }

@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -170,11 +169,19 @@ public class RoomService {
 		return target;
 	}
 
-	public Amenity getAmenityById(Optional<Integer> id) {
-		return amenityRepo.findOne(new Long(id.get()));
+	public Amenity getAmenityById(Long id) {
+		return amenityRepo.findOne(id);
 	}
 
-	public AmenityType getAmenityTypeById(Optional<Integer> id) {
-		return amenityTypeRepo.findOne(new Long(id.get()));
+	public AmenityType getAmenityTypeById(Long id) {
+		return amenityTypeRepo.findOne(id);
+	}
+
+	public void deleteAmenity(Long id) {
+		amenityRepo.delete(id);		
+	}
+
+	public void deleteAmenityType(Long id) {
+		amenityTypeRepo.delete(id);
 	}
 }
