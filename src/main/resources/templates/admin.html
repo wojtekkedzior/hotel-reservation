@@ -10,10 +10,7 @@
 <body>
 
 	<p>
-		<a th:href="@{/addRoom}">Add Room</a>
-	</p>
-	<p>
-		<a th:href="@{/addRoomRate}">Add Room Rate</a>
+		<a th:href="@{/room}">Rooms</a>
 	</p>
 	<p>
 		<a th:href="@{/user}">Users</a>
@@ -22,15 +19,12 @@
 	<p>
 		<a th:href="@{/addReservation}">Add Reservation</a>
 	</p>
-	<p>
-		<a th:href="@{/addRoomType}">Add Room Type</a>
-	</p>
 
-		<p>
+	<p>
 		<a th:href="@{/amenity}">Amenities</a>
 	</p>
-	
-		<p>
+
+	<p>
 		<a th:href="@{/editReservation/1}">Add Reservation</a>
 	</p>
 
@@ -46,30 +40,15 @@
 
 			<tr th:each="data, iterstat: ${reservations}">
 				<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
-				<td th:text="${data.mainGuest.firstName}" th:id="|td${iterstat.index}|"></td>
-				<td th:text="${data.mainGuest.lastName}" th:id="|td${iterstat.index}|"></td>
+				<td th:text="${data.mainGuest.firstName}"
+					th:id="|td${iterstat.index}|"></td>
+				<td th:text="${data.mainGuest.lastName}"
+					th:id="|td${iterstat.index}|"></td>
 			</tr>
 		</table>
 	</div>
 
 
-
-	<div>
-		<p>Room Types</p>
-		<table width="1000">
-			<tr>
-				<td><label>Id</label></td>
-				<td><label>Name</label></td>
-				<td><label>Description</label></td>
-			</tr>
-
-			<tr th:each="data, iterstat: ${roomTypes}">
-				<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
-				<td th:text="${data.name}" th:id="|td${iterstat.index}|"></td>
-				<td th:text="${data.description}" th:id="|td${iterstat.index}|"></td>
-			</tr>
-		</table>
-	</div>
 
 
 

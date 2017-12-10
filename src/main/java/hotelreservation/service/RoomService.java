@@ -89,10 +89,13 @@ public class RoomService {
 		return roomRepo.findOne(id);
 	}
 
+	public void deleteRoom(Long id) {
+		roomRepo.delete(id);
+	}	
+	
 	public void deleteRoom(Room room) {
 		roomRepo.delete(room);
 	}
-
 	public AmenityType createAmenityType(AmenityType amenityType) {
 		return amenityTypeRepo.save(amenityType);
 	}
@@ -183,5 +186,13 @@ public class RoomService {
 
 	public void deleteAmenityType(Long id) {
 		amenityTypeRepo.delete(id);
+	}
+
+	public Room getGetRoomById(Long id) {
+		return roomRepo.findOne(id);
+	}
+
+	public void deleteRoomType(Long id) {
+		roomTypeRepo.delete(id);
 	}
 }

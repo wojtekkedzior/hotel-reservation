@@ -27,7 +27,7 @@ public class RoomServiceController {
 	@Autowired
 	private RoomService roomService;
 
-	@RequestMapping(value={"/amenity", "/amenity/{id}"},  method=RequestMethod.GET )
+	@RequestMapping(value={"/amenity", "/amenity/{id}"})
 	public String addAmenityModel(Model model, @PathVariable Optional<Integer> id) {
 		if(!id.isPresent()) {
 			model.addAttribute("amenity", new Amenity());
@@ -68,22 +68,51 @@ public class RoomServiceController {
 		return "amenity";
 	} 
 
-	@RequestMapping("/addRoomType")
-	public String addRoomTypeModel(Model model) {
+	@RequestMapping(value={"/room", "room/{id}"})
+	public String roomModel(Model model, @PathVariable Optional<Integer> id) {
+		if(!id.isPresent()) {
+			model.addAttribute("room", new Room()); 
+		} else {
+			Room room = roomService.getGetRoomById(new Long(id.get()));
+			if(room == null) {
+				model.addAttribute("room", new Room()); 
+			} else {
+				model.addAttribute("room", room);
+			}
+		}
+		
 		model.addAttribute("roomType", new RoomType());
-		return "addRoomType";
-	}
-	
-	@RequestMapping("/addRoom")
-	public String addRoomModel(Model model) {
-		model.addAttribute("room", new Room());
+		
+		model.addAttribute("rooms", roomService.getAllRooms());
 		model.addAttribute("roomTypes", roomService.getAllRoomTypes());
 		model.addAttribute("amenities", roomService.getRoomAmenities());
 		model.addAttribute("statuses", roomService.getAllStatuses());
-		return "addRoom";
+		return "room";
 	}
 	
-	@RequestMapping("/addRoomRate")
+	@RequestMapping(value={"/roomType", "/roomType/{id}"})
+	public String roomTypeModel(Model model, @PathVariable Optional<Integer> id) {
+		if(!id.isPresent()) {
+			model.addAttribute("roomType", new RoomType());
+		} else {
+			RoomType roomType = roomService.getRoomTypeById(new Long(id.get()));
+			if(roomType == null) {
+				model.addAttribute("roomType", new RoomType());
+			} else {
+				model.addAttribute("roomType", roomType); 
+			}
+		}
+		
+		model.addAttribute("room", new Room());
+		
+		model.addAttribute("rooms", roomService.getAllRooms());
+		model.addAttribute("roomTypes", roomService.getAllRoomTypes());
+		model.addAttribute("amenities", roomService.getRoomAmenities());
+		model.addAttribute("statuses", roomService.getAllStatuses());
+		return "room";
+	}
+	
+	@RequestMapping(value={"/roomRate", "/roomRate/{id}"})
 	public String addRoomRateModel(Model model) {
 		model.addAttribute("roomRate", new RoomRate());
 		model.addAttribute("rooms", roomService.getAllRooms());
@@ -106,13 +135,13 @@ public class RoomServiceController {
 	@PostMapping("/addRoomType")
 	public ModelAndView addRoomType(@ModelAttribute RoomType roomType, BindingResult bindingResult) {
 		roomService.createRoomType(roomType);
-		return new ModelAndView("redirect:/admin");
+		return new ModelAndView("redirect:/roomType/" + roomType.getId());
 	}
 	
 	@PostMapping("/addRoom") 
 	public ModelAndView addRoom(@ModelAttribute Room room, BindingResult bindingResult) {
 		roomService.createRoom(room);
-		return new ModelAndView("redirect:/admin");
+		return new ModelAndView("redirect:/room/" + room.getId());
 	}
 	
 	@PostMapping("/addRoomRate") 
@@ -135,5 +164,21 @@ public class RoomServiceController {
 			roomService.deleteAmenityType(new Long(id.get()));
 		} 
 		return new ModelAndView("redirect:/amenity");
+	}
+	
+	@RequestMapping(value="/roomDelete/{id}", method=RequestMethod.DELETE)
+	public ModelAndView deleteRoom(@PathVariable Optional<Integer> id) {
+		if(id.isPresent()) {
+			roomService.deleteRoom(new Long(id.get()));
+		} 
+		return new ModelAndView("redirect:/room");
+	}
+	
+	@RequestMapping(value="/roomTypeDelete/{id}", method=RequestMethod.DELETE)
+	public ModelAndView deleteRoomType(@PathVariable Optional<Integer> id) {
+		if(id.isPresent()) {
+			roomService.deleteRoomType(new Long(id.get()));
+		} 
+		return new ModelAndView("redirect:/room");
 	}
 }

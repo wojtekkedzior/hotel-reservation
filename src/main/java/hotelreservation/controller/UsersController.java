@@ -85,7 +85,7 @@ public class UsersController {
 	}
 	
 	@RequestMapping(value="/userTypeDelete/{id}", method=RequestMethod.DELETE)
-	public ModelAndView deleteAminityType(@PathVariable Optional<Integer> id) {
+	public ModelAndView deleteAmenityType(@PathVariable Optional<Integer> id) {
 		if(id.isPresent()) {
 			userService.deleteUserType(new Long(id.get()));
 		} 
