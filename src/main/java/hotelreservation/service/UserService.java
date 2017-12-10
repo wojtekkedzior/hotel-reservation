@@ -3,6 +3,7 @@ package hotelreservation.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,12 +50,20 @@ public class UserService {
 		return target;
 	}
 
-	public List<User> getUsers() {
+	public List<User> getAllUsers() {
 		Iterable<User> findAll = userRepo.findAll();
 
 		List<User> target = new ArrayList<User>();
 		findAll.forEach(target::add);
 
 		return target;
+	}
+
+	public User getUserById(Optional<Integer> id) {
+		return userRepo.findOne(new Long(id.get()));
+	}
+	
+	public UserType getUserTypeById(Optional<Integer> id) {
+		return userTypeRepo.findOne(new Long(id.get()));
 	}
 }

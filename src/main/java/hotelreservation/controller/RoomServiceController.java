@@ -92,14 +92,12 @@ public class RoomServiceController {
 
 	@PostMapping("/addAmenityType")
 	public ModelAndView addAmenityType(@ModelAttribute AmenityType amenityType, BindingResult bindingResult) {
-		System.err.println(amenityType);
 		AmenityType createAmenityType = roomService.createAmenityType(amenityType);
 		return new ModelAndView("redirect:/amenityType/"+createAmenityType.getId());
 	}
 
 	@PostMapping("/addAmenity")
 	public ModelAndView addAmenity(@ModelAttribute Amenity amenity, BindingResult bindingResult) {
-		System.err.println(amenity);
 		Amenity createAmenity = roomService.createAmenity(amenity);
 		return new ModelAndView("redirect:/amenity/"+createAmenity.getId());
 	}

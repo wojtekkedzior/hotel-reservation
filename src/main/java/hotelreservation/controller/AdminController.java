@@ -10,13 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import hotelreservation.model.Reservation;
 import hotelreservation.service.BookingService;
 import hotelreservation.service.RoomService;
-import hotelreservation.service.UserService;
 
 @Controller
 public class AdminController {
-
-	@Autowired
-	private UserService userService;
 
 	@Autowired
 	private RoomService roomService;
@@ -26,9 +22,8 @@ public class AdminController {
 
 	@RequestMapping("/admin")
 	public String hello(Model model) {
-		model.addAttribute("userTypes", userService.getAllUserTypes());
+
 		model.addAttribute("roomTypes", roomService.getAllRoomTypes());
-		model.addAttribute("users", userService.getUsers());
 		model.addAttribute("reservations", bookingService.getAllReservations());
 
 		List<Reservation> findByStartDate = bookingService.getReservationsStartingToday();

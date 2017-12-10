@@ -1,0 +1,102 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+<title>Getting Started: Serving Web Content</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="/css/mycss.css" />
+</head>
+<body>
+
+	<div class="row">
+		<div class="column">
+			<p>Users</p>
+
+			<form action="#" th:action="@{/adduser}" th:object="${user}"
+				method="post">
+				<p>
+					Name: <input type="text" th:field="*{name}" />
+				</p>
+				<p>
+					User Type: <select class="form-control" th:field="${user.userType}"
+						id="dropOperator">
+						<option th:each="userType : ${userTypes}"
+							th:value="${userType.id}" th:text="${userType.name}"></option>
+					</select>
+				</p>
+
+				<p>
+					User Name: <input type="text" th:field="*{userName}" />
+				</p>
+				<p>
+					Password: <input type="text" th:field="*{password}" />
+				</p>
+
+				<p>
+					<input type="submit" value="Submit" /> 
+				</p>
+
+				<div>
+					<table width="1000">
+						<tr>
+							<td><label>Id</label></td>
+							<td><label>Name</label></td>
+							<td><label>User Name</label></td>
+							<td><label>Enabled</label></td>
+							<td><label>Created On</label></td>
+						</tr>
+
+						<tr th:each="data, iterstat: ${users}">
+							<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
+							<td th:text="${data.name}" th:id="|td${iterstat.index}|"></td>
+							<td th:text="${data.userName}" th:id="|td${iterstat.index}|"></td>
+							<td th:text="${data.enabled}" th:id="|td${iterstat.index}|"></td>
+							<td th:text="${data.createdOn}" th:id="|td${iterstat.index}|"></td>
+						</tr>
+					</table>
+				</div>
+			</form>
+		</div>
+
+		<div class="column">
+			<p>User Types</p>
+
+			<form action="#" th:action="@{/addUserType}" th:object="${userType}"
+				method="post">
+				<p>
+					User Type Name: <input type="text" th:field="*{name}" />
+				</p>
+				<p>
+					User Type Description: <input type="text" th:field="*{description}" />
+				</p>
+				<p>
+					Enabled: <input type="checkbox" th:field="*{enabled}" />
+				</p>
+				<p>
+					<input type="submit" value="Submit" /> 
+				</p>
+
+				<div>
+					<table width="1000">
+						<tr>
+							<td><label>Id</label></td>
+							<td><label>Name</label></td>
+							<td><label>Description</label></td>
+							<td><label>Enabled</label></td>
+						</tr>
+
+						<tr th:each="data, iterstat: ${userTypes}">
+							<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
+							<td th:text="${data.name}" th:id="|td${iterstat.index}|"></td>
+							<td th:text="${data.description}" th:id="|td${iterstat.index}|"></td>
+							<td th:text="${data.enabled}" th:id="|td${iterstat.index}|"></td>
+						</tr>
+					</table>
+				</div>
+			</form>
+		</div>
+	</div>
+
+</body>
+
+</html>

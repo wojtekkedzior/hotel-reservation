@@ -10,16 +10,13 @@
 <body>
 
 	<p>
-		<a th:href="@{/addAmenity}">Add Amenity</a>
-	</p>
-	<p>
 		<a th:href="@{/addRoom}">Add Room</a>
 	</p>
 	<p>
 		<a th:href="@{/addRoomRate}">Add Room Rate</a>
 	</p>
 	<p>
-		<a th:href="@{/addUsers}">Add Users</a>
+		<a th:href="@{/user}">Users</a>
 	</p>
 
 	<p>
@@ -29,10 +26,6 @@
 		<a th:href="@{/addRoomType}">Add Room Type</a>
 	</p>
 
-	<p>
-		<a th:href="@{/addAmenityType}">Add Amenity Type</a>
-	</p>
-	
 		<p>
 		<a th:href="@{/amenity}">Amenities</a>
 	</p>
@@ -57,29 +50,9 @@
 				<td th:text="${data.mainGuest.lastName}" th:id="|td${iterstat.index}|"></td>
 			</tr>
 		</table>
-		<p>
-			<a th:href="@{/reservation}">Add Users</a>
-		</p>
 	</div>
 
 
-	<div>
-		<p>Users Types</p>
-		<table width="1000">
-			<tr>
-				<td><label>ID</label></td>
-				<td><label>Name</label></td>
-				<td><label>Description</label></td>
-				<td><label>Enabled</label></td>
-			</tr>
-			<tr th:each="data, iterstat: ${userTypes}">
-				<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
-				<td th:text="${data.name}" th:id="|td${iterstat.index}|"></td>
-				<td th:text="${data.description}" th:id="|td${iterstat.index}|"></td>
-				<td th:text="${data.enabled}" th:id="|td${iterstat.index}|"></td>
-			</tr>
-		</table>
-	</div>
 
 	<div>
 		<p>Room Types</p>
@@ -98,45 +71,6 @@
 		</table>
 	</div>
 
-	<div>
-		<p>Amenity Types</p>
-		<table width="1000">
-			<tr>
-				<td><label>Id</label></td>
-				<td><label>Name</label></td>
-				<td><label>Description</label></td>
-			</tr>
-
-			<tr th:each="data, iterstat: ${amenityTypes}">
-				<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
-				<td th:text="${data.name}" th:id="|td${iterstat.index}|"></td>
-				<td th:text="${data.description}" th:id="|td${iterstat.index}|"></td>
-			</tr>
-		</table>
-	</div>
-
-	<div>
-		<p>Users</p>
-		<table width="1000">
-			<tr>
-				<td><label>Id</label></td>
-				<td><label>Name</label></td>
-				<td><label>User Name</label></td>
-				<td><label>Enabled</label></td>
-				<!-- <td><label>Created By</label></td> -->
-				<td><label>Created On</label></td>
-			</tr>
-
-			<tr th:each="data, iterstat: ${users}">
-				<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
-				<td th:text="${data.name}" th:id="|td${iterstat.index}|"></td>
-				<td th:text="${data.userName}" th:id="|td${iterstat.index}|"></td>
-				<td th:text="${data.enabled}" th:id="|td${iterstat.index}|"></td>
-				<!-- <td th:text="${data.createdBy}" th:id="|td${iterstat.index}|"></td> -->
-				<td th:text="${data.createdOn}" th:id="|td${iterstat.index}|"></td>
-			</tr>
-		</table>
-	</div>
 
 
 	<button th:onclick="'javascript:sayHello(\'hello\')'">Say
