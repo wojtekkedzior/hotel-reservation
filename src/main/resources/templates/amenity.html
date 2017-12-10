@@ -24,6 +24,7 @@
 				<p>
 					<input type="submit" value="Submit" />
 				</p>
+				</form>
 
 				<div>
 					<table width="1000">
@@ -31,18 +32,23 @@
 							<td><label>Id</label></td>
 							<td><label>Name</label></td>
 							<td><label>Description</label></td>
+							<td><label>Delete</label></td>
 						</tr>
 
 						<tr th:each="data, iterstat: ${amenityTypes}">
 							<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
 							<td th:text="${data.name}" th:id="|td${iterstat.index}|"></td>
 							<td th:text="${data.description}" th:id="|td${iterstat.index}|"></td>
+													<td>
+							<form action="#" th:action="@{/amenityTypeDelete/}+${data.id}"
+								th:method="delete">
+								<input type="hidden" name="_method" value="delete" />
+								<button type="submit">delete</button>
+							</form>
+						</td>
 						</tr>
 					</table>
 				</div>
-
-			</form>
-
 		</div>
 
 		<div class="column">
@@ -66,26 +72,35 @@
 				<p>
 					<input type="submit" value="Submit" />
 				</p>
-
-				<div>
-					<table width="1000">
-						<tr>
-							<td><label>Id</label></td>
-							<td><label>Name</label></td>
-							<td><label>Description</label></td>
-							<td><label>AminityType</label></td>
-						</tr>
-
-						<tr th:each="data, iterstat: ${amenities}">
-							<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
-							<td th:text="${data.name}" th:id="|td${iterstat.index}|"></td>
-							<td th:text="${data.description}" th:id="|td${iterstat.index}|"></td>
-							<td th:text="${data.amenityType.name}"
-								th:id="|td${iterstat.index}|"></td>
-						</tr>
-					</table>
-				</div>
 			</form>
+
+			<div>
+				<table width="1000">
+					<tr>
+						<td><label>Id</label></td>
+						<td><label>Name</label></td>
+						<td><label>Description</label></td>
+						<td><label>AminityType</label></td>
+						<td><label>Delete</label></td>
+					</tr>
+
+					<tr th:each="data, iterstat: ${amenities}">
+						<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
+						<td th:text="${data.name}" th:id="|td${iterstat.index}|"></td>
+						<td th:text="${data.description}" th:id="|td${iterstat.index}|"></td>
+						<td th:text="${data.amenityType.name}"
+							th:id="|td${iterstat.index}|"></td>
+						<td>
+							<form action="#" th:action="@{/amenityDelete/}+${data.id}"
+								th:method="delete">
+								<input type="hidden" name="_method" value="delete" />
+								<button type="submit">delete</button>
+							</form>
+						</td>
+					</tr>
+				</table>
+			</div>
+
 		</div>
 	</div>
 </body>
