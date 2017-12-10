@@ -7,19 +7,21 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
 import lombok.Data;
 
 @Entity
 @Data
+@Table(uniqueConstraints=@UniqueConstraint(columnNames = {"userName"}, name = "uq_userName"))
 public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-
 
 	private String userName;
 	private String password;
