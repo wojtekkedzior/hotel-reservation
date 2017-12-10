@@ -66,4 +66,12 @@ public class UserService {
 	public UserType getUserTypeById(Optional<Integer> id) {
 		return userTypeRepo.findOne(new Long(id.get()));
 	}
+
+	public void deleteUser(Long id) {
+		userRepo.delete(id);
+	}
+
+	public void deleteUserType(Long id) {
+		userTypeRepo.delete(id);
+	}
 }
