@@ -173,6 +173,10 @@ public class RoomService {
 		return amenityTypeRepo.findOne(id);
 	}
 
+	public Room getGetRoomById(Long id) {
+		return roomRepo.findOne(id);
+	}
+	
 	public void deleteAmenity(Long id) {
 		amenityRepo.delete(id);
 	}
@@ -180,11 +184,7 @@ public class RoomService {
 	public void deleteAmenityType(Long id) {
 		amenityTypeRepo.delete(id);
 	}
-
-	public Room getGetRoomById(Long id) {
-		return roomRepo.findOne(id);
-	}
-
+	
 	public void deleteRoomType(Long id) {
 		roomTypeRepo.delete(id);
 	}
