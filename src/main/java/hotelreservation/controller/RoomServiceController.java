@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,7 +118,7 @@ public class RoomServiceController {
 		}
 
 		Calendar cal = new GregorianCalendar();
-		cal.roll(Calendar.DAY_OF_YEAR, 30);
+		cal.add(Calendar.DAY_OF_YEAR,30);
 
 		Date start = dateConvertor.asDate(LocalDate.now());
 		Date end = dateConvertor.asDate(LocalDate.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH)));
