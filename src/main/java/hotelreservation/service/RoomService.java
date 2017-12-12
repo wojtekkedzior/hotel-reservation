@@ -138,7 +138,9 @@ public class RoomService {
 		roomRateRepo.save(roomRate);
 	}
 
-	public List<RoomRate> getAvailableRoomRatesForRoom(Date start, Date end) {
+	public List<RoomRate> getAvailableRoomRatesForAllRooms(Date start, Date end) {
+		System.err.println("start: " + start);
+		System.err.println("start: " + end);
 		List<RoomRate> findByStartDateBetween = roomRateRepo.findByDayBetween(start, end);
 		System.err.println("size: " + findByStartDateBetween.size());
 
@@ -164,6 +166,13 @@ public class RoomService {
 
 		return target;
 	}
+	
+//	public List<RoomRate> getAvailableRoomRates(Date startDate, Date endDate) {
+//		List<RoomRate> target = new ArrayList<RoomRate>();
+//		roomRateRepo.findByDayBetween(startDate, endDate).forEach(target::add);
+//
+//		return target;
+//	}
 
 	public Amenity getAmenityById(Long id) {
 		return amenityRepo.findOne(id);
@@ -195,5 +204,13 @@ public class RoomService {
 
 	public void deleteRoom(Room room) {
 		roomRepo.delete(room);
+	}
+
+	public void deleteRoomRate(Long id) {
+		roomRateRepo.delete(id);
+	}
+
+	public RoomRate getRoomRateById(Long id) {
+		return roomRateRepo.findOne(id);
 	}
 }

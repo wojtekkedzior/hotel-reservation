@@ -1,5 +1,13 @@
 package hotelreservation.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import hotelreservation.DateConvertor;
 import hotelreservation.model.Amenity;
 import hotelreservation.model.AmenityType;
 import hotelreservation.model.Room;
@@ -26,6 +35,10 @@ public class RoomServiceController {
 
 	@Autowired
 	private RoomService roomService;
+	
+	@Autowired 
+	private DateConvertor dateConvertor;
+	
 
 	@RequestMapping(value={"/amenity", "/amenity/{id}"})
 	public String addAmenityModel(Model model, @PathVariable Optional<Integer> id) {
@@ -113,11 +126,32 @@ public class RoomServiceController {
 	}
 	
 	@RequestMapping(value={"/roomRate", "/roomRate/{id}"})
-	public String addRoomRateModel(Model model) {
-		model.addAttribute("roomRate", new RoomRate());
+	public String addRoomRateModel(Model model, @PathVariable Optional<Integer> id) throws ParseException {
+		if(!id.isPresent()) {
+			model.addAttribute("roomRate", new RoomRate());
+		} else {
+			RoomRate roomRate = roomService.getRoomRateById(new Long(id.get()));
+			if(roomRate == null) {
+				model.addAttribute("roomRate", new RoomRate());
+			} else {
+				model.addAttribute("roomRate", roomRate); 
+			}
+		}
+		
+		Calendar cal = new GregorianCalendar();
+		System.err.println("cal:" + cal.toString());
+		cal.roll(Calendar.DAY_OF_YEAR, 2); 
+		
+		Date asDate = dateConvertor.asDate(LocalDate.now());
+		Date asDate2 = dateConvertor.asDate(LocalDate.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH)));
+				
+				
+		List<RoomRate> availableRoomRates = roomService.getAvailableRoomRatesForAllRooms(asDate, asDate2);
+		model.addAttribute("roomRates", availableRoomRates);
+		
 		model.addAttribute("rooms", roomService.getAllRooms());
 		model.addAttribute("currencies", Currency.values());
-		return "addRoomRate";
+		return "roomRate";
 	}
 
 	@PostMapping("/addAmenityType")
@@ -147,7 +181,7 @@ public class RoomServiceController {
 	@PostMapping("/addRoomRate") 
 	public ModelAndView addRoomRate(@ModelAttribute RoomRate roomRate, BindingResult bindingResult) {
 		roomService.createRoomRate(roomRate);
-		return new ModelAndView("redirect:/admin");
+		return new ModelAndView("redirect:/roomRate/" + roomRate.getId());
 	}
 	
 	@RequestMapping(value="/amenityDelete/{id}", method=RequestMethod.DELETE)
@@ -178,6 +212,14 @@ public class RoomServiceController {
 	public ModelAndView deleteRoomType(@PathVariable Optional<Integer> id) {
 		if(id.isPresent()) {
 			roomService.deleteRoomType(new Long(id.get()));
+		} 
+		return new ModelAndView("redirect:/room");
+	}
+	
+	@RequestMapping(value="/roomRateDelete/{id}", method=RequestMethod.DELETE)
+	public ModelAndView deleteRoomRate(@PathVariable Optional<Integer> id) {
+		if(id.isPresent()) {
+			roomService.deleteRoomRate(new Long(id.get()));
 		} 
 		return new ModelAndView("redirect:/room");
 	}

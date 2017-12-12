@@ -7,56 +7,92 @@
 
 </head>
 <body>
-
-
-<div class="row">
+	<div class="row">
 		<div class="column">
-			<p>Amenity Types</p>
+			<p>Room Rate</p>
+			<form action="#" th:action="@{/addRoomRate}" th:object="${roomRate}"
+				method="post">
+				<p>
+					Description: <input type="text" th:field="*{description}" />
+				</p>
+
+				<p>
+					Room Number: <select class="form-control"
+						th:field="${roomRate.room}" id="dropOperator">
+						<!-- <option value="0" th:text="selectoperator"></option> -->
+						<option th:each="room : ${rooms}" th:value="${room.id}"
+							th:text="${room.roomNumber}"></option>
+					</select>
+				</p>
+				<p>
+
+					Currency: <select class="form-control"
+						th:field="${roomRate.currency}" id="dropOperator">
+						<option th:each="currency : ${currencies}"
+							th:value="${currency.toString()}"
+							th:text="${currency.toString()}"></option>
+					</select>
+				</p>
+
+				<p>
+					Value: <input type="number" th:field="*{value}" />
+				</p>
+				<p>
+					Date: <input type="date" th:field="*{day}" />
+				</p>
+
+
+				<p>
+					<input type="submit" value="Submit" />
+				</p>
+
+			</form>
+
 		</div>
 
 		<div class="column">
-			<p>Amenities</p>
+			<p>Room Rates</p>
+
+			<div>
+				<table width="1000">
+					<tr>
+						<td><label>Id</label></td>
+						<td><label>Description</label></td>
+						<td><label>Room</label></td>
+						<td><label>Currency</label></td>
+						<td><label>Value</label></td>
+						<td><label>Day</label></td>
+					</tr>
+
+					<tr th:each="data, iterstat: ${roomRates}">
+						<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
+						<td th:text="${data.description}" th:id="|td${iterstat.index}|"></td>
+						<td th:text="${data.room.roomNumber}" th:id="|td${iterstat.index}|"></td>
+						<td th:text="${data.currency}" th:id="|td${iterstat.index}|"></td>
+						<td th:text="${data.value}" th:id="|td${iterstat.index}|"></td>
+						<td th:text="${data.day}" th:id="|td${iterstat.index}|"></td>
+						<td>
+							<form action="#" th:action="@{/roomRateDelete/}+${data.id}"
+								th:method="delete">
+								<input type="hidden" name="_method" value="delete" />
+								<button type="submit">delete</button>
+							</form>
+						</td>
+					</tr>
+				</table>
+			</div>
+
+
+
+
 		</div>
 	</div>
-	
-
-	<form action="#" th:action="@{/addRoomRate}" th:object="${roomRate}"
-		method="post">
-		<p>
-			Description: <input type="text" th:field="*{description}" />
-		</p>
-
-		<p>
-			Room Number: <select class="form-control" th:field="${roomRate.room}"
-				id="dropOperator">
-				<!-- <option value="0" th:text="selectoperator"></option> -->
-				<option th:each="room : ${rooms}" th:value="${room.id}"
-					th:text="${room.roomNumber}"></option>
-			</select>
-		</p>
-
-		<p>
-
-			Currency: <select class="form-control"
-				th:field="${roomRate.currency}" id="dropOperator">
-				<!-- <option value="0" th:text="selectoperator"></option> -->
-				<option th:each="currency : ${currencies}"
-					th:value="${currency.toString()}" th:text="${currency.toString()}"></option>
-			</select>
-		</p>
-
-		<p>
-			Value: <input type="number" th:field="*{value}" />
-		</p>
-		<p>
-			Date: <input type="date" th:field="*{day}" />
-		</p>
 
 
-		<p>
-			<input type="submit" value="Submit" />
-		</p>
-	</form>
+
+
+
+
 </body>
 
 </html>
