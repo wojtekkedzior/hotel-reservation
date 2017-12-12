@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import hotelreservation.model.Reservation;
 import hotelreservation.model.Room;
 import hotelreservation.service.BookingService;
+import hotelreservation.service.GuestService;
 import hotelreservation.service.RoomService;
 
 @Controller
@@ -29,6 +30,10 @@ public class ReservationController {
 
 	@Autowired
 	private BookingService bookingService;
+	
+	@Autowired
+	private GuestService guestService;
+	
 
 	@RequestMapping("/addReservation")
 	public String addReservationModel(Model model) {
@@ -61,17 +66,6 @@ public class ReservationController {
 		return "addReservation";
 	} 
 
-	// //delete user
-	// @RequestMapping(value="users/doDelete", method = RequestMethod.POST) 
-	// public String deleteUser (@RequestParam Long id) {
-	//// customerDAO.delete(id);
-	// return "redirect:/users";
-	// }
-
-	// @RequestMapping(value="/edit", method=RequestMethod.POST,
-	// params="action=save")
-	// public ModelAndView save() {}
-
 	@PostMapping("/addReservation")
 	public ModelAndView addAmenityType(@ModelAttribute Reservation reservation, BindingResult bindingResult, RedirectAttributes redir) {
 		ModelAndView modelAndView = new ModelAndView();
@@ -81,11 +75,4 @@ public class ReservationController {
 		bookingService.createReservation(reservation);
 		return modelAndView;
 	}
-	
-	//could be used to actually start a booking
-//	@RequestMapping(value = "/startBooking/{id}") 
-//	public String startBooking(Model model, @PathVariable int id) {
-//		model.addAttribute("reservation", bookingService.getReservation(id));
-//		return "addReservation";
-//	}
 }
