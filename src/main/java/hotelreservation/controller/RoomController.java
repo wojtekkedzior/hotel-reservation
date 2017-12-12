@@ -28,7 +28,7 @@ import hotelreservation.model.enums.Currency;
 import hotelreservation.service.RoomService;
 
 @Controller
-public class RoomServiceController {
+public class RoomController {
 
 	@Autowired
 	private RoomService roomService;
