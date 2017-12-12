@@ -4,6 +4,7 @@
 <head>
 <title>Getting Started: Serving Web Content</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="/css/mycss.css" />
 
 </head>
 <body>
@@ -45,9 +46,7 @@
 				<p>
 					<input type="submit" value="Submit" />
 				</p>
-
 			</form>
-
 		</div>
 
 		<div class="column">
@@ -67,7 +66,8 @@
 					<tr th:each="data, iterstat: ${roomRates}">
 						<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
 						<td th:text="${data.description}" th:id="|td${iterstat.index}|"></td>
-						<td th:text="${data.room.roomNumber}" th:id="|td${iterstat.index}|"></td>
+						<td th:text="${data.room.roomNumber}"
+							th:id="|td${iterstat.index}|"></td>
 						<td th:text="${data.currency}" th:id="|td${iterstat.index}|"></td>
 						<td th:text="${data.value}" th:id="|td${iterstat.index}|"></td>
 						<td th:text="${data.day}" th:id="|td${iterstat.index}|"></td>
