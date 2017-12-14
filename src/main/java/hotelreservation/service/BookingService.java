@@ -58,7 +58,7 @@ public class BookingService {
 	}
 
 	public Reservation getReservation(int reservationId) {
-		return reservationRepo.findOne(new Long(reservationId));
+		return reservationRepo.findById(new Long(reservationId)).get();
 	}
  
 	public List<Reservation> getReservationsStartingToday() {

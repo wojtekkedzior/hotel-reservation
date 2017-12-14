@@ -20,7 +20,7 @@ public class Stay {
 	//TODO don't worry about the stay for now. 
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
 	//Reservation that make up a stay.  This shuld be used to mark a non-consecutive day stay. 

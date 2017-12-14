@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -130,9 +131,9 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	
 	@Autowired 
 	private DateConvertor dateConvertor;
-
+	
 	@Override
-	public void onApplicationEvent(final ApplicationReadyEvent event) {
+	public void onApplicationEvent(ApplicationReadyEvent event) {
 		addUserTypes();
 		addUsers();
 
@@ -237,11 +238,11 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		receptionistTwo.setCreatedBy(admin);
 
 		userService.createUser(superAdmin);
-		userService.createUser(admin, superAdmin.getId());
-		userService.createUser(manager, admin.getId());
+		userService.createUser(admin, superAdminUserType.getId());
+		userService.createUser(manager, adminUserType.getId());
 
-		userService.createUser(receptionistOne, manager.getId());
-		userService.createUser(receptionistTwo, manager.getId());
+		userService.createUser(receptionistOne, managerUserType.getId());
+		userService.createUser(receptionistTwo, managerUserType.getId());
 	}
 
 	private void addStatuses() {
@@ -396,4 +397,6 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 
 		bookingService.createReservation(reservationOne);
 	}
+
+
 }

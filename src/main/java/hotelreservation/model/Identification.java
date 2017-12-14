@@ -14,7 +14,7 @@ import lombok.Data;
 @Data
 public class Identification {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
 	private String name;
