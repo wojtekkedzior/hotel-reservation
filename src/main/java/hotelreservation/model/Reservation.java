@@ -35,6 +35,9 @@ public class Reservation {
 	@ManyToOne
 	private User discountAuthorisedBy;
 	
+	@ManyToOne
+	private User createdBy;
+	
 	public Reservation() {}
 	
 	@Temporal(TemporalType.DATE)
