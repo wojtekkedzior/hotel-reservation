@@ -1,8 +1,5 @@
 package hotelservation.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
@@ -21,6 +18,9 @@ import hotelreservation.Application;
 import hotelreservation.DateConvertor;
 import hotelreservation.model.Amenity;
 import hotelreservation.model.AmenityType;
+import hotelreservation.model.Contact;
+import hotelreservation.model.Guest;
+import hotelreservation.model.Identification;
 import hotelreservation.model.Reservation;
 import hotelreservation.model.Room;
 import hotelreservation.model.RoomRate;
@@ -29,6 +29,8 @@ import hotelreservation.model.Status;
 import hotelreservation.model.User;
 import hotelreservation.model.UserType;
 import hotelreservation.model.enums.Currency;
+import hotelreservation.model.enums.IdType;
+import hotelreservation.service.BookingService;
 import hotelreservation.service.RoomService;
 import hotelreservation.service.UserService;
 
@@ -44,6 +46,9 @@ public class BookingServiceTest {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private BookingService bookingService;
+	
 	private Room standardRoomOne;
 	private RoomType roomTypeStandard;
 	
@@ -58,7 +63,16 @@ public class BookingServiceTest {
 	private Amenity pillow;
 	private Status operational;
 	private User user;
-	UserType managerUserType;
+	private UserType managerUserType;
+	
+	private Guest mainGuest;
+	private Guest guestOne;
+	
+	private Identification idOne;
+	private Identification idTwo;
+	
+	private Contact contactOne;
+	private Contact contactTwo;
 	
 	@Autowired 
 	private DateConvertor dateConvertor;
@@ -102,15 +116,41 @@ public class BookingServiceTest {
 		roomService.createRoomRate(roomRateThree);
 		roomService.createRoomRate(roomRateFour);
 		roomService.createRoomRate(roomRateFive);
+		
+		idOne = new Identification("IdOne Name", "IdOne Description", IdType.IDCard);
+		idTwo = new Identification("IdTwo Name", "IdTwo Description", IdType.DriversLicense);
+		
+		bookingService.createIdentification(idOne);
+		bookingService.createIdentification(idTwo);
+		
+		contactOne = new Contact();
+		contactTwo = new Contact(); 
+
+		bookingService.createContact(contactOne);
+		bookingService.createContact(contactTwo);
+		
+		guestOne = new Guest("GuestOne First Name", "GuestOne Last Name", "GuestOne Description", contactOne, idOne);
+		mainGuest = new Guest("GuestTWo First Name", "GuestTwo Last Name", "GuestTwo Description", contactTwo, idTwo);
+
+		bookingService.createGuest(guestOne);
+		bookingService.createGuest(mainGuest);
 	}
 
 	@Test
 	public void testCreateReservation() {
 		Reservation reservation = new Reservation();
 		
-		reservation.setCreatedBy(user);
+		reservation.setMainGuest(mainGuest);
 		reservation.setRoomRates(Arrays.asList(roomRateOne));
+		reservation.setCreatedBy(user);
 
+		//First check is to make sure that all the roomRate that make up the reservation do cover the entire stay (sequential rates), otherwise fail.
+		bookingService.createReservation(reservation);
+		
+		//secondly check that room-rates are actually available, otherwise fail
+		
+		
+		//thirdly, how to handle a non-sequential stay?  Probably multiple reservations linked together.
 		
 		
 		
