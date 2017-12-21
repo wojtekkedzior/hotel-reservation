@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -74,8 +73,7 @@ public class RoomService {
 	}
 
 	public RoomType getRoomTypeById(long id) {
-		Optional<RoomType> findById = roomTypeRepo.findById(id);
-		return findById.get();
+		return roomTypeRepo.findOne(id);
 	}
 
 	public void deleteRoomType(RoomType roomType) {
@@ -88,7 +86,7 @@ public class RoomService {
 	}
 
 	public Room getRoomById(long id) {
-		return roomRepo.findById(id).get();
+		return roomRepo.findOne(id);
 	}
 
 	public AmenityType createAmenityType(AmenityType amenityType) {
@@ -133,7 +131,7 @@ public class RoomService {
 	}
 
 	public Status getRoomStatus(Room room) {
-		return roomRepo.findById(room.getId()).get().getStatus();
+		return roomRepo.findOne(room.getId()).getStatus();
 	}
 
 	public void createRoomRate(RoomRate roomRate) {
@@ -177,31 +175,31 @@ public class RoomService {
 //	}
 
 	public Amenity getAmenityById(Long id) {
-		return amenityRepo.findById(id).get();
+		return amenityRepo.findOne(id);
 	}
 
 	public AmenityType getAmenityTypeById(Long id) {
-		return amenityTypeRepo.findById(id).get();
+		return amenityTypeRepo.findOne(id);
 	}
 
 	public Room getGetRoomById(Long id) {
-		return roomRepo.findById(id).get();
+		return roomRepo.findOne(id);
 	}
 	
 	public void deleteAmenity(Long id) {
-		amenityRepo.deleteById(id);
+		amenityRepo.delete(id);
 	}
 
 	public void deleteAmenityType(Long id) {
-		amenityTypeRepo.deleteById(id);
+		amenityTypeRepo.delete(id);
 	}
 	
 	public void deleteRoomType(Long id) {
-		roomTypeRepo.deleteById(id);
+		roomTypeRepo.delete(id);
 	}
 
 	public void deleteRoom(Long id) {
-		roomRepo.deleteById(id);
+		roomRepo.delete(id);
 	}
 
 	public void deleteRoom(Room room) {
@@ -209,10 +207,10 @@ public class RoomService {
 	}
 
 	public void deleteRoomRate(Long id) {
-		roomRateRepo.deleteById(id);
+		roomRateRepo.delete(id);
 	}
 
 	public RoomRate getRoomRateById(Long id) {
-		return roomRateRepo.findById(id).get();
+		return roomRateRepo.findOne(id);
 	}
 }

@@ -23,7 +23,7 @@ public class UserService {
 	private UserTypeRepo userTypeRepo;
 
 	public User createUser(User user, long userTypeId) {
-		UserType userType = userTypeRepo.findById(userTypeId).get();
+		UserType userType = userTypeRepo.findOne(userTypeId);
 		user.setUserType(userType);
 		return userRepo.save(user);
 	}
@@ -60,18 +60,18 @@ public class UserService {
 	}
 
 	public User getUserById(Optional<Integer> id) {
-		return userRepo.findById(new Long(id.get())).get();
+		return userRepo.findOne(new Long(id.get()));
 	}
 	
 	public UserType getUserTypeById(Optional<Integer> id) {
-		return userTypeRepo.findById(new Long(id.get())).get();
+		return userTypeRepo.findOne(new Long(id.get()));
 	}
 
 	public void deleteUser(Long id) {
-		userRepo.deleteById(id);
+		userRepo.delete(id);
 	}
 
 	public void deleteUserType(Long id) {
-		userTypeRepo.deleteById(id);
+		userTypeRepo.delete(id);
 	}
 }
