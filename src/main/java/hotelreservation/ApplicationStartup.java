@@ -29,6 +29,7 @@ import hotelreservation.model.User;
 import hotelreservation.model.UserType;
 import hotelreservation.model.enums.Currency;
 import hotelreservation.model.enums.IdType;
+import hotelreservation.model.enums.ReservationStatus;
 import hotelreservation.service.BookingService;
 import hotelreservation.service.RoomService;
 import hotelreservation.service.UserService;
@@ -390,6 +391,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	private void addReservations() {
 		reservationOne = new Reservation();
 		reservationOne.setStartDate(new Date());
+		reservationOne.setReservationStatus(ReservationStatus.UpComing);
 		reservationOne.setMainGuest(guestOne);
 		reservationOne.setOccupants(Arrays.asList(guestTwo, guestThree));
 		reservationOne.setRoomRates(Arrays.asList(roomRateOne, roomRateTwo));
