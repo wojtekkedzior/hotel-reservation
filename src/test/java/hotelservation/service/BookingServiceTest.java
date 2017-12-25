@@ -9,7 +9,6 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +35,6 @@ import hotelreservation.model.UserType;
 import hotelreservation.model.enums.Currency;
 import hotelreservation.model.enums.IdType;
 import hotelreservation.model.enums.ReservationStatus;
-import hotelreservation.repository.ReservationRepo;
 import hotelreservation.service.BookingService;
 import hotelreservation.service.RoomService;
 import hotelreservation.service.UserService;
@@ -57,17 +55,19 @@ public class BookingServiceTest {
 	private BookingService bookingService;
 
 	private Room standardRoomOne;
+	private Room standardRoomTwo;
+	private Room standardRoomThree;
 	private RoomType roomTypeStandard;
 
-	// Room Rates
-	private RoomRate roomRateOne;
-	private RoomRate roomRateTwo;
-	private RoomRate roomRateThree;
-	private RoomRate roomRateFour;
-	private RoomRate roomRateFive;
-	private RoomRate roomRateSix;
-	private RoomRate roomRateSeven;
-	private RoomRate roomRateEight;
+//	// Room Rates
+//	private RoomRate roomRateOne;
+//	private RoomRate roomRateTwo;
+//	private RoomRate roomRateThree;
+//	private RoomRate roomRateFour;
+//	private RoomRate roomRateFive;
+//	private RoomRate roomRateSix;
+//	private RoomRate roomRateSeven;
+//	private RoomRate roomRateEight;
 
 	private AmenityType amenityTypeRoomBasic;
 	private Amenity pillow;
@@ -116,10 +116,20 @@ public class BookingServiceTest {
 		standardRoomOne = new Room(1, operational, roomTypeStandard, user);
 		standardRoomOne.setName("Room 1");
 		standardRoomOne.setDescription("The Best Room Description");
-		List<Amenity> standardRoomOneAmenitites = new ArrayList<>();
-		standardRoomOneAmenitites.add(pillow);
-		standardRoomOne.setRoomAmenities(standardRoomOneAmenitites);
+		standardRoomOne.setRoomAmenities(Arrays.asList(pillow));
 		roomService.createRoom(standardRoomOne);
+		
+		standardRoomTwo = new Room(2, operational, roomTypeStandard, user);
+		standardRoomTwo.setName("Room 2");
+		standardRoomTwo.setDescription("The Best Room Description");
+		standardRoomTwo.setRoomAmenities(Arrays.asList(pillow));
+		roomService.createRoom(standardRoomTwo);
+		
+		standardRoomThree = new Room(3, operational, roomTypeStandard, user);
+		standardRoomThree.setName("Room 3");
+		standardRoomThree.setDescription("The Best Room Description");
+		standardRoomThree.setRoomAmenities(Arrays.asList(pillow));
+		roomService.createRoom(standardRoomThree);
 
 		// roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
 		// roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
@@ -433,24 +443,96 @@ public class BookingServiceTest {
 		bookingService.createReservation(reservationFour);
 		assertEquals(0, bookingService.getAvailableRoomRates(startDate, endDate).size());
 	}
-
-
 	
 	@Test
 	public void testCreateManyReservationsOverMultipleRooms() {
-		// TODO
-		// This scenario can only work with more rooms
 		// ...|..........|................ reservationOne
 		// .|...|......................... reservationTwo
 		// .........|.........|........... reservationThree
 		// .|......................|...... reservationFour
 		
+		Date startDate = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1));
+		Date endDate = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 31));
+		
+		reservationOne = new Reservation();
+		reservationTwo = new Reservation();
+		reservationThree = new Reservation();
+		reservationFour = new Reservation();
+
+		reservationOne.setMainGuest(mainGuest);
+		reservationOne.setCreatedBy(user);
+		reservationOne.setReservationStatus(ReservationStatus.UpComing);
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 15)));
+		reservationOne.setRoomRates(new ArrayList<RoomRate>());
+		
+		reservationTwo.setMainGuest(mainGuest);
+		reservationTwo.setCreatedBy(user);
+		reservationTwo.setReservationStatus(ReservationStatus.UpComing);
+		reservationTwo.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationTwo.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 6)));
+		reservationTwo.setRoomRates(new ArrayList<RoomRate>());
+
+		reservationThree.setMainGuest(mainGuest);
+		reservationThree.setCreatedBy(user);
+		reservationThree.setReservationStatus(ReservationStatus.UpComing);
+		reservationThree.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 10)));
+		reservationThree.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 20)));
+		reservationThree.setRoomRates(new ArrayList<RoomRate>());
+		
+		reservationFour.setMainGuest(mainGuest);
+		reservationFour.setCreatedBy(user);
+		reservationFour.setReservationStatus(ReservationStatus.UpComing);
+		reservationFour.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationFour.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 25)));
+		reservationFour.setRoomRates(new ArrayList<RoomRate>());
+
+		for(int i = 1; i <= 31; i++) {
+			RoomRate roomRate = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, i)));
+			roomService.createRoomRate(roomRate);
+
+			if(i >= 4 && i <= 15 ) {
+				reservationOne.getRoomRates().add(roomRate);
+			} 
+		}
+		
+		for(int i = 1; i <= 31; i++) {
+			RoomRate roomRate = new RoomRate(standardRoomTwo, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, i)));
+			roomService.createRoomRate(roomRate);
+
+			if(i >= 2 && i <= 6 ) {
+				reservationTwo.getRoomRates().add(roomRate);
+			} 
+			
+			if(i >= 10 && i <= 20 ) {
+				reservationThree.getRoomRates().add(roomRate);
+				System.err.println(roomRate.getDay());
+			} 
+		}
+		
+		for(int i = 1; i <= 31; i++) {
+			RoomRate roomRate = new RoomRate(standardRoomThree, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, i)));
+			roomService.createRoomRate(roomRate);
+
+			if(i >= 2 && i <= 25 ) {
+				reservationFour.getRoomRates().add(roomRate);
+			} 
+		}
+		
+		assertEquals(93, bookingService.getAvailableRoomRates(startDate, endDate).size());
+		bookingService.createReservation(reservationOne);
+		
+		assertEquals(81, bookingService.getAvailableRoomRates(startDate, endDate).size());
+		bookingService.createReservation(reservationTwo);
+		
+		assertEquals(76, bookingService.getAvailableRoomRates(startDate, endDate).size());
+		bookingService.createReservation(reservationThree);
+		
+		assertEquals(65, bookingService.getAvailableRoomRates(startDate, endDate).size());
+		bookingService.createReservation(reservationFour);
+
+		assertEquals(41, bookingService.getAvailableRoomRates(startDate, endDate).size());
 	}
-	
-	
-	
-	
-	
 	
 	@Test
 	public void testFindAvailableRoomRates() {
