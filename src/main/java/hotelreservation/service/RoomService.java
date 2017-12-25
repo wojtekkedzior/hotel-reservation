@@ -138,7 +138,7 @@ public class RoomService {
 		roomRateRepo.save(roomRate);
 	}
 
-	public List<RoomRate> getAvailableRoomRatesForAllRooms(Date start, Date end) {
+	public List<RoomRate> getRoomRatesForAllRooms(Date start, Date end) {
 		System.err.println("start: " + start);
 		System.err.println("start: " + end);
 		List<RoomRate> findByStartDateBetween = roomRateRepo.findByDayBetween(start, end);
@@ -148,7 +148,7 @@ public class RoomService {
 	}
 
 	// TODO this needs to check if these rooms are actually available
-	public Map<Room, List<RoomRate>> getRoomRatesForAllRooms(Date startDate, Date endDate) {
+	public Map<Room, List<RoomRate>> getRoomRatesForAllRoomsAsMap(Date startDate, Date endDate) {
 		Map<Room, List<RoomRate>> ratesForAllRooms = new HashMap<Room, List<RoomRate>>();
 
 		Iterable<Room> allRooms = roomRepo.findAll();
@@ -160,7 +160,7 @@ public class RoomService {
 		return ratesForAllRooms;
 	}
 
-	public List<RoomRate> getAvailableRoomRates() {
+	public List<RoomRate> getAllRoomRates() { 
 		List<RoomRate> target = new ArrayList<RoomRate>();
 		roomRateRepo.findAll().forEach(target::add);
 

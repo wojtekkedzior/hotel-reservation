@@ -20,6 +20,7 @@ import hotelreservation.repository.ContactRepo;
 import hotelreservation.repository.GuestRepo;
 import hotelreservation.repository.IdentificationRepo;
 import hotelreservation.repository.ReservationRepo;
+import hotelreservation.repository.RoomRateRepo;
 
 @Service
 public class BookingService {
@@ -41,7 +42,7 @@ public class BookingService {
 	
 	@Autowired
 	private DateConvertor dateConvertor;
-
+	
 	public void createContact(Contact contact) {
 		contactRepo.save(contact);
 	}
@@ -60,6 +61,7 @@ public class BookingService {
 		}
 		
 		//validate reservation has start and end date
+		
 		
 		//Check if room rates have sequential days
 		List<RoomRate> roomRates = reservation.getRoomRates();
@@ -80,8 +82,7 @@ public class BookingService {
 			}
 		}
 		
-		//Check of roomRates are available
-		//check all reservations hat may have this roomRate
+		//Check if roomRates are available
 		List<Reservation> findInProgressAndUpComingReservations = reservationRepo.findInProgressAndUpComingReservations();
 		for (Reservation reservation2 : findInProgressAndUpComingReservations) {
 			for (RoomRate roomRate : roomRates) {
@@ -91,18 +92,43 @@ public class BookingService {
 			}
 		}
 		
-		
-		
 		reservationRepo.save(reservation);
-		
-		
-		List<Reservation> upcomingReservations = findInProgressAndUpComingReservations;
-		
-		//find all reservation between start and end date, and check if their roomRates contain this room rate for the given day
-		
-		
 	}
 
+	public List<RoomRate> getAvailableRoomRates(Date start, Date end) {
+		List<RoomRate> availableRoomRates = new ArrayList<RoomRate>();
+		List<Reservation> inProgressAndUpComingReservations = reservationRepo.findInProgressAndUpComingReservations();
+		List<RoomRate> availableRoomRatesForAllRooms = roomService.getRoomRatesForAllRooms(start, end);
+
+		for (RoomRate roomRate : availableRoomRatesForAllRooms) {
+			//No reservations so rate is available
+			if(inProgressAndUpComingReservations.isEmpty()) {
+				availableRoomRates.add(roomRate);
+				continue;
+			}
+			
+			boolean isRoomRatesAvailable = false;
+			
+			for (Reservation reservation : inProgressAndUpComingReservations) {
+				if(!reservation.getRoomRates().contains(roomRate)) {
+					//Rate is available for this reservation, but need to check all the others,
+					isRoomRatesAvailable = true;
+				} else {
+					//One reservation has this rate already, therefore it's no longer available
+					isRoomRatesAvailable = false;
+					break;
+				}
+			}
+			
+			if(isRoomRatesAvailable) {
+				availableRoomRates.add(roomRate);
+				isRoomRatesAvailable=false;
+			}
+		}
+		
+		return availableRoomRates;
+	}
+	
 	public List<Reservation> getAllReservations() {
 		List<Reservation> target = new ArrayList<Reservation>();
 		reservationRepo.findAll().forEach(target::add);

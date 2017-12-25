@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import hotelreservation.Application;
+import hotelreservation.DateConvertor;
 import hotelreservation.model.Room;
 import hotelreservation.model.RoomRate;
 import hotelreservation.model.RoomType;
@@ -38,10 +41,14 @@ public class RoomServiceTest {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private DateConvertor dateConvertor;
+	
 	@Before
 	public void setup() {
 		addStatuses();
 	}
+	
 
 	private void addStatuses() {
 		// TODO Auto-generated method stub
@@ -140,11 +147,11 @@ public class RoomServiceTest {
 		room.setCreatedOn(new Date());
 		roomService.createRoom(room);
 
-		Date day = new Date(2017, 3, 15);
+		Date day = dateConvertor.asDate(LocalDate.of(2017, Month.MARCH, 15));
 		RoomRate roomRate = new RoomRate(room, Currency.CZK, 1000, day);
 		roomService.createRoomRate(roomRate);
 
-		assertTrue(roomService.getAvailableRoomRates().size() == 1);
+		assertTrue(roomService.getAllRoomRates().size() == 1);
 
 		RoomRate roomRate1 = new RoomRate(room, Currency.CZK, 1000, day);
 

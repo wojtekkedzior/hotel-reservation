@@ -1,5 +1,7 @@
 package hotelservation.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.time.LocalDate;
@@ -162,7 +164,6 @@ public class BookingServiceTest {
 
 		reservationOne.setMainGuest(mainGuest);
 		reservationOne.setCreatedBy(user);
-		reservationOne.setStartDate(new Date());
 		reservationOne.setReservationStatus(ReservationStatus.UpComing);
 
 		RoomRate roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
@@ -305,40 +306,179 @@ public class BookingServiceTest {
 	}
 
 	@Test
-	public void testCreateReservation() {
+	public void testCreateManyReservations() {
+		RoomRate roomRate1 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1)));
+		RoomRate roomRate2 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		RoomRate roomRate3 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		RoomRate roomRate4 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
+		RoomRate roomRate5 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 5)));
+		RoomRate roomRate6 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 6)));
+		RoomRate roomRate7 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 7)));
+		RoomRate roomRate8 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 8)));
+		RoomRate roomRate9 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 9)));
+
+		RoomRate roomRate10 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 10)));
+		RoomRate roomRate11 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 11)));
+		RoomRate roomRate12 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 12)));
+		RoomRate roomRate13 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 13)));
+		RoomRate roomRate14 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 14)));
+		RoomRate roomRate15 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 15)));
+		RoomRate roomRate16 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 16)));
+		RoomRate roomRate17 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 17)));
+		RoomRate roomRate18 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 18)));
+		RoomRate roomRate19 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 19)));
+
+		RoomRate roomRate20 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 20)));
+		RoomRate roomRate21 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 21)));
+		RoomRate roomRate22 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 22)));
+		RoomRate roomRate23 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 23)));
+		RoomRate roomRate24 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 24)));
+		RoomRate roomRate25 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 25)));
+		RoomRate roomRate26 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 26)));
+		RoomRate roomRate27 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 27)));
+		RoomRate roomRate28 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 28)));
+		RoomRate roomRate29 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 29)));
+
+		RoomRate roomRate30 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 30)));
+		RoomRate roomRate31 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 31)));
+
+		roomService.createRoomRate(roomRate1);
+		roomService.createRoomRate(roomRate2);
+		roomService.createRoomRate(roomRate3);
+		roomService.createRoomRate(roomRate4);
+		roomService.createRoomRate(roomRate5);
+		roomService.createRoomRate(roomRate6);
+		roomService.createRoomRate(roomRate7);
+		roomService.createRoomRate(roomRate8);
+		roomService.createRoomRate(roomRate9);
+
+		roomService.createRoomRate(roomRate10);
+		roomService.createRoomRate(roomRate11);
+		roomService.createRoomRate(roomRate12);
+		roomService.createRoomRate(roomRate13);
+		roomService.createRoomRate(roomRate14);
+		roomService.createRoomRate(roomRate15);
+		roomService.createRoomRate(roomRate16);
+		roomService.createRoomRate(roomRate17);
+		roomService.createRoomRate(roomRate18);
+		roomService.createRoomRate(roomRate19);
+
+		roomService.createRoomRate(roomRate20);
+		roomService.createRoomRate(roomRate21);
+		roomService.createRoomRate(roomRate22);
+		roomService.createRoomRate(roomRate23);
+		roomService.createRoomRate(roomRate24);
+		roomService.createRoomRate(roomRate25);
+		roomService.createRoomRate(roomRate26);
+		roomService.createRoomRate(roomRate27);
+		roomService.createRoomRate(roomRate28);
+		roomService.createRoomRate(roomRate29);
+
+		roomService.createRoomRate(roomRate30);
+		roomService.createRoomRate(roomRate31);
+
+		Date startDate = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1));
+		Date endDate = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 31));
+
+		// ...|..........|................ reservationOne
+		// ...............|...|........... reservationTwo
+		// ....................|.........| reservationThree
+		// |.|............................ reservationFour
+
+		reservationOne = new Reservation();
+		reservationTwo = new Reservation();
+		reservationThree = new Reservation();
+		reservationFour = new Reservation();
+
+		reservationOne.setMainGuest(mainGuest);
+		reservationOne.setCreatedBy(user);
+		reservationOne.setReservationStatus(ReservationStatus.UpComing);
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 15)));
+		reservationOne.setRoomRates(
+				Arrays.asList(roomRate4, roomRate5, roomRate6, roomRate7, roomRate8, roomRate9, roomRate10, roomRate11, roomRate12, roomRate13, roomRate14, roomRate15));
+
+		assertEquals(31, bookingService.getAvailableRoomRates(startDate, endDate).size());
+		bookingService.createReservation(reservationOne);
+		assertEquals(19, bookingService.getAvailableRoomRates(startDate, endDate).size());
+
+		reservationTwo.setMainGuest(mainGuest);
+		reservationTwo.setCreatedBy(user);
+		reservationTwo.setReservationStatus(ReservationStatus.UpComing);
+		reservationTwo.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 16)));
+		reservationTwo.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 20)));
+		reservationTwo.setRoomRates(Arrays.asList(roomRate16, roomRate17, roomRate18, roomRate19, roomRate20));
+
+		bookingService.createReservation(reservationTwo);
+		assertEquals(14, bookingService.getAvailableRoomRates(startDate, endDate).size());
+
+		reservationThree.setMainGuest(mainGuest);
+		reservationThree.setCreatedBy(user);
+		reservationThree.setReservationStatus(ReservationStatus.UpComing);
+		reservationThree.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 21)));
+		reservationThree.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 31)));
+		reservationThree
+				.setRoomRates(Arrays.asList(roomRate21, roomRate22, roomRate23, roomRate24, roomRate25, roomRate26, roomRate27, roomRate28, roomRate29, roomRate30, roomRate31));
+
+		bookingService.createReservation(reservationThree);
+		assertEquals(3, bookingService.getAvailableRoomRates(startDate, endDate).size());
+
+		reservationFour.setMainGuest(mainGuest);
+		reservationFour.setCreatedBy(user);
+		reservationFour.setReservationStatus(ReservationStatus.UpComing);
+		reservationFour.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1)));
+		reservationFour.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		reservationFour.setRoomRates(Arrays.asList(roomRate1, roomRate2, roomRate3));
+
+		bookingService.createReservation(reservationFour);
+		assertEquals(0, bookingService.getAvailableRoomRates(startDate, endDate).size());
+	}
+
+
+	
+	@Test
+	public void testCreateManyReservationsOverMultipleRooms() {
+		// TODO
+		// This scenario can only work with more rooms
 		// ...|..........|................ reservationOne
 		// .|...|......................... reservationTwo
 		// .........|.........|........... reservationThree
 		// .|......................|...... reservationFour
-
+		
+	}
+	
+	
+	
+	
+	
+	
+	@Test
+	public void testFindAvailableRoomRates() {
 		reservationOne = new Reservation();
-		reservationTwo = new Reservation();
 
 		reservationOne.setMainGuest(mainGuest);
-		reservationOne.setRoomRates(Arrays.asList(roomRateOne));
 		reservationOne.setCreatedBy(user);
-		reservationOne.setStartDate(new Date());
 		reservationOne.setReservationStatus(ReservationStatus.UpComing);
 
 		RoomRate roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
 		RoomRate roomRateThree = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
-		RoomRate roomRateFour = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
-		RoomRate roomRateFive = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 5)));
-		RoomRate roomRateSix = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 6)));
 
 		roomService.createRoomRate(roomRateTwo);
 		roomService.createRoomRate(roomRateThree);
-		roomService.createRoomRate(roomRateFour);
-		roomService.createRoomRate(roomRateFive);
-		roomService.createRoomRate(roomRateSix);
 
-		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2017, Month.JANUARY, 4)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2017, Month.JANUARY, 6)));
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
 
-		reservationOne.setRoomRates(Arrays.asList(roomRateFour, roomRateFive, roomRateSix));
+		reservationOne.setRoomRates(Arrays.asList(roomRateTwo));
 
-		reservationTwo.setStartDate(dateConvertor.asDate(LocalDate.of(2017, Month.JANUARY, 2)));
-		reservationTwo.setEndDate(dateConvertor.asDate(LocalDate.of(2017, Month.JANUARY, 6)));
+		Date startDate = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1));
+		Date endDate = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4));
+
+		assertEquals(2, bookingService.getAvailableRoomRates(startDate, endDate).size());
+
+		bookingService.createReservation(reservationOne);
+
+		assertEquals(1, bookingService.getAvailableRoomRates(startDate, endDate).size());
+		assertTrue(bookingService.getAvailableRoomRates(startDate, endDate).get(0).equals(roomRateThree));
 	}
 
 }
