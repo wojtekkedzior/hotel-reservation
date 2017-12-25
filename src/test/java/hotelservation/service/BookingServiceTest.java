@@ -88,6 +88,9 @@ public class BookingServiceTest {
 	private Reservation reservationTwo;
 	private Reservation reservationThree;
 	private Reservation reservationFour;
+	
+	private Date startDate;
+	private Date endDate;
 
 	@Autowired
 	private DateConvertor dateConvertor;
@@ -166,6 +169,9 @@ public class BookingServiceTest {
 
 		bookingService.createGuest(guestOne);
 		bookingService.createGuest(mainGuest);
+		
+		startDate = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1));
+		endDate = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 31));
 	}
 
 	@Test
@@ -387,9 +393,6 @@ public class BookingServiceTest {
 		roomService.createRoomRate(roomRate30);
 		roomService.createRoomRate(roomRate31);
 
-		Date startDate = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1));
-		Date endDate = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 31));
-
 		// ...|..........|................ reservationOne
 		// ...............|...|........... reservationTwo
 		// ....................|.........| reservationThree
@@ -442,6 +445,7 @@ public class BookingServiceTest {
 
 		bookingService.createReservation(reservationFour);
 		assertEquals(0, bookingService.getAvailableRoomRates(startDate, endDate).size());
+		assertEquals(4, bookingService.getAllReservations().size());
 	}
 	
 	@Test
@@ -450,9 +454,6 @@ public class BookingServiceTest {
 		// .|...|......................... reservationTwo
 		// .........|.........|........... reservationThree
 		// .|......................|...... reservationFour
-		
-		Date startDate = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1));
-		Date endDate = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 31));
 		
 		reservationOne = new Reservation();
 		reservationTwo = new Reservation();
@@ -532,6 +533,7 @@ public class BookingServiceTest {
 		bookingService.createReservation(reservationFour);
 
 		assertEquals(41, bookingService.getAvailableRoomRates(startDate, endDate).size());
+		assertEquals(4, bookingService.getAllReservations().size());
 	}
 	
 	@Test

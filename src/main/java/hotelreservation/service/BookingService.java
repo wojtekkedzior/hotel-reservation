@@ -95,7 +95,7 @@ public class BookingService {
 		reservationRepo.save(reservation);
 	}
 
-	public List<RoomRate> getAvailableRoomRates(Date start, Date end) {
+	public List<RoomRate> getAvailableRoomRates(Date start, Date end) { //TODO add a variant of this method but for a particular room and move thos to roomservice
 		List<RoomRate> availableRoomRates = new ArrayList<RoomRate>();
 		List<Reservation> inProgressAndUpComingReservations = reservationRepo.findInProgressAndUpComingReservations();
 		List<RoomRate> availableRoomRatesForAllRooms = roomService.getRoomRatesForAllRooms(start, end);
