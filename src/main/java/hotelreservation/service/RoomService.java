@@ -11,12 +11,14 @@ import org.springframework.stereotype.Service;
 
 import hotelreservation.model.Amenity;
 import hotelreservation.model.AmenityType;
+import hotelreservation.model.Reservation;
 import hotelreservation.model.Room;
 import hotelreservation.model.RoomRate;
 import hotelreservation.model.RoomType;
 import hotelreservation.model.Status;
 import hotelreservation.repository.AmenityRepo;
 import hotelreservation.repository.AmenityTypeRepo;
+import hotelreservation.repository.ReservationRepo;
 import hotelreservation.repository.RoomRateRepo;
 import hotelreservation.repository.RoomRepo;
 import hotelreservation.repository.RoomTypeRepo;
@@ -42,6 +44,9 @@ public class RoomService {
 
 	@Autowired
 	private RoomRateRepo roomRateRepo;
+	
+	@Autowired
+	private ReservationRepo reservationRepo;
 
 	public RoomType createRoomType(RoomType roomType) {
 		return roomTypeRepo.save(roomType);
@@ -146,6 +151,41 @@ public class RoomService {
 
 		return findByStartDateBetween;
 	}
+	
+	public List<RoomRate> getAvailableRoomRates(Date start, Date end) { //TODO add a variant of this method but for a particular room and move thos to roomservice
+		List<RoomRate> availableRoomRates = new ArrayList<RoomRate>();
+		List<Reservation> inProgressAndUpComingReservations = reservationRepo.findInProgressAndUpComingReservations();
+		List<RoomRate> availableRoomRatesForAllRooms = getRoomRatesForAllRooms(start, end);
+
+		for (RoomRate roomRate : availableRoomRatesForAllRooms) {
+			//No reservations so rate is available
+			if(inProgressAndUpComingReservations.isEmpty()) {
+				availableRoomRates.add(roomRate);
+				continue;
+			}
+			
+			boolean isRoomRatesAvailable = false;
+			
+			for (Reservation reservation : inProgressAndUpComingReservations) {
+				if(!reservation.getRoomRates().contains(roomRate)) {
+					//Rate is available for this reservation, but need to check all the others,
+					isRoomRatesAvailable = true;
+				} else {
+					//One reservation has this rate already, therefore it's no longer available
+					isRoomRatesAvailable = false;
+					break;
+				}
+			}
+			
+			if(isRoomRatesAvailable) {
+				availableRoomRates.add(roomRate);
+				isRoomRatesAvailable=false;
+			}
+		}
+		
+		return availableRoomRates;
+	}
+	
 
 	// TODO this needs to check if these rooms are actually available
 	public Map<Room, List<RoomRate>> getRoomRatesForAllRoomsAsMap(Date startDate, Date endDate) {

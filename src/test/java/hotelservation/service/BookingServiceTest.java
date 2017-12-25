@@ -411,9 +411,9 @@ public class BookingServiceTest {
 		reservationOne.setRoomRates(
 				Arrays.asList(roomRate4, roomRate5, roomRate6, roomRate7, roomRate8, roomRate9, roomRate10, roomRate11, roomRate12, roomRate13, roomRate14, roomRate15));
 
-		assertEquals(31, bookingService.getAvailableRoomRates(startDate, endDate).size());
+		assertEquals(31, roomService.getAvailableRoomRates(startDate, endDate).size());
 		bookingService.createReservation(reservationOne);
-		assertEquals(19, bookingService.getAvailableRoomRates(startDate, endDate).size());
+		assertEquals(19, roomService.getAvailableRoomRates(startDate, endDate).size());
 
 		reservationTwo.setMainGuest(mainGuest);
 		reservationTwo.setCreatedBy(user);
@@ -423,7 +423,7 @@ public class BookingServiceTest {
 		reservationTwo.setRoomRates(Arrays.asList(roomRate16, roomRate17, roomRate18, roomRate19, roomRate20));
 
 		bookingService.createReservation(reservationTwo);
-		assertEquals(14, bookingService.getAvailableRoomRates(startDate, endDate).size());
+		assertEquals(14, roomService.getAvailableRoomRates(startDate, endDate).size());
 
 		reservationThree.setMainGuest(mainGuest);
 		reservationThree.setCreatedBy(user);
@@ -434,7 +434,7 @@ public class BookingServiceTest {
 				.setRoomRates(Arrays.asList(roomRate21, roomRate22, roomRate23, roomRate24, roomRate25, roomRate26, roomRate27, roomRate28, roomRate29, roomRate30, roomRate31));
 
 		bookingService.createReservation(reservationThree);
-		assertEquals(3, bookingService.getAvailableRoomRates(startDate, endDate).size());
+		assertEquals(3, roomService.getAvailableRoomRates(startDate, endDate).size());
 
 		reservationFour.setMainGuest(mainGuest);
 		reservationFour.setCreatedBy(user);
@@ -444,7 +444,7 @@ public class BookingServiceTest {
 		reservationFour.setRoomRates(Arrays.asList(roomRate1, roomRate2, roomRate3));
 
 		bookingService.createReservation(reservationFour);
-		assertEquals(0, bookingService.getAvailableRoomRates(startDate, endDate).size());
+		assertEquals(0, roomService.getAvailableRoomRates(startDate, endDate).size());
 		assertEquals(4, bookingService.getAllReservations().size());
 	}
 	
@@ -459,7 +459,7 @@ public class BookingServiceTest {
 		reservationTwo = new Reservation();
 		reservationThree = new Reservation();
 		reservationFour = new Reservation();
-
+ 
 		reservationOne.setMainGuest(mainGuest);
 		reservationOne.setCreatedBy(user);
 		reservationOne.setReservationStatus(ReservationStatus.UpComing);
@@ -520,19 +520,19 @@ public class BookingServiceTest {
 			} 
 		}
 		
-		assertEquals(93, bookingService.getAvailableRoomRates(startDate, endDate).size());
+		assertEquals(93, roomService.getAvailableRoomRates(startDate, endDate).size());
 		bookingService.createReservation(reservationOne);
 		
-		assertEquals(81, bookingService.getAvailableRoomRates(startDate, endDate).size());
+		assertEquals(81, roomService.getAvailableRoomRates(startDate, endDate).size());
 		bookingService.createReservation(reservationTwo);
 		
-		assertEquals(76, bookingService.getAvailableRoomRates(startDate, endDate).size());
+		assertEquals(76, roomService.getAvailableRoomRates(startDate, endDate).size());
 		bookingService.createReservation(reservationThree);
 		
-		assertEquals(65, bookingService.getAvailableRoomRates(startDate, endDate).size());
+		assertEquals(65, roomService.getAvailableRoomRates(startDate, endDate).size());
 		bookingService.createReservation(reservationFour);
 
-		assertEquals(41, bookingService.getAvailableRoomRates(startDate, endDate).size());
+		assertEquals(41, roomService.getAvailableRoomRates(startDate, endDate).size());
 		assertEquals(4, bookingService.getAllReservations().size());
 	}
 	
@@ -557,12 +557,12 @@ public class BookingServiceTest {
 		Date startDate = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1));
 		Date endDate = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4));
 
-		assertEquals(2, bookingService.getAvailableRoomRates(startDate, endDate).size());
+		assertEquals(2, roomService.getAvailableRoomRates(startDate, endDate).size());
 
 		bookingService.createReservation(reservationOne);
 
-		assertEquals(1, bookingService.getAvailableRoomRates(startDate, endDate).size());
-		assertTrue(bookingService.getAvailableRoomRates(startDate, endDate).get(0).equals(roomRateThree));
+		assertEquals(1, roomService.getAvailableRoomRates(startDate, endDate).size());
+		assertTrue(roomService.getAvailableRoomRates(startDate, endDate).get(0).equals(roomRateThree));
 	}
 
 }

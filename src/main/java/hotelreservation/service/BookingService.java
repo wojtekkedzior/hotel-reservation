@@ -20,7 +20,6 @@ import hotelreservation.repository.ContactRepo;
 import hotelreservation.repository.GuestRepo;
 import hotelreservation.repository.IdentificationRepo;
 import hotelreservation.repository.ReservationRepo;
-import hotelreservation.repository.RoomRateRepo;
 
 @Service
 public class BookingService {
@@ -36,9 +35,6 @@ public class BookingService {
 
 	@Autowired
 	private ReservationRepo reservationRepo;
-	
-	@Autowired
-	private RoomService roomService;
 	
 	@Autowired
 	private DateConvertor dateConvertor;
@@ -95,40 +91,6 @@ public class BookingService {
 		reservationRepo.save(reservation);
 	}
 
-	public List<RoomRate> getAvailableRoomRates(Date start, Date end) { //TODO add a variant of this method but for a particular room and move thos to roomservice
-		List<RoomRate> availableRoomRates = new ArrayList<RoomRate>();
-		List<Reservation> inProgressAndUpComingReservations = reservationRepo.findInProgressAndUpComingReservations();
-		List<RoomRate> availableRoomRatesForAllRooms = roomService.getRoomRatesForAllRooms(start, end);
-
-		for (RoomRate roomRate : availableRoomRatesForAllRooms) {
-			//No reservations so rate is available
-			if(inProgressAndUpComingReservations.isEmpty()) {
-				availableRoomRates.add(roomRate);
-				continue;
-			}
-			
-			boolean isRoomRatesAvailable = false;
-			
-			for (Reservation reservation : inProgressAndUpComingReservations) {
-				if(!reservation.getRoomRates().contains(roomRate)) {
-					//Rate is available for this reservation, but need to check all the others,
-					isRoomRatesAvailable = true;
-				} else {
-					//One reservation has this rate already, therefore it's no longer available
-					isRoomRatesAvailable = false;
-					break;
-				}
-			}
-			
-			if(isRoomRatesAvailable) {
-				availableRoomRates.add(roomRate);
-				isRoomRatesAvailable=false;
-			}
-		}
-		
-		return availableRoomRates;
-	}
-	
 	public List<Reservation> getAllReservations() {
 		List<Reservation> target = new ArrayList<Reservation>();
 		reservationRepo.findAll().forEach(target::add);
