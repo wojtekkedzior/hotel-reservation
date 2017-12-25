@@ -507,7 +507,6 @@ public class BookingServiceTest {
 			
 			if(i >= 10 && i <= 20 ) {
 				reservationThree.getRoomRates().add(roomRate);
-				System.err.println(roomRate.getDay());
 			} 
 		}
 		

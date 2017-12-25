@@ -216,4 +216,9 @@ public class RoomServiceTest {
 
 		assertEquals(status, roomService.getRoomStatus(room));
 	}
+	
+	@Test
+	public void testGetAvailableRoomRates() {
+		
+	}
 }
