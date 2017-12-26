@@ -400,7 +400,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		reservationOne.setOccupants(Arrays.asList(guestTwo, guestThree));
 		reservationOne.setRoomRates(new ArrayList<RoomRate>());
 
-		List<RoomRate> roomRatesForAllRooms = roomService.getRoomRatesForAllRooms(dateConvertor.asDate(LocalDate.of(2018, Month.MARCH, 1)),
+		List<RoomRate> roomRatesForAllRooms = roomService.getRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.MARCH, 1)),
 				dateConvertor.asDate(LocalDate.of(2018, Month.MARCH, 31)));
 
 		for (RoomRate roomRate : roomRatesForAllRooms) {

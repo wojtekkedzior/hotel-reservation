@@ -144,19 +144,20 @@ public class RoomService {
 		roomRateRepo.save(roomRate);
 	}
 
-	public List<RoomRate> getRoomRatesForAllRooms(Date start, Date end) {
-		System.err.println("start: " + start);
-		System.err.println("start: " + end);
+	public List<RoomRate> getRoomRates(Date start, Date end) {
 		List<RoomRate> findByStartDateBetween = roomRateRepo.findByDayBetween(start, end);
-		System.err.println("size: " + findByStartDateBetween.size());
-
+		return findByStartDateBetween;
+	}
+	
+	public List<RoomRate> getRoomRates(Room room, Date start, Date end) {
+		List<RoomRate> findByStartDateBetween = roomRateRepo.findByRoomIdAndDayBetween(room.getId(), start, end);
 		return findByStartDateBetween;
 	}
 	
 	public List<RoomRate> getAvailableRoomRates(Date start, Date end) { //TODO add a variant of this method but for a particular room 
 		List<RoomRate> availableRoomRates = new ArrayList<RoomRate>();
 		List<Reservation> inProgressAndUpComingReservations = reservationRepo.findInProgressAndUpComingReservations();
-		List<RoomRate> availableRoomRatesForAllRooms = getRoomRatesForAllRooms(start, end);
+		List<RoomRate> availableRoomRatesForAllRooms = getRoomRates(start, end);
 
 		for (RoomRate roomRate : availableRoomRatesForAllRooms) {
 			//No reservations so rate is available
@@ -187,7 +188,7 @@ public class RoomService {
 		return availableRoomRates;
 	}
 
-	public Map<Room, List<RoomRate>> getRoomRatesForAllRoomsAsMap(Date startDate, Date endDate) {
+	public Map<Room, List<RoomRate>> getRoomRatesAsMap(Date startDate, Date endDate) {
 		Map<Room, List<RoomRate>> ratesForAllRooms = new HashMap<Room, List<RoomRate>>();
 		
 		for (RoomRate roomRate : getAvailableRoomRates(startDate, endDate)) {

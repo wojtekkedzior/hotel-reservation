@@ -34,7 +34,6 @@ public class ReservationController {
 	@Autowired
 	private GuestService guestService;
 	
-
 	@RequestMapping("/addReservation")
 	public String addReservationModel(Model model) {
 		model.addAttribute("reservation", new Reservation());
@@ -62,7 +61,7 @@ public class ReservationController {
 
 		model.addAttribute("room", new Room());
 		model.addAttribute("reservation", new Reservation());
-		model.addAttribute("roomRatesPerRoom", roomService.getRoomRatesForAllRoomsAsMap(startDate, endDate));
+		model.addAttribute("roomRatesPerRoom", roomService.getRoomRatesAsMap(startDate, endDate));
  
 		return "addReservation";
 	} 

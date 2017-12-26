@@ -123,7 +123,7 @@ public class RoomController {
 		Date start = dateConvertor.asDate(LocalDate.now());
 		Date end = dateConvertor.asDate(LocalDate.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH)));
 
-		model.addAttribute("roomRates", roomService.getRoomRatesForAllRooms(start, end));
+		model.addAttribute("roomRates", roomService.getRoomRates(start, end));
 		model.addAttribute("rooms", roomService.getAllRooms());
 		model.addAttribute("currencies", Currency.values());
 		return "roomRate";
