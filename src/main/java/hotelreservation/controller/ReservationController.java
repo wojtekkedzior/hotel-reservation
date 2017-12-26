@@ -2,6 +2,7 @@ package hotelreservation.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -12,14 +13,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import hotelreservation.model.Reservation;
 import hotelreservation.model.Room;
 import hotelreservation.service.BookingService;
-import hotelreservation.service.GuestService;
 import hotelreservation.service.RoomService;
 
 @Controller
@@ -30,48 +29,43 @@ public class ReservationController {
 
 	@Autowired
 	private BookingService bookingService;
-	
-	@Autowired
-	private GuestService guestService;
-	
-	@RequestMapping("/addReservation")
-	public String addReservationModel(Model model) {
-		model.addAttribute("reservation", new Reservation());
-		return "addReservation";
-	}
-	
-	@RequestMapping(value = "/editReservation/{id}") 
-	public String getReservationModel(Model model, @PathVariable int id) {
-		model.addAttribute("reservation", bookingService.getReservation(id));
-		return "addReservation";
-	} 
 
-	//Should get rid of this post. need to build up an href via js adding start and end date for a filter and hit the get method.  need to add params to it as well.
-	@PostMapping("/addReservation/withDates")
-	public String addReservation(Model model, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
-			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
+	@RequestMapping(value = { "/addReservation", "/addReservation/start/{startDate}/end/{endDate}" })
+	public String addReservationModel(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<Date> startDate,
+			@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<Date> endDate, Model model) {
+		model.addAttribute("reservation", new Reservation());
+		
 		System.err.println(startDate);
 		System.err.println(endDate);
 
 		// TODO move to properties file
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
-		model.addAttribute("startDate", formatter.format(startDate));
-		model.addAttribute("endDate", formatter.format(endDate));
+		model.addAttribute("startDate", startDate.isPresent() ? formatter.format(startDate.get()) : "2018-03-09");
+		model.addAttribute("endDate", endDate.isPresent() ? formatter.format(endDate.get()) : "2018-03-20");
 
 		model.addAttribute("room", new Room());
 		model.addAttribute("reservation", new Reservation());
-		model.addAttribute("roomRatesPerRoom", roomService.getRoomRatesAsMap(startDate, endDate));
- 
+		
+		if(startDate.isPresent() && endDate.isPresent()) {
+			model.addAttribute("roomRatesPerRoom", roomService.getRoomRatesAsMap(startDate.get(), endDate.get()));
+		}
+		
 		return "addReservation";
-	} 
+	}
+
+	@RequestMapping(value = "/editReservation/{id}")
+	public String getReservationModel(Model model, @PathVariable int id) {
+		model.addAttribute("reservation", bookingService.getReservation(id));
+		return "addReservation";
+	}
 
 	@PostMapping("/addReservation")
 	public ModelAndView addAmenityType(@ModelAttribute Reservation reservation, BindingResult bindingResult, RedirectAttributes redir) {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("redirect:/addReservation");
 		redir.addFlashAttribute("id", 1);
- 
+
 		bookingService.createReservation(reservation);
 		return modelAndView;
 	}

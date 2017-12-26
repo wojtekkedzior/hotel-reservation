@@ -5,25 +5,14 @@
 <title>Getting Started: Serving Web Content</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="stylesheet" href="/css/mycss.css" />
-
 </head>
 
-<!--  (${user.isAdmin()} ? 'Administrator' : (${user.type} ?: 'Unknown')) -->
-
-
 <body>
-	<form action="#" th:action="@{/addReservation/withDates}" method="post">
-		<p>
-			<!-- th:value="${startDate}" -->
-			Start Date: <input type="date" name="startDate" th:value="2018-03-09" />
-			<!-- 2017-3-9 -->
-			End Date: <input type="date" name="endDate" th:value="2018-03-20" />
-		</p>
-		<p>
-			<input type="submit" value="Submit" /> >
-		</p>
-	</form>
-
+	<p>
+		Start Date: <input id="desiredReservationStartDate" type="date" name="startDate" th:value="2018-03-09" th:onClick="'javascript:changedDate();'"/>
+		End Date: <input id="desiredReservationEndDate" type="date" name="endDate" th:value="2018-03-20" th:onClick="'javascript:changedDate();'"/>
+		<a th:id="filterByDate" href="/bob" th:text="Filter"> </a> <!-- add OnLoad -->
+	</p>
 
 	<form action="#" th:action="@{/addReservation}"
 		th:object="${reservation}" method="post">
@@ -93,6 +82,14 @@
 
 		document.getElementById("roomRateSelectSubTotal-" + value).value = subTotal;
 	}
+	
+	function changedDate() {
+		var startDate = document.getElementById("desiredReservationStartDate");
+		var endDate = document.getElementById("desiredReservationEndDate");
+		
+		document.getElementById("filterByDate").href = "/addReservation/start/" + startDate.value + "/end/" + endDate.value ;
+	}
+	
 	/*]]>*/
 </script>
 
