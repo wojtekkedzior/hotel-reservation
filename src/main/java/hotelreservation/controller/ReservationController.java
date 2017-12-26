@@ -62,7 +62,7 @@ public class ReservationController {
 
 		model.addAttribute("room", new Room());
 		model.addAttribute("reservation", new Reservation());
-		model.addAttribute("roomRatesPerRoom", roomService.getRoomRatesForAllRooms(startDate, endDate));
+		model.addAttribute("roomRatesPerRoom", roomService.getRoomRatesForAllRoomsAsMap(startDate, endDate));
  
 		return "addReservation";
 	} 

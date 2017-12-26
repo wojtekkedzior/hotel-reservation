@@ -128,10 +128,10 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 
 	@Autowired
 	private BookingService bookingService;
-	
-	@Autowired 
+
+	@Autowired
 	private DateConvertor dateConvertor;
-	
+
 	@Override
 	public void onApplicationEvent(ApplicationReadyEvent event) {
 		addUserTypes();
@@ -315,46 +315,46 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	private void addRoomRates() {
 		// -|-||----|---------|-----------
 
-		roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
-		roomRateThree = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 5)));
-		roomRateFour = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 10)));
-		roomRateFive = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 20)));
-
-		roomService.createRoomRate(roomRateOne);
-		roomService.createRoomRate(roomRateTwo); 
-		roomService.createRoomRate(roomRateThree);
-		roomService.createRoomRate(roomRateFour);
-		roomService.createRoomRate(roomRateFive);
+		// roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		// roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
+		// roomRateThree = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 5)));
+		// roomRateFour = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 10)));
+		// roomRateFive = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 20)));
+		//
+		// roomService.createRoomRate(roomRateOne);
+		// roomService.createRoomRate(roomRateTwo);
+		// roomService.createRoomRate(roomRateThree);
+		// roomService.createRoomRate(roomRateFour);
+		// roomService.createRoomRate(roomRateFive);
 	}
 
 	private void addAdditionalRoomRates() {
 		Calendar cal = new GregorianCalendar();
-		cal.setTime(dateConvertor.asDate(LocalDate.of(2017, Month.JANUARY, 1)));
-		
-		for(int days = 1; days <= 365; days++) { 
+		cal.setTime(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1)));
+
+		for (int days = 1; days <= 365; days++) {
 			cal.roll(Calendar.DAY_OF_YEAR, true);
-			 
-		    int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
-		    int value = 1000;
-	        
-		    if (dayOfWeek == Calendar.FRIDAY || dayOfWeek == Calendar.SATURDAY) { 
-		    	value = 1999;
-	        } else if (dayOfWeek == Calendar.SUNDAY) {
-	        	value = 1500; 
-	        }
-	        
+
+			int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+			int value = 1000;
+
+			if (dayOfWeek == Calendar.FRIDAY || dayOfWeek == Calendar.SATURDAY) {
+				value = 1999;
+			} else if (dayOfWeek == Calendar.SUNDAY) {
+				value = 1500;
+			}
+
 			roomService.createRoomRate(new RoomRate(standardRoomOne, Currency.CZK, value, cal.getTime()));
 			roomService.createRoomRate(new RoomRate(standardRoomTwo, Currency.CZK, value, cal.getTime()));
 
 			roomService.createRoomRate(new RoomRate(luxuryRoomOne, Currency.CZK, value * 2, cal.getTime()));
 			roomService.createRoomRate(new RoomRate(luxuryRoomTwo, Currency.CZK, value * 2, cal.getTime()));
 		}
-	} 
+	}
 
 	private void addContacts() {
 		contactOne = new Contact();
-		contactTwo = new Contact(); 
+		contactTwo = new Contact();
 		contactThree = new Contact();
 		contactFour = new Contact();
 
@@ -389,15 +389,28 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	}
 
 	private void addReservations() {
+		LocalDate startDate = LocalDate.of(2018, Month.MARCH, 3);
+		LocalDate endDate = LocalDate.of(2018, Month.MARCH, 20);
+
 		reservationOne = new Reservation();
-		reservationOne.setStartDate(new Date());
+		reservationOne.setStartDate(dateConvertor.asDate(startDate));
+		reservationOne.setEndDate(dateConvertor.asDate(endDate));
 		reservationOne.setReservationStatus(ReservationStatus.UpComing);
 		reservationOne.setMainGuest(guestOne);
 		reservationOne.setOccupants(Arrays.asList(guestTwo, guestThree));
-		reservationOne.setRoomRates(Arrays.asList(roomRateOne, roomRateTwo));
+		reservationOne.setRoomRates(new ArrayList<RoomRate>());
+
+		List<RoomRate> roomRatesForAllRooms = roomService.getRoomRatesForAllRooms(dateConvertor.asDate(LocalDate.of(2018, Month.MARCH, 1)),
+				dateConvertor.asDate(LocalDate.of(2018, Month.MARCH, 31)));
+
+		for (RoomRate roomRate : roomRatesForAllRooms) {
+			if (roomRate.getRoom().getId() == 1 
+					&& roomRate.getDay().after(dateConvertor.asDate(startDate.minusDays(1)))
+					&& roomRate.getDay().before(dateConvertor.asDate(endDate.plusDays(1)))) {
+				reservationOne.getRoomRates().add(roomRate);
+			}
+		}
 
 		bookingService.createReservation(reservationOne);
 	}
-
-
 }

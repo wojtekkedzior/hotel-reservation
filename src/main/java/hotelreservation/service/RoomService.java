@@ -1,6 +1,7 @@
 package hotelreservation.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -152,7 +153,7 @@ public class RoomService {
 		return findByStartDateBetween;
 	}
 	
-	public List<RoomRate> getAvailableRoomRates(Date start, Date end) { //TODO add a variant of this method but for a particular room and move thos to roomservice
+	public List<RoomRate> getAvailableRoomRates(Date start, Date end) { //TODO add a variant of this method but for a particular room 
 		List<RoomRate> availableRoomRates = new ArrayList<RoomRate>();
 		List<Reservation> inProgressAndUpComingReservations = reservationRepo.findInProgressAndUpComingReservations();
 		List<RoomRate> availableRoomRatesForAllRooms = getRoomRatesForAllRooms(start, end);
@@ -185,16 +186,17 @@ public class RoomService {
 		
 		return availableRoomRates;
 	}
-	
 
-	// TODO this needs to check if these rooms are actually available
 	public Map<Room, List<RoomRate>> getRoomRatesForAllRoomsAsMap(Date startDate, Date endDate) {
 		Map<Room, List<RoomRate>> ratesForAllRooms = new HashMap<Room, List<RoomRate>>();
-
-		Iterable<Room> allRooms = roomRepo.findAll();
-
-		for (Room room : allRooms) {
-			ratesForAllRooms.put(room, roomRateRepo.findByRoomIdAndDayBetween(room.getId(), startDate, endDate));
+		
+		for (RoomRate roomRate : getAvailableRoomRates(startDate, endDate)) {
+			
+			if(ratesForAllRooms.containsKey(roomRate.getRoom())) {
+				ratesForAllRooms.get(roomRate.getRoom()).add(roomRate);
+			} else {
+				ratesForAllRooms.put(roomRate.getRoom(), new ArrayList<RoomRate>(Arrays.asList(roomRate)));
+			}
 		}
 
 		return ratesForAllRooms;
@@ -207,13 +209,6 @@ public class RoomService {
 		return target;
 	}
 	
-//	public List<RoomRate> getAvailableRoomRates(Date startDate, Date endDate) {
-//		List<RoomRate> target = new ArrayList<RoomRate>();
-//		roomRateRepo.findByDayBetween(startDate, endDate).forEach(target::add);
-//
-//		return target;
-//	}
-
 	public Amenity getAmenityById(Long id) {
 		return amenityRepo.findOne(id);
 	}
