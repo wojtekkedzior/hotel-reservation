@@ -46,7 +46,7 @@ public class ReservationController {
 		return "addReservation";
 	} 
 
-	//Sohuld get rid of this post. need to build up an href via js adding start and end date for a filter and hit the get method.  need to add params to it as well.
+	//Should get rid of this post. need to build up an href via js adding start and end date for a filter and hit the get method.  need to add params to it as well.
 	@PostMapping("/addReservation/withDates")
 	public String addReservation(Model model, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
 			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {

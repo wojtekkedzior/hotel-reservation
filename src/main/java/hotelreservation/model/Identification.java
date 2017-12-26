@@ -23,9 +23,7 @@ public class Identification {
 	@Enumerated(EnumType.STRING)
 	private IdType idType;
 	
-	
 	public Identification() {}
-
 
 	public Identification(String name, String description, IdType idType) {
 		super();
