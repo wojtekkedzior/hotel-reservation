@@ -30,7 +30,7 @@ public class ReservationController {
 	@Autowired
 	private BookingService bookingService;
 
-	@RequestMapping(value = { "/addReservation", "/addReservation/start/{startDate}/end/{endDate}" })
+	@RequestMapping(value = { "/reservation", "/reservation/start/{startDate}/end/{endDate}" })
 	public String addReservationModel(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<Date> startDate,
 			@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<Date> endDate, Model model) {
 		model.addAttribute("reservation", new Reservation());
@@ -51,19 +51,19 @@ public class ReservationController {
 			model.addAttribute("roomRatesPerRoom", roomService.getRoomRatesAsMap(startDate.get(), endDate.get()));
 		}
 		
-		return "addReservation";
+		return "reservation";
 	}
 
 	@RequestMapping(value = "/editReservation/{id}")
 	public String getReservationModel(Model model, @PathVariable int id) {
 		model.addAttribute("reservation", bookingService.getReservation(id));
-		return "addReservation";
+		return "reservation";
 	}
 
-	@PostMapping("/addReservation")
+	@PostMapping("/reservation")
 	public ModelAndView addAmenityType(@ModelAttribute Reservation reservation, BindingResult bindingResult, RedirectAttributes redir) {
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("redirect:/addReservation");
+		modelAndView.setViewName("redirect:/reservation");
 		redir.addFlashAttribute("id", 1);
 
 		bookingService.createReservation(reservation);

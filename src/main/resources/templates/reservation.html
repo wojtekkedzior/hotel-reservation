@@ -11,7 +11,7 @@
 	<p>
 		Start Date: <input id="desiredReservationStartDate" type="date" name="startDate" th:value="2018-03-09" th:onClick="'javascript:changedDate();'"/>
 		End Date: <input id="desiredReservationEndDate" type="date" name="endDate" th:value="2018-03-20" th:onClick="'javascript:changedDate();'"/>
-		<a th:id="filterByDate" href="/bob" th:text="Filter"> </a> <!-- add OnLoad -->
+		<a th:id="filterByDate" th:onClick="'javascript:changedDate();'" th:text="Filter"> </a> <!-- add OnLoad -->
 	</p>
 
 	<form action="#" th:action="@{/addReservation}"
@@ -87,7 +87,7 @@
 		var startDate = document.getElementById("desiredReservationStartDate");
 		var endDate = document.getElementById("desiredReservationEndDate");
 		
-		document.getElementById("filterByDate").href = "/addReservation/start/" + startDate.value + "/end/" + endDate.value ;
+		document.getElementById("filterByDate").href = "/reservation/start/" + startDate.value + "/end/" + endDate.value ;
 	}
 	
 	/*]]>*/
