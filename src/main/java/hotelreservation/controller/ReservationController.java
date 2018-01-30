@@ -5,10 +5,13 @@ import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,6 +57,12 @@ public class ReservationController {
 		return "reservation";
 	}
 
+	@InitBinder     
+	public void initBinder(WebDataBinder binder){
+	     binder.registerCustomEditor(       Date.class,     
+	                         new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true, 10));   
+	}
+	
 	@RequestMapping(value = "/editReservation/{id}")
 	public String getReservationModel(Model model, @PathVariable int id) {
 		model.addAttribute("reservation", bookingService.getReservation(id));
@@ -62,6 +71,7 @@ public class ReservationController {
 
 	@PostMapping("/reservation")
 	public ModelAndView addAmenityType(@ModelAttribute Reservation reservation, BindingResult bindingResult, RedirectAttributes redir) {
+		System.err.println(bindingResult); //need to handle binding results
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("redirect:/reservation");
 		redir.addFlashAttribute("id", 1);

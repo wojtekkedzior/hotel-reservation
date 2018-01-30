@@ -8,14 +8,16 @@
 </head>
 
 <body>
-	<p>
+
+
+	<form action="#" th:action="@{/reservation}"
+		th:object="${reservation}" method="post">
+		
+			<p>
 		Start Date: <input id="desiredReservationStartDate" type="date" name="startDate" th:value="2018-03-09" th:onClick="'javascript:changedDate();'"/>
 		End Date: <input id="desiredReservationEndDate" type="date" name="endDate" th:value="2018-03-20" th:onClick="'javascript:changedDate();'"/>
 		<a th:id="filterByDate" th:onClick="'javascript:changedDate();'" th:text="Filter"> </a> <!-- add OnLoad -->
 	</p>
-
-	<form action="#" th:action="@{/addReservation}"
-		th:object="${reservation}" method="post">
 
 		<div th:each="roomRateCombo : ${roomRatesPerRoom}">
 			<p>
@@ -49,7 +51,7 @@
 		<p>
 		<!-- hidden field to make sure the ID gets passed back to the controller when submit is called. -->
 			<input type="number" th:field="${reservation.id}" hidden="true" />
-			
+			<input type="date" th:field="${startDate}" th:value="2008-03-09" hidden="true" />
 			
 			Guest First Name: <input type="text"
 				th:field="${reservation.mainGuest.firstName}" /> Guest Last Name: <input

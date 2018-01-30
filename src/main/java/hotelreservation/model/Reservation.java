@@ -14,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import hotelreservation.model.enums.ReservationStatus;
 import lombok.Data;
 
@@ -43,10 +45,13 @@ public class Reservation {
 	
 	public Reservation() {}
 	
+	
 	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern = "yyyyMMdd") //The DateTimeFormat needs to be in this format for Spring to convert a string back to a date. duh!
 	private Date startDate;
 	
 	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern = "yyyyMMdd")
 	private Date endDate;
 	
 	@Enumerated(EnumType.STRING)
