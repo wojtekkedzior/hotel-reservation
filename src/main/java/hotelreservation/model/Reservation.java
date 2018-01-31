@@ -43,7 +43,8 @@ public class Reservation {
 	@ManyToOne
 	private User createdBy;
 	
-	public Reservation() {}
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date createdOn;
 	
 	
 	@Temporal(TemporalType.DATE)
@@ -60,5 +61,7 @@ public class Reservation {
 	//should we have start and end date here as well?  It would be useful to do so, so that we don't have to iterate over all the roomrates
 	//but how would having a start and end date help when dealing with a reservation over non-consecutive days?  this will get complicated
 	//logic to determin the reservation type (consecutive days vs non-consecutive) can also get tricky.
+
+	public Reservation() {}
 
 }

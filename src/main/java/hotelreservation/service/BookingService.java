@@ -89,6 +89,7 @@ public class BookingService {
 			}
 		}
 		
+		reservation.setCreatedOn(new Date());
 		reservationRepo.save(reservation);
 	}
 

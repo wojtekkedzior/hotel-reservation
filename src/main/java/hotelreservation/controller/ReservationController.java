@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -61,6 +62,8 @@ public class ReservationController {
 			model.addAttribute("roomRatesPerRoom", roomService.getRoomRatesAsMap(startDate.get(), endDate.get()));
 		}
 
+		model.addAttribute("reservations", bookingService.getAllReservations());
+		
 		return "reservation";
 	}
 
@@ -72,7 +75,15 @@ public class ReservationController {
 		bookingService.createReservation(reservation);
 		
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("redirect:/admin");
+		modelAndView.setViewName("redirect:/reservation");
 		return modelAndView;
+	}
+	
+	@RequestMapping(value="/reservationDelete/{id}", method=RequestMethod.DELETE)
+	public ModelAndView deleteUser(@PathVariable Optional<Integer> id) {
+		if(id.isPresent()) {
+//			bookingService.deleteUser(new Long(id.get()));
+		} 
+		return new ModelAndView("redirect:/reservation");
 	}
 }
