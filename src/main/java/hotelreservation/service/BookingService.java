@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -97,8 +98,8 @@ public class BookingService {
 		return target;
 	}
 
-	public Reservation getReservation(int reservationId) {
-		return reservationRepo.findOne(new Long(reservationId));
+	public Reservation getReservation(Optional<Integer> reservationId) {
+		return reservationRepo.findOne(new Long(reservationId.get()));
 	}
  
 	public List<Reservation> getReservationsStartingToday() {

@@ -32,51 +32,47 @@ public class ReservationController {
 
 	@Autowired
 	private BookingService bookingService;
+	
+	//TODO figure out what is this for since I thought that dates worked prior to having this copied and pasted in.
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true, 10));
+	}
 
-	@RequestMapping(value = { "/reservation", "/reservation/start/{startDate}/end/{endDate}" })
+	@RequestMapping(value = { "/reservation", "/reservation/{id}", "/reservation/start/{startDate}/end/{endDate}" })
 	public String addReservationModel(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<Date> startDate,
-			@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<Date> endDate, Model model) {
-		model.addAttribute("reservation", new Reservation());
-		
-		System.err.println(startDate);
-		System.err.println(endDate);
+			@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<Date> endDate, @PathVariable Optional<Integer> id, Model model) {
+		if (!id.isPresent()) {
+			model.addAttribute("reservation", new Reservation());
+			model.addAttribute("room", new Room());
+		} else {
+			Reservation reservation = bookingService.getReservation(id);
+			model.addAttribute("reservation", reservation == null ? new Reservation() : reservation);
+		}
 
 		// TODO move to properties file
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
+		// TODO hard-coded for now
 		model.addAttribute("startDate", startDate.isPresent() ? formatter.format(startDate.get()) : "2018-03-09");
 		model.addAttribute("endDate", endDate.isPresent() ? formatter.format(endDate.get()) : "2018-03-20");
 
-		model.addAttribute("room", new Room());
-		model.addAttribute("reservation", new Reservation());
-		
-		if(startDate.isPresent() && endDate.isPresent()) {
+		if (startDate.isPresent() && endDate.isPresent()) {
 			model.addAttribute("roomRatesPerRoom", roomService.getRoomRatesAsMap(startDate.get(), endDate.get()));
 		}
-		
-		return "reservation";
-	}
 
-	@InitBinder     
-	public void initBinder(WebDataBinder binder){
-	     binder.registerCustomEditor(       Date.class,     
-	                         new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true, 10));   
-	}
-	
-	@RequestMapping(value = "/editReservation/{id}")
-	public String getReservationModel(Model model, @PathVariable int id) {
-		model.addAttribute("reservation", bookingService.getReservation(id));
 		return "reservation";
 	}
 
 	@PostMapping("/reservation")
 	public ModelAndView addAmenityType(@ModelAttribute Reservation reservation, BindingResult bindingResult, RedirectAttributes redir) {
-		System.err.println(bindingResult); //need to handle binding results
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("redirect:/reservation");
-		redir.addFlashAttribute("id", 1);
-
+		//TODO need to make use of the binding results (in all Post handlers)
+		System.err.println(bindingResult); // need to handle binding results
+		
 		bookingService.createReservation(reservation);
+		
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("redirect:/admin");
 		return modelAndView;
 	}
 }
