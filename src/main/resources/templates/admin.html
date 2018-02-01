@@ -17,53 +17,17 @@
 	</p>
 
 	<p>
-		<a th:href="@{/reservation}">Add Reservation</a>
+		<a th:href="@{/reservation}">Reservations</a>
 	</p>
 
 	<p>
 		<a th:href="@{/amenity}">Amenities</a>
 	</p>
-	
+
 	<p>
 		<a th:href="@{/roomRate}">Room Rates</a>
 	</p>
-
-	<p>
-		<a th:href="@{/reservation/1}">Add Reservation</a>
-	</p>
-
-
-	<div>
-		<p>Reservtions</p>
-		<table width="1000">
-			<tr>
-				<td><label>Id</label></td>
-				<td><label>Guest First Name</label></td>
-				<td><label>Guest Last Name</label></td>
-			</tr>
-
-			<tr th:each="data, iterstat: ${reservations}">
-				<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
-				<td th:text="${data.mainGuest.firstName}"
-					th:id="|td${iterstat.index}|"></td>
-				<td th:text="${data.mainGuest.lastName}"
-					th:id="|td${iterstat.index}|"></td>
-			</tr>
-		</table>
-	</div>
-
-
-
-
-
-	<button th:onclick="'javascript:sayHello(\'hello\')'">Say
-		Hello</button>
+	
 </body>
-
-<script>
-	function sayHello(text) {
-		alert(text);
-	}
-</script>
 
 </html>

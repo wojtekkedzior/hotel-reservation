@@ -66,6 +66,15 @@ public class ReservationController {
 		
 		return "reservation";
 	}
+	
+	@RequestMapping(value = {"/realiseReservation/{id}"})
+	public String getRealiseReservation(@PathVariable Optional<Integer> id, Model model) {
+
+		Reservation reservation = bookingService.getReservation(id);
+		model.addAttribute("reservation", reservation);
+		
+		return "";
+	}
 
 	@PostMapping("/reservation")
 	public ModelAndView addAmenityType(@ModelAttribute Reservation reservation, BindingResult bindingResult, RedirectAttributes redir) {
