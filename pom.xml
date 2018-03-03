@@ -119,7 +119,7 @@
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
-					<warName>getMyIp</warName>
+					<warName>hotel</warName>
 				</configuration>
 			</plugin>
 		</plugins>
