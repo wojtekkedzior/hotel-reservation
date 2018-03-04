@@ -20,9 +20,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import hotelreservation.model.Contact;
+import hotelreservation.model.Guest;
+import hotelreservation.model.Identification;
 import hotelreservation.model.Reservation;
 import hotelreservation.model.Room;
+import hotelreservation.model.enums.IdType;
 import hotelreservation.service.BookingService;
+import hotelreservation.service.GuestService;
 import hotelreservation.service.RoomService;
 
 @Controller
@@ -33,6 +38,9 @@ public class ReservationController {
 
 	@Autowired
 	private BookingService bookingService;
+	
+	@Autowired
+	private GuestService guestService;
 	
 	//TODO figure out what is this for since I thought that dates worked prior to having this copied and pasted in.
 	@InitBinder
@@ -67,17 +75,48 @@ public class ReservationController {
 		return "reservation";
 	}
 	
+	
+	
 	@RequestMapping(value = {"/realiseReservation/{id}"})
 	public String getRealiseReservation(@PathVariable Optional<Integer> id, Model model) {
 
 		Reservation reservation = bookingService.getReservation(id);
 		model.addAttribute("reservation", reservation);
 		
-		return "";
+		Guest guest = new Guest();
+		guest.setContact(new Contact());
+		guest.setIdentification(new Identification());
+		
+		model.addAttribute("guest", guest);
+		model.addAttribute("idTypes", IdType.values());
+		
+		return "realiseReservation";
+	}
+	
+	@PostMapping("/realiseReservation")
+	public ModelAndView realiseReservation(@ModelAttribute Reservation reservation, Guest guest, BindingResult bindingResult) {
+
+		//TODO the guest ID is also set because it matches the id field name on the reservation. Is there a way to exclude that?
+		guest.setId(0);
+		
+		//TODO need to make use of the binding results (in all Post handlers)
+		System.err.println(bindingResult); // need to handle binding results
+		
+		guestService.createContact(guest.getContact());
+		guestService.createIdentification(guest.getIdentification());
+		guestService.createGuest(guest);
+		
+		Reservation reservation2 = bookingService.getReservation(reservation.getId());
+		reservation2.getOccupants().add(guest);
+		bookingService.createReservation(reservation2);
+		
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("redirect:/reservation");
+		return modelAndView;
 	}
 
 	@PostMapping("/reservation")
-	public ModelAndView addAmenityType(@ModelAttribute Reservation reservation, BindingResult bindingResult, RedirectAttributes redir) {
+	public ModelAndView saveReservation(@ModelAttribute Reservation reservation, BindingResult bindingResult, RedirectAttributes redir) {
 		//TODO need to make use of the binding results (in all Post handlers)
 		System.err.println(bindingResult); // need to handle binding results
 		
@@ -88,11 +127,39 @@ public class ReservationController {
 		return modelAndView;
 	}
 	
+	
+	
+	
+	
 	@RequestMapping(value="/reservationDelete/{id}", method=RequestMethod.DELETE)
-	public ModelAndView deleteUser(@PathVariable Optional<Integer> id) {
+	public ModelAndView deleteReservation(@PathVariable Optional<Integer> id) {
 		if(id.isPresent()) {
 //			bookingService.deleteUser(new Long(id.get()));
 		} 
 		return new ModelAndView("redirect:/reservation");
 	}
+	
+	@RequestMapping(value="/deleteContact/{id}", method=RequestMethod.DELETE)
+	public ModelAndView deleteGuest(@ModelAttribute Reservation reservation, @PathVariable Optional<Integer> id) {
+		if(id.isPresent()) {
+			//remove it from the reservation first.
+			//need to check if the guest actually existsi
+			//can't have no guests.
+			guestService.deleteGuest(id);
+			
+			
+			
+			
+			
+		} 
+		
+		System.err.println("reservation " + reservation.getId());
+		System.err.println("delete contact " + id.get()	);
+		//TODO need to get the reservation ID too
+		return new ModelAndView("redirect:/realiseReservation/" + reservation.getId());
+	}
+	
+	
+	
+	
 }

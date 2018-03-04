@@ -1,5 +1,7 @@
 package hotelreservation.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +35,9 @@ public class GuestService {
 	public Identification createIdentification(Identification identification) {
 		return identificationRepo.save(identification);
 	}
-	
-	
+
+	public void deleteGuest(Optional<Integer> id) {
+		guestRepo.delete(guestRepo.findOne(new Long(id.get())));
+	}
 	
 }

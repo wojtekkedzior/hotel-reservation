@@ -23,6 +23,9 @@ public class Identification {
 	@Enumerated(EnumType.STRING)
 	private IdType idType;
 	
+	private String idNumber;
+	
+	
 	public Identification() {}
 
 	public Identification(String name, String description, IdType idType) {

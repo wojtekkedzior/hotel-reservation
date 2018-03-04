@@ -1,0 +1,77 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+<title>Getting Started: Serving Web Content</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/mycss.css}" />
+</head>
+
+<body>
+	<form action="#" th:action="@{/realiseReservation}"
+		th:object="${reservation}" method="post">
+
+		<p>
+			First Name: <input th:field="${guest.firstName}" type="text" /> Last
+			Name : <input th:field="${guest.lastName}" type="text" />
+		</p>
+		<p>
+			Address : <input th:field="${guest.contact.address}" type="text" />
+			Country : <input th:field="${guest.contact.country}" type="text" />
+		</p>
+		<p>
+			Id Type: <select class="form-control"
+				th:field="${guest.identification.idType}">
+				<option th:each="idType : ${idTypes}"
+					th:value="${idType.toString()}" th:text="${idType.toString()}"></option>
+			</select> ID Number : <input th:field="${guest.identification.idNumber}"
+				type="text" />
+		</p>
+
+		<p>
+			<!-- hidden field to make sure the ID gets passed back to the controller when submit is called. -->
+			<input type="number" th:field="${reservation.id}" hidden="true" />
+		</p>
+		<p>
+			<input type="submit" value="Submit" />
+		</p>
+
+	</form>
+
+	<div>
+		<table width="1000">
+			<tr>
+				<td><label>First Name</label></td>
+				<td><label>Last Name</label></td>
+				<td><label>Address</label></td>
+				<td><label>Country</label></td>
+				<td><label>ID Type</label></td>
+				<td><label>ID Number</label></td>
+				<td><label>Delete</label></td>
+			</tr>
+
+			<tr th:each="guest, iterstat: ${reservation.occupants}">
+				<!-- 		<td><a th:href="@{/reservation/}+${reservation.id}" th:text="${reservation.id}"> </a></td> -->
+				<td th:text="${guest.firstName}"></td>
+				<td th:text="${guest.lastName}"></td>
+				<td th:text="${guest.contact.address}"></td>
+				<td th:text="${guest.contact.country}"></td>
+				<td th:text="${guest.identification.idType}"></td>
+				<td th:text="${guest.identification.idNumber}"></td>
+				<td>
+					<form action="#" th:action="@{/deleteContact/}+${guest.id}"
+						th:method="delete">
+						<input type="hidden" name="_method" value="delete" /> <input
+							type="number" th:field="${reservation.id}" hidden="true" />
+						<button type="submit">delete</button>
+					</form>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+
+</body>
+
+
+</html>

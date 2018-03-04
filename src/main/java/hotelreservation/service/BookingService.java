@@ -53,6 +53,13 @@ public class BookingService {
 	}
 
 	public void createReservation(Reservation reservation) {
+		if(guestRepo.exists(reservation.getId())) {
+			reservationRepo.save(reservation);
+			//TODO set modified dates etc here too
+			return;
+		}
+		
+		
 		if (reservation.getMainGuest().getId() == 0) {
 			guestRepo.save(reservation.getMainGuest());
 		}
@@ -105,5 +112,9 @@ public class BookingService {
  
 	public List<Reservation> getReservationsStartingToday() {
 		return reservationRepo.findByStartDate(new Date());
+	}
+
+	public Reservation getReservation(long id) {
+		return reservationRepo.findOne(id);
 	}
 }
