@@ -26,6 +26,7 @@ public class Reservation {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
+	//TODO remove this. Instead store the first and last name as a reservation can be done on behalf of someone and all details about the guest may not be known at this point
 	@ManyToOne
 	private Guest mainGuest;
 	
