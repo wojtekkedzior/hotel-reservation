@@ -102,9 +102,9 @@ public class ReservationController {
 		//TODO need to make use of the binding results (in all Post handlers)
 		System.err.println(bindingResult); // need to handle binding results
 		
-		guestService.createContact(guest.getContact());
-		guestService.createIdentification(guest.getIdentification());
-		guestService.createGuest(guest);
+		guestService.saveContact(guest.getContact());
+		guestService.saveIdentification(guest.getIdentification());
+		guestService.saveGuest(guest);
 		
 		Reservation reservation2 = bookingService.getReservation(reservation.getId());
 		reservation2.getOccupants().add(guest);

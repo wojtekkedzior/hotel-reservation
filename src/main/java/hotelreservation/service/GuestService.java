@@ -24,20 +24,47 @@ public class GuestService {
 	@Autowired
 	private ContactRepo contactRepo;
 	
-	public Contact createContact(Contact contact) {
+	public Contact saveContact(Contact contact) {
 		return contactRepo.save(contact);
 	}
 	
-	public Guest createGuest(Guest guest) {
+	public Guest saveGuest(Guest guest) {
 		return guestRepo.save(guest);
 	}
 	
-	public Identification createIdentification(Identification identification) {
+	public Identification saveIdentification(Identification identification) {
 		return identificationRepo.save(identification);
 	}
 
+	public Guest findGuest(long id) {
+		return guestRepo.findOne(id);
+	}
+	
+	public Contact findContact(long id) {
+		return contactRepo.findOne(id);
+	}
+	
+	public Identification findIdentification(long id) {
+		return identificationRepo.findOne(id);
+	}
+	
 	public void deleteGuest(Optional<Integer> id) {
 		guestRepo.delete(guestRepo.findOne(new Long(id.get())));
 	}
+	
+	public void deleteContact(Optional<Integer> id) {
+		contactRepo.delete(contactRepo.findOne(new Long(id.get())));
+	}
+	
+	public void deleteIdentification(Optional<Integer> id) {
+		identificationRepo.delete(identificationRepo.findOne(new Long(id.get())));
+	}
+
+	public void deleteContact(long id) {
+		contactRepo.delete(id);
+		
+	}
+
+
 	
 }

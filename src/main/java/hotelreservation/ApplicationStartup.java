@@ -353,10 +353,10 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	}
 
 	private void addContacts() {
-		contactOne = new Contact();
-		contactTwo = new Contact();
-		contactThree = new Contact();
-		contactFour = new Contact();
+		contactOne = new Contact("address1", "Country1");
+		contactTwo = new Contact("address2", "Country2");
+		contactThree = new Contact("address3", "Country3");
+		contactFour = new Contact("address4", "Country4");
 
 		bookingService.createContact(contactOne);
 		bookingService.createContact(contactTwo);
