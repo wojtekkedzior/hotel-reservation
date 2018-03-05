@@ -27,6 +27,7 @@ public class GuestServiceTest {
 	
 	@Autowired
 	private GuestService guestService;
+	
 	private Identification identification;
 	private Contact contact;
 	private Guest guest;

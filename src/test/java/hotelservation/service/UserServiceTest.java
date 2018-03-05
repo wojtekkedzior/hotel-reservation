@@ -27,11 +27,15 @@ public class UserServiceTest {
 	
 	@Before
 	public void setup() {
-		addStatuses();
 	}
 
-	private void addStatuses() {
-		// TODO Auto-generated method stub
+	@Test
+	public void testCRUDUser() {
+		
+	}
+	
+	@Test
+	public void testCRUDUserType() {
 		
 	}
 

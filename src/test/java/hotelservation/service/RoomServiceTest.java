@@ -46,15 +46,39 @@ public class RoomServiceTest {
 	
 	@Before
 	public void setup() {
-		addStatuses();
 	}
 	
 
-	private void addStatuses() {
-		// TODO Auto-generated method stub
-
+	@Test
+	public void testCRUDRoom() {
+		
 	}
-
+	
+	@Test
+	public void testCRUDRoomType() {
+		
+	}
+	
+	@Test
+	public void testCRUDStatus() {
+		
+	}
+	
+	@Test
+	public void testCRUDAmenity() {
+		
+	}
+	
+	@Test
+	public void testCRUDAmenityType() {
+		
+	}
+	
+	@Test
+	public void testCRUDRoomRate() {
+		
+	}
+	
 	@Test
 	public void testCreateStatus() {
 		Status status = new Status("Status name", "Status Description");
