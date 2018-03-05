@@ -14,11 +14,7 @@ public class Contact {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	//TODO remove name and desc
-//	private String name;
-//	private String description;
 	private String country;
-	
 	private String address;
 	
 	public Contact() {}

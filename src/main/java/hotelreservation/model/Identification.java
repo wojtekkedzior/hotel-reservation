@@ -25,14 +25,10 @@ public class Identification {
 	
 	private String idNumber;
 	
-	
 	public Identification() {}
 
-	public Identification(String name, String description, IdType idType) {
-		super();
-		this.name = name;
-		this.description = description;
+	public Identification(IdType idType, String idNumber) {
 		this.idType = idType;
+		this.idNumber = idNumber;
 	}
-
 }

@@ -27,14 +27,10 @@ public class Guest {
 	
 	public Guest() {}
 
-	public Guest(String firstName, String lastName, String description, Contact contact, Identification identification) {
+	public Guest(String firstName, String lastName, Contact contact, Identification identification) {
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.description = description;
 		this.contact = contact;
 		this.identification = identification;
 	}
-	
-	
-
 }

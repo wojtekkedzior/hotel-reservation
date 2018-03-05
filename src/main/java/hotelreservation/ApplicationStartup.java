@@ -365,10 +365,10 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	}
 
 	private void addIdentifications() {
-		idOne = new Identification("IdOne Name", "IdOne Description", IdType.IDCard);
-		idTwo = new Identification("IdTwo Name", "IdTwo Description", IdType.DriversLicense);
-		idThree = new Identification("IdThree Name", "IdThree Description", IdType.Passport);
-		idFour = new Identification("IdFour Name", "IdFour Description", IdType.IDCard);
+		idOne = new Identification(IdType.IDCard, "oneIdNumber");
+		idTwo = new Identification(IdType.DriversLicense, "twoIdNumber");
+		idThree = new Identification(IdType.Passport, "threeIdNumber");
+		idFour = new Identification(IdType.IDCard, "fourIdNumber");
 
 		bookingService.createIdentification(idOne);
 		bookingService.createIdentification(idTwo);
@@ -377,10 +377,10 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	}
 
 	private void addGuests() {
-		guestOne = new Guest("GuestOne First Name", "GuestOne Last Name", "GuestOne Description", contactOne, idOne);
-		guestTwo = new Guest("GuestTWo First Name", "GuestTwo Last Name", "GuestTwo Description", contactTwo, idTwo);
-		guestThree = new Guest("GuestThree First Name", "GuestThree Last Name", "GuestThree Description", contactThree, idThree);
-		guestFour = new Guest("GuestFour First Name", "GuestFour Last Name", "GuestFour Description", contactFour, idFour);
+		guestOne = new Guest("GuestOne First Name", "GuestOne Last Name", contactOne, idOne);
+		guestTwo = new Guest("GuestTWo First Name", "GuestTwo Last Name", contactTwo, idTwo);
+		guestThree = new Guest("GuestThree First Name", "GuestThree Last Name", contactThree, idThree);
+		guestFour = new Guest("GuestFour First Name", "GuestFour Last Name", contactFour, idFour);
 
 		bookingService.createGuest(guestOne);
 		bookingService.createGuest(guestTwo);

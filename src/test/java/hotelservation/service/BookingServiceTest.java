@@ -152,8 +152,8 @@ public class BookingServiceTest {
 		// roomService.createRoomRate(roomRateSeven);
 		// roomService.createRoomRate(roomRateEight);
 
-		idOne = new Identification("IdOne Name", "IdOne Description", IdType.IDCard);
-		idTwo = new Identification("IdTwo Name", "IdTwo Description", IdType.DriversLicense);
+		idOne = new Identification(IdType.IDCard, "oneIdNumber");
+		idTwo = new Identification(IdType.DriversLicense, "twoIdNumber");
 
 		bookingService.createIdentification(idOne);
 		bookingService.createIdentification(idTwo);
@@ -164,8 +164,8 @@ public class BookingServiceTest {
 		bookingService.createContact(contactOne);
 		bookingService.createContact(contactTwo);
 
-		guestOne = new Guest("GuestOne First Name", "GuestOne Last Name", "GuestOne Description", contactOne, idOne);
-		mainGuest = new Guest("GuestTWo First Name", "GuestTwo Last Name", "GuestTwo Description", contactTwo, idTwo);
+		guestOne = new Guest("GuestOne First Name", "GuestOne Last Name", contactOne, idOne);
+		mainGuest = new Guest("GuestTWo First Name", "GuestTwo Last Name", contactTwo, idTwo);
 
 		bookingService.createGuest(guestOne);
 		bookingService.createGuest(mainGuest);
