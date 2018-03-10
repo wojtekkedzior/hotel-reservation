@@ -51,69 +51,6 @@ public class RoomServiceTest {
 
 	@Test
 	public void testCRUDRoom() {
-		
-	}
-	
-	@Test
-	public void testCRUDRoomType() {
-		
-	}
-	
-	@Test
-	public void testCRUDStatus() {
-		
-	}
-	
-	@Test
-	public void testCRUDAmenity() {
-		
-	}
-	
-	@Test
-	public void testCRUDAmenityType() {
-		
-	}
-	
-	@Test
-	public void testCRUDRoomRate() {
-		
-	}
-	
-	@Test
-	public void testCreateStatus() {
-		Status status = new Status("Status name", "Status Description");
-		roomService.createStatus(status);
-
-		List<Status> target = roomService.getAllStatuses();
-		assertTrue(target.size() == 1);
-		assertEquals(status, target.get(0));
-	}
-
-	@Test
-	public void testCrudRoomType() {
-		RoomType roomType = new RoomType("Standard", "Standard room");
-		roomService.createRoomType(roomType);
-
-		// when
-		List<RoomType> target = roomService.getAllRoomTypes();
-
-		assertTrue(target.size() == 1);
-		assertEquals(roomType, target.get(0));
-
-		roomType.setName("Fancy");
-		roomType.setDescription("Fancy room");
-
-		RoomType updatedRoomType = roomService.getRoomTypeById(roomType.getId());
-		assertEquals(roomType, updatedRoomType);
-
-		roomService.deleteRoomType(roomType);
-
-		target = roomService.getAllRoomTypes();
-		assertTrue(target.size() == 0);
-	}
-
-	@Test
-	public void testCrudRoom() {
 		Status status = new Status("Status name", "Status Description");
 		roomService.createStatus(status);
 
@@ -146,6 +83,71 @@ public class RoomServiceTest {
 		roomService.deleteRoom(createdRoom);
 		assertNull(roomService.getRoomById(room.getId()));
 	}
+	
+	@Test
+	public void testCRUDRoomType() {
+		RoomType roomType = new RoomType("Standard", "Standard room");
+		roomService.createRoomType(roomType);
+
+		// when
+		List<RoomType> target = roomService.getAllRoomTypes();
+
+		assertTrue(target.size() == 1);
+		assertEquals(roomType, target.get(0));
+
+		roomType.setName("Fancy");
+		roomType.setDescription("Fancy room");
+
+		RoomType updatedRoomType = roomService.getRoomTypeById(roomType.getId());
+		assertEquals(roomType, updatedRoomType);
+
+		roomService.deleteRoomType(roomType);
+
+		target = roomService.getAllRoomTypes();
+		assertTrue(target.isEmpty());
+	}
+	
+	@Test
+	public void testCRUDStatus() {
+		Status status = new Status("Status name", "Status Description");
+		roomService.createStatus(status);
+
+		List<Status> target = roomService.getAllStatuses();
+		assertTrue(target.size() == 1);
+		assertEquals(status, target.get(0));
+		
+		status.setName("Other Status");
+		Status status2 = roomService.getStatusById(status.getId());
+		assertEquals(status2, status);
+		
+		roomService.deleteStatus(status.getId());
+
+		target = roomService.getAllStatuses();
+		assertTrue(target.isEmpty());
+	}
+	
+	@Test
+	public void testCRUDAmenity() {
+		
+	}
+	
+	@Test
+	public void testCRUDAmenityType() {
+		
+	}
+	
+	@Test
+	public void testCRUDRoomRate() {
+		
+	}
+	
+	@Test
+	public void testCreateStatus() {
+	
+	}
+
+
+
 
 	@Test
 	public void testAddAllUserTypes() {

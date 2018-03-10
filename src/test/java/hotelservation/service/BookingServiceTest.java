@@ -563,5 +563,25 @@ public class BookingServiceTest {
 		assertEquals(1, roomService.getAvailableRoomRates(startDate, endDate).size());
 		assertTrue(roomService.getAvailableRoomRates(startDate, endDate).get(0).equals(roomRateThree));
 	}
+	
+	@Test
+	public void testDeleteReservation() {
+		
+	}
+	
+	@Test
+	public void testCancelReservation() {
+		
+	}
+	
+	@Test
+	public void testRealiseReservation() {
+		
+	}
+	
+	@Test
+	public void testCancelReservationMidway() {
+		
+	}
 
 }

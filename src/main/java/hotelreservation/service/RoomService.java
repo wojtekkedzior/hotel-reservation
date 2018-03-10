@@ -249,4 +249,12 @@ public class RoomService {
 	public RoomRate getRoomRateById(Long id) {
 		return roomRateRepo.findOne(id);
 	}
+
+	public Status getStatusById(Long id) {
+		return statusRepo.findOne(id);
+	}
+
+	public void deleteStatus(Long id) {
+		statusRepo.delete(id);
+	}
 }
