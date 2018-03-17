@@ -59,7 +59,6 @@ public class BookingService {
 			return;
 		}
 		
-		
 		if (reservation.getMainGuest().getId() == 0) {
 			guestRepo.save(reservation.getMainGuest());
 		}
@@ -116,5 +115,14 @@ public class BookingService {
 
 	public Reservation getReservation(long id) {
 		return reservationRepo.findOne(id);
+	}
+
+	public void deleteReservation(Reservation reservation) {
+		reservationRepo.delete(reservation);
+		
+	}
+
+	public void saveReservation(Reservation reservationOne) {
+		reservationRepo.save(reservationOne);
 	}
 }

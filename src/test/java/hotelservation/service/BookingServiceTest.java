@@ -566,12 +566,56 @@ public class BookingServiceTest {
 	
 	@Test
 	public void testDeleteReservation() {
+		reservationOne = new Reservation();
+
+		reservationOne.setMainGuest(mainGuest);
+		reservationOne.setCreatedBy(user);
+		reservationOne.setReservationStatus(ReservationStatus.UpComing);
+
+		RoomRate roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		RoomRate roomRateThree = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+
+		roomService.createRoomRate(roomRateTwo);
+		roomService.createRoomRate(roomRateThree);
+
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+
+		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
+		bookingService.createReservation(reservationOne);
 		
+		assertTrue(bookingService.getAllReservations().size() == 1);
+		
+		bookingService.deleteReservation(reservationOne);
+		assertTrue(bookingService.getAllReservations().isEmpty());
 	}
 	
 	@Test
 	public void testCancelReservation() {
+		reservationOne = new Reservation();
+
+		reservationOne.setMainGuest(mainGuest);
+		reservationOne.setCreatedBy(user);
+		reservationOne.setReservationStatus(ReservationStatus.UpComing);
+
+		RoomRate roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		RoomRate roomRateThree = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+
+		roomService.createRoomRate(roomRateTwo);
+		roomService.createRoomRate(roomRateThree);
+
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+
+		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
+		bookingService.createReservation(reservationOne);
 		
+		assertTrue(bookingService.getAllReservations().size() == 1);
+		
+		reservationOne.setReservationStatus(ReservationStatus.Cancelled);
+		
+		Reservation reservation = bookingService.getReservation(reservationOne.getId());
+		assertEquals(ReservationStatus.Cancelled, reservation.getReservationStatus());
 	}
 	
 	@Test
