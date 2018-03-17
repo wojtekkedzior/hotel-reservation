@@ -93,8 +93,24 @@ public class ReservationController {
 		return "realiseReservation";
 	}
 	
-	@PostMapping("/realiseReservation")
-	public ModelAndView realiseReservation(@ModelAttribute Reservation reservation, Guest guest, BindingResult bindingResult) {
+	@RequestMapping(value = {"/cancelReservation/{id}"})
+	public String cancelReservation(@PathVariable Optional<Integer> id, Model model) {
+
+		Reservation reservation = bookingService.getReservation(id);
+		model.addAttribute("reservation", reservation);
+		
+//		Guest guest = new Guest();
+//		guest.setContact(new Contact());
+//		guest.setIdentification(new Identification());
+		
+//		model.addAttribute("guest", guest);
+		
+		return "cancelReservation";
+	}
+	
+	
+	@PostMapping("/addOccupant") 
+	public ModelAndView addOccupant(@ModelAttribute Reservation reservation, Guest guest, BindingResult bindingResult) {
 
 		//TODO the guest ID is also set because it matches the id field name on the reservation. Is there a way to exclude that?
 		guest.setId(0);
@@ -111,9 +127,18 @@ public class ReservationController {
 		bookingService.createReservation(reservation2);
 		
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("redirect:/reservation");
+		modelAndView.setViewName("redirect:/realiseReservation/" + reservation.getId());
 		return modelAndView;
 	}
+	
+	@PostMapping("/realiseReservation") 
+	public ModelAndView realiseReservation(@ModelAttribute Reservation reservation, BindingResult bindingResult) {
+
+		ModelAndView modelAndView = new ModelAndView();
+//		modelAndView.setViewName("redirect:/realiseReservation/" + reservation.getId());
+		return modelAndView;
+	}
+	
 
 	@PostMapping("/reservation")
 	public ModelAndView saveReservation(@ModelAttribute Reservation reservation, BindingResult bindingResult, RedirectAttributes redir) {
@@ -126,11 +151,9 @@ public class ReservationController {
 		modelAndView.setViewName("redirect:/reservation");
 		return modelAndView;
 	}
+		
 	
-	
-	
-	
-	
+	//TODO only super-admin type user should be able to fully delete a reservation
 	@RequestMapping(value="/reservationDelete/{id}", method=RequestMethod.DELETE)
 	public ModelAndView deleteReservation(@PathVariable Optional<Integer> id) {
 		if(id.isPresent()) {
@@ -145,21 +168,24 @@ public class ReservationController {
 			//remove it from the reservation first.
 			//need to check if the guest actually existsi
 			//can't have no guests.
+			
+			Guest guestToDelete = null;
+			
+			Reservation resFromDB = bookingService.getReservation(reservation.getId());
+			//TODO ugly 
+			for (Guest occupant : resFromDB.getOccupants()) {
+				if(occupant.getId() == id.get()) {
+					guestToDelete = occupant;
+				}
+			}
+			
+			if(guestToDelete != null) {
+				resFromDB.getOccupants().remove(guestToDelete);
+			}
+			
 			guestService.deleteGuest(id);
-			
-			
-			
-			
-			
 		} 
 		
-		System.err.println("reservation " + reservation.getId());
-		System.err.println("delete contact " + id.get()	);
-		//TODO need to get the reservation ID too
 		return new ModelAndView("redirect:/realiseReservation/" + reservation.getId());
 	}
-	
-	
-	
-	
 }
