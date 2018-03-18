@@ -48,6 +48,14 @@ public class ReservationController {
 	public void initBinder(WebDataBinder binder) {
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true, 10));
 	}
+	
+	//TODO move to new controller which will handle security and other bits and pieces
+	@RequestMapping("/")
+	public ModelAndView redirectIndexToHOme() {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("redirect:/home");
+		return modelAndView;
+	}
 
 	@RequestMapping(value = { "/reservation", "/reservation/{id}", "/reservation/start/{startDate}/end/{endDate}" })
 	public String addReservationModel(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<Date> startDate,
