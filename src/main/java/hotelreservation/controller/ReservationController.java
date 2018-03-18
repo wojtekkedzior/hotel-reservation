@@ -26,6 +26,7 @@ import hotelreservation.model.Identification;
 import hotelreservation.model.Reservation;
 import hotelreservation.model.Room;
 import hotelreservation.model.enums.IdType;
+import hotelreservation.model.enums.ReservationStatus;
 import hotelreservation.service.BookingService;
 import hotelreservation.service.GuestService;
 import hotelreservation.service.RoomService;
@@ -134,8 +135,14 @@ public class ReservationController {
 	@PostMapping("/realiseReservation") 
 	public ModelAndView realiseReservation(@ModelAttribute Reservation reservation, BindingResult bindingResult) {
 
+		
+		Reservation reservation2 = bookingService.getReservation(reservation.getId());
+		reservation2.setReservationStatus(ReservationStatus.InProgress);
+		
+		bookingService.saveReservation(reservation2);
+		
 		ModelAndView modelAndView = new ModelAndView();
-//		modelAndView.setViewName("redirect:/realiseReservation/" + reservation.getId());
+		modelAndView.setViewName("redirect:/realiseReservation/" + reservation.getId());
 		return modelAndView;
 	}
 	
@@ -161,6 +168,8 @@ public class ReservationController {
 		} 
 		return new ModelAndView("redirect:/reservation");
 	}
+	
+	
 	
 	@RequestMapping(value="/deleteContact/{id}", method=RequestMethod.DELETE)
 	public ModelAndView deleteGuest(@ModelAttribute Reservation reservation, @PathVariable Optional<Integer> id) {

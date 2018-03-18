@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -53,6 +54,9 @@ public class BookingServiceTest {
 
 	@Autowired
 	private BookingService bookingService;
+	
+    @Autowired
+    private TestEntityManager entityManager;
 
 	private Room standardRoomOne;
 	private Room standardRoomTwo;
@@ -612,9 +616,12 @@ public class BookingServiceTest {
 		
 		assertTrue(bookingService.getAllReservations().size() == 1);
 		
-		reservationOne.setReservationStatus(ReservationStatus.Cancelled);
+		Reservation reservationFromDb = bookingService.getReservation(reservationOne.getId());
+		reservationFromDb.setReservationStatus(ReservationStatus.Cancelled);
+		entityManager.flush(); //even smellier. with the embedded DB the setter above seems to go directly to the DB. works different with MYSQL. Might be to do with the List interface
+//		bookingService.saveReservation(reservationFromDb); //TODO smelly
 		
-		Reservation reservation = bookingService.getReservation(reservationOne.getId());
+		Reservation reservation = bookingService.getReservation(reservationFromDb.getId());;
 		assertEquals(ReservationStatus.Cancelled, reservation.getReservationStatus());
 	}
 	

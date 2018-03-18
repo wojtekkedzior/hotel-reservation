@@ -70,8 +70,16 @@
 		</table>
 	</div>
 	
+	<div>
 	
+	<form action="#" th:action="@{/realiseReservation}"  
+						th:method="post">
+						<input type="hidden" name="_method" value="post" /> <input
+							type="number" th:field="${reservation.id}" hidden="true" /> <!-- is this better than just a path param?? -->
+						<button type="submit">Realise</button>
+					</form> 
 	
+	</div>
 
 
 </body>
