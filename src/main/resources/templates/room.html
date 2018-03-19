@@ -1,135 +1,154 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
 
 
 <head>
 <title>Getting Started: Serving Web Content</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="stylesheet" type="text/css" th:href="@{/css/mycss.css}" />
 
 </head>
 <body>
-	<div class="row">
-		<div class="column">
-			<p>Rooms</p>
 
-			<form action="#" th:action="@{/addRoom}" th:object="${room}"
-				method="post">
+	<div layout:fragment="side_menu" class="first">
+		<p>
+			<a th:href="@{/admin}">Admin</a>
+		</p>
+		
+		<p>
+			<a th:href="@{/room}">Rooms</a>
+		</p>
 				<p>
-					Name: <input type="text" th:field="*{name}" />
-				</p>
-				<p>
-					Description: <input type="text" th:field="*{description}" />
-				</p>
-				<p>
-					Room Number: <input type="text" th:field="*{roomNumber}" />
-				</p>
+			<a th:href="@{/roomRate}">Room Rates</a>
+		</p>
+	
+		<p>
+			<a th:href="@{/user}">Users</a>
+		</p>
 
-				<p>Room Amenitites: </p>
-				<select class="form-control" th:field="${room.roomAmenities}"
-					multiple="multiple" id="dropOperator">
-					<!-- <option value="0" th:text="selectoperator"></option> -->
-					<option th:each="amenity : ${amenities}" th:value="${amenity.id}"
-						th:text="${amenity.name}"></option>
-				</select> 
-					
-				<p>Room Types: 
-				<select class="form-control" th:field="${room.roomType}"
-					id="dropOperator">
-					<option th:each="roomType : ${roomTypes}" th:value="${roomType.id}"
-						th:text="${roomType.name}"></option>
-				</select>
-				</p>
-				
-				<p>Room Status: 
-				 <select class="form-control" th:field="${room.status}"
-					id="dropOperator">
-					<option th:each="status : ${statuses}" th:value="${status.id}"
-						th:text="${status.name}"></option>
-				</select>
-				</p>
-				<p>
-					<input type="submit" value="Submit" />
-				</p>
-			</form>
-			
-			<div>
-				<table width="1000">
-					<tr>
-						<td><label>Id</label></td>
-						<td><label>Number</label></td>
-						<td><label>Type</label></td>
-						<td><label>Status</label></td>
-						<td><label>Description</label></td>
-						<td><label>Delete</label></td>
-					</tr>
-
-					<tr th:each="data, iterstat: ${rooms}">
-						<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
-						<td th:text="${data.roomNumber}" th:id="|td${iterstat.index}|"></td>
-						<td th:text="${data.roomType.name}" th:id="|td${iterstat.index}|"></td>
-						<td th:text="${data.status.name}" th:id="|td${iterstat.index}|"></td>
-						<td th:text="${data.description}" th:id="|td${iterstat.index}|"></td>
-							<td>
-							<form action="#" th:action="@{/roomDelete/}+${data.id}"
-								th:method="delete" >
-								<input type="hidden" name="_method" value="delete" />
-								<button type="submit">delete</button>
-							</form>
-						</td>
-					</tr>
-				</table>
-			</div>
-
-
-		</div>
-
-		<div class="column">
-			<p>Room Types</p>
-
-			<form action="#" th:action="@{/addRoomType}" th:object="${roomType}"
-				method="post">
-				<p>
-					Name: <input type="text" th:field="*{name}" />
-				</p>
-				<p>
-					Description: <input type="text" th:field="*{description}" />
-				</p>
-
-				<p>
-					<input type="submit" value="Submit" />
-				</p>
-			</form>
-
-
-			<div>
-				<p>Room Types</p>
-				<table width="1000">
-					<tr>
-						<td><label>Id</label></td>
-						<td><label>Name</label></td>
-						<td><label>Description</label></td>
-						<td><label>Delete</label></td>
-					</tr>
-
-					<tr th:each="data, iterstat: ${roomTypes}">
-						<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
-						<td th:text="${data.name}" th:id="|td${iterstat.index}|"></td>
-						<td th:text="${data.description}" th:id="|td${iterstat.index}|"></td>
-												<td>
-							<form action="#" th:action="@{/roomTypeDelete/}+${data.id}"
-								th:method="delete">
-								<input type="hidden" name="_method" value="delete" />
-								<button type="submit">delete</button>
-							</form>
-						</td>
-					</tr>
-				</table>
-			</div>
-
-		</div>
+		<p>
+			<a th:href="@{/amenity}">Amenities</a>
+		</p>
 	</div>
 
+	<div layout:fragment="content">
+			<div class="column">
+				<p>Rooms</p>	
 
+				<form action="#" th:action="@{/addRoom}" th:object="${room}"
+					method="post">
+					<p>
+						Name: <input type="text" th:field="*{name}" />
+					</p>
+					<p>
+						Description: <input type="text" th:field="*{description}" />
+					</p>
+					<p>
+						Room Number: <input type="text" th:field="*{roomNumber}" />
+					</p>
+
+					<p>Room Amenitites:</p>
+					<select class="form-control" th:field="${room.roomAmenities}"
+						multiple="multiple" id="dropOperator">
+						<!-- <option value="0" th:text="selectoperator"></option> -->
+						<option th:each="amenity : ${amenities}" th:value="${amenity.id}"
+							th:text="${amenity.name}"></option>
+					</select>
+
+					<p>
+						Room Types: <select class="form-control"
+							th:field="${room.roomType}" id="dropOperator">
+							<option th:each="roomType : ${roomTypes}"
+								th:value="${roomType.id}" th:text="${roomType.name}"></option>
+						</select>
+					</p>
+
+					<p>
+						Room Status: <select class="form-control"
+							th:field="${room.status}" id="dropOperator">
+							<option th:each="status : ${statuses}" th:value="${status.id}"
+								th:text="${status.name}"></option>
+						</select>
+					</p>
+					<p>
+						<input type="submit" value="Submit" />
+					</p>
+				</form>
+
+				<div>
+					<table >
+						<tr>
+							<td><label>Id</label></td>
+							<td><label>Number</label></td>
+							<td><label>Type</label></td>
+							<td><label>Status</label></td>
+							<td><label>Description</label></td>
+							<td><label>Delete</label></td>
+						</tr>
+
+						<tr th:each="data, iterstat: ${rooms}">
+							<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
+							<td th:text="${data.roomNumber}" th:id="|td${iterstat.index}|"></td>
+							<td th:text="${data.roomType.name}" th:id="|td${iterstat.index}|"></td>
+							<td th:text="${data.status.name}" th:id="|td${iterstat.index}|"></td>
+							<td th:text="${data.description}" th:id="|td${iterstat.index}|"></td>
+							<td>
+								<form action="#" th:action="@{/roomDelete/}+${data.id}"
+									th:method="delete">
+									<input type="hidden" name="_method" value="delete" />
+									<button type="submit">delete</button>
+								</form>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			
+			<div class="column">
+				<p>Room Types</p>
+
+				<form action="#" th:action="@{/addRoomType}" th:object="${roomType}"
+					method="post">
+					<p>
+						Name: <input type="text" th:field="*{name}" />
+					</p>
+					<p>
+						Description: <input type="text" th:field="*{description}" />
+					</p>
+
+					<p>
+						<input type="submit" value="Submit" />
+					</p>
+				</form>
+
+
+				<div>
+					<p>Room Types</p>
+					<table width="1000">
+						<tr>
+							<td><label>Id</label></td>
+							<td><label>Name</label></td>
+							<td><label>Description</label></td>
+							<td><label>Delete</label></td>
+						</tr>
+
+						<tr th:each="data, iterstat: ${roomTypes}">
+							<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
+							<td th:text="${data.name}" th:id="|td${iterstat.index}|"></td>
+							<td th:text="${data.description}" th:id="|td${iterstat.index}|"></td>
+							<td>
+								<form action="#" th:action="@{/roomTypeDelete/}+${data.id}"
+									th:method="delete">
+									<input type="hidden" name="_method" value="delete" />
+									<button type="submit">delete</button>
+								</form>
+							</td>
+						</tr>
+					</table>
+				</div>
+
+			</div>
+	</div>
 
 
 

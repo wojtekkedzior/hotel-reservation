@@ -19,9 +19,8 @@ a {
 /* Create two equal columns that floats next to each other */
 .column {
     float: left;
-    width: 50%;
+ /*    width: 50%; */
     padding: 10px;
-    height: 300px; /* Should be removed. Only for demonstration */
 }
 
 /* Clear floats after the columns */
@@ -37,4 +36,15 @@ a {
 
 body {
     margin: 0;
+}
+
+
+
+.wrapper {
+    overflow: auto; /* add this to contain floated children */
+}
+.first {
+    float:left; /* add this */
+}
+.second {
 }

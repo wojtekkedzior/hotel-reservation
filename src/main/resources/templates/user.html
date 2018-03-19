@@ -1,4 +1,5 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
 
 
 <head>
@@ -8,7 +9,29 @@
 </head>
 <body>
 
-	<div class="row">
+	<div layout:fragment="side_menu" class="first">
+		<p>
+			<a th:href="@{/admin}">Admin</a>
+		</p>
+		
+		<p>
+			<a th:href="@{/room}">Rooms</a>
+		</p>
+				<p>
+			<a th:href="@{/roomRate}">Room Rates</a>
+		</p>
+	
+		<p>
+			<a th:href="@{/user}">Users</a>
+		</p>
+
+		<p>
+			<a th:href="@{/amenity}">Amenities</a>
+		</p>
+	</div>
+	
+	<div layout:fragment="content">
+	
 		<div class="column">
 			<p>Users</p>
 
