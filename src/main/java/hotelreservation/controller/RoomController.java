@@ -196,6 +196,6 @@ public class RoomController {
 		if (id.isPresent()) {
 			roomService.deleteRoomRate(new Long(id.get()));
 		}
-		return new ModelAndView("redirect:/room");
+		return new ModelAndView("redirect:/roomRate");
 	}
 }
