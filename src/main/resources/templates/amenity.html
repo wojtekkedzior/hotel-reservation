@@ -1,10 +1,8 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layouts/adminLayout">
 
 <body>
-
 	<div layout:fragment="content">
 		<div class="column">
-
 			<p>Amenity Types</p>
 			<form action="#" th:action="@{/addAmenityType}" th:object="${amenityType}" method="post">
 				<p>
@@ -19,7 +17,7 @@
 			</form>
 
 			<div>
-				<table width="1000">
+				<table>
 					<tr>
 						<td><label>Id</label></td>
 						<td><label>Name</label></td>
@@ -63,7 +61,7 @@
 			</form>
 
 			<div>
-				<table width="1000">
+				<table>
 					<tr>
 						<td><label>Id</label></td>
 						<td><label>Name</label></td>
@@ -90,5 +88,4 @@
 		</div>
 	</div>
 </body>
-
 </html>

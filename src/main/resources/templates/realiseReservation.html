@@ -2,7 +2,6 @@
 
 <body>
 	<form action="#" th:action="@{/addOccupant}" th:object="${reservation}" method="post">
-
 		<p>
 			First Name: <input th:field="${guest.firstName}" type="text" /> Last Name : <input th:field="${guest.lastName}" type="text" />
 		</p>
@@ -22,11 +21,10 @@
 		<p>
 			<input type="submit" value="Submit" />
 		</p>
-
 	</form>
 
 	<div>
-		<table width="1000">
+		<table>
 			<tr>
 				<td><label>First Name</label></td>
 				<td><label>Last Name</label></td>
@@ -38,7 +36,6 @@
 			</tr>
 
 			<tr th:each="guest, iterstat: ${reservation.occupants}">
-				<!-- 		<td><a th:href="@{/reservation/}+${reservation.id}" th:text="${reservation.id}"> </a></td> -->
 				<td th:text="${guest.firstName}"></td>
 				<td th:text="${guest.lastName}"></td>
 				<td th:text="${guest.contact.address}"></td>
@@ -56,17 +53,11 @@
 	</div>
 
 	<div>
-
 		<form action="#" th:action="@{/realiseReservation}" th:method="post">
 			<input type="hidden" name="_method" value="post" /> <input type="number" th:field="${reservation.id}" hidden="true" />
 			<!-- is this better than just a path param?? -->
 			<button type="submit">Realise</button>
 		</form>
-
 	</div>
-
-
 </body>
-
-
 </html>
