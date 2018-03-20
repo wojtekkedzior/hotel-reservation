@@ -16,7 +16,7 @@
 					Room Number: <input type="text" th:field="*{roomNumber}" />
 				</p>
 
-				<p>Room Amenitites:</p>
+				<p>Room Amenities:</p>
 				<select class="form-control" th:field="${room.roomAmenities}" multiple="multiple" id="dropOperator">
 					<!-- <option value="0" th:text="selectoperator"></option> -->
 					<option th:each="amenity : ${amenities}" th:value="${amenity.id}" th:text="${amenity.name}"></option>
