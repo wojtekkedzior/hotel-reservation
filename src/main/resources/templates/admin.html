@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layout">
+	layout:decorator="adminLayout">
 
 <head>
 <title>Getting Started: Serving Web Content</title>
@@ -18,30 +18,6 @@
 
 
 
-	<div layout:fragment="side_menu" class="first">
-
-		<p>
-			<a th:href="@{/admin}">Admin</a>
-		</p>
-		
-		<p>
-			<a th:href="@{/room}">Rooms</a>
-		</p>
-				<p>
-			<a th:href="@{/roomRate}">Room Rates</a>
-		</p>
-	
-		<p>
-			<a th:href="@{/user}">Users</a>
-		</p>
-
-		<p>
-			<a th:href="@{/amenity}">Amenities</a>
-		</p>
-
-	</div>
-	
-	
 	<div layout:fragment="content">
 	
 	adasdasdasasdas
