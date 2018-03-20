@@ -1,10 +1,8 @@
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	xmlns:th="http://www.thymeleaf.org">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="stylesheet" type="text/css" th:href="@{/css/mycss.css}" />
-<link rel="stylesheet" type="text/css"
-	th:href="@{/css/bootstrap.min.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}" />
 </head>
 <body>
 	<header>
@@ -13,24 +11,18 @@
 		<div class="navbar navbar-inverse" th:fragment="header">
 			<div class="container">
 				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse"
-						data-target=".nav-collapse">
-						<span class="icon-bar"></span> <span class="icon-bar"></span> <span
-							class="icon-bar"></span>
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+						<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
 					</button>
 					<a class="navbar-brand" href="#">My project</a>
 				</div>
 				<div class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
-						<li th:classappend="${module == 'admin' ? 'active' : ''}"><a
-							href="#" th:href="@{/admin}">Admin</a></li>
-						<li th:classappend="${module == 'reservation' ? 'active' : ''}"><a
-							href="#" th:href="@{/reservation}">Reservation</a></li>
+						<li th:classappend="${module == 'admin' ? 'active' : ''}"><a href="#" th:href="@{/admin}">Admin</a></li>
+						<li th:classappend="${module == 'reservation' ? 'active' : ''}"><a href="#" th:href="@{/reservation}">Reservation</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
-						<li><a href="/signin" th:href="@{/signin}"> <span
-								class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;Sign
-								in
+						<li><a href="/signin" th:href="@{/signin}"> <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;Sign in
 						</a></li>
 						<!--   <li th:if="${#authorization.expression('isAuthenticated()')}">
               <a href="/logout" th:href="@{#}" onclick="$('#form').submit();">
@@ -45,16 +37,13 @@
 	</header>
 
 
-<div class="wrapper">
-	<div layout:fragment="side_menu" class="first">
+	<div class="wrapper">
+		<div layout:fragment="side_menu" class="first"></div>
 
+
+		<div layout:fragment="content" class="second"></div>
 
 	</div>
-
-
-	<div layout:fragment="content" class="second"></div>
-
-</div>
 
 	<footer>
 		<p>My footer</p>

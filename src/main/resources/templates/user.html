@@ -1,6 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layouts/adminLayout">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layouts/adminLayout">
 
 <body>
 	<div layout:fragment="content">
@@ -8,16 +6,13 @@
 		<div class="column">
 			<p>Users</p>
 
-			<form action="#" th:action="@{/adduser}" th:object="${user}"
-				method="post">
+			<form action="#" th:action="@{/adduser}" th:object="${user}" method="post">
 				<p>
 					Name: <input type="text" th:field="*{name}" />
 				</p>
 				<p>
-					User Type: <select class="form-control" th:field="${user.userType}"
-						id="dropOperator">
-						<option th:each="userType : ${userTypes}"
-							th:value="${userType.id}" th:text="${userType.name}"></option>
+					User Type: <select class="form-control" th:field="${user.userType}" id="dropOperator">
+						<option th:each="userType : ${userTypes}" th:value="${userType.id}" th:text="${userType.name}"></option>
 					</select>
 				</p>
 
@@ -48,14 +43,12 @@
 					<tr th:each="data, iterstat: ${users}">
 						<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
 						<td th:text="${data.name}" th:id="|td${iterstat.index}|"></td>
-						<td><a th:href="@{/user/}+${data.id}"
-							th:text="${data.userName}"> </a></td>
+						<td><a th:href="@{/user/}+${data.id}" th:text="${data.userName}"> </a></td>
 						<td th:text="${data.userType.name}" th:id="|td${iterstat.index}|"></td>
 						<td th:text="${data.enabled}" th:id="|td${iterstat.index}|"></td>
 						<td th:text="${data.createdOn}" th:id="|td${iterstat.index}|"></td>
 						<td>
-							<form action="#" th:action="@{/userDelete/}+${data.id}"
-								th:method="delete">
+							<form action="#" th:action="@{/userDelete/}+${data.id}" th:method="delete">
 								<input type="hidden" name="_method" value="delete" />
 								<button type="submit">delete</button>
 							</form>
@@ -68,8 +61,7 @@
 		<div class="column">
 			<p>User Types</p>
 
-			<form action="#" th:action="@{/addUserType}" th:object="${userType}"
-				method="post">
+			<form action="#" th:action="@{/addUserType}" th:object="${userType}" method="post">
 				<p>
 					User Type Name: <input type="text" th:field="*{name}" />
 				</p>
@@ -100,8 +92,7 @@
 						<td th:text="${data.description}" th:id="|td${iterstat.index}|"></td>
 						<td th:text="${data.enabled}" th:id="|td${iterstat.index}|"></td>
 						<td>
-							<form action="#" th:action="@{/userTypeDelete/}+${data.id}"
-								th:method="delete">
+							<form action="#" th:action="@{/userTypeDelete/}+${data.id}" th:method="delete">
 								<input type="hidden" name="_method" value="delete" />
 								<button type="submit">delete</button>
 							</form>

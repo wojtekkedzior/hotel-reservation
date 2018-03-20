@@ -1,32 +1,25 @@
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layouts/adminLayout">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layouts/adminLayout">
 
 <body>
 
 	<div layout:fragment="content">
 		<div class="column">
 			<p>Room Rate</p>
-			<form action="#" th:action="@{/addRoomRate}" th:object="${roomRate}"
-				method="post">
+			<form action="#" th:action="@{/addRoomRate}" th:object="${roomRate}" method="post">
 				<p>
 					Description: <input type="text" th:field="*{description}" />
 				</p>
 
 				<p>
-					Room Number: <select class="form-control"
-						th:field="${roomRate.room}" id="dropOperator">
+					Room Number: <select class="form-control" th:field="${roomRate.room}" id="dropOperator">
 						<!-- <option value="0" th:text="selectoperator"></option> -->
-						<option th:each="room : ${rooms}" th:value="${room.id}"
-							th:text="${room.roomNumber}"></option>
+						<option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.roomNumber}"></option>
 					</select>
 				</p>
 				<p>
 
-					Currency: <select class="form-control"
-						th:field="${roomRate.currency}" id="dropOperator">
-						<option th:each="currency : ${currencies}"
-							th:value="${currency.toString()}"
-							th:text="${currency.toString()}"></option>
+					Currency: <select class="form-control" th:field="${roomRate.currency}" id="dropOperator">
+						<option th:each="currency : ${currencies}" th:value="${currency.toString()}" th:text="${currency.toString()}"></option>
 					</select>
 				</p>
 
@@ -61,14 +54,12 @@
 					<tr th:each="data, iterstat: ${roomRates}">
 						<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
 						<td th:text="${data.description}" th:id="|td${iterstat.index}|"></td>
-						<td th:text="${data.room.roomNumber}"
-							th:id="|td${iterstat.index}|"></td>
+						<td th:text="${data.room.roomNumber}" th:id="|td${iterstat.index}|"></td>
 						<td th:text="${data.currency}" th:id="|td${iterstat.index}|"></td>
 						<td th:text="${data.value}" th:id="|td${iterstat.index}|"></td>
 						<td th:text="${data.day}" th:id="|td${iterstat.index}|"></td>
 						<td>
-							<form action="#" th:action="@{/roomRateDelete/}+${data.id}"
-								th:method="delete">
+							<form action="#" th:action="@{/roomRateDelete/}+${data.id}" th:method="delete">
 								<input type="hidden" name="_method" value="delete" />
 								<button type="submit">delete</button>
 							</form>
@@ -79,7 +70,7 @@
 
 		</div>
 	</div>
-	
+
 
 
 

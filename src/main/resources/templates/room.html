@@ -1,14 +1,11 @@
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layouts/adminLayout">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layouts/adminLayout">
 
 <body>
 	<div layout:fragment="content">
 		<div class="column">
 			<p>Rooms</p>
 
-			<form action="#" th:action="@{/addRoom}" th:object="${room}"
-				method="post">
+			<form action="#" th:action="@{/addRoom}" th:object="${room}" method="post">
 				<p>
 					Name: <input type="text" th:field="*{name}" />
 				</p>
@@ -20,26 +17,20 @@
 				</p>
 
 				<p>Room Amenitites:</p>
-				<select class="form-control" th:field="${room.roomAmenities}"
-					multiple="multiple" id="dropOperator">
+				<select class="form-control" th:field="${room.roomAmenities}" multiple="multiple" id="dropOperator">
 					<!-- <option value="0" th:text="selectoperator"></option> -->
-					<option th:each="amenity : ${amenities}" th:value="${amenity.id}"
-						th:text="${amenity.name}"></option>
+					<option th:each="amenity : ${amenities}" th:value="${amenity.id}" th:text="${amenity.name}"></option>
 				</select>
 
 				<p>
-					Room Types: <select class="form-control"
-						th:field="${room.roomType}" id="dropOperator">
-						<option th:each="roomType : ${roomTypes}"
-							th:value="${roomType.id}" th:text="${roomType.name}"></option>
+					Room Types: <select class="form-control" th:field="${room.roomType}" id="dropOperator">
+						<option th:each="roomType : ${roomTypes}" th:value="${roomType.id}" th:text="${roomType.name}"></option>
 					</select>
 				</p>
 
 				<p>
-					Room Status: <select class="form-control" th:field="${room.status}"
-						id="dropOperator">
-						<option th:each="status : ${statuses}" th:value="${status.id}"
-							th:text="${status.name}"></option>
+					Room Status: <select class="form-control" th:field="${room.status}" id="dropOperator">
+						<option th:each="status : ${statuses}" th:value="${status.id}" th:text="${status.name}"></option>
 					</select>
 				</p>
 				<p>
@@ -65,8 +56,7 @@
 						<td th:text="${data.status.name}" th:id="|td${iterstat.index}|"></td>
 						<td th:text="${data.description}" th:id="|td${iterstat.index}|"></td>
 						<td>
-							<form action="#" th:action="@{/roomDelete/}+${data.id}"
-								th:method="delete">
+							<form action="#" th:action="@{/roomDelete/}+${data.id}" th:method="delete">
 								<input type="hidden" name="_method" value="delete" />
 								<button type="submit">delete</button>
 							</form>
@@ -79,8 +69,7 @@
 		<div class="column">
 			<p>Room Types</p>
 
-			<form action="#" th:action="@{/addRoomType}" th:object="${roomType}"
-				method="post">
+			<form action="#" th:action="@{/addRoomType}" th:object="${roomType}" method="post">
 				<p>
 					Name: <input type="text" th:field="*{name}" />
 				</p>
@@ -109,8 +98,7 @@
 						<td th:text="${data.name}" th:id="|td${iterstat.index}|"></td>
 						<td th:text="${data.description}" th:id="|td${iterstat.index}|"></td>
 						<td>
-							<form action="#" th:action="@{/roomTypeDelete/}+${data.id}"
-								th:method="delete">
+							<form action="#" th:action="@{/roomTypeDelete/}+${data.id}" th:method="delete">
 								<input type="hidden" name="_method" value="delete" />
 								<button type="submit">delete</button>
 							</form>

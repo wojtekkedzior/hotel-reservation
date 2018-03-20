@@ -1,24 +1,18 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <body>
-	<form action="#" th:action="@{/addOccupant}"
-		th:object="${reservation}" method="post">
+	<form action="#" th:action="@{/addOccupant}" th:object="${reservation}" method="post">
 
 		<p>
-			First Name: <input th:field="${guest.firstName}" type="text" /> Last
-			Name : <input th:field="${guest.lastName}" type="text" />
+			First Name: <input th:field="${guest.firstName}" type="text" /> Last Name : <input th:field="${guest.lastName}" type="text" />
 		</p>
 		<p>
-			Address : <input th:field="${guest.contact.address}" type="text" />
-			Country : <input th:field="${guest.contact.country}" type="text" />
+			Address : <input th:field="${guest.contact.address}" type="text" /> Country : <input th:field="${guest.contact.country}" type="text" />
 		</p>
 		<p>
-			Id Type: <select class="form-control"
-				th:field="${guest.identification.idType}">
-				<option th:each="idType : ${idTypes}"
-					th:value="${idType.toString()}" th:text="${idType.toString()}"></option>
-			</select> ID Number : <input th:field="${guest.identification.idNumber}"
-				type="text" />
+			Id Type: <select class="form-control" th:field="${guest.identification.idType}">
+				<option th:each="idType : ${idTypes}" th:value="${idType.toString()}" th:text="${idType.toString()}"></option>
+			</select> ID Number : <input th:field="${guest.identification.idNumber}" type="text" />
 		</p>
 
 		<p>
@@ -52,26 +46,23 @@
 				<td th:text="${guest.identification.idType}"></td>
 				<td th:text="${guest.identification.idNumber}"></td>
 				<td>
-					<form action="#" th:action="@{/deleteContact/}+${guest.id}"
-						th:method="delete">
-						<input type="hidden" name="_method" value="delete" /> <input
-							type="number" th:field="${reservation.id}" hidden="true" />
+					<form action="#" th:action="@{/deleteContact/}+${guest.id}" th:method="delete">
+						<input type="hidden" name="_method" value="delete" /> <input type="number" th:field="${reservation.id}" hidden="true" />
 						<button type="submit">delete</button>
 					</form>
 				</td>
 			</tr>
 		</table>
 	</div>
-	
+
 	<div>
-	
-	<form action="#" th:action="@{/realiseReservation}"  
-						th:method="post">
-						<input type="hidden" name="_method" value="post" /> <input
-							type="number" th:field="${reservation.id}" hidden="true" /> <!-- is this better than just a path param?? -->
-						<button type="submit">Realise</button>
-					</form> 
-	
+
+		<form action="#" th:action="@{/realiseReservation}" th:method="post">
+			<input type="hidden" name="_method" value="post" /> <input type="number" th:field="${reservation.id}" hidden="true" />
+			<!-- is this better than just a path param?? -->
+			<button type="submit">Realise</button>
+		</form>
+
 	</div>
 
 

@@ -1,5 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layouts/adminLayout">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layouts/adminLayout">
 
 <body>
 
@@ -7,8 +6,7 @@
 		<div class="column">
 
 			<p>Amenity Types</p>
-			<form action="#" th:action="@{/addAmenityType}"
-				th:object="${amenityType}" method="post">
+			<form action="#" th:action="@{/addAmenityType}" th:object="${amenityType}" method="post">
 				<p>
 					Name: <input type="text" th:field="*{name}" />
 				</p>
@@ -18,49 +16,45 @@
 				<p>
 					<input type="submit" value="Submit" />
 				</p>
-				</form>
+			</form>
 
-				<div>
-					<table width="1000">
-						<tr>
-							<td><label>Id</label></td>
-							<td><label>Name</label></td>
-							<td><label>Description</label></td>
-							<td><label>Delete</label></td>
-						</tr>
+			<div>
+				<table width="1000">
+					<tr>
+						<td><label>Id</label></td>
+						<td><label>Name</label></td>
+						<td><label>Description</label></td>
+						<td><label>Delete</label></td>
+					</tr>
 
-						<tr th:each="data, iterstat: ${amenityTypes}">
-							<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
-							<td th:text="${data.name}" th:id="|td${iterstat.index}|"></td>
-							<td th:text="${data.description}" th:id="|td${iterstat.index}|"></td>
-													<td>
-							<form action="#" th:action="@{/amenityTypeDelete/}+${data.id}"
-								th:method="delete">
+					<tr th:each="data, iterstat: ${amenityTypes}">
+						<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
+						<td th:text="${data.name}" th:id="|td${iterstat.index}|"></td>
+						<td th:text="${data.description}" th:id="|td${iterstat.index}|"></td>
+						<td>
+							<form action="#" th:action="@{/amenityTypeDelete/}+${data.id}" th:method="delete">
 								<input type="hidden" name="_method" value="delete" />
 								<button type="submit">delete</button>
 							</form>
 						</td>
-						</tr>
-					</table>
-				</div>
+					</tr>
+				</table>
+			</div>
 		</div>
 
 		<div class="column">
 
 			<p>Amenities</p>
-			<form action="#" th:action="@{/addAmenity}" th:object="${amenity}"
-				method="post">
+			<form action="#" th:action="@{/addAmenity}" th:object="${amenity}" method="post">
 				<p>
 					Name: <input type="text" th:field="*{name}" />
 				</p>
 				<p>
 					Description: <input type="text" th:field="*{description}" />
 				</p>
-				<select class="form-control" th:field="${amenity.amenityType}"
-					id="dropOperator">
+				<select class="form-control" th:field="${amenity.amenityType}" id="dropOperator">
 					<!-- <option value="0" th:text="selectoperator"></option> -->
-					<option th:each="amenityType : ${amenityTypes}"
-						th:value="${amenityType.id}" th:text="${amenityType.name}"></option>
+					<option th:each="amenityType : ${amenityTypes}" th:value="${amenityType.id}" th:text="${amenityType.name}"></option>
 				</select>
 
 				<p>
@@ -82,11 +76,9 @@
 						<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
 						<td th:text="${data.name}" th:id="|td${iterstat.index}|"></td>
 						<td th:text="${data.description}" th:id="|td${iterstat.index}|"></td>
-						<td th:text="${data.amenityType.name}"
-							th:id="|td${iterstat.index}|"></td>
+						<td th:text="${data.amenityType.name}" th:id="|td${iterstat.index}|"></td>
 						<td>
-							<form action="#" th:action="@{/amenityDelete/}+${data.id}"
-								th:method="delete">
+							<form action="#" th:action="@{/amenityDelete/}+${data.id}" th:method="delete">
 								<input type="hidden" name="_method" value="delete" />
 								<button type="submit">delete</button>
 							</form>

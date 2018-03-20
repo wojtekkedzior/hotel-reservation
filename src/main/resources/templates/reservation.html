@@ -1,6 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layouts/layout">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layouts/layout">
 
 
 <head>
@@ -53,55 +51,42 @@
 	<div layout:fragment="content">
 		<div class="column">
 
-			<form action="#" th:action="@{/reservation}"
-				th:object="${reservation}" method="post">
+			<form action="#" th:action="@{/reservation}" th:object="${reservation}" method="post">
 
 				<p>
-					Start Date: <input id="desiredReservationStartDate" type="date"
-						name="startDate" th:value="2018-03-09"
-						th:onClick="'javascript:changedDate();'" /> End Date: <input
-						id="desiredReservationEndDate" type="date" name="endDate"
-						th:value="2018-03-20" th:onClick="'javascript:changedDate();'" />
-					<a th:id="filterByDate" th:onClick="'javascript:changedDate();'"
-						th:text="Filter"> </a>
+					Start Date: <input id="desiredReservationStartDate" type="date" name="startDate" th:value="2018-03-09" th:onClick="'javascript:changedDate();'" /> End
+					Date: <input id="desiredReservationEndDate" type="date" name="endDate" th:value="2018-03-20" th:onClick="'javascript:changedDate();'" /> <a
+						th:id="filterByDate" th:onClick="'javascript:changedDate();'" th:text="Filter"> </a>
 					<!-- add OnLoad -->
 				</p>
 
 				<div th:each="roomRateCombo : ${roomRatesPerRoom}">
 					<p>
-						Room Number: <label
-							th:text="${roomRateCombo.key.roomNumber} + ' - ' + ${roomRateCombo.key.description}"></label>
+						Room Number: <label th:text="${roomRateCombo.key.roomNumber} + ' - ' + ${roomRateCombo.key.description}"></label>
 					</p>
 
 					<p>
-						<select name="wgtmsr" class="form-control" multiple="multiple"
-							th:id="'roomRateSelect-' + ${roomRateCombo.key.roomNumber}"
-							size="12" th:field="${reservation.roomRates}"
-							th:onChange="'javascript:subTotal(\'' + ${roomRateCombo.key.roomNumber} + '\');'">
+						<select name="wgtmsr" class="form-control" multiple="multiple" th:id="'roomRateSelect-' + ${roomRateCombo.key.roomNumber}" size="12"
+							th:field="${reservation.roomRates}" th:onChange="'javascript:subTotal(\'' + ${roomRateCombo.key.roomNumber} + '\');'">
 							<!-- onChange="showLimits()" -->
 
 							<!-- It's odd having the option value set to roomRate.id and the id to roomRate.value, but if the ID is not set than the roomRates are not added to the reservation  -->
-							<option th:each="roomRate : ${roomRateCombo.value}"
-								th:value="${roomRate.id}" th:id="${roomRate.value}"
+							<option th:each="roomRate : ${roomRateCombo.value}" th:value="${roomRate.id}" th:id="${roomRate.value}"
 								th:text="${roomRate.day} + ' - ' + ${roomRate.value} + ' - ' + ${roomRate.room.description}"
 								th:onClick="'javascript:sayHello(\'' + ${roomRate.value} + '\');'"></option>
 						</select>
 					</p>
 
 					<p>
-						Sub Total: <input
-							th:id="'roomRateSelectSubTotal-' + ${roomRateCombo.key.roomNumber}"
-							type="number" />
+						Sub Total: <input th:id="'roomRateSelectSubTotal-' + ${roomRateCombo.key.roomNumber}" type="number" />
 					</p>
 				</div>
 
 				<p>
 					<!-- hidden field to make sure the ID gets passed back to the controller when submit is called. -->
-					<input type="number" th:field="${reservation.id}" hidden="true" />
-					<input type="date" th:field="${startDate}" th:value="2008-03-09"
-						hidden="true" /> Guest First Name: <input type="text"
-						th:field="${reservation.mainGuest.firstName}" /> Guest Last Name:
-					<input type="text" th:field="${reservation.mainGuest.lastName}" />
+					<input type="number" th:field="${reservation.id}" hidden="true" /> <input type="date" th:field="${startDate}" th:value="2008-03-09" hidden="true" />
+					Guest First Name: <input type="text" th:field="${reservation.mainGuest.firstName}" /> Guest Last Name: <input type="text"
+						th:field="${reservation.mainGuest.lastName}" />
 				</p>
 
 				<p>
@@ -126,8 +111,7 @@
 					</tr>
 
 					<tr th:each="reservation, iterstat: ${reservations}">
-						<td><a th:href="@{/reservation/}+${reservation.id}"
-							th:text="${reservation.id}"> </a></td>
+						<td><a th:href="@{/reservation/}+${reservation.id}" th:text="${reservation.id}"> </a></td>
 						<td th:text="${reservation.mainGuest.firstName}"></td>
 						<td th:text="${reservation.mainGuest.lastName}"></td>
 						<td th:text="${reservation.startDate}"></td>
@@ -141,9 +125,7 @@
 						<button type="submit">Realise</button>
 					</form>
 				</td> -->
-						<td><a th:id="cancelReservation"
-							th:href="@{/cancelReservation/}+${reservation.id}"
-							th:text="Cancel"> </a></td>
+						<td><a th:id="cancelReservation" th:href="@{/cancelReservation/}+${reservation.id}" th:text="Cancel"> </a></td>
 					</tr>
 				</table>
 			</div>
