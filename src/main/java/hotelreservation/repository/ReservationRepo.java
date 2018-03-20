@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import hotelreservation.model.Reservation;
 import hotelreservation.model.RoomRate;
+import hotelreservation.model.enums.ReservationStatus;
 
 @Repository
 public interface ReservationRepo extends CrudRepository<Reservation, Long> {
@@ -24,6 +25,9 @@ public interface ReservationRepo extends CrudRepository<Reservation, Long> {
 //	List<RoomRate> findBystartDateGreaterThanAndendDateLessThan(Date start, Date end);
 	
 	List<RoomRate> findBystartDateGreaterThan(Date start);
+
+	List<Reservation> findByReservationStatus(ReservationStatus status);
+
 	
 	
 	

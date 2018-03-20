@@ -117,6 +117,19 @@ public class ReservationController {
 		return "cancelReservation";
 	}
 	
+	@RequestMapping(value = {"reservationDashBoard"})
+	public String getReservationDashBoard(Model model) {
+		
+		model.addAttribute("upComingReservations", bookingService.getReservationsByStatus(ReservationStatus.UpComing));
+		model.addAttribute("inProgressReservations", bookingService.getReservationsByStatus(ReservationStatus.InProgress));
+		
+		return "reservationDashBoard";
+	}
+	
+	
+	
+	
+	
 	
 	@PostMapping("/addOccupant") 
 	public ModelAndView addOccupant(@ModelAttribute Reservation reservation, Guest guest, BindingResult bindingResult) {

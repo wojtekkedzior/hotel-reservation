@@ -17,6 +17,7 @@ import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;
 import hotelreservation.model.Reservation;
 import hotelreservation.model.RoomRate;
+import hotelreservation.model.enums.ReservationStatus;
 import hotelreservation.repository.ContactRepo;
 import hotelreservation.repository.GuestRepo;
 import hotelreservation.repository.IdentificationRepo;
@@ -119,10 +120,13 @@ public class BookingService {
 
 	public void deleteReservation(Reservation reservation) {
 		reservationRepo.delete(reservation);
-		
 	}
 
 	public void saveReservation(Reservation reservationOne) {
 		reservationRepo.save(reservationOne);
+	}
+
+	public List<Reservation> getReservationsByStatus(ReservationStatus reservationStatus) {
+		return reservationRepo.findByReservationStatus(reservationStatus);
 	}
 }
