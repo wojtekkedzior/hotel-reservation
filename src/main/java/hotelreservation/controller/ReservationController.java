@@ -125,15 +125,12 @@ public class ReservationController {
 		
 		return "reservationDashBoard";
 	}
-	
-	
-	
+
 	
 	
 	
 	@PostMapping("/addOccupant") 
 	public ModelAndView addOccupant(@ModelAttribute Reservation reservation, Guest guest, BindingResult bindingResult) {
-
 		//TODO the guest ID is also set because it matches the id field name on the reservation. Is there a way to exclude that?
 		guest.setId(0);
 		
@@ -155,18 +152,15 @@ public class ReservationController {
 	
 	@PostMapping("/realiseReservation") 
 	public ModelAndView realiseReservation(@ModelAttribute Reservation reservation, BindingResult bindingResult) {
-
-		
 		Reservation reservation2 = bookingService.getReservation(reservation.getId());
 		reservation2.setReservationStatus(ReservationStatus.InProgress);
 		
 		bookingService.saveReservation(reservation2);
 		
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("redirect:/realiseReservation/" + reservation.getId());
+		modelAndView.setViewName("redirect:/reservationDashBoard");
 		return modelAndView;
 	}
-	
 
 	@PostMapping("/reservation")
 	public ModelAndView saveReservation(@ModelAttribute Reservation reservation, BindingResult bindingResult, RedirectAttributes redir) {
@@ -179,7 +173,6 @@ public class ReservationController {
 		modelAndView.setViewName("redirect:/reservation");
 		return modelAndView;
 	}
-		
 	
 	//TODO only super-admin type user should be able to fully delete a reservation
 	@RequestMapping(value="/reservationDelete/{id}", method=RequestMethod.DELETE)
@@ -189,8 +182,6 @@ public class ReservationController {
 		} 
 		return new ModelAndView("redirect:/reservation");
 	}
-	
-	
 	
 	@RequestMapping(value="/deleteContact/{id}", method=RequestMethod.DELETE)
 	public ModelAndView deleteGuest(@ModelAttribute Reservation reservation, @PathVariable Optional<Integer> id) {

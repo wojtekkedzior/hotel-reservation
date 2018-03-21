@@ -119,6 +119,9 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 
 	// Reservations
 	private Reservation reservationOne;
+	private Reservation reservationTwo;
+	private Reservation reservationThree;
+	
 
 	@Autowired
 	private UserService userService;
@@ -412,5 +415,43 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		}
 
 		bookingService.createReservation(reservationOne);
+		
+		//2
+		reservationTwo = new Reservation();
+		reservationTwo.setStartDate(dateConvertor.asDate(startDate));
+		reservationTwo.setEndDate(dateConvertor.asDate(endDate));
+		reservationTwo.setReservationStatus(ReservationStatus.UpComing);
+		reservationTwo.setMainGuest(guestTwo);
+		reservationTwo.setOccupants(Arrays.asList(guestTwo, guestThree));
+		reservationTwo.setRoomRates(new ArrayList<RoomRate>());
+
+		for (RoomRate roomRate : roomRatesForAllRooms) {
+			if (roomRate.getRoom().getId() == 1
+					&& roomRate.getDay().after(dateConvertor.asDate(startDate.minusDays(1)))
+					&& roomRate.getDay().before(dateConvertor.asDate(endDate.plusDays(1)))) {
+				reservationTwo.getRoomRates().add(roomRate);
+			}
+		}
+
+		bookingService.createReservation(reservationTwo);
+		
+		//3
+		reservationThree = new Reservation();
+		reservationThree.setStartDate(dateConvertor.asDate(startDate));
+		reservationThree.setEndDate(dateConvertor.asDate(endDate));
+		reservationThree.setReservationStatus(ReservationStatus.UpComing);
+		reservationThree.setMainGuest(guestTwo);
+		reservationThree.setOccupants(Arrays.asList(guestTwo, guestThree));
+		reservationThree.setRoomRates(new ArrayList<RoomRate>());
+
+		for (RoomRate roomRate : roomRatesForAllRooms) {
+			if (roomRate.getRoom().getId() == 3
+					&& roomRate.getDay().after(dateConvertor.asDate(startDate.minusDays(1)))
+					&& roomRate.getDay().before(dateConvertor.asDate(endDate.plusDays(1)))) {
+				reservationThree.getRoomRates().add(roomRate);
+			}
+		}
+
+		bookingService.createReservation(reservationThree);
 	}
 }
