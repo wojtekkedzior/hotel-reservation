@@ -37,7 +37,6 @@
 
 <body>
 
-
 	<div layout:fragment="side_menu" class="first">
 		<p>
 			<a th:href="@{/reservationDashBoard}">Dashboard</a>
@@ -94,9 +93,11 @@
 				</p>
 
 			</form>
-
-
-			<div>
+			
+			
+			<!-- to do add created by etc -->
+			
+<!-- 			<div>
 				<table>
 					<tr>
 						<td><label>Id</label></td>
@@ -106,7 +107,7 @@
 						<td><label>End Date</label></td>
 						<td><label>Created By</label></td>
 						<td><label>Created On</label></td>
-						<!-- 		<td><label>Realise</label></td> -->
+								<td><label>Realise</label></td>
 						<td><label>Cancel</label></td>
 					</tr>
 
@@ -118,18 +119,18 @@
 						<td th:text="${reservation.endDate}"></td>
 						<td th:text="${reservation.createdOn}"></td>
 						<td th:text="${reservation.createdBy}"></td>
-						<!-- 				<td>
+										<td>
 					<form action="#" th:action="@{/realiseReservation/}+${reservation.id}"
 						th:method="get">
 						<input type="hidden" name="_method" value="get" />
 						<button type="submit">Realise</button>
 					</form>
-				</td> -->
+				</td>
 						<td><a th:id="cancelReservation" th:href="@{/cancelReservation/}+${reservation.id}" th:text="Cancel"> </a></td>
 					</tr>
 				</table>
-			</div>
-		</div>
+			</div>-->
+		</div> 
 	</div>
 
 
