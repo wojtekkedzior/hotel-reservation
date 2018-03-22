@@ -154,7 +154,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		addIdentifications();
 		addGuests();
 
-		addReservations();
+		addReservation();
+		addReservations(5);
 	}
 
 	private void addamenities() {
@@ -391,7 +392,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		bookingService.createGuest(guestFour);
 	}
 
-	private void addReservations() {
+	private void addReservation() {
 		LocalDate startDate = LocalDate.of(2018, Month.MARCH, 3);
 		LocalDate endDate = LocalDate.of(2018, Month.MARCH, 20);
 
@@ -415,43 +416,34 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		}
 
 		bookingService.createReservation(reservationOne);
+	}
+	
+	private void addReservations(int reservations) {
 		
-		//2
-		reservationTwo = new Reservation();
-		reservationTwo.setStartDate(dateConvertor.asDate(startDate));
-		reservationTwo.setEndDate(dateConvertor.asDate(endDate));
-		reservationTwo.setReservationStatus(ReservationStatus.UpComing);
-		reservationTwo.setMainGuest(guestTwo);
-		reservationTwo.setOccupants(Arrays.asList(guestTwo, guestThree));
-		reservationTwo.setRoomRates(new ArrayList<RoomRate>());
+		for (int i = 1; i <= reservations; i++) {
+			LocalDate startDate = LocalDate.of(2018, Month.MARCH, 3);
+			LocalDate endDate = LocalDate.of(2018, Month.MARCH, 20);
 
-		for (RoomRate roomRate : roomRatesForAllRooms) {
-			if (roomRate.getRoom().getId() == 1
-					&& roomRate.getDay().after(dateConvertor.asDate(startDate.minusDays(1)))
-					&& roomRate.getDay().before(dateConvertor.asDate(endDate.plusDays(1)))) {
-				reservationTwo.getRoomRates().add(roomRate);
+			Reservation reservation = new Reservation();
+			reservation.setStartDate(dateConvertor.asDate(startDate));
+			reservation.setEndDate(dateConvertor.asDate(endDate));
+			reservation.setReservationStatus(ReservationStatus.UpComing);
+			reservation.setMainGuest(guestOne);
+			reservation.setOccupants(Arrays.asList(guestTwo, guestThree));
+			reservation.setRoomRates(new ArrayList<RoomRate>());
+
+			List<RoomRate> roomRatesForAllRooms = roomService.getRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.MARCH, 1)),
+					dateConvertor.asDate(LocalDate.of(2018, Month.MARCH, 31)));
+
+			for (RoomRate roomRate : roomRatesForAllRooms) {
+				if (roomRate.getRoom().getId() == i 
+						&& roomRate.getDay().after(dateConvertor.asDate(startDate.minusDays(1)))
+						&& roomRate.getDay().before(dateConvertor.asDate(endDate.plusDays(1)))) {
+					reservation.getRoomRates().add(roomRate);
+				}
 			}
+
+			bookingService.createReservation(reservation);	
 		}
-
-		bookingService.createReservation(reservationTwo);
-		
-		//3
-		reservationThree = new Reservation();
-		reservationThree.setStartDate(dateConvertor.asDate(startDate));
-		reservationThree.setEndDate(dateConvertor.asDate(endDate));
-		reservationThree.setReservationStatus(ReservationStatus.UpComing);
-		reservationThree.setMainGuest(guestTwo);
-		reservationThree.setOccupants(Arrays.asList(guestTwo, guestThree));
-		reservationThree.setRoomRates(new ArrayList<RoomRate>());
-
-		for (RoomRate roomRate : roomRatesForAllRooms) {
-			if (roomRate.getRoom().getId() == 3
-					&& roomRate.getDay().after(dateConvertor.asDate(startDate.minusDays(1)))
-					&& roomRate.getDay().before(dateConvertor.asDate(endDate.plusDays(1)))) {
-				reservationThree.getRoomRates().add(roomRate);
-			}
-		}
-
-		bookingService.createReservation(reservationThree);
 	}
 }
