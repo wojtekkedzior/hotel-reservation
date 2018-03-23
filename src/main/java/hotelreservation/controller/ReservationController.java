@@ -2,6 +2,8 @@ package hotelreservation.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;
 import hotelreservation.model.Reservation;
 import hotelreservation.model.Room;
+import hotelreservation.model.RoomRate;
 import hotelreservation.model.enums.IdType;
 import hotelreservation.model.enums.ReservationStatus;
 import hotelreservation.service.BookingService;
@@ -72,14 +75,15 @@ public class ReservationController {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
 		// TODO hard-coded for now
-		model.addAttribute("startDate", startDate.isPresent() ? formatter.format(startDate.get()) : "2018-03-09");
-		model.addAttribute("endDate", endDate.isPresent() ? formatter.format(endDate.get()) : "2018-03-20");
+		model.addAttribute("startDate", startDate.isPresent() ? formatter.format(startDate.get()) : "2018-04-09");
+		model.addAttribute("endDate", endDate.isPresent() ? formatter.format(endDate.get()) : "2018-04-20");
 
 		if (startDate.isPresent() && endDate.isPresent()) {
-			model.addAttribute("roomRatesPerRoom", roomService.getRoomRatesAsMap(startDate.get(), endDate.get()));
+			Map<Room, List<RoomRate>> roomRatesAsMap = roomService.getRoomRatesAsMap(startDate.get(), endDate.get());
+			model.addAttribute("roomRatesPerRoom", roomRatesAsMap);
 		}
 
-		model.addAttribute("reservations", bookingService.getAllReservations());
+		//TODO if there are no rooms available we neeed to display something usefull to the user.
 		
 		return "reservation";
 	}
@@ -108,11 +112,7 @@ public class ReservationController {
 		Reservation reservation = bookingService.getReservation(id);
 		model.addAttribute("reservation", reservation);
 		
-//		Guest guest = new Guest();
-//		guest.setContact(new Contact());
-//		guest.setIdentification(new Identification());
-		
-//		model.addAttribute("guest", guest);
+		//TODO make sure the roomrates associated with the cancelled booking are also reset to available again.
 		
 		return "cancelReservation";
 	}

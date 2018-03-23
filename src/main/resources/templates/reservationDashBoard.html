@@ -12,57 +12,59 @@
 
 	<div layout:fragment="content">
 		<div class="column">
-			<table>
-				<tr>
-					<td><label>Id</label></td>
-					<td><label>First Name</label></td>
-					<td><label>Last Name</label></td>
-					<td><label>Start Date</label></td>
-					<td><label>End Date</label></td>
-					<td><label>Created By</label></td>
-					<td><label>Created On</label></td>
-					<td><label>Realise</label></td>
-					<td><label>Cancel</label></td>
-				</tr>
+			<div>
+				<table>
+					<tr>
+						<td><label>Id</label></td>
+						<td><label>First Name</label></td>
+						<td><label>Last Name</label></td>
+						<td><label>Start Date</label></td>
+						<td><label>End Date</label></td>
+						<td><label>Created By</label></td>
+						<td><label>Created On</label></td>
+						<td><label>Realise</label></td>
+						<td><label>Cancel</label></td>
+					</tr>
 
-				<tr th:each="reservation, iterstat: ${upComingReservations}">
-					<td><a th:href="@{/reservation/}+${reservation.id}" th:text="${reservation.id}"> </a></td>
-					<td th:text="${reservation.mainGuest.firstName}"></td>
-					<td th:text="${reservation.mainGuest.lastName}"></td>
-					<td th:text="${reservation.startDate}"></td>
-					<td th:text="${reservation.endDate}"></td>
-					<td th:text="${reservation.createdOn}"></td>
-					<td th:text="${reservation.createdBy}"></td>
-					<td><a th:id="realiseReservation" th:href="@{/realiseReservation/}+${reservation.id}" th:text="Realise"> </a></td>
-					<td><a th:id="cancelReservation" th:href="@{/cancelReservation/}+${reservation.id}" th:text="Cancel"> </a></td>
-				</tr>
-			</table>
-		</div>
+					<tr th:each="reservation, iterstat: ${upComingReservations}">
+						<td><a th:href="@{/reservation/}+${reservation.id}" th:text="${reservation.id}"> </a></td>
+						<td th:text="${reservation.mainGuest.firstName}"></td>
+						<td th:text="${reservation.mainGuest.lastName}"></td>
+						<td th:text="${reservation.startDate}"></td>
+						<td th:text="${reservation.endDate}"></td>
+						<td th:text="${reservation.createdOn}"></td>
+						<td th:text="${reservation.createdBy}"></td>
+						<td><a th:id="realiseReservation" th:href="@{/realiseReservation/}+${reservation.id}" th:text="Realise"> </a></td>
+						<td><a th:id="cancelReservation" th:href="@{/cancelReservation/}+${reservation.id}" th:text="Cancel"> </a></td>
+					</tr>
+				</table>
+			</div>
 
-		<div class="column">
-			<table>
-				<tr>
-					<td><label>Id</label></td>
-					<td><label>First Name</label></td>
-					<td><label>Last Name</label></td>
-					<td><label>Start Date</label></td>
-					<td><label>End Date</label></td>
-					<td><label>Created By</label></td>
-					<td><label>Created On</label></td>
-					<td><label>Cancel</label></td>
-				</tr>
+			<div>
+				<table>
+					<tr>
+						<td><label>Id</label></td>
+						<td><label>First Name</label></td>
+						<td><label>Last Name</label></td>
+						<td><label>Start Date</label></td>
+						<td><label>End Date</label></td>
+						<td><label>Created By</label></td>
+						<td><label>Created On</label></td>
+						<td><label>Cancel</label></td>
+					</tr>
 
-				<tr th:each="reservation, iterstat: ${inProgressReservations}">
-					<td><a th:href="@{/reservation/}+${reservation.id}" th:text="${reservation.id}"> </a></td>
-					<td th:text="${reservation.mainGuest.firstName}"></td>
-					<td th:text="${reservation.mainGuest.lastName}"></td>
-					<td th:text="${reservation.startDate}"></td>
-					<td th:text="${reservation.endDate}"></td>
-					<td th:text="${reservation.createdOn}"></td>
-					<td th:text="${reservation.createdBy}"></td>
-					<td><a th:id="cancelReservation" th:href="@{/cancelReservation/}+${reservation.id}" th:text="Cancel"> </a></td>
-				</tr>
-			</table>
+					<tr th:each="reservation, iterstat: ${inProgressReservations}">
+						<td><a th:href="@{/reservation/}+${reservation.id}" th:text="${reservation.id}"> </a></td>
+						<td th:text="${reservation.mainGuest.firstName}"></td>
+						<td th:text="${reservation.mainGuest.lastName}"></td>
+						<td th:text="${reservation.startDate}"></td>
+						<td th:text="${reservation.endDate}"></td>
+						<td th:text="${reservation.createdOn}"></td>
+						<td th:text="${reservation.createdBy}"></td>
+						<td><a th:id="cancelReservation" th:href="@{/cancelReservation/}+${reservation.id}" th:text="Cancel"> </a></td>
+					</tr>
+				</table>
+			</div>
 		</div>
 	</div>
 </body>
