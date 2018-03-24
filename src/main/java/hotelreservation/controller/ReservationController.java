@@ -209,4 +209,11 @@ public class ReservationController {
 		
 		return new ModelAndView("redirect:/realiseReservation/" + reservation.getId());
 	}
+	
+	@PostMapping("/cancelReservation/{id}")
+	public ModelAndView cancelReservation(@ModelAttribute Reservation reservation, @PathVariable Optional<Integer> id) {
+		Reservation resFromDB = bookingService.getReservation(reservation.getId());
+		bookingService.cancelReservation(resFromDB);
+		return new ModelAndView("redirect:/reservation");
+	}
 }

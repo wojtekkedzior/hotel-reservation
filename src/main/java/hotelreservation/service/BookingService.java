@@ -132,4 +132,11 @@ public class BookingService {
 	public List<Reservation> getReservationsByStatus(ReservationStatus reservationStatus) {
 		return reservationRepo.findByReservationStatus(reservationStatus);
 	}
+	
+	public void cancelReservation(Reservation reservation) {
+//		reservation.getRoomRates().clear();
+		reservation.setRoomRates(null);
+		reservation.setReservationStatus(ReservationStatus.Cancelled);
+		reservationRepo.save(reservation);
+	}
 }

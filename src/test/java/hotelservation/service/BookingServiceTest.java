@@ -9,6 +9,7 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -616,13 +617,20 @@ public class BookingServiceTest {
 		
 		assertTrue(bookingService.getAllReservations().size() == 1);
 		
-		Reservation reservationFromDb = bookingService.getReservation(reservationOne.getId());
-		reservationFromDb.setReservationStatus(ReservationStatus.Cancelled);
-		entityManager.flush(); //even smellier. with the embedded DB the setter above seems to go directly to the DB. works different with MYSQL. Might be to do with the List interface
-//		bookingService.saveReservation(reservationFromDb); //TODO smelly
+		List<RoomRate> availableRoomRates = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)), dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+
+		if(availableRoomRates.contains(roomRateTwo) || availableRoomRates.contains(roomRateThree)) {
+			fail();
+		}
 		
-		Reservation reservation = bookingService.getReservation(reservationFromDb.getId());;
-		assertEquals(ReservationStatus.Cancelled, reservation.getReservationStatus());
+		bookingService.cancelReservation(reservationOne);
+		
+		assertEquals(ReservationStatus.Cancelled, reservationOne.getReservationStatus());
+		availableRoomRates = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)), dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		
+		if(!availableRoomRates.contains(roomRateTwo) || !availableRoomRates.contains(roomRateThree)) {
+			fail();
+		}
 	}
 	
 	@Test
