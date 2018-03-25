@@ -158,7 +158,14 @@ public class ReservationController {
 	@PostMapping("/realiseReservation") 
 	public ModelAndView realiseReservation(@ModelAttribute Reservation reservation, BindingResult bindingResult) {
 		Reservation reservation2 = bookingService.getReservation(reservation.getId());
+		
+		if(reservation.getReservationStatus().equals(ReservationStatus.Cancelled) {
+			//TODO can't realise a cancelled or in progress reservation
+		}
+		
+		
 		reservation2.setReservationStatus(ReservationStatus.InProgress);
+		
 		
 		bookingService.saveReservation(reservation2);
 		
