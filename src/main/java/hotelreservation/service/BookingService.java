@@ -18,11 +18,13 @@ import hotelreservation.model.Contact;
 import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;
 import hotelreservation.model.Reservation;
+import hotelreservation.model.ReservationCancellation;
 import hotelreservation.model.RoomRate;
 import hotelreservation.model.enums.ReservationStatus;
 import hotelreservation.repository.ContactRepo;
 import hotelreservation.repository.GuestRepo;
 import hotelreservation.repository.IdentificationRepo;
+import hotelreservation.repository.ReservationCancellationRepo;
 import hotelreservation.repository.ReservationRepo;
 
 @Service
@@ -40,6 +42,9 @@ public class BookingService {
 
 	@Autowired
 	private ReservationRepo reservationRepo;
+	
+	@Autowired
+	private ReservationCancellationRepo reservationCancellationRepo;
 	
 	@Autowired
 	private DateConvertor dateConvertor;
@@ -133,10 +138,14 @@ public class BookingService {
 		return reservationRepo.findByReservationStatus(reservationStatus);
 	}
 	
-	public void cancelReservation(Reservation reservation) {
-//		reservation.getRoomRates().clear();
+	//This method prodbaby doesnt even need the reservation as the cancel reason has this relationship
+	public void cancelReservation(Reservation reservation, ReservationCancellation reservationCancellation) {
+		reservationCancellationRepo.save(reservationCancellation);
+		
 		reservation.setRoomRates(null);
 		reservation.setReservationStatus(ReservationStatus.Cancelled);
 		reservationRepo.save(reservation);
 	}
+	
+	
 }

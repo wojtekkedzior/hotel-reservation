@@ -26,6 +26,7 @@ import hotelreservation.model.Contact;
 import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;
 import hotelreservation.model.Reservation;
+import hotelreservation.model.ReservationCancellation;
 import hotelreservation.model.Room;
 import hotelreservation.model.RoomRate;
 import hotelreservation.model.enums.IdType;
@@ -111,6 +112,12 @@ public class ReservationController {
 
 		Reservation reservation = bookingService.getReservation(id);
 		model.addAttribute("reservation", reservation);
+		
+		if(reservation.getReservationStatus().equals(ReservationStatus.Cancelled)) {
+			
+		} else {
+			model.addAttribute("reservationCancellation", new ReservationCancellation());
+		}
 		
 		//TODO make sure the roomrates associated with the cancelled booking are also reset to available again.
 		
@@ -210,10 +217,17 @@ public class ReservationController {
 		return new ModelAndView("redirect:/realiseReservation/" + reservation.getId());
 	}
 	
-	@PostMapping("/cancelReservation/{id}")
-	public ModelAndView cancelReservation(@ModelAttribute Reservation reservation, @PathVariable Optional<Integer> id) {
-		Reservation resFromDB = bookingService.getReservation(reservation.getId());
-		bookingService.cancelReservation(resFromDB);
-		return new ModelAndView("redirect:/reservation");
+	@PostMapping("/cancelReservation/{reservationID}")
+	public ModelAndView cancelReservation(@ModelAttribute ReservationCancellation reservationCancellation, @PathVariable Optional<Integer> reservationID) {
+		Reservation resFromDB = bookingService.getReservation(reservationID);
+		
+		reservationCancellation.setId(0); //need to figure out why the ID is being set. in this case the reservation ID is also placed into the ReservationCancellation
+		reservationCancellation.setReservation(resFromDB);
+		
+		bookingService.cancelReservation(resFromDB, reservationCancellation);
+		
+		System.err.println("reservationCancellation: " + reservationCancellation.getId() );
+		System.err.println(reservationID);
+		return new ModelAndView("redirect:/reservationDashBoard");
 	}
 }

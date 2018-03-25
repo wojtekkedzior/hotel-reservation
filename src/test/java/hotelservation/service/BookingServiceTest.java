@@ -28,6 +28,7 @@ import hotelreservation.model.Contact;
 import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;
 import hotelreservation.model.Reservation;
+import hotelreservation.model.ReservationCancellation;
 import hotelreservation.model.Room;
 import hotelreservation.model.RoomRate;
 import hotelreservation.model.RoomType;
@@ -623,7 +624,11 @@ public class BookingServiceTest {
 			fail();
 		}
 		
-		bookingService.cancelReservation(reservationOne);
+		ReservationCancellation cancellation = new ReservationCancellation();
+		cancellation.setReason("canceled");
+		cancellation.setReservation(reservationOne);
+		
+		bookingService.cancelReservation(reservationOne, cancellation);
 		
 		assertEquals(ReservationStatus.Cancelled, reservationOne.getReservationStatus());
 		availableRoomRates = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)), dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));

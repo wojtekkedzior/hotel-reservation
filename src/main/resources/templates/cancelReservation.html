@@ -12,10 +12,23 @@
 
 	<div layout:fragment="content">
 		<div class="column">
+
+			<form action="#" th:action="@{/cancelReservation/}+${reservation.id}" th:object="${reservationCancellation}" method="post">
+				<p>
+					Cancellation reason: <input type="text" th:field="*{reason}" />
+				</p>
+
+				<p>
+					<!-- hidden field to make sure the ID gets passed back to the controller when submit is called. -->
+					<input type="number" id="reservationID" th:name="reservationID" th:field="${reservation.id}" hidden="true" />
+				</p>
+				<p>
+					<input type="submit" value="Submit" />
+				</p>
+			</form>
 		</div>
 
-		<div class="column">
-		</div>
+		<div class="column"></div>
 	</div>
 </body>
 </html>
