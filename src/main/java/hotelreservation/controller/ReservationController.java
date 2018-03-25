@@ -159,8 +159,10 @@ public class ReservationController {
 	public ModelAndView realiseReservation(@ModelAttribute Reservation reservation, BindingResult bindingResult) {
 		Reservation reservation2 = bookingService.getReservation(reservation.getId());
 		
-		if(reservation.getReservationStatus().equals(ReservationStatus.Cancelled)) {
+		if(reservation2.getReservationStatus().equals(ReservationStatus.UpComing) || reservation2.getReservationStatus().equals(ReservationStatus.InProgress)) {
 			//TODO can't realise a cancelled or in progress reservation
+		} else {
+			//TODO return some erro message
 		}
 		
 		
@@ -226,13 +228,15 @@ public class ReservationController {
 	public ModelAndView cancelReservation(@ModelAttribute ReservationCancellation reservationCancellation, @PathVariable Optional<Integer> reservationID) {
 		Reservation resFromDB = bookingService.getReservation(reservationID);
 		
-		reservationCancellation.setId(0); //need to figure out why the ID is being set. in this case the reservation ID is also placed into the ReservationCancellation
+		reservationCancellation.setId(0); //TODO need to figure out why the ID is being set. in this case the reservation ID is also placed into the ReservationCancellation
 		reservationCancellation.setReservation(resFromDB);
 		
 		bookingService.cancelReservation(resFromDB, reservationCancellation);
 		
-		System.err.println("reservationCancellation: " + reservationCancellation.getId() );
+		System.err.println("reservationCancellation: " + reservationCancellation.getId());
 		System.err.println(reservationID);
+		
+		
 		return new ModelAndView("redirect:/reservationDashBoard");
 	}
 }
