@@ -159,7 +159,7 @@ public class ReservationController {
 	public ModelAndView realiseReservation(@ModelAttribute Reservation reservation, BindingResult bindingResult) {
 		Reservation reservation2 = bookingService.getReservation(reservation.getId());
 		
-		if(reservation.getReservationStatus().equals(ReservationStatus.Cancelled) {
+		if(reservation.getReservationStatus().equals(ReservationStatus.Cancelled)) {
 			//TODO can't realise a cancelled or in progress reservation
 		}
 		
