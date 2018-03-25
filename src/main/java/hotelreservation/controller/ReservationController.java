@@ -119,8 +119,6 @@ public class ReservationController {
 			model.addAttribute("reservationCancellation", new ReservationCancellation());
 		}
 		
-		//TODO make sure the roomrates associated with the cancelled booking are also reset to available again.
-		
 		return "cancelReservation";
 	}
 	
