@@ -105,6 +105,7 @@ public class BookingService {
 		}
 		
 		reservation.setCreatedOn(new Date());
+		reservation.setReservationStatus(ReservationStatus.UpComing);
 		reservationRepo.save(reservation);
 	}
 
