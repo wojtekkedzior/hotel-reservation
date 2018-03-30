@@ -1,7 +1,10 @@
 package hotelreservation.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -70,6 +73,18 @@ public class ReservationController {
 		} else {
 			Reservation reservation = bookingService.getReservation(id);
 			model.addAttribute("reservation", reservation == null ? new Reservation() : reservation);
+			
+			Map<Room, List<RoomRate>> roomRatesAsMap = new HashMap<Room, List<RoomRate>>();
+			
+			for (RoomRate roomRate : reservation.getRoomRates()) {
+				if(roomRatesAsMap.containsKey(roomRate.getRoom())) {
+					roomRatesAsMap.get(roomRate.getRoom()).add(roomRate);
+				} else {
+					roomRatesAsMap.put(roomRate.getRoom(), new ArrayList<RoomRate>(Arrays.asList(roomRate)));
+				}
+			}
+			
+			model.addAttribute("roomRatesPerRoom", roomRatesAsMap);
 		}
 
 		// TODO move to properties file
@@ -93,7 +108,6 @@ public class ReservationController {
 	
 	@RequestMapping(value = {"/realiseReservation/{id}"})
 	public String getRealiseReservation(@PathVariable Optional<Integer> id, Model model) {
-
 		Reservation reservation = bookingService.getReservation(id);
 		model.addAttribute("reservation", reservation);
 		
@@ -107,6 +121,7 @@ public class ReservationController {
 		return "realiseReservation";
 	}
 	
+		
 	@RequestMapping(value = {"/cancelReservation/{id}"})
 	public String cancelReservation(@PathVariable Optional<Integer> id, Model model) {
 

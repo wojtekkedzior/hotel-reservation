@@ -86,8 +86,10 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	// Rooms
 	private Room standardRoomOne;
 	private Room standardRoomTwo;
+	private Room standardRoomThree;
 	private Room luxuryRoomOne;
 	private Room luxuryRoomTwo;
+	private Room luxuryRoomThree;
 
 	// Room Rates
 	private RoomRate roomRateOne;
@@ -155,7 +157,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		addGuests();
 
 		addReservation();
-		addReservations(5);
+		addReservations(6);
+		createMultiRoomReservation();
 	}
 
 	private void addamenities() {
@@ -289,6 +292,12 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		standardRoomTwoAmenitites.add(blanket);
 		standardRoomTwo.setRoomAmenities(standardRoomTwoAmenitites);
 		roomService.createRoom(standardRoomTwo);
+		
+		standardRoomThree = new Room(3, operational, roomTypeStandard, admin);
+		standardRoomThree.setName("Room 3");
+		standardRoomThree.setDescription("The Third Best Room Description");
+		standardRoomThree.setRoomAmenities(standardRoomTwoAmenitites);
+		roomService.createRoom(standardRoomThree);
 
 		// Luxury Rooms
 		luxuryRoomOne = new Room(11, operational, roomTypeLuxury, admin);
@@ -314,9 +323,15 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		luxuryRoomTwoAmenitites.add(miniBar);
 		luxuryRoomTwo.setRoomAmenities(luxuryRoomTwoAmenitites);
 		roomService.createRoom(luxuryRoomTwo);
+		
+		luxuryRoomThree = new Room(33, operational, roomTypeLuxury, admin);
+		luxuryRoomThree.setName("Room 33");
+		luxuryRoomThree.setDescription("The Thid Best Luxury Room Description");
+		luxuryRoomThree.setRoomAmenities(luxuryRoomTwoAmenitites);
+		roomService.createRoom(luxuryRoomThree);
 	}
 
-	private void addRoomRates() {
+	private void addRoomRates() { 
 		// -|-||----|---------|-----------
 
 		// roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
@@ -350,9 +365,11 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 
 			roomService.createRoomRate(new RoomRate(standardRoomOne, Currency.CZK, value, cal.getTime()));
 			roomService.createRoomRate(new RoomRate(standardRoomTwo, Currency.CZK, value, cal.getTime()));
+			roomService.createRoomRate(new RoomRate(standardRoomThree, Currency.CZK, value, cal.getTime()));
 
 			roomService.createRoomRate(new RoomRate(luxuryRoomOne, Currency.CZK, value * 2, cal.getTime()));
 			roomService.createRoomRate(new RoomRate(luxuryRoomTwo, Currency.CZK, value * 2, cal.getTime()));
+			roomService.createRoomRate(new RoomRate(luxuryRoomThree, Currency.CZK, value * 2, cal.getTime()));
 		}
 	}
 
@@ -420,7 +437,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	
 	private void addReservations(int reservations) {
 		
-		for (int i = 1; i <= reservations; i++) {
+		for (int i = 2; i <= reservations; i++) {
 			LocalDate startDate = LocalDate.of(2018, Month.MARCH, 3);
 			LocalDate endDate = LocalDate.of(2018, Month.MARCH, 20);
 
@@ -432,18 +449,24 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 			reservation.setOccupants(Arrays.asList(guestTwo, guestThree));
 			reservation.setRoomRates(new ArrayList<RoomRate>());
 
-			List<RoomRate> roomRatesForAllRooms = roomService.getRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.MARCH, 1)),
+			List<RoomRate> roomRatesForAllRooms = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.MARCH, 1)),
 					dateConvertor.asDate(LocalDate.of(2018, Month.MARCH, 31)));
 
 			for (RoomRate roomRate : roomRatesForAllRooms) {
-				if (roomRate.getRoom().getId() == i 
+				if (roomRate.getRoom().getId() == i // this is the room ID 
 						&& roomRate.getDay().after(dateConvertor.asDate(startDate.minusDays(1)))
 						&& roomRate.getDay().before(dateConvertor.asDate(endDate.plusDays(1)))) {
 					reservation.getRoomRates().add(roomRate);
 				}
 			}
+			
+			//TODO createReservation should fail if there are not available rooms.
 
 			bookingService.createReservation(reservation);	
 		}
+	}
+	
+	private void createMultiRoomReservation () {
+		
 	}
 }
