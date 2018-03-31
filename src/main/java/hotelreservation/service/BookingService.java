@@ -72,8 +72,9 @@ public class BookingService {
 			guestRepo.save(reservation.getMainGuest());
 		}
 		
-		//validate reservation has start and end date
+		//TODO validate reservation has start and end date
 		
+		//TODO createReservation should fail if there are not available rooms.
 		
 		//Check if room rates have sequential days
 		List<RoomRate> roomRates = reservation.getRoomRates();
