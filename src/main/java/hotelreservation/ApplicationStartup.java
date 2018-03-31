@@ -385,7 +385,6 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		reservationOne = new Reservation();
 		reservationOne.setStartDate(dateConvertor.asDate(startDate));
 		reservationOne.setEndDate(dateConvertor.asDate(endDate));
-		reservationOne.setReservationStatus(ReservationStatus.UpComing);
 		reservationOne.setMainGuest(guestOne);
 		reservationOne.setOccupants(Arrays.asList(guestTwo, guestThree));
 		reservationOne.setRoomRates(new ArrayList<RoomRate>());
@@ -413,7 +412,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 			Reservation reservation = new Reservation();
 			reservation.setStartDate(dateConvertor.asDate(startDate));
 			reservation.setEndDate(dateConvertor.asDate(endDate));
-			reservation.setReservationStatus(ReservationStatus.UpComing);
+			
 			reservation.setMainGuest(guestOne);
 			reservation.setOccupants(Arrays.asList(guestTwo, guestThree));
 			reservation.setRoomRates(new ArrayList<RoomRate>());
@@ -431,6 +430,12 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 			
 			bookingService.createReservation(reservation);	
 		}
+		
+		//Make one reservation InProgress
+		Reservation reservation = bookingService.getReservation(3);
+		reservation.setReservationStatus(ReservationStatus.InProgress);
+		bookingService.saveReservation(reservation);
+		
 	}
 	
 	private void createMultiRoomReservation () {
@@ -440,7 +445,6 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		Reservation reservation = new Reservation();
 		reservation.setStartDate(dateConvertor.asDate(startDate));
 		reservation.setEndDate(dateConvertor.asDate(endDate));
-		reservation.setReservationStatus(ReservationStatus.UpComing);
 		reservation.setMainGuest(guestOne);
 		reservation.setOccupants(Arrays.asList(guestTwo, guestThree));
 		reservation.setRoomRates(new ArrayList<RoomRate>());
