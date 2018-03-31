@@ -144,10 +144,18 @@ public class BookingService {
 	public void cancelReservation(Reservation reservation, ReservationCancellation reservationCancellation) {
 		reservationCancellationRepo.save(reservationCancellation);
 		
+		switch (reservation.getReservationStatus()) {
+		case UpComing:
+			reservation.setReservationStatus(ReservationStatus.Cancelled);
+			break;
+		case InProgress:
+			reservation.setReservationStatus(ReservationStatus.Abandoned);
+			break;
+		default:
+			break;
+		}
+		
 		reservation.setRoomRates(null);
-		reservation.setReservationStatus(ReservationStatus.Cancelled);
 		reservationRepo.save(reservation);
 	}
-	
-	
 }
