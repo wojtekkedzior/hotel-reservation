@@ -1,0 +1,34 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layouts/layout">
+<body>
+	<div layout:fragment="side_menu" class="first">
+		<p>
+			<a th:href="@{/reservationDashBoard}">Dashboard</a>
+		</p>
+
+		<p>
+			<a th:href="@{/reservation}">New Reservation</a>
+		</p>
+	</div>
+
+	<div layout:fragment="content">
+		<div class="column">
+
+			<form action="#" th:action="@{/checkoutReservation/}+${reservation.id}" th:object="${reservationCheckout}" method="post">
+				<p>
+					Cancellation reason: <input type="text" th:field="*{reason}" />
+				</p>
+
+				<p>
+					<!-- hidden field to make sure the ID gets passed back to the controller when submit is called. -->
+					<input type="number" id="reservationID" th:name="reservationID" th:field="${reservation.id}" hidden="true" />
+				</p>
+				<p>
+					<input type="submit" value="Submit" />
+				</p>
+			</form>
+		</div>
+
+		<div class="column"></div>
+	</div>
+</body>
+</html>

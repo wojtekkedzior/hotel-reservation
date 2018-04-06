@@ -165,9 +165,7 @@ public class ReservationController {
 		reservation2.getOccupants().add(guest);
 		bookingService.createReservation(reservation2);
 		
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("redirect:/realiseReservation/" + reservation.getId());
-		return modelAndView;
+		return new ModelAndView("redirect:/realiseReservation/" + reservation.getId());
 	}
 	
 	@PostMapping("/realiseReservation") 
@@ -183,12 +181,9 @@ public class ReservationController {
 		
 		reservation2.setReservationStatus(ReservationStatus.InProgress);
 		
-		
 		bookingService.saveReservation(reservation2);
 		
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("redirect:/reservationDashBoard");
-		return modelAndView;
+		return new ModelAndView("redirect:/reservationDashBoard");
 	}
 
 	@PostMapping("/reservation")
@@ -198,9 +193,7 @@ public class ReservationController {
 		
 		bookingService.createReservation(reservation);
 		
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("redirect:/reservation");
-		return modelAndView;
+		return new ModelAndView("redirect:/reservationDashBoard");
 	}
 	
 	//TODO only super-admin type user should be able to fully delete a reservation
