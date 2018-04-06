@@ -2,8 +2,8 @@ package hotelreservation.repository;
 
 import org.springframework.data.repository.CrudRepository;
 
-import hotelreservation.model.ReservationCheckout;
+import hotelreservation.model.ReservationCancellation;
 
-public interface ReservationCancellationRepo extends CrudRepository<ReservationCheckout, Long>  {
+public interface ReservationCancellationRepo extends CrudRepository<ReservationCancellation, Long>  {
 
 }
