@@ -6,7 +6,11 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class DateConvertor {
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	public Date asDate(LocalDate localDate) {
 		return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());

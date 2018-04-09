@@ -2,6 +2,8 @@ package hotelreservation.service;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,7 @@ import hotelreservation.repository.IdentificationRepo;
 
 @Service
 public class GuestService {
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
 	private GuestRepo guestRepo;

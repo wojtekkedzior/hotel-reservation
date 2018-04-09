@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -41,6 +43,7 @@ import hotelreservation.service.RoomService;
 
 @Controller
 public class ReservationController {
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private RoomService roomService;
@@ -140,20 +143,24 @@ public class ReservationController {
 	
 	@RequestMapping(value = {"reservationDashBoard"})
 	public String getReservationDashBoard(Model model) {
+		log.info("loading dashboard");
 		
 		model.addAttribute("upComingReservations", bookingService.getReservationsByStatus(ReservationStatus.UpComing));
 		model.addAttribute("inProgressReservations", bookingService.getReservationsByStatus(ReservationStatus.InProgress));
 		
+		log.info("dashboard ready");
 		return "reservationDashBoard";
 	}
 
 	@RequestMapping(value = {"/checkoutReservation/{id}"})
 	public String checkoutReservation(@PathVariable Optional<Integer> id, Model model) {
-
+		log.info("loading checkout Reservation");
+		
 		Reservation reservation = bookingService.getReservation(id);
 		model.addAttribute("reservation", reservation);
 		model.addAttribute("reservationCheckout", new ReservationCheckout());
 		
+		log.info("checkout Reservation ready");
 		return "checkoutReservation";
 	}
 	
