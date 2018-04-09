@@ -64,5 +64,8 @@ public class Reservation {
 	//logic to determin the reservation type (consecutive days vs non-consecutive) can also get tricky.
 
 	public Reservation() {}
+	
+	
+	//probably needs a history table
 
 }
