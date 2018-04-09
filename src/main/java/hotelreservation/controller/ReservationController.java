@@ -30,6 +30,7 @@ import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;
 import hotelreservation.model.Reservation;
 import hotelreservation.model.ReservationCancellation;
+import hotelreservation.model.ReservationCheckout;
 import hotelreservation.model.Room;
 import hotelreservation.model.RoomRate;
 import hotelreservation.model.enums.IdType;
@@ -146,6 +147,17 @@ public class ReservationController {
 		return "reservationDashBoard";
 	}
 
+	@RequestMapping(value = {"/checkoutReservation/{id}"})
+	public String checkoutReservation(@PathVariable Optional<Integer> id, Model model) {
+
+		Reservation reservation = bookingService.getReservation(id);
+		model.addAttribute("reservation", reservation);
+		model.addAttribute("reservationCheckout", new ReservationCheckout());
+		
+		return "checkoutReservation";
+	}
+	
+	
 	
 	
 	
@@ -241,9 +253,18 @@ public class ReservationController {
 		
 		bookingService.cancelReservation(resFromDB, reservationCancellation);
 		
-		System.err.println("reservationCancellation: " + reservationCancellation.getId());
-		System.err.println(reservationID);
+		return new ModelAndView("redirect:/reservationDashBoard");
+	}
+	
+	@PostMapping("/checkoutReservation/{reservationID}")
+	public ModelAndView reservationCheckout(@ModelAttribute ReservationCheckout reservationCheckout, @PathVariable Optional<Integer> reservationID) {
+		Reservation resFromDB = bookingService.getReservation(reservationID);
 		
+		reservationCheckout.setId(0); //TODO need to figure out why the ID is being set. in this case the reservation ID is also placed into the ReservationCancellation
+		reservationCheckout.setReservation(resFromDB);
+		reservationCheckout.setCheckedout(new Date());
+		
+		bookingService.checkoutReservation(resFromDB, reservationCheckout);
 		
 		return new ModelAndView("redirect:/reservationDashBoard");
 	}

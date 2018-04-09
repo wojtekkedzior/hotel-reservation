@@ -19,12 +19,14 @@ import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;
 import hotelreservation.model.Reservation;
 import hotelreservation.model.ReservationCancellation;
+import hotelreservation.model.ReservationCheckout;
 import hotelreservation.model.RoomRate;
 import hotelreservation.model.enums.ReservationStatus;
 import hotelreservation.repository.ContactRepo;
 import hotelreservation.repository.GuestRepo;
 import hotelreservation.repository.IdentificationRepo;
 import hotelreservation.repository.ReservationCancellationRepo;
+import hotelreservation.repository.ReservationCheckoutRepo;
 import hotelreservation.repository.ReservationRepo;
 
 @Service
@@ -48,6 +50,9 @@ public class BookingService {
 	
 	@Autowired
 	private DateConvertor dateConvertor;
+
+	@Autowired
+	private ReservationCheckoutRepo reservationCheckoutRepo;
 	
 	public void createContact(Contact contact) {
 		contactRepo.save(contact);
@@ -157,5 +162,11 @@ public class BookingService {
 		
 		reservation.setRoomRates(null);
 		reservationRepo.save(reservation);
+	}
+
+	public void checkoutReservation(Reservation resFromDB, ReservationCheckout reservationCheckout) {
+		resFromDB.setReservationStatus(ReservationStatus.Fulfilled);
+		reservationRepo.save(resFromDB);
+		reservationCheckoutRepo.save(reservationCheckout);
 	}
 }

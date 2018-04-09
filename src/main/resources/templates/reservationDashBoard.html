@@ -90,7 +90,7 @@
 						<td th:text="${reservation.endDate}"></td>
 						<td th:text="${reservation.createdOn}"></td>
 						<td th:text="${reservation.createdBy}"></td>
-						<td><a th:id="cancelReservation" th:href="@{/checkoutReservation/}+${reservation.id}" th:text="Check-out"> </a></td>
+						<td><a th:id="checkoutReservation" th:href="@{/checkoutReservation/}+${reservation.id}" th:text="Check-out"> </a></td>
 					</tr>
 				</table>
 			</div>
