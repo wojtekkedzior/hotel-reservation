@@ -32,5 +32,5 @@ public class ReservationCheckout {
 	@ManyToOne
 	private User checkedOutBy;
 	
-	//Any payment details
+	//Any payment details such as fully paid? anything outstanding? bar/room charges?
 }
