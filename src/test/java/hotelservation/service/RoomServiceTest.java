@@ -25,7 +25,7 @@ import hotelreservation.model.RoomRate;
 import hotelreservation.model.RoomType;
 import hotelreservation.model.Status;
 import hotelreservation.model.User;
-import hotelreservation.model.UserType;
+import hotelreservation.model.Role;
 import hotelreservation.model.enums.Currency;
 import hotelreservation.service.RoomService;
 import hotelreservation.service.UserService;
@@ -57,7 +57,7 @@ public class RoomServiceTest {
 		RoomType roomType = new RoomType("Standard", "Standard room");
 		roomService.createRoomType(roomType);
 
-		UserType managerUserType = new UserType("manager", "manager desc", true);
+		Role managerUserType = new Role("manager", "manager desc", true);
 		userService.createUserType(managerUserType);
 
 		User createdBy = new User();
@@ -161,7 +161,7 @@ public class RoomServiceTest {
 		RoomType roomType = new RoomType("Standard", "Standard room");
 		roomService.createRoomType(roomType);
 
-		UserType managerUserType = new UserType("manager", "manager desc", true);
+		Role managerUserType = new Role("manager", "manager desc", true);
 		userService.createUserType(managerUserType);
 
 		Room room = new Room();
@@ -197,7 +197,7 @@ public class RoomServiceTest {
 		RoomType roomType = new RoomType("Standard", "Standard room");
 		roomService.createRoomType(roomType);
 
-		UserType managerUserType = new UserType("manager", "manager desc", true);
+		Role managerUserType = new Role("manager", "manager desc", true);
 		userService.createUserType(managerUserType);
 
 		User createdBy = new User();
@@ -224,7 +224,7 @@ public class RoomServiceTest {
 		RoomType roomType = new RoomType("Standard", "Standard room");
 		roomService.createRoomType(roomType);
 
-		UserType managerUserType = new UserType("manager", "manager desc", true);
+		Role managerUserType = new Role("manager", "manager desc", true);
 		userService.createUserType(managerUserType);
 
 		User createdBy = new User();

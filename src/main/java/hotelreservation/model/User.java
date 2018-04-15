@@ -28,7 +28,7 @@ public class User {
 	private String password;
 
 	@OneToOne
-	private UserType userType;
+	private Role userType;
 	
 	private String name;
 	private boolean enabled;
@@ -50,7 +50,7 @@ public class User {
 	
 	public User() {}
 
-	public User(String usernName, UserType userType, String name) {
+	public User(String usernName, Role userType, String name) {
 		this.userName = usernName;
 		this.userType = userType;
 		this.name = name;
@@ -59,7 +59,7 @@ public class User {
 		enabled = true;
 	}
 	
-	public User(String usernName, UserType userType, String name, User createdBy) {
+	public User(String usernName, Role userType, String name, User createdBy) {
 		this.userName = usernName;
 		this.userType = userType;
 		this.name = name;

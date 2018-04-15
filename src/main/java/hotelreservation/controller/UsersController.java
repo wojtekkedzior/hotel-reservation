@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import hotelreservation.model.User;
-import hotelreservation.model.UserType;
+import hotelreservation.model.Role;
 import hotelreservation.service.UserService;
 
 @Controller
@@ -39,7 +39,7 @@ public class UsersController {
 			}
 		}
 
-		model.addAttribute("userType", new UserType());
+		model.addAttribute("userType", new Role());
 		model.addAttribute("users", userService.getAllUsers());
 		model.addAttribute("userTypes", userService.getAllUserTypes());
 		return "user";
@@ -49,9 +49,9 @@ public class UsersController {
 	public String userTypes(Model model, @PathVariable Optional<Integer> id) {
 
 		if(!id.isPresent()) {
-			model.addAttribute("userType", new UserType());
+			model.addAttribute("userType", new Role());
 		} else {
-			UserType userType = userService.getUserTypeById(id);
+			Role userType = userService.getUserTypeById(id);
 			if(userType == null) {
 				model.addAttribute("userType", new User());
 			} else {
@@ -74,7 +74,7 @@ public class UsersController {
 	}
 
 	@PostMapping("/addUserType")
-	public ModelAndView addAUserType(@ModelAttribute UserType userType, BindingResult bindingResult) {
+	public ModelAndView addAUserType(@ModelAttribute Role userType, BindingResult bindingResult) {
 		userService.createUserType(userType);
 		return new ModelAndView("redirect:/userType/" + userType.getId());
 	}

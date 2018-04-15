@@ -33,7 +33,7 @@ import hotelreservation.model.RoomRate;
 import hotelreservation.model.RoomType;
 import hotelreservation.model.Status;
 import hotelreservation.model.User;
-import hotelreservation.model.UserType;
+import hotelreservation.model.Role;
 import hotelreservation.model.enums.Currency;
 import hotelreservation.model.enums.IdType;
 import hotelreservation.model.enums.ReservationStatus;
@@ -75,7 +75,7 @@ public class BookingServiceTest {
 	private Amenity pillow;
 	private Status operational;
 	private User user;
-	private UserType managerUserType;
+	private Role managerUserType;
 
 	private Guest mainGuest;
 	private Guest guestOne;
@@ -99,7 +99,7 @@ public class BookingServiceTest {
 
 	@Before
 	public void setup() {
-		managerUserType = new UserType("manager", "manager desc", true);
+		managerUserType = new Role("manager", "manager desc", true);
 		userService.createUserType(managerUserType);
 
 		user = new User();

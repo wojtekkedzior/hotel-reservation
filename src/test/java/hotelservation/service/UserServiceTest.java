@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import hotelreservation.Application;
-import hotelreservation.model.UserType;
+import hotelreservation.model.Role;
 import hotelreservation.service.UserService;
 
 @RunWith(SpringRunner.class)
@@ -42,10 +42,10 @@ public class UserServiceTest {
 	@Test
 	public void whenFindByName_thenReturnEmployee() {
 		// given
-		UserType userType = new UserType("UserType name", "UserTypeDescription", true);
+		Role userType = new Role("UserType name", "UserTypeDescription", true);
 		userService.createUserType(userType);
 
-		List<UserType> target = userService.getAllUserTypes();
+		List<Role> target = userService.getAllUserTypes();
 
 		assertTrue(target.size() == 1);
 		assertEquals(userType, target.get(0));
@@ -54,11 +54,11 @@ public class UserServiceTest {
 	@Test
 	public void testDisabledUser() {
 		// given
-		UserType userType = new UserType("UserType name", "UserTypeDescription", true);
+		Role userType = new Role("UserType name", "UserTypeDescription", true);
 		userService.createUserType(userType);
 
 		// when
-		List<UserType> target =  userService.getAllUserTypes();
+		List<Role> target =  userService.getAllUserTypes();
 
 		assertTrue(target.size() == 1);
 		assertEquals(userType, target.get(0));
@@ -75,11 +75,11 @@ public class UserServiceTest {
 	
 	@Test
 	public void testAddAllUserTypes() {
-		UserType superAdminUserType = new UserType("superAdmin", "superAdmin desc", true);
-		UserType adminUserType = new UserType("admin", "admin desc", true);
+		Role superAdminUserType = new Role("superAdmin", "superAdmin desc", true);
+		Role adminUserType = new Role("admin", "admin desc", true);
 		
-		UserType managerUserType = new UserType("manager", "manager desc", true);
-		UserType receptionUserType = new UserType("reception", "reception desc", true);
+		Role managerUserType = new Role("manager", "manager desc", true);
+		Role receptionUserType = new Role("reception", "reception desc", true);
 		
 		userService.createUserType(superAdminUserType);
 		userService.createUserType(adminUserType);
@@ -87,7 +87,7 @@ public class UserServiceTest {
 		userService.createUserType(managerUserType);
 		userService.createUserType(receptionUserType);
 		
-		List<UserType> target =  userService.getAllUserTypes();
+		List<Role> target =  userService.getAllUserTypes();
 		assertTrue(target.size() == 4);
 		
 		assertTrue(target.contains(superAdminUserType));

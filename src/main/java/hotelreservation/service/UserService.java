@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import hotelreservation.model.User;
-import hotelreservation.model.UserType;
+import hotelreservation.model.Role;
 import hotelreservation.repository.UserRepo;
 import hotelreservation.repository.UserTypeRepo;
 
@@ -26,7 +26,7 @@ public class UserService {
 	private UserTypeRepo userTypeRepo;
 
 	public User createUser(User user, long userTypeId) {
-		UserType userType = userTypeRepo.findOne(userTypeId);
+		Role userType = userTypeRepo.findOne(userTypeId);
 		user.setUserType(userType);
 		return userRepo.save(user);
 	}
@@ -40,14 +40,14 @@ public class UserService {
 		return userRepo.save(user);
 	}
 	
-	public UserType createUserType(UserType userType) {
+	public Role createUserType(Role userType) {
 		return userTypeRepo.save(userType);
 	}
 
-	public List<UserType> getAllUserTypes() {
-		Iterable<UserType> findAll = userTypeRepo.findAll();
+	public List<Role> getAllUserTypes() {
+		Iterable<Role> findAll = userTypeRepo.findAll();
 
-		List<UserType> target = new ArrayList<UserType>();
+		List<Role> target = new ArrayList<Role>();
 		findAll.forEach(target::add);
 
 		return target;
@@ -66,7 +66,7 @@ public class UserService {
 		return userRepo.findOne(new Long(id.get()));
 	}
 	
-	public UserType getUserTypeById(Optional<Integer> id) {
+	public Role getUserTypeById(Optional<Integer> id) {
 		return userTypeRepo.findOne(new Long(id.get()));
 	}
 

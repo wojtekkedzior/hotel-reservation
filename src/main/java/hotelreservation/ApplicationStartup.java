@@ -27,7 +27,7 @@ import hotelreservation.model.RoomRate;
 import hotelreservation.model.RoomType;
 import hotelreservation.model.Status;
 import hotelreservation.model.User;
-import hotelreservation.model.UserType;
+import hotelreservation.model.Role;
 import hotelreservation.model.enums.Currency;
 import hotelreservation.model.enums.IdType;
 import hotelreservation.model.enums.ReservationStatus;
@@ -40,11 +40,11 @@ import hotelreservation.service.UserService;
 public class ApplicationStartup implements ApplicationListener<ApplicationReadyEvent> {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private UserType superAdminUserType;
-	private UserType adminUserType;
+	private Role superAdminUserType;
+	private Role adminUserType;
 
-	private UserType managerUserType;
-	private UserType receptionUserType;
+	private Role managerUserType;
+	private Role receptionUserType;
 
 	private User superAdmin;
 	private User admin;
@@ -205,11 +205,11 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	}
 
 	private void addUserTypes() {
-		superAdminUserType = new UserType("superAdmin", "superAdmin desc", true);
-		adminUserType = new UserType("admin", "admin desc", true);
+		superAdminUserType = new Role("superAdmin", "superAdmin desc", true);
+		adminUserType = new Role("admin", "admin desc", true);
 
-		managerUserType = new UserType("manager", "manager desc", true);
-		receptionUserType = new UserType("reception", "reception desc", true);
+		managerUserType = new Role("manager", "manager desc", true);
+		receptionUserType = new Role("reception", "reception desc", true);
 
 		userService.createUserType(superAdminUserType);
 		userService.createUserType(adminUserType);

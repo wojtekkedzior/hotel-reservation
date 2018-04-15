@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class UserType {
+public class Role {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,9 +19,9 @@ public class UserType {
 	private String description;
 	private boolean enabled;
 	
-	public UserType() {}
+	public Role() {}
 
-	public UserType(String name, String description, boolean enabled) {
+	public Role(String name, String description, boolean enabled) {
 		this.name = name;
 		this.description = description;
 		this.enabled = enabled;
