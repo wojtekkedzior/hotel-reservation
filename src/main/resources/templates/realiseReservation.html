@@ -19,7 +19,12 @@
 					First Name: <input th:field="${guest.firstName}" type="text" /> Last Name : <input th:field="${guest.lastName}" type="text" />
 				</p>
 				<p>
-					Address : <input th:field="${guest.contact.address}" type="text" /> Country : <input th:field="${guest.contact.country}" type="text" />
+					Address : <input th:field="${guest.contact.address}" type="text" />
+				</p>
+				<p>
+					Country : <select class="form-control" th:field="${guest.contact.country}">
+						<option th:each="country : ${countries}" th:value="${country}" th:text="${country}"></option>
+					</select>
 				</p>
 				<p>
 					Id Type: <select class="form-control" th:field="${guest.identification.idType}">

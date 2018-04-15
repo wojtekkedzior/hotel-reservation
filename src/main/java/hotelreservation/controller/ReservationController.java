@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
@@ -121,6 +122,14 @@ public class ReservationController {
 		
 		model.addAttribute("guest", guest);
 		model.addAttribute("idTypes", IdType.values());
+		
+		List<String> countries = new ArrayList<String>();
+		
+		for (String countryCode : Locale.getISOCountries()) {
+			countries.add(new Locale("", countryCode).getDisplayCountry());
+		}
+		
+		model.addAttribute("countries", countries);
 		
 		return "realiseReservation";
 	}
