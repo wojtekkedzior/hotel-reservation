@@ -159,7 +159,9 @@ public class RoomController {
 
 	@PostMapping("/addRoomRate")
 	public ModelAndView addRoomRate(@ModelAttribute RoomRate roomRate, BindingResult bindingResult) {
-		log.info(bindingResult.toString());
+		if(bindingResult.hasErrors()) {
+			log.error(bindingResult.toString());
+		}
 		roomService.createRoomRate(roomRate);
 		return new ModelAndView("redirect:/roomRate/" + roomRate.getId());
 	}
