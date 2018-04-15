@@ -14,6 +14,12 @@
 	<div layout:fragment="content">
 
 		<div class="column">
+
+			<p>
+				Total: <input th:value="${total}" type="number" readonly="readonly" /> Currency : <input th:value="${currency}" type="text" readonly="readonly" />
+			</p>
+
+
 			<form action="#" th:action="@{/addOccupant}" th:object="${reservation}" method="post">
 				<p>
 					First Name: <input th:field="${guest.firstName}" type="text" /> Last Name : <input th:field="${guest.lastName}" type="text" />

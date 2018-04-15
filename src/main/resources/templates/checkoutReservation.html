@@ -11,12 +11,22 @@
 	</div>
 
 	<div layout:fragment="content">
+				<p>
+				Total: <input th:value="${total}" type="number" readonly="readonly" /> Currency : <input th:value="${currency}" type="text" readonly="readonly" />
+			</p>
+			
 		<div class="column">
 
 			<form action="#" th:action="@{/checkoutReservation/}+${reservation.id}" th:object="${reservationCheckout}" method="post">
 				<p>
 					Notes: <input type="text" th:field="*{notes}" />
 				</p>
+				
+				<p>Form of paymnet: </p>
+				<p>Bar usage: </p>
+				<p>any other extras?</p>
+				<p>payment being accepted by: </p>
+				
 				
 				<p>
 					<!-- hidden field to make sure the ID gets passed back to the controller when submit is called. -->

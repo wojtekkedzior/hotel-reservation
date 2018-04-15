@@ -133,6 +133,17 @@ public class ReservationController {
 		Collections.sort(countries);
 		model.addAttribute("countries", countries);
 		
+		int total = 0;
+		
+		for (RoomRate roomRate : reservation.getRoomRates()) {
+			total = total + roomRate.getValue();
+		}
+		
+		model.addAttribute("total", total);
+		model.addAttribute("currency", reservation.getRoomRates().get(0).getCurrency().toString());
+		
+		//TODO add form of payment - or maybe not here and on check out only
+		
 		return "realiseReservation";
 	}
 	
@@ -170,6 +181,17 @@ public class ReservationController {
 		Reservation reservation = bookingService.getReservation(id);
 		model.addAttribute("reservation", reservation);
 		model.addAttribute("reservationCheckout", new ReservationCheckout());
+		
+		int total = 0;
+		
+		for (RoomRate roomRate : reservation.getRoomRates()) {
+			total = total + roomRate.getValue();
+		}
+		
+		model.addAttribute("total", total);
+		model.addAttribute("currency", reservation.getRoomRates().get(0).getCurrency().toString());
+		
+		
 		
 		log.info("checkout Reservation ready");
 		return "checkoutReservation";
