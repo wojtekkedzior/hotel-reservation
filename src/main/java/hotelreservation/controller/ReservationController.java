@@ -3,6 +3,7 @@ package hotelreservation.controller;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -129,6 +130,7 @@ public class ReservationController {
 			countries.add(new Locale("", countryCode).getDisplayCountry());
 		}
 		
+		Collections.sort(countries);
 		model.addAttribute("countries", countries);
 		
 		return "realiseReservation";
