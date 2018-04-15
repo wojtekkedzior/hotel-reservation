@@ -14,6 +14,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import hotelreservation.model.enums.Currency;
 import lombok.Data;
 
@@ -36,6 +38,7 @@ public class RoomRate {
 	private int value;
 	
 	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date day;
 	
 	public RoomRate() { 
