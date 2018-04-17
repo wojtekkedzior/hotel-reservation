@@ -79,7 +79,7 @@ public class ReservationController {
 		return modelAndView;
 	}
 
-	@PreAuthorize("hasRole('USER')") 
+//	@PreAuthorize("hasRole('USER')") 
 	@RequestMapping(value = { "/reservation", "/reservation/{id}", "/reservation/start/{startDate}/end/{endDate}" })
 	public String addReservationModel(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<Date> startDate,
 			@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<Date> endDate, @PathVariable Optional<Integer> id, Model model) {
