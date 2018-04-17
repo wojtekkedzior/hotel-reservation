@@ -37,16 +37,16 @@ public class MyUserDetailsService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 
 		User user = userRepo.findByUserName(userName);
-		if (user == null) {
+		if (user == null) { //TODO should take you to the login screen
 			return new org.springframework.security.core.userdetails.User(" ", " ", true, true, true, true, getAuthorities(Arrays.asList(roleRepo.findByName("ROLE_USER"))));
 		}
 
+		//TODO figure out why a set works and all the crap below doesn't
 		Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
 		for (Role role : user.getRoles()) {
 			grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
 		}
 
-		//TODO figure out why a set works and all the crap below doesn;t
 		return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), user.isEnabled(), true, true, true, grantedAuthorities);
 	}
 
