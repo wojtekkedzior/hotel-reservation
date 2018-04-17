@@ -1,11 +1,13 @@
 package hotelreservation.model;
 
+import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -25,6 +27,10 @@ public class User {
 	private long id;
 
 	private String userName;
+	
+	private String firstName;
+	private String lastName;
+	
 	private String password;
 
 	@OneToOne
@@ -47,6 +53,9 @@ public class User {
 	
 	@Temporal(TemporalType.TIMESTAMP) 
 	private Date lastloggedOn;
+
+    @ManyToMany
+    private Collection<Role> roles;
 	
 	public User() {}
 
@@ -69,6 +78,4 @@ public class User {
 		enabled = true;
 	}
 
-	
-	
 }

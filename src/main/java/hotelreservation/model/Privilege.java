@@ -12,29 +12,23 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Role {
-
+public class Privilege {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
+	
+    private String name;
+ 
+    @ManyToMany(mappedBy = "privileges")
+    private Collection<Role> roles;
+    
+    public Privilege() {}
 
-	private String name;
-	private String description;
-	private boolean enabled;
-
-	@ManyToMany(mappedBy = "roles")
-	private Collection<User> users;
-
-	@ManyToMany
-	private Collection<Privilege> privileges;
-
-	public Role() {
-	}
-
-	public Role(String name, String description, boolean enabled) {
+	public Privilege(String name) {
+		super();
 		this.name = name;
-		this.description = description;
-		this.enabled = enabled;
 	}
-
+	
+	
+    
 }

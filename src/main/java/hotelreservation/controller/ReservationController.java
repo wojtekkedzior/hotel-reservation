@@ -11,11 +11,14 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -64,12 +67,19 @@ public class ReservationController {
 	
 	//TODO move to new controller which will handle security and other bits and pieces
 	@RequestMapping("/")
-	public ModelAndView redirectIndexToHOme() {
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")  
+	public ModelAndView redirectIndexToHOme(HttpServletRequest request) {
+	     if (request.isUserInRole("ROLE_ADMIN")) {
+//	            return "redirect:/events/";
+	        }
+//	        return "redirect:/"; 
+	        
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("redirect:/home");
+		modelAndView.setViewName("redirect:/reservationDashBoard");
 		return modelAndView;
 	}
 
+	@PreAuthorize("hasRole('USER')") 
 	@RequestMapping(value = { "/reservation", "/reservation/{id}", "/reservation/start/{startDate}/end/{endDate}" })
 	public String addReservationModel(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<Date> startDate,
 			@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<Date> endDate, @PathVariable Optional<Integer> id, Model model) {

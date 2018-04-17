@@ -206,7 +206,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 
 	private void addUserTypes() {
 		superAdminUserType = new Role("superAdmin", "superAdmin desc", true);
-		adminUserType = new Role("admin", "admin desc", true);
+		adminUserType = new Role("admin2", "admin desc", true); //TODO needs better naming
 
 		managerUserType = new Role("manager", "manager desc", true);
 		receptionUserType = new Role("reception", "reception desc", true);

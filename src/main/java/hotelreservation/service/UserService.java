@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import hotelreservation.model.User;
 import hotelreservation.model.Role;
 import hotelreservation.repository.UserRepo;
-import hotelreservation.repository.UserTypeRepo;
+import hotelreservation.repository.RoleRepo;
 
 @Service
 public class UserService {
@@ -23,7 +23,7 @@ public class UserService {
 	private UserRepo userRepo;
 
 	@Autowired
-	private UserTypeRepo userTypeRepo;
+	private RoleRepo userTypeRepo;
 
 	public User createUser(User user, long userTypeId) {
 		Role userType = userTypeRepo.findOne(userTypeId);

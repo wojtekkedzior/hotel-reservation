@@ -8,4 +8,6 @@ import hotelreservation.model.User;
 
 @Repository
 public interface UserRepo extends CrudRepository<User, Long>{
+
+	User findByUserName(String userName);
 }
