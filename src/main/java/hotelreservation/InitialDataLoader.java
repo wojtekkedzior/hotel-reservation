@@ -42,8 +42,11 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 		Privilege writePrivilege = createPrivilegeIfNotFound("WRITE_PRIVILEGE");
 
 		List<Privilege> adminPrivileges = Arrays.asList(readPrivilege, writePrivilege);
+		createRoleIfNotFound("ROLE_SUPERADMIN", adminPrivileges);
 		createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
-		createRoleIfNotFound("ROLE_USER", Arrays.asList(readPrivilege));
+		
+		createRoleIfNotFound("ROLE_MANAGER", adminPrivileges);
+		createRoleIfNotFound("ROLE_RECEPTIONIST", Arrays.asList(readPrivilege));
 
 		Role adminRole = roleRepo.findByName("ROLE_ADMIN");
 		User user = new User();

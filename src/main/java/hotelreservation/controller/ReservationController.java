@@ -65,21 +65,6 @@ public class ReservationController {
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true, 10));
 	}
 	
-	//TODO move to new controller which will handle security and other bits and pieces
-	@RequestMapping("/")
-	@PreAuthorize("hasAuthority('ROLE_ADMIN')")  
-	public ModelAndView redirectIndexToHOme(HttpServletRequest request) {
-	     if (request.isUserInRole("ROLE_ADMIN")) {
-//	            return "redirect:/events/";
-	        }
-//	        return "redirect:/"; 
-	        
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("redirect:/reservationDashBoard");
-		return modelAndView;
-	}
-
-//	@PreAuthorize("hasRole('USER')") 
 	@RequestMapping(value = { "/reservation", "/reservation/{id}", "/reservation/start/{startDate}/end/{endDate}" })
 	public String addReservationModel(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<Date> startDate,
 			@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<Date> endDate, @PathVariable Optional<Integer> id, Model model) {

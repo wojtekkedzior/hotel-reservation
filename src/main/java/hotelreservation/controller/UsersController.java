@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import hotelreservation.model.User;
 import hotelreservation.model.Role;
+import hotelreservation.model.User;
 import hotelreservation.service.UserService;
 
 @Controller
@@ -27,6 +28,7 @@ public class UsersController {
 	private UserService userService;
 
 	@RequestMapping(value = { "/user", "/user/{id}" })
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERADMIN')")  
 	public String users(Model model, @PathVariable Optional<Integer> id) {
 		if(!id.isPresent()) {
 			model.addAttribute("user", new User());
