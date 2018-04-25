@@ -8,7 +8,7 @@
 
 			<form action="#" th:action="@{/adduser}" th:object="${user}" method="post">
 				<p>
-					Name: <input type="text" th:field="*{name}" />
+					Name: <input type="text" th:field="${user.name}" />
 				</p>
 				<p>
 					User Type: <select class="form-control" th:field="${user.userType}" id="dropOperator">
@@ -44,7 +44,7 @@
 						<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
 						<td th:text="${data.name}" th:id="|td${iterstat.index}|"></td>
 						<td><a th:href="@{/user/}+${data.id}" th:text="${data.userName}"> </a></td>
-						<td th:text="${data.userType.name}" th:id="|td${iterstat.index}|"></td>
+						<!-- <td th:text="${data.userType.name}" ></td> -->
 						<td th:text="${data.enabled}" th:id="|td${iterstat.index}|"></td>
 						<td th:text="${data.createdOn}" th:id="|td${iterstat.index}|"></td>
 						<td>

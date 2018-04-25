@@ -103,7 +103,7 @@ public class BookingServiceTest {
 		userService.createUserType(managerUserType);
 
 		user = new User();
-		user.setUserType(managerUserType);
+//		user.setUserType(managerUserType);
 		userService.createUser(user);
 
 		amenityTypeRoomBasic = new AmenityType("Basic", "Basic Room amenity Type");

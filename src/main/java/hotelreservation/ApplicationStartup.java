@@ -220,12 +220,12 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 
 	private void addUsers() {
 		// SuperAdmin will be added by a script in the future
-		superAdmin = new User("superadmin", superAdminUserType, "Mr Super Admin");
+		superAdmin = new User("superadmin", "Mr Super Admin");
 
-		admin = new User("admin", adminUserType, "Mr Admin");
-		manager = new User("manager", managerUserType, "Mr Manager");
-		receptionistOne = new User("receptionistOne", receptionUserType, "Mr Receptionist One");
-		receptionistTwo = new User("receptionistTwo", receptionUserType, "Mr Receptionist Two");
+		admin = new User("admin", "Mr Admin");
+		manager = new User("manager", "Mr Manager");
+		receptionistOne = new User("receptionistOne", "Mr Receptionist One");
+		receptionistTwo = new User("receptionistTwo", "Mr Receptionist Two");
 
 		admin.setCreatedBy(superAdmin);
 		manager.setCreatedBy(admin);

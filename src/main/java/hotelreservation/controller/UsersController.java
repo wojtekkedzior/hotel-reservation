@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,26 +30,28 @@ public class UsersController {
 
 	@RequestMapping(value = { "/user", "/user/{id}" })
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERADMIN')")  
-	public String users(Model model, @PathVariable Optional<Integer> id) {
+	public String getUsers(Model model, @PathVariable Optional<Integer> id) {
 		if(!id.isPresent()) {
-			model.addAttribute("user", new User());
+			User user = new User();
+			model.addAttribute("user", user);
 		} else {
 			User user = userService.getUserById(id);
 			if(user == null) {
-				model.addAttribute("user", new User());
+				model.addAttribute("user", user);
 			} else {
 				model.addAttribute("user", user);
 			}
 		}
 
-		model.addAttribute("userType", new Role());
 		model.addAttribute("users", userService.getAllUsers());
 		model.addAttribute("userTypes", userService.getAllUserTypes());
+		
 		return "user";
 	}
 	
 	@RequestMapping(value = { "/userType", "/userType/{id}" })
-	public String userTypes(Model model, @PathVariable Optional<Integer> id) {
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERADMIN')")  
+	public String getUserTypes(Model model, @PathVariable Optional<Integer> id) {
 
 		if(!id.isPresent()) {
 			model.addAttribute("userType", new Role());
@@ -69,19 +72,34 @@ public class UsersController {
 		return "user";
 	}
 	
+	
+	/*
+	 * ---------------------------------------------------------------------------------------------------------------------------
+	 */
+	
 	@PostMapping("/adduser")
-	public ModelAndView addUser(@ModelAttribute User user, BindingResult bindingResult) {
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERADMIN')")  
+	public ModelAndView addUser(@ModelAttribute User user,  Authentication authentication, BindingResult bindingResult) {
+		//TODO check that ID == null 
+		System.err.println(authentication.getName());
 		userService.createUser(user);
 		return new ModelAndView("redirect:/user/" + user.getId());
 	}
 
 	@PostMapping("/addUserType")
-	public ModelAndView addAUserType(@ModelAttribute Role userType, BindingResult bindingResult) {
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERADMIN')")  
+	public ModelAndView addUserType(@ModelAttribute Role userType, BindingResult bindingResult) {
+		//check that ID == null 
 		userService.createUserType(userType);
 		return new ModelAndView("redirect:/userType/" + userType.getId());
 	}
 	
+	/*
+	 * ---------------------------------------------------------------------------------------------------------------------------
+	 */
+	
 	@RequestMapping(value="/userDelete/{id}", method=RequestMethod.DELETE)
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERADMIN')")  
 	public ModelAndView deleteUser(@PathVariable Optional<Integer> id) {
 		if(id.isPresent()) {
 			userService.deleteUser(new Long(id.get()));
@@ -90,6 +108,7 @@ public class UsersController {
 	}
 	
 	@RequestMapping(value="/userTypeDelete/{id}", method=RequestMethod.DELETE)
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERADMIN')")  
 	public ModelAndView deleteAmenityType(@PathVariable Optional<Integer> id) {
 		if(id.isPresent()) {
 			userService.deleteUserType(new Long(id.get()));

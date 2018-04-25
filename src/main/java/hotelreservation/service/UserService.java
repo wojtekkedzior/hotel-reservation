@@ -1,6 +1,7 @@
 package hotelreservation.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -10,10 +11,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import hotelreservation.model.User;
 import hotelreservation.model.Role;
-import hotelreservation.repository.UserRepo;
+import hotelreservation.model.User;
 import hotelreservation.repository.RoleRepo;
+import hotelreservation.repository.UserRepo;
 
 @Service
 public class UserService {
@@ -23,11 +24,11 @@ public class UserService {
 	private UserRepo userRepo;
 
 	@Autowired
-	private RoleRepo userTypeRepo;
+	private RoleRepo roleRepo;
 
 	public User createUser(User user, long userTypeId) {
-		Role userType = userTypeRepo.findOne(userTypeId);
-		user.setUserType(userType);
+		Role role = roleRepo.findOne(userTypeId);
+		user.setRoles(Arrays.asList(role));
 		return userRepo.save(user);
 	}
 	
@@ -37,15 +38,18 @@ public class UserService {
 //		user.setUserType(userType);
 		
 		user.setCreatedOn(new Date());
+		//TODO set created BY
+		
+		
 		return userRepo.save(user);
 	}
 	
 	public Role createUserType(Role userType) {
-		return userTypeRepo.save(userType);
+		return roleRepo.save(userType);
 	}
 
 	public List<Role> getAllUserTypes() {
-		Iterable<Role> findAll = userTypeRepo.findAll();
+		Iterable<Role> findAll = roleRepo.findAll();
 
 		List<Role> target = new ArrayList<Role>();
 		findAll.forEach(target::add);
@@ -67,7 +71,7 @@ public class UserService {
 	}
 	
 	public Role getUserTypeById(Optional<Integer> id) {
-		return userTypeRepo.findOne(new Long(id.get()));
+		return roleRepo.findOne(new Long(id.get()));
 	}
 
 	public void deleteUser(Long id) {
@@ -75,6 +79,6 @@ public class UserService {
 	}
 
 	public void deleteUserType(Long id) {
-		userTypeRepo.delete(id);
+		roleRepo.delete(id);
 	}
 }

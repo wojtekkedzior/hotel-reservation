@@ -61,7 +61,7 @@ public class RoomServiceTest {
 		userService.createUserType(managerUserType);
 
 		User createdBy = new User();
-		createdBy.setUserType(managerUserType);
+//		createdBy.setUserType(managerUserType);
 
 		Room room = new Room();
 		room.setRoomNumber(1);
@@ -201,7 +201,7 @@ public class RoomServiceTest {
 		userService.createUserType(managerUserType);
 
 		User createdBy = new User();
-		createdBy.setUserType(managerUserType);
+//		createdBy.setUserType(managerUserType);
 
 		Room room = new Room();
 		room.setRoomNumber(1);
@@ -228,7 +228,7 @@ public class RoomServiceTest {
 		userService.createUserType(managerUserType);
 
 		User createdBy = new User();
-		createdBy.setUserType(managerUserType);
+//		createdBy.setUserType(managerUserType);
 
 		Room room = new Room();
 		room.setRoomNumber(1);

@@ -11,8 +11,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,16 +53,16 @@ public class ReservationController {
 
 	@Autowired
 	private BookingService bookingService;
-	
+
 	@Autowired
 	private GuestService guestService;
-	
-	//TODO figure out what is this for since I thought that dates worked prior to having this copied and pasted in.
+
+	// TODO figure out what is this for since I thought that dates worked prior to having this copied and pasted in.
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true, 10));
 	}
-	
+
 	@RequestMapping(value = { "/reservation", "/reservation/{id}", "/reservation/start/{startDate}/end/{endDate}" })
 	public String addReservationModel(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<Date> startDate,
 			@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<Date> endDate, @PathVariable Optional<Integer> id, Model model) {
@@ -74,17 +72,17 @@ public class ReservationController {
 		} else {
 			Reservation reservation = bookingService.getReservation(id);
 			model.addAttribute("reservation", reservation == null ? new Reservation() : reservation);
-			
+
 			Map<Room, List<RoomRate>> roomRatesAsMap = new HashMap<Room, List<RoomRate>>();
-			
+
 			for (RoomRate roomRate : reservation.getRoomRates()) {
-				if(roomRatesAsMap.containsKey(roomRate.getRoom())) {
+				if (roomRatesAsMap.containsKey(roomRate.getRoom())) {
 					roomRatesAsMap.get(roomRate.getRoom()).add(roomRate);
 				} else {
 					roomRatesAsMap.put(roomRate.getRoom(), new ArrayList<RoomRate>(Arrays.asList(roomRate)));
 				}
 			}
-			
+
 			model.addAttribute("roomRatesPerRoom", roomRatesAsMap);
 		}
 
@@ -100,207 +98,210 @@ public class ReservationController {
 			model.addAttribute("roomRatesPerRoom", roomRatesAsMap);
 		}
 
-		//TODO if there are no rooms available we neeed to display something usefull to the user.
-		
+		// TODO if there are no rooms available we neeed to display something usefull to the user.
+
 		return "reservation";
 	}
-	
-	
-	
-	@RequestMapping(value = {"/realiseReservation/{id}"})
+
+	@RequestMapping(value = { "/realiseReservation/{id}" })
 	public String getRealiseReservation(@PathVariable Optional<Integer> id, Model model) {
 		Reservation reservation = bookingService.getReservation(id);
 		model.addAttribute("reservation", reservation);
-		
+
 		Guest guest = new Guest();
 		guest.setContact(new Contact());
 		guest.setIdentification(new Identification());
-		
+
 		model.addAttribute("guest", guest);
 		model.addAttribute("idTypes", IdType.values());
-		
+
 		List<String> countries = new ArrayList<String>();
-		
+
 		for (String countryCode : Locale.getISOCountries()) {
 			countries.add(new Locale("", countryCode).getDisplayCountry());
 		}
-		
+
 		Collections.sort(countries);
 		model.addAttribute("countries", countries);
-		
+
 		int total = 0;
-		
+
 		for (RoomRate roomRate : reservation.getRoomRates()) {
 			total = total + roomRate.getValue();
 		}
-		
+
 		model.addAttribute("total", total);
 		model.addAttribute("currency", reservation.getRoomRates().get(0).getCurrency().toString());
-		
-		//TODO add form of payment - or maybe not here and on check out only
-		
+
+		// TODO add form of payment - or maybe not here and on check out only
+
 		return "realiseReservation";
 	}
-	
-		
-	@RequestMapping(value = {"/cancelReservation/{id}"})
+
+	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_MANAGER')")
+	@RequestMapping(value = { "/cancelReservation/{id}" })
 	public String cancelReservation(@PathVariable Optional<Integer> id, Model model) {
 
 		Reservation reservation = bookingService.getReservation(id);
 		model.addAttribute("reservation", reservation);
-		
-		if(reservation.getReservationStatus().equals(ReservationStatus.Cancelled)) {
-			
+
+		if (reservation.getReservationStatus().equals(ReservationStatus.Cancelled)) {
+
 		} else {
 			model.addAttribute("reservationCancellation", new ReservationCancellation());
 		}
-		
+
 		return "cancelReservation";
 	}
-	
-	@RequestMapping(value = {"reservationDashBoard"})
+
+	@RequestMapping(value = { "reservationDashBoard" })
 	public String getReservationDashBoard(Model model) {
 		log.info("loading dashboard");
-		
+
 		model.addAttribute("upComingReservations", bookingService.getReservationsByStatus(ReservationStatus.UpComing));
 		model.addAttribute("inProgressReservations", bookingService.getReservationsByStatus(ReservationStatus.InProgress));
-		
+
 		log.info("dashboard ready");
 		return "reservationDashBoard";
 	}
 
-	@RequestMapping(value = {"/checkoutReservation/{id}"})
+	@RequestMapping(value = { "/checkoutReservation/{id}" })
+	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_MANAGER')")
 	public String checkoutReservation(@PathVariable Optional<Integer> id, Model model) {
 		log.info("loading checkout Reservation");
-		
+
 		Reservation reservation = bookingService.getReservation(id);
 		model.addAttribute("reservation", reservation);
 		model.addAttribute("reservationCheckout", new ReservationCheckout());
-		
+
 		int total = 0;
-		
+
 		for (RoomRate roomRate : reservation.getRoomRates()) {
 			total = total + roomRate.getValue();
 		}
-		
+
 		model.addAttribute("total", total);
 		model.addAttribute("currency", reservation.getRoomRates().get(0).getCurrency().toString());
-		
-		
-		
+
 		log.info("checkout Reservation ready");
 		return "checkoutReservation";
 	}
-	
-	
-	
-	
-	
-	@PostMapping("/addOccupant") 
+
+	/*
+	 * ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+	 */
+
+	@PostMapping("/addOccupant")
+	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_MANAGER')")
 	public ModelAndView addOccupant(@ModelAttribute Reservation reservation, Guest guest, BindingResult bindingResult) {
-		//TODO the guest ID is also set because it matches the id field name on the reservation. Is there a way to exclude that?
+		// TODO the guest ID is also set because it matches the id field name on the reservation. Is there a way to exclude that?
 		guest.setId(0);
-		
-		//TODO need to make use of the binding results (in all Post handlers)
+
+		// TODO need to make use of the binding results (in all Post handlers)
 		System.err.println(bindingResult); // need to handle binding results
-		
+
 		guestService.saveContact(guest.getContact());
 		guestService.saveIdentification(guest.getIdentification());
 		guestService.saveGuest(guest);
-		
+
 		Reservation reservation2 = bookingService.getReservation(reservation.getId());
 		reservation2.getOccupants().add(guest);
 		bookingService.createReservation(reservation2);
-		
+
 		return new ModelAndView("redirect:/realiseReservation/" + reservation.getId());
 	}
-	
-	@PostMapping("/realiseReservation") 
+
+	@PostMapping("/realiseReservation")
+	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_MANAGER')")
 	public ModelAndView realiseReservation(@ModelAttribute Reservation reservation, BindingResult bindingResult) {
 		Reservation reservation2 = bookingService.getReservation(reservation.getId());
-		
-		if(reservation2.getReservationStatus().equals(ReservationStatus.UpComing) || reservation2.getReservationStatus().equals(ReservationStatus.InProgress)) {
-			//TODO can't realise a cancelled or in progress reservation
+
+		if (reservation2.getReservationStatus().equals(ReservationStatus.UpComing) || reservation2.getReservationStatus().equals(ReservationStatus.InProgress)) {
+			// TODO can't realise a cancelled or in progress reservation
 		} else {
-			//TODO return some erro message
+			// TODO return some erro message
 		}
-		
-		
+
 		reservation2.setReservationStatus(ReservationStatus.InProgress);
-		
+
 		bookingService.saveReservation(reservation2);
-		
+
 		return new ModelAndView("redirect:/reservationDashBoard");
 	}
 
 	@PostMapping("/reservation")
+	
 	public ModelAndView saveReservation(@ModelAttribute Reservation reservation, BindingResult bindingResult, RedirectAttributes redir) {
-		//TODO need to make use of the binding results (in all Post handlers)
+		// TODO need to make use of the binding results (in all Post handlers)
 		System.err.println(bindingResult); // need to handle binding results
-		
+
 		bookingService.createReservation(reservation);
-		
+
 		return new ModelAndView("redirect:/reservationDashBoard");
 	}
-	
-	//TODO only super-admin type user should be able to fully delete a reservation
-	@RequestMapping(value="/reservationDelete/{id}", method=RequestMethod.DELETE)
+
+	// TODO only super-admin type user should be able to fully delete a reservation. Move to super admin controller? 
+	@PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
+	@RequestMapping(value = "/reservationDelete/{id}", method = RequestMethod.DELETE)
 	public ModelAndView deleteReservation(@PathVariable Optional<Integer> id) {
-		if(id.isPresent()) {
-//			bookingService.deleteUser(new Long(id.get()));
-		} 
+		if (id.isPresent()) {
+			// bookingService.deleteUser(new Long(id.get()));
+		}
 		return new ModelAndView("redirect:/reservation");
 	}
-	
-	@RequestMapping(value="/deleteContact/{id}", method=RequestMethod.DELETE)
+
+	@RequestMapping(value = "/deleteContact/{id}", method = RequestMethod.DELETE)
+	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_MANAGER')")
 	public ModelAndView deleteGuest(@ModelAttribute Reservation reservation, @PathVariable Optional<Integer> id) {
-		if(id.isPresent()) {
-			//remove it from the reservation first.
-			//need to check if the guest actually existsi
-			//can't have no guests.
-			
+		if (id.isPresent()) {
+			// remove it from the reservation first.
+			// need to check if the guest actually existsi
+			// can't have no guests.
+
 			Guest guestToDelete = null;
-			
+
 			Reservation resFromDB = bookingService.getReservation(reservation.getId());
-			//TODO ugly 
+			// TODO ugly
 			for (Guest occupant : resFromDB.getOccupants()) {
-				if(occupant.getId() == id.get()) {
+				if (occupant.getId() == id.get()) {
 					guestToDelete = occupant;
 				}
 			}
-			
-			if(guestToDelete != null) {
+
+			if (guestToDelete != null) {
 				resFromDB.getOccupants().remove(guestToDelete);
 			}
-			
+
 			guestService.deleteGuest(id);
-		} 
-		
+		}
+
 		return new ModelAndView("redirect:/realiseReservation/" + reservation.getId());
 	}
 	
 	@PostMapping("/cancelReservation/{reservationID}")
+	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_MANAGER')")
 	public ModelAndView cancelReservation(@ModelAttribute ReservationCancellation reservationCancellation, @PathVariable Optional<Integer> reservationID) {
 		Reservation resFromDB = bookingService.getReservation(reservationID);
-		
-		reservationCancellation.setId(0); //TODO need to figure out why the ID is being set. in this case the reservation ID is also placed into the ReservationCancellation
+
+		reservationCancellation.setId(0); // TODO need to figure out why the ID is being set. in this case the reservation ID is also placed into the ReservationCancellation
 		reservationCancellation.setReservation(resFromDB);
-		
+
 		bookingService.cancelReservation(resFromDB, reservationCancellation);
-		
+
 		return new ModelAndView("redirect:/reservationDashBoard");
 	}
-	
+
 	@PostMapping("/checkoutReservation/{reservationID}")
+	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_MANAGER')")
 	public ModelAndView reservationCheckout(@ModelAttribute ReservationCheckout reservationCheckout, @PathVariable Optional<Integer> reservationID) {
 		Reservation resFromDB = bookingService.getReservation(reservationID);
-		
-		reservationCheckout.setId(0); //TODO need to figure out why the ID is being set. in this case the reservation ID is also placed into the ReservationCancellation
+
+		reservationCheckout.setId(0); // TODO need to figure out why the ID is being set. in this case the reservation ID is also placed into the ReservationCancellation
 		reservationCheckout.setReservation(resFromDB);
 		reservationCheckout.setCheckedout(new Date());
-		
+
 		bookingService.checkoutReservation(resFromDB, reservationCheckout);
-		
+
 		return new ModelAndView("redirect:/reservationDashBoard");
 	}
 }
