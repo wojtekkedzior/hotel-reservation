@@ -48,7 +48,7 @@ public class UserService {
 		return roleRepo.save(userType);
 	}
 
-	public List<Role> getAllUserTypes() {
+	public List<Role> getAllRoles() {
 		Iterable<Role> findAll = roleRepo.findAll();
 
 		List<Role> target = new ArrayList<Role>();

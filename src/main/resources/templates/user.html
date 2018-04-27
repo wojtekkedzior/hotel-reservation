@@ -10,9 +10,15 @@
 				<p>
 					Name: <input type="text" th:field="${user.name}" />
 				</p>
-				<p>
+<!-- 				<p>
 					User Type: <select class="form-control" th:field="${user.userType}" id="dropOperator">
 						<option th:each="userType : ${userTypes}" th:value="${userType.id}" th:text="${userType.name}"></option>
+					</select>
+				</p> -->
+				
+				<p>
+					User Type: <select class="form-control" th:field="${user.roles}" id="dropOperator">
+						<option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
 					</select>
 				</p>
 
@@ -61,9 +67,9 @@
 		<div class="column">
 			<p>User Types</p>
 
-			<form action="#" th:action="@{/addUserType}" th:object="${userType}" method="post">
+			<form action="#" th:action="@{/addUserType}" th:object="${role}" method="post">
 				<p>
-					User Type Name: <input type="text" th:field="*{name}" />
+					User Type Name: <input type="text" th:field="${role.name}" />
 				</p>
 				<p>
 					User Type Description: <input type="text" th:field="*{description}" />

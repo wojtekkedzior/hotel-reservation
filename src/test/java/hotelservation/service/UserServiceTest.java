@@ -45,7 +45,7 @@ public class UserServiceTest {
 		Role userType = new Role("UserType name", "UserTypeDescription", true);
 		userService.createUserType(userType);
 
-		List<Role> target = userService.getAllUserTypes();
+		List<Role> target = userService.getAllRoles();
 
 		assertTrue(target.size() == 3);
 //		assertEquals(userType, target.get(0)); //TODO needs fixing
@@ -58,7 +58,7 @@ public class UserServiceTest {
 		userService.createUserType(userType);
 
 		// when
-		List<Role> target =  userService.getAllUserTypes();
+		List<Role> target =  userService.getAllRoles();
 
 		assertTrue(target.size() == 3);
 //		assertEquals(userType, target.get(0)); //TODO needs fixing
@@ -67,7 +67,7 @@ public class UserServiceTest {
 		userService.createUserType(userType);
 
 		// when
-		target = userService.getAllUserTypes();
+		target = userService.getAllRoles();
 
 		assertTrue(target.size() == 3);
 //		assertEquals(userType, target.get(0));  //TODO needs fixing
@@ -87,7 +87,7 @@ public class UserServiceTest {
 		userService.createUserType(managerUserType);
 		userService.createUserType(receptionUserType);
 		
-		List<Role> target =  userService.getAllUserTypes();
+		List<Role> target =  userService.getAllRoles();
 		assertTrue(target.size() == 6);
 		
 		assertTrue(target.contains(superAdminUserType));

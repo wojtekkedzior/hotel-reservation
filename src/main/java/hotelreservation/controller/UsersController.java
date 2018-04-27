@@ -43,31 +43,32 @@ public class UsersController {
 			}
 		}
 
+		model.addAttribute("role", new Role()); //TODO this will be a multi select so have to select all available roles
 		model.addAttribute("users", userService.getAllUsers());
-		model.addAttribute("userTypes", userService.getAllUserTypes());
+		model.addAttribute("roles", userService.getAllRoles());
 		
 		return "user";
 	}
 	
 	@RequestMapping(value = { "/userType", "/userType/{id}" })
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERADMIN')")  
-	public String getUserTypes(Model model, @PathVariable Optional<Integer> id) {
+	public String getRoles(Model model, @PathVariable Optional<Integer> id) {
 
 		if(!id.isPresent()) {
-			model.addAttribute("userType", new Role());
+			model.addAttribute("role", new Role());
 		} else {
-			Role userType = userService.getUserTypeById(id);
-			if(userType == null) {
-				model.addAttribute("userType", new User());
+			Role role = userService.getUserTypeById(id);
+			if(role == null) {
+				model.addAttribute("user", new User());
 			} else {
-				model.addAttribute("userType", userType);
+				model.addAttribute("role", role);
 			}
 		}
 		
 		model.addAttribute("user", new User());
 		
 		model.addAttribute("users", userService.getAllUsers());
-		model.addAttribute("userTypes", userService.getAllUserTypes());
+		model.addAttribute("roles", userService.getAllRoles());
 
 		return "user";
 	}
@@ -88,10 +89,10 @@ public class UsersController {
 
 	@PostMapping("/addUserType")
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERADMIN')")  
-	public ModelAndView addUserType(@ModelAttribute Role userType, BindingResult bindingResult) {
+	public ModelAndView addUserType(@ModelAttribute Role role, BindingResult bindingResult) {
 		//check that ID == null 
-		userService.createUserType(userType);
-		return new ModelAndView("redirect:/userType/" + userType.getId());
+		userService.createUserType(role);
+		return new ModelAndView("redirect:/userType/" + role.getId());
 	}
 	
 	/*
