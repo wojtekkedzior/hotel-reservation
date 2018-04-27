@@ -211,11 +211,11 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		managerUserType = new Role("manager", "manager desc", true);
 		receptionUserType = new Role("reception", "reception desc", true);
 
-		userService.createUserType(superAdminUserType);
-		userService.createUserType(adminUserType);
+		userService.createRole(superAdminUserType);
+		userService.createRole(adminUserType);
 
-		userService.createUserType(managerUserType);
-		userService.createUserType(receptionUserType);
+		userService.createRole(managerUserType);
+		userService.createRole(receptionUserType);
 	}
 
 	private void addUsers() {

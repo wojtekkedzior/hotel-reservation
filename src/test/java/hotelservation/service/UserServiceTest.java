@@ -43,11 +43,11 @@ public class UserServiceTest {
 	public void whenFindByName_thenReturnEmployee() {
 		// given
 		Role userType = new Role("UserType name", "UserTypeDescription", true);
-		userService.createUserType(userType);
+		userService.createRole(userType);
 
 		List<Role> target = userService.getAllRoles();
 
-		assertTrue(target.size() == 3);
+		assertTrue(target.size() == 5);
 //		assertEquals(userType, target.get(0)); //TODO needs fixing
 	}
 
@@ -55,21 +55,20 @@ public class UserServiceTest {
 	public void testDisabledUser() {
 		// given
 		Role userType = new Role("UserType name", "UserTypeDescription", true);
-		userService.createUserType(userType);
+		userService.createRole(userType);
 
 		// when
 		List<Role> target =  userService.getAllRoles();
-
-		assertTrue(target.size() == 3);
+		assertTrue(target.size() == 5);
 //		assertEquals(userType, target.get(0)); //TODO needs fixing
 
 		userType.setEnabled(false);
-		userService.createUserType(userType);
+		userService.createRole(userType);
 
 		// when
 		target = userService.getAllRoles();
 
-		assertTrue(target.size() == 3);
+		assertTrue(target.size() == 5);
 //		assertEquals(userType, target.get(0));  //TODO needs fixing
 	}
 	
@@ -81,14 +80,14 @@ public class UserServiceTest {
 		Role managerUserType = new Role("manager", "manager desc", true);
 		Role receptionUserType = new Role("reception", "reception desc", true);
 		
-		userService.createUserType(superAdminUserType);
-		userService.createUserType(adminUserType);
+		userService.createRole(superAdminUserType);
+		userService.createRole(adminUserType);
 		
-		userService.createUserType(managerUserType);
-		userService.createUserType(receptionUserType);
+		userService.createRole(managerUserType);
+		userService.createRole(receptionUserType);
 		
 		List<Role> target =  userService.getAllRoles();
-		assertTrue(target.size() == 6);
+		assertTrue(target.size() == 8);
 		
 		assertTrue(target.contains(superAdminUserType));
 		assertTrue(target.contains(adminUserType));

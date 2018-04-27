@@ -50,14 +50,14 @@ public class UsersController {
 		return "user";
 	}
 	
-	@RequestMapping(value = { "/userType", "/userType/{id}" })
+	@RequestMapping(value = { "/role", "/role/{id}" })
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERADMIN')")  
 	public String getRoles(Model model, @PathVariable Optional<Integer> id) {
 
 		if(!id.isPresent()) {
 			model.addAttribute("role", new Role());
 		} else {
-			Role role = userService.getUserTypeById(id);
+			Role role = userService.getRoleById(id);
 			if(role == null) {
 				model.addAttribute("user", new User());
 			} else {
@@ -87,11 +87,11 @@ public class UsersController {
 		return new ModelAndView("redirect:/user/" + user.getId());
 	}
 
-	@PostMapping("/addUserType")
+	@PostMapping("/addRole")
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERADMIN')")  
-	public ModelAndView addUserType(@ModelAttribute Role role, BindingResult bindingResult) {
+	public ModelAndView addRole(@ModelAttribute Role role, BindingResult bindingResult) {
 		//check that ID == null 
-		userService.createUserType(role);
+		userService.createRole(role);
 		return new ModelAndView("redirect:/userType/" + role.getId());
 	}
 	
@@ -108,11 +108,11 @@ public class UsersController {
 		return new ModelAndView("redirect:/user");
 	}
 	
-	@RequestMapping(value="/userTypeDelete/{id}", method=RequestMethod.DELETE)
+	@RequestMapping(value="/roleDelete/{id}", method=RequestMethod.DELETE)
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERADMIN')")  
-	public ModelAndView deleteAmenityType(@PathVariable Optional<Integer> id) {
+	public ModelAndView deleteRole(@PathVariable Optional<Integer> id) {
 		if(id.isPresent()) {
-			userService.deleteUserType(new Long(id.get()));
+			userService.deleteRole(new Long(id.get()));
 		} 
 		return new ModelAndView("redirect:/user");
 	}

@@ -100,7 +100,7 @@ public class BookingServiceTest {
 	@Before
 	public void setup() {
 		managerUserType = new Role("manager", "manager desc", true);
-		userService.createUserType(managerUserType);
+		userService.createRole(managerUserType);
 
 		user = new User();
 //		user.setUserType(managerUserType);

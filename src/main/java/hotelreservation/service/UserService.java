@@ -44,7 +44,7 @@ public class UserService {
 		return userRepo.save(user);
 	}
 	
-	public Role createUserType(Role userType) {
+	public Role createRole(Role userType) {
 		return roleRepo.save(userType);
 	}
 
@@ -70,7 +70,7 @@ public class UserService {
 		return userRepo.findOne(new Long(id.get()));
 	}
 	
-	public Role getUserTypeById(Optional<Integer> id) {
+	public Role getRoleById(Optional<Integer> id) {
 		return roleRepo.findOne(new Long(id.get()));
 	}
 
@@ -78,7 +78,7 @@ public class UserService {
 		userRepo.delete(id);
 	}
 
-	public void deleteUserType(Long id) {
+	public void deleteRole(Long id) {
 		roleRepo.delete(id);
 	}
 }

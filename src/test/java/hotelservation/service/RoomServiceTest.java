@@ -58,7 +58,7 @@ public class RoomServiceTest {
 		roomService.createRoomType(roomType);
 
 		Role managerUserType = new Role("manager", "manager desc", true);
-		userService.createUserType(managerUserType);
+		userService.createRole(managerUserType);
 
 		User createdBy = new User();
 //		createdBy.setUserType(managerUserType);
@@ -162,7 +162,7 @@ public class RoomServiceTest {
 		roomService.createRoomType(roomType);
 
 		Role managerUserType = new Role("manager", "manager desc", true);
-		userService.createUserType(managerUserType);
+		userService.createRole(managerUserType);
 
 		Room room = new Room();
 		room.setRoomNumber(1);
@@ -198,7 +198,7 @@ public class RoomServiceTest {
 		roomService.createRoomType(roomType);
 
 		Role managerUserType = new Role("manager", "manager desc", true);
-		userService.createUserType(managerUserType);
+		userService.createRole(managerUserType);
 
 		User createdBy = new User();
 //		createdBy.setUserType(managerUserType);
@@ -225,7 +225,7 @@ public class RoomServiceTest {
 		roomService.createRoomType(roomType);
 
 		Role managerUserType = new Role("manager", "manager desc", true);
-		userService.createUserType(managerUserType);
+		userService.createRole(managerUserType);
 
 		User createdBy = new User();
 //		createdBy.setUserType(managerUserType);

@@ -67,7 +67,7 @@
 		<div class="column">
 			<p>User Types</p>
 
-			<form action="#" th:action="@{/addUserType}" th:object="${role}" method="post">
+			<form action="#" th:action="@{/addRole}" th:object="${role}" method="post">
 				<p>
 					User Type Name: <input type="text" th:field="${role.name}" />
 				</p>
@@ -92,7 +92,7 @@
 						<td><label>Delete</label></td>
 					</tr>
 
-					<tr th:each="data, iterstat: ${userTypes}">
+					<tr th:each="data, iterstat: ${roles}">
 						<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
 						<td th:text="${data.name}" th:id="|td${iterstat.index}|"></td>
 						<td th:text="${data.description}" th:id="|td${iterstat.index}|"></td>
