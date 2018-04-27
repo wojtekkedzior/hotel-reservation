@@ -37,7 +37,7 @@ public class UsersController {
 		} else {
 			User user = userService.getUserById(id);
 			if(user == null) {
-				model.addAttribute("user", user);
+				model.addAttribute("user", new User());
 			} else {
 				model.addAttribute("user", user);
 			}
