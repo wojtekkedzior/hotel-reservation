@@ -104,6 +104,8 @@ public class ReservationController {
 	}
 
 	@RequestMapping(value = { "/realiseReservation/{id}" })
+	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_ADMIN')")
+//	@PreAuthorize("hasAuthority('WRITE_PRIVILEGE')")
 	public String getRealiseReservation(@PathVariable Optional<Integer> id, Model model) {
 		Reservation reservation = bookingService.getReservation(id);
 		model.addAttribute("reservation", reservation);
@@ -212,7 +214,8 @@ public class ReservationController {
 	}
 
 	@PostMapping("/realiseReservation")
-	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_MANAGER')")
+//	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_ADMIN')")
+	@PreAuthorize("hasAuthority('WRITE')")
 	public ModelAndView realiseReservation(@ModelAttribute Reservation reservation, BindingResult bindingResult) {
 		Reservation reservation2 = bookingService.getReservation(reservation.getId());
 
@@ -230,7 +233,6 @@ public class ReservationController {
 	}
 
 	@PostMapping("/reservation")
-	
 	public ModelAndView saveReservation(@ModelAttribute Reservation reservation, BindingResult bindingResult, RedirectAttributes redir) {
 		// TODO need to make use of the binding results (in all Post handlers)
 		System.err.println(bindingResult); // need to handle binding results
