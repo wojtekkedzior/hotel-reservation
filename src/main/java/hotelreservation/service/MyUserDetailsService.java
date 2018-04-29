@@ -42,15 +42,21 @@ public class MyUserDetailsService implements UserDetailsService {
 		}
 
 		//TODO figure out why a set works and all the crap below doesn't
-		Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+//		Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+//		for (Role role : user.getRoles()) {
+//			grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
+//		}
+		
+		List<GrantedAuthority> grantedAuthorities = getAuthorities(user.getRoles());
 		for (Role role : user.getRoles()) {
 			grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
 		}
+		
 
 		return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), user.isEnabled(), true, true, true, grantedAuthorities);
 	}
 
-	private Collection<? extends GrantedAuthority> getAuthorities(Collection<Role> roles) {
+	private List<GrantedAuthority> getAuthorities(Collection<Role> roles) {
 
 		return getGrantedAuthorities(getPrivileges(roles));
 	}
