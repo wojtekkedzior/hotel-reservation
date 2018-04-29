@@ -11,8 +11,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import hotelreservation.model.Privilege;
 import hotelreservation.model.Role;
 import hotelreservation.model.User;
+import hotelreservation.repository.PrivilegeRepo;
 import hotelreservation.repository.RoleRepo;
 import hotelreservation.repository.UserRepo;
 
@@ -25,6 +27,9 @@ public class UserService {
 
 	@Autowired
 	private RoleRepo roleRepo;
+	
+	@Autowired
+	private PrivilegeRepo privilegeRepo;
 
 	public User createUser(User user, long userTypeId) {
 		Role role = roleRepo.findOne(userTypeId);
@@ -80,5 +85,18 @@ public class UserService {
 
 	public void deleteRole(Long id) {
 		roleRepo.delete(id);
+	}
+
+	public Privilege getPrivilegeByName(String name) {
+		return privilegeRepo.findByName(name);
+	}
+
+	public void createPrivilege(Privilege privilege) {
+		privilegeRepo.save(privilege);
+		
+	}
+
+	public Role getRoleByName(String name) {
+		return roleRepo.findByName(name);
 	}
 }
