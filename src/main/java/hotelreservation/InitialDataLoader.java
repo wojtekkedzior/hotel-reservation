@@ -38,8 +38,8 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 
 		if (alreadySetup)
 			return;
-		Privilege readPrivilege = createPrivilegeIfNotFound("READ_PRIVILEGE");
-		Privilege writePrivilege = createPrivilegeIfNotFound("WRITE_PRIVILEGE");
+		Privilege readPrivilege = createPrivilegeIfNotFound("READ");
+		Privilege writePrivilege = createPrivilegeIfNotFound("WRITE");
 
 		List<Privilege> adminPrivileges = Arrays.asList(readPrivilege, writePrivilege);
 		createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);

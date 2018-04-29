@@ -215,7 +215,7 @@ public class ReservationController {
 
 	@PostMapping("/realiseReservation")
 //	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_ADMIN')")
-	@PreAuthorize("hasAuthority('adas')")
+	@PreAuthorize("hasAuthority('READ')")
 	public ModelAndView realiseReservation(@ModelAttribute Reservation reservation, BindingResult bindingResult) {
 		Reservation reservation2 = bookingService.getReservation(reservation.getId());
 

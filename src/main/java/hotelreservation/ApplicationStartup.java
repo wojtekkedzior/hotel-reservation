@@ -211,8 +211,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	
 	private void addPrivileges() {
 		// TODO Auto-generated method stub
-		Privilege realiseReservationPrivilege = createPrivilegeIfNotFound("REALISE_RESERVATION_PRIVILEGE");
-		Privilege cancelReservationPrivilege = createPrivilegeIfNotFound("CANCEL_RESERVATION_PRIVILEGE");
+		Privilege realiseReservationPrivilege = createPrivilegeIfNotFound("REALISE_RESERVATION");
+		Privilege cancelReservationPrivilege = createPrivilegeIfNotFound("CANCEL_RESERVATION");
 		
 		
 		superAdminRole = new Role("superAdmin", "superAdmin desc", true);
