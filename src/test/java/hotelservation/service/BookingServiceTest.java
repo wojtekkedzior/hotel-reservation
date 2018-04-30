@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +18,20 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 import hotelreservation.Application;
 import hotelreservation.DateConvertor;
@@ -55,6 +69,9 @@ public class BookingServiceTest {
 
 	@Autowired
 	private BookingService bookingService;
+	
+//	  @Autowired
+//	    private TestRestTemplate restTemplate;
 	
 	private Room standardRoomOne;
 	private Room standardRoomTwo;
@@ -99,6 +116,12 @@ public class BookingServiceTest {
 
 	@Before
 	public void setup() {
+//	    mvc = MockMvcBuilders
+//                .webAppContextSetup(context)
+//                .apply(springSecurity())
+//                .build();
+	    
+	    
 		managerUserType = new Role("manager", "manager desc", true);
 		userService.createRole(managerUserType);
 
@@ -643,5 +666,44 @@ public class BookingServiceTest {
 	public void testCancelReservationMidway() {
 		
 	}
+	
+    @Autowired
+    private WebApplicationContext context;
 
+    private MockMvc mvc;
+    
+    
+//    @Test
+//    @WithMockUser(roles={"ADMIN"})
+//    public void testTwo() {
+//        userService.methodTwo("This is Admin");
+//    } 
+    
+
+//	
+	@Test
+	public void givenUserMemberNotInOrganization_whenGetOrganization_thenForbidden() {
+//	    Response response = givenAuth("john", "123").get("http://localhost:8081/organizations/2");
+//	    assertEquals(403, response.getStatusCode());
+		
+//		RequestBuilder request = get("/110")
+//			    .with(user("ADMIN").roles("USER"));
+//
+//			mvc
+//			    .perform(request)
+//			    .andExpect(status().isUnAuthorized());
+	}
+
+//    @Test
+//    public void givenAuthProviders_whenGetPingWithBadCred_then401() {
+//        ResponseEntity<String> result = makeRestCallToGetPing("user", "bad_password");
+//
+//        assertThat(result.getStatusCodeValue()).isEqualTo(401);
+//    }
+//
+//    private ResponseEntity<String> makeRestCallToGetPing(String username, String password) {
+//        return restTemplate.withBasicAuth(username, password)
+//            .getForEntity("/api/ping", String.class, Collections.emptyMap());
+//    }
+    
 }
