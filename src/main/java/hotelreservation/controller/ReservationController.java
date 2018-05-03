@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import hotelreservation.model.Contact;
@@ -44,6 +45,7 @@ import hotelreservation.service.BookingService;
 import hotelreservation.service.GuestService;
 import hotelreservation.service.RoomService;
 
+@EnableWebMvc
 @Controller
 public class ReservationController {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -103,7 +105,7 @@ public class ReservationController {
 		return "reservation";
 	}
 
-	@RequestMapping(value = { "/realiseReservation/{id}" })
+	@RequestMapping(value = { "/realiseReservation/{id}" }, method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_ADMIN')")
 //	@PreAuthorize("hasAuthority('WRITE_PRIVILEGE')")
 	public String getRealiseReservation(@PathVariable Optional<Integer> id, Model model) {
