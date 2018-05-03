@@ -63,6 +63,12 @@ public class ReservationControllerTest {
 ////	        .andExpect(status().isOk())  
 //	        .andExpect(view().name("redirect:/reservationDashBoard"));  
 	    	
+	    	
+//	    	mockMvc.perform(get("/reservationDashBoard"))
+//			.andExpect(status().isForbidden()); // Expect that VIEWER users are forbidden from accessing this page
+//	    	
+	    	
+	    	
 //	        mockMvc.perform(MockMvcRequestBuilders.request(HttpMethod.GET, "/realiseReservation/{id}", Optional.of(1))
 //	                // ADD this line
 ////	                .with(user("admin").roles("USER","ADMIN"))
@@ -73,12 +79,17 @@ public class ReservationControllerTest {
 //	                .accept(MediaType.ALL))
 //	                .andExpect(status().isOk());
 	        
-	    	
-	    	
-//	        this.mockMvc.perform(get("/realiseReservation/{id}", new Integer(1)))
+	    	//Forbidden
+	        this.mockMvc.perform(get("/realiseReservation/{id}", new Integer(1)).with(user("admin").roles("MANAGER")))
+	        .andDo(print())
+	        .andExpect(status().isForbidden()); 
+	        
+	        
+//	        this.mockMvc.perform(get("/realiseReservation/{id}", new Integer(1)).with(user("admin").roles("ADMIN")))
 //	        .andDo(print())
-////	        .andExpect(status().isOk())  
-//	        .andExpect(status().isOk()); 
+//	        .andExpect(status().isForbidden()); 
+	        
+	        
 	    	
 	        // Send password change request
 //	        PasswordChangeRepresentation passwordChange = new PasswordChangeRepresentation(DefaultUsers.Admin.getPassword(), "12345678");

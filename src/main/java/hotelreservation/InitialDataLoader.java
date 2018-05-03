@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +20,7 @@ import hotelreservation.repository.RoleRepo;
 import hotelreservation.repository.UserRepo;
 
 @Component
+@Profile("dev")
 public class InitialDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
 	boolean alreadySetup = false;
