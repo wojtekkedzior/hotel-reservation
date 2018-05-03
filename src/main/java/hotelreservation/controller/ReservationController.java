@@ -45,7 +45,7 @@ import hotelreservation.service.BookingService;
 import hotelreservation.service.GuestService;
 import hotelreservation.service.RoomService;
 
-@EnableWebMvc
+
 @Controller
 public class ReservationController {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
