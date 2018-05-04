@@ -85,9 +85,9 @@ public class ReservationControllerTest {
 	        .andExpect(status().isForbidden()); 
 	        
 	        
-//	        this.mockMvc.perform(get("/realiseReservation/{id}", new Integer(1)).with(user("admin").roles("ADMIN")))
-//	        .andDo(print())
-//	        .andExpect(status().isForbidden()); 
+	        this.mockMvc.perform(get("/realiseReservation/{id}", new Integer(1)).with(user("admin").roles("ADMIN")))
+	        .andDo(print())
+	        .andExpect(status().isOk()); 
 	        
 	        
 	    	
