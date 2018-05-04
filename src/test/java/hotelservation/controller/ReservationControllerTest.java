@@ -36,7 +36,6 @@ import org.springframework.web.context.WebApplicationContext;
 import hotelreservation.Application;
 import hotelreservation.ApplicationStartup;
 import hotelreservation.DateConvertor;
-import hotelreservation.StartUpData;
 import hotelreservation.model.Amenity;
 import hotelreservation.model.AmenityType;
 import hotelreservation.model.Contact;
