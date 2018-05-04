@@ -51,7 +51,8 @@ public class RoomRate {
 		this.value = value;
 		this.day = day;
 	}
-
+	
+	//getting the room in the generated toString causes a loop because the room has a user, who has roles who has users etc
 	@Override
 	public String toString() {
 		return "RoomRate [id=" + id + ", description=" + description + ", room=" + room.getId() + ", currency=" + currency + ", value=" + value + ", day=" + day + "]";
