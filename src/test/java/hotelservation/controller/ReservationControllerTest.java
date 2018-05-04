@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
@@ -27,7 +29,9 @@ import hotelreservation.DateConvertor;
 import hotelreservation.model.Contact;
 import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;
+import hotelreservation.model.Privilege;
 import hotelreservation.model.Reservation;
+import hotelreservation.model.Role;
 import hotelreservation.model.Room;
 import hotelreservation.model.RoomRate;
 import hotelreservation.model.RoomType;
@@ -44,8 +48,21 @@ import hotelreservation.service.UserService;
 @SpringBootTest (classes = Application.class)
 @DataJpaTest
 @AutoConfigureMockMvc
+//@WebMvcTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ReservationControllerTest {
+	
+	private Role superAdminRole;
+	private Role adminUserRole;
+
+	private Role managerUserRole;
+	private Role receptionUserRole;
+	
+	private User superAdmin;
+	private User admin;
+	private User manager;
+	private User receptionistOne;
+	private User receptionistTwo;
 	
 	  @Autowired
 	    private MockMvc mockMvc;
@@ -119,21 +136,132 @@ public class ReservationControllerTest {
 			} catch (Exception e) {
 				fail();
 			}
+			
+			addPrivileges();
+			
 	  }
 	  
+	  
+	  
+	  private void addPrivileges() {
+			// TODO Auto-generated method stub
+			Privilege realiseReservationPrivilege = createPrivilegeIfNotFound("REALISE_RESERVATION");
+			Privilege cancelReservationPrivilege = createPrivilegeIfNotFound("CANCEL_RESERVATION");
+			
+			
+			superAdminRole = new Role("superAdmin", "superAdmin desc", true);
+
+			adminUserRole = new Role("ADMIN", "admin desc", true); 
+			adminUserRole.setPrivileges(Arrays.asList(realiseReservationPrivilege,  cancelReservationPrivilege));
+
+			managerUserRole = new Role("MANAGER", "manager desc", true);
+			managerUserRole.setPrivileges(Arrays.asList(realiseReservationPrivilege,  cancelReservationPrivilege));
+			
+			receptionUserRole = new Role("reception", "reception desc", true);
+			receptionUserRole.setPrivileges(Arrays.asList(realiseReservationPrivilege,  cancelReservationPrivilege));
+
+			
+			userService.createRole(superAdminRole);
+			userService.createRole(adminUserRole);
+
+			userService.createRole(managerUserRole);
+			userService.createRole(receptionUserRole);
+			
+			
+			
+			// SuperAdmin will be added by a script in the future
+			superAdmin = new User("superadmin", "Mr Super Admin");
+			superAdmin.setRoles(Arrays.asList(superAdminRole));
+
+			admin = new User("admin", "Mr Admin");
+			admin.setRoles(Arrays.asList(adminUserRole));
+			
+			manager = new User("manager", "Mr Manager");
+			manager.setRoles(Arrays.asList(managerUserRole));
+			
+			receptionistOne = new User("receptionistOne", "Mr Receptionist One");
+			receptionistOne.setRoles(Arrays.asList(receptionUserRole));
+			
+			receptionistTwo = new User("receptionistTwo", "Mr Receptionist Two");
+			receptionistTwo.setRoles(Arrays.asList(receptionUserRole));
+
+			
+			admin.setCreatedBy(superAdmin);
+			manager.setCreatedBy(admin);
+			receptionistOne.setCreatedBy(admin);
+			receptionistTwo.setCreatedBy(admin);
+
+			userService.createUser(superAdmin);
+			userService.createUser(admin, superAdminRole.getId());
+			userService.createUser(manager, adminUserRole.getId());
+
+			userService.createUser(receptionistOne, managerUserRole.getId());
+			userService.createUser(receptionistTwo, managerUserRole.getId());
+			
+			
+			Privilege readPrivilege = createPrivilegeIfNotFound("READ");
+			Privilege writePrivilege = createPrivilegeIfNotFound("WRITE");
+
+			List<Privilege> adminPrivileges = Arrays.asList(readPrivilege, writePrivilege);
+//			createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
+			
+//			createRoleIfNotFound("ROLE_MANAGER", adminPrivileges);
+//			createRoleIfNotFound("ROLE_RECEPTIONIST", Arrays.asList(readPrivilege));
+
+//			Role adminRole = roleRepo.findByName("ROLE_ADMIN");
+			User user = new User();
+			user.setFirstName("Test");
+			user.setLastName("Test");
+			user.setUserName("test");
+			// user.setPassword(passwordEncoder.encode("test")); //TODO use encoder
+			user.setPassword("test");
+			user.setRoles(Arrays.asList(adminUserRole));
+			user.setEnabled(true);
+//			userRepository.save(user);
+			userService.createUser(user);
+			
+			
+		}
+	  
+		private Privilege createPrivilegeIfNotFound(String name) {
+
+			Privilege privilege = userService.getPrivilegeByName(name);
+			if (privilege == null) {
+				privilege = new Privilege(name);
+				userService.createPrivilege(privilege);
+			}
+			return privilege;
+		}
+		
+//		@Transactional
+//		private Role createRoleIfNotFound(String name, Collection<Privilege> privileges) {
+//
+//			Role role = roleRepo.findByName(name);
+//			if (role == null) {
+//				role = new Role(name, "ada", true);
+//				role.setPrivileges(privileges);
+//				roleRepo.save(role);
+//			}
+//			return role;
+//		}
+		
 	   @Test
+//	   @WithMockUser(roles={"ADMIN"})
 	    public void testCancelReservationPermissions() throws Exception {
-	        this.mockMvc.perform(get("/cancelReservation/{id}", new Integer(1)).with(user("admin").roles("MANAGER")))
+//		   this.mockMvc.perform(get("/login")).andExpect(status().isOk()); 
+		   
+		   
+	        this.mockMvc.perform(get("/cancelReservation/{id}", new Integer(1)).with(user("test").roles("daas")))
 	        .andDo(print())
 	        .andExpect(status().isForbidden()); 
 	        
-//	        this.mockMvc.perform(get("/cancelReservation/{id}", new Integer(1)).with(user("admin").roles("MANAGER")))
-//	        .andDo(print())
-//	        .andExpect(status().isForbidden()); 
+	        this.mockMvc.perform(get("/cancelReservation/{id}", new Integer(1)).with(user("admin").roles("ADMIN")))
+	        .andDo(print())
+	        .andExpect(status().isOk()); 
 	    }
 	   
 	    @Test
-	    @WithMockUser(roles={"ADMIN"})
+//	    @WithMockUser(roles={"ADMIN"})
 	    public void testTwo() throws Exception {
 //	        userService.methodTwo("This is Admin");
 	    	
@@ -159,7 +287,7 @@ public class ReservationControllerTest {
 //	                .andExpect(status().isOk());
 	        
 	    	//Forbidden
-	        this.mockMvc.perform(get("/realiseReservation/{id}", new Integer(1)).with(user("admin").roles("MANAGER")))
+	        this.mockMvc.perform(get("/realiseReservation/{id}", new Integer(1)).with(user("test").roles("daas")))
 	        .andDo(print())
 	        .andExpect(status().isForbidden()); 
 	        

@@ -142,7 +142,7 @@ public class ReservationController {
 		return "realiseReservation";
 	}
 
-	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_MANAGER')")
+	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_MANAGER', 'ROLE_ADMIN')")
 	@RequestMapping(value = { "/cancelReservation/{id}" })
 	public String cancelReservation(@PathVariable Optional<Integer> id, Model model) {
 
