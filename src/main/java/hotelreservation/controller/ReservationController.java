@@ -11,11 +11,15 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -142,10 +146,16 @@ public class ReservationController {
 		return "realiseReservation";
 	}
 
-	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_MANAGER', 'ROLE_ADMIN')")
+	@Secured({"ROLE_RECEPTIONIST", "ROLE_ADMIN", "ROLE_MANAGER"})
+//	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_ADMIN', 'ROLE_MANAGER')")
+//	@RolesAllowed("MANAGER")
 	@RequestMapping(value = { "/cancelReservation/{id}" })
-	public String cancelReservation(@PathVariable Optional<Integer> id, Model model) {
+	public String cancelReservation(@PathVariable Optional<Integer> id, Model model, HttpServletRequest request) {
 
+	     if (request.isUserInRole("ROLE_MANAGER")) {
+//	            return "redirect:/events/";
+	        }
+	     
 		Reservation reservation = bookingService.getReservation(id);
 		model.addAttribute("reservation", reservation);
 
