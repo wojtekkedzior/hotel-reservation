@@ -3,9 +3,7 @@ package hotelreservation.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -37,21 +35,14 @@ public class MyUserDetailsService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 
 		User user = userRepo.findByUserName(userName);
-		if (user == null) { //TODO should take you to the login screen
+		if (user == null) { // TODO should take you to the login screen
 			return new org.springframework.security.core.userdetails.User(" ", " ", true, true, true, true, getAuthorities(Arrays.asList(roleRepo.findByName("ROLE_USER"))));
 		}
 
-		//TODO figure out why a set works and all the crap below doesn't
-//		Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-//		for (Role role : user.getRoles()) {
-//			grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
-//		}
-		
 		List<GrantedAuthority> grantedAuthorities = getAuthorities(user.getRoles());
 		for (Role role : user.getRoles()) {
 			grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
 		}
-		
 
 		return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), user.isEnabled(), true, true, true, grantedAuthorities);
 	}
