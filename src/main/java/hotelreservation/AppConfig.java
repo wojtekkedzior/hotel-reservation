@@ -24,7 +24,7 @@ public class AppConfig extends WebSecurityConfigurerAdapter {
       
       http
       .authorizeRequests()
-          //.antMatchers("/**").hasAnyRole("ADMIN", "MANAGER", "RECEPTIONIST")
+//          .antMatchers("/**").hasAnyRole("ADMIN", "MANAGER", "RECEPTIONIST")
           .anyRequest().authenticated()
           .and()
       .formLogin()
@@ -32,5 +32,7 @@ public class AppConfig extends WebSecurityConfigurerAdapter {
           .and()
       .logout()
           .permitAll();
+      
+      http.csrf().disable();
   }
 }

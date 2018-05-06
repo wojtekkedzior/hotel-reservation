@@ -224,7 +224,7 @@ public class ReservationController {
 	}
 
 	@PostMapping("/realiseReservation")
-	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_ADMIN')")
+	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_MANAGER')")
 	public ModelAndView realiseReservation(@ModelAttribute Reservation reservation, BindingResult bindingResult) {
 		Reservation reservation2 = bookingService.getReservation(reservation.getId());
 
@@ -252,8 +252,8 @@ public class ReservationController {
 	}
 
 	// TODO only super-admin type user should be able to fully delete a reservation. Move to super admin controller? 
-	@PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
 	@RequestMapping(value = "/reservationDelete/{id}", method = RequestMethod.DELETE)
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
 	public ModelAndView deleteReservation(@PathVariable Optional<Integer> id) {
 		if (id.isPresent()) {
 			// bookingService.deleteUser(new Long(id.get()));
