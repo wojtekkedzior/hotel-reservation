@@ -245,5 +245,11 @@ public class HomeControllerTest {
 	public void testReceptionistCanAccessHome_allowed() throws Exception {
 		mvc.perform(get("/")).andExpect(status().is3xxRedirection());
 	}
+	
+	@Test
+	@WithMockUser(username="nonExistentUser", roles = "receptionist")
+	public void testInvalidUserIsForbidden() throws Exception {
+		mvc.perform(get("/")).andExpect(status().is3xxRedirection());
+	}
 
 }
