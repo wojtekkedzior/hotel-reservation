@@ -1,9 +1,7 @@
 package hotelservation.controller;
 
 import static org.junit.Assert.fail;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
@@ -21,7 +19,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.BeforeTransaction;
@@ -36,7 +33,6 @@ import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;
 import hotelreservation.model.Privilege;
 import hotelreservation.model.Reservation;
-import hotelreservation.model.ReservationCancellation;
 import hotelreservation.model.Role;
 import hotelreservation.model.Room;
 import hotelreservation.model.RoomRate;
@@ -56,7 +52,7 @@ import hotelreservation.service.UserService;
 @DataJpaTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class ReservationControllerTest {
+public class HomeControllerTest {
 
 	private Role adminRole;
 	private Role managerRole;
@@ -233,69 +229,21 @@ public class ReservationControllerTest {
 	}
 
 	@Test
-	@WithUserDetails("admin")
-	public void testAdminRolePermissions_allowed() throws Exception {
-		mvc.perform(delete("/reservationDelete/1")).andExpect(status().is3xxRedirection());
+	@WithMockUser(username="admin", roles = "admin")
+	public void testAdminCanAccessHome_allowed() throws Exception {
+		mvc.perform(get("/")).andExpect(status().is3xxRedirection());
 	}
-
+	
 	@Test
-	@WithUserDetails("admin")
-	public void testAdminRolePermissions_forbidden() throws Exception {
-		mvc.perform(get("/reservation/1")).andExpect(status().isForbidden());
-		mvc.perform(get("/realiseReservation/1")).andExpect(status().isForbidden());
-		mvc.perform(post("/realiseReservation").flashAttr("reservation", reservationOne)).andExpect(status().isForbidden());
-		mvc.perform(get("/cancelReservation/1")).andExpect(status().isForbidden());
-		mvc.perform(get("/checkoutReservation/1")).andExpect(status().isForbidden());
-		mvc.perform(post("/cancelReservation/1").flashAttr("reservation", new ReservationCancellation())).andExpect(status().isForbidden());
+	@WithMockUser(username="manager", roles = "manager")
+	public void testManagerCanAccessHome_allowed() throws Exception {
+		mvc.perform(get("/")).andExpect(status().is3xxRedirection());
 	}
-
+	
 	@Test
-	@WithUserDetails("manager")
-	public void testManagerRolePermissions_allowed() throws Exception {
-		mvc.perform(get("/reservation/1")).andExpect(status().isOk());
-		mvc.perform(get("/realiseReservation/1")).andExpect(status().isOk());
-		mvc.perform(post("/realiseReservation").flashAttr("reservation", reservationOne)).andExpect(status().is3xxRedirection());
-		mvc.perform(get("/cancelReservation/1")).andExpect(status().isOk());
-		mvc.perform(get("/checkoutReservation/1")).andExpect(status().isOk());
-
-		ReservationCancellation cancellation = new ReservationCancellation();
-		cancellation.setReservation(reservationOne);
-		mvc.perform(post("/cancelReservation/1").flashAttr("reservation", cancellation)).andExpect(status().is3xxRedirection());
+	@WithMockUser(username="receptionist", roles = "receptionist")
+	public void testReceptionistCanAccessHome_allowed() throws Exception {
+		mvc.perform(get("/")).andExpect(status().is3xxRedirection());
 	}
 
-	@Test
-	@WithUserDetails("manager")
-	public void testManagerRolePermissions_forbidden() throws Exception {
-		mvc.perform(delete("/reservationDelete/1")).andExpect(status().isForbidden());
-	}
-
-	@Test
-	@WithUserDetails("receptionist")
-	public void testReceptionistRolePermissions_allowed() throws Exception {
-		mvc.perform(get("/reservation/1")).andExpect(status().isOk());
-		mvc.perform(get("/realiseReservation/1")).andExpect(status().isOk());
-		mvc.perform(post("/realiseReservation").flashAttr("reservation", reservationOne)).andExpect(status().is3xxRedirection());
-		mvc.perform(get("/cancelReservation/1")).andExpect(status().isOk());
-		mvc.perform(get("/checkoutReservation/1")).andExpect(status().isOk());
-
-		ReservationCancellation cancellation = new ReservationCancellation();
-		cancellation.setReservation(reservationOne);
-		mvc.perform(post("/cancelReservation/1").flashAttr("reservation", cancellation)).andExpect(status().is3xxRedirection());
-	}
-
-	@Test
-	@WithUserDetails("receptionist")
-	public void testReceptionistRolePermissions_forbidden() throws Exception {
-		mvc.perform(delete("/reservationDelete/{id}", new Integer(1))).andExpect(status().isForbidden());
-	}
-
-	@Test
-	@WithMockUser(username = "manager", roles = "MISSING_ROLE")
-	public void testMissingRole() throws Exception {
-		mvc.perform(get("/reservation/1")).andExpect(status().isForbidden());
-		mvc.perform(get("/realiseReservation/1")).andExpect(status().isForbidden());
-		mvc.perform(get("/cancelReservation/1")).andExpect(status().isForbidden());
-		mvc.perform(get("/checkoutReservation/1")).andExpect(status().isForbidden());
-		mvc.perform(delete("/reservationDelete/1")).andExpect(status().isForbidden());
-	}
 }
