@@ -11,7 +11,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -19,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,7 +30,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import hotelreservation.model.Contact;
@@ -69,7 +66,7 @@ public class ReservationController {
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true, 10));
 	}
 
-	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_MANAGER')")
+	@PreAuthorize("hasAuthority('createReservation')")
 	@RequestMapping(value = { "/reservation", "/reservation/{id}", "/reservation/start/{startDate}/end/{endDate}" })
 	public String addReservationModel(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<Date> startDate,
 			@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<Date> endDate, @PathVariable Optional<Integer> id, Model model) {
@@ -111,7 +108,7 @@ public class ReservationController {
 	}
 
 	@RequestMapping(value = { "/realiseReservation/{id}" }, method = RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_MANAGER')")
+	@PreAuthorize("hasAuthority('realiseReservation')")
 	public String getRealiseReservation(@PathVariable Optional<Integer> id, Model model) {
 		Reservation reservation = bookingService.getReservation(id);
 		model.addAttribute("reservation", reservation);
@@ -146,14 +143,9 @@ public class ReservationController {
 		return "realiseReservation";
 	}
 
-	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_MANAGER')")
 	@RequestMapping(value = { "/cancelReservation/{id}" })
+	@PreAuthorize("hasAuthority('cancelReservation')")
 	public String cancelReservation(@PathVariable Optional<Integer> id, Model model, HttpServletRequest request) {
-
-	     if (request.isUserInRole("ROLE_MANAGER")) {
-//	            return "redirect:/events/";
-	        }
-	     
 		Reservation reservation = bookingService.getReservation(id);
 		model.addAttribute("reservation", reservation);
 
@@ -178,7 +170,7 @@ public class ReservationController {
 	}
 
 	@RequestMapping(value = { "/checkoutReservation/{id}" })
-	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_MANAGER')")
+	@PreAuthorize("hasAuthority('checkoutReservation')")
 	public String checkoutReservation(@PathVariable Optional<Integer> id, Model model) {
 		log.info("loading checkout Reservation");
 
@@ -204,7 +196,7 @@ public class ReservationController {
 	 */
 
 	@PostMapping("/addOccupant")
-	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_MANAGER')")
+	@PreAuthorize("hasAuthority('realiseReservation')")
 	public ModelAndView addOccupant(@ModelAttribute Reservation reservation, Guest guest, BindingResult bindingResult) {
 		// TODO the guest ID is also set because it matches the id field name on the reservation. Is there a way to exclude that?
 		guest.setId(0);
@@ -224,7 +216,7 @@ public class ReservationController {
 	}
 
 	@PostMapping("/realiseReservation")
-	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_MANAGER')")
+	@PreAuthorize("hasAuthority('realiseReservation')")
 	public ModelAndView realiseReservation(@ModelAttribute Reservation reservation, BindingResult bindingResult) {
 		Reservation reservation2 = bookingService.getReservation(reservation.getId());
 
@@ -242,6 +234,7 @@ public class ReservationController {
 	}
 
 	@PostMapping("/reservation")
+	@PreAuthorize("hasAuthority('createReservation')")
 	public ModelAndView saveReservation(@ModelAttribute Reservation reservation, BindingResult bindingResult, RedirectAttributes redir) {
 		// TODO need to make use of the binding results (in all Post handlers)
 		System.err.println(bindingResult); // need to handle binding results
@@ -253,7 +246,7 @@ public class ReservationController {
 
 	// TODO only super-admin type user should be able to fully delete a reservation. Move to super admin controller? 
 	@RequestMapping(value = "/reservationDelete/{id}", method = RequestMethod.DELETE)
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+	@PreAuthorize("hasAuthority('deleteReservation')")
 	public ModelAndView deleteReservation(@PathVariable Optional<Integer> id) {
 		if (id.isPresent()) {
 			// bookingService.deleteUser(new Long(id.get()));
@@ -262,7 +255,7 @@ public class ReservationController {
 	}
 
 	@RequestMapping(value = "/deleteContact/{id}", method = RequestMethod.DELETE)
-	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_MANAGER')")
+	@PreAuthorize("hasAuthority('realiseReservation')")
 	public ModelAndView deleteGuest(@ModelAttribute Reservation reservation, @PathVariable Optional<Integer> id) {
 		if (id.isPresent()) {
 			// remove it from the reservation first.
@@ -290,7 +283,7 @@ public class ReservationController {
 	}
 	
 	@PostMapping("/cancelReservation/{reservationID}")
-	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_MANAGER')")
+	@PreAuthorize("hasAuthority('cancelReservation')")
 	public ModelAndView cancelReservation(@ModelAttribute ReservationCancellation reservationCancellation, @PathVariable Optional<Integer> reservationID) {
 		Reservation resFromDB = bookingService.getReservation(reservationID);
 
@@ -303,7 +296,7 @@ public class ReservationController {
 	}
 
 	@PostMapping("/checkoutReservation/{reservationID}")
-	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_MANAGER')")
+	@PreAuthorize("hasAuthority('checkoutReservation')")
 	public ModelAndView reservationCheckout(@ModelAttribute ReservationCheckout reservationCheckout, @PathVariable Optional<Integer> reservationID) {
 		Reservation resFromDB = bookingService.getReservation(reservationID);
 
