@@ -53,16 +53,10 @@ import hotelreservation.service.UserService;
 public class ReservationControllerTest {
 	
 	private Role superAdminRole;
-	private Role adminUserRole;
+	private Role adminRole;
 
-	private Role managerUserRole;
-	private Role receptionUserRole;
-	
-	private User superAdmin;
-	private User admin;
-//	private User manager;
-	private User receptionistOne;
-	private User receptionistTwo;
+	private Role managerRole;
+	private Role receptionistRole;
 	
 	  @Autowired
 	    private MockMvc mockMvc;
@@ -84,6 +78,10 @@ public class ReservationControllerTest {
 		
 //		@Autowired
 //		private DataSetup dataSetup;
+		
+		User admin;
+		User manager;
+		User receptionist;
 		
 	  @Before
 	  public void setup() {
@@ -146,57 +144,43 @@ public class ReservationControllerTest {
 			// TODO Auto-generated method stub
 //			Privilege realiseReservationPrivilege = createPrivilegeIfNotFound("REALISE_RESERVATION");
 //			Privilege cancelReservationPrivilege = createPrivilegeIfNotFound("CANCEL_RESERVATION");
-			
-		  
-		  
-		  
 
-			adminUserRole = new Role("ADMIN", "admin desc", true); 
-			managerUserRole = new Role("MANAGER", "manager desc", true);
-
+			adminRole = new Role("ADMIN", "admin desc", true); 
+			managerRole = new Role("MANAGER", "manager desc", true);
+			receptionistRole = new Role("RECEPTIONIST", "receptionist", true);
 			
-			userService.createRole(adminUserRole);
-			userService.createRole(managerUserRole);
-
+			userService.createRole(adminRole);
+			userService.createRole(managerRole);
+			userService.createRole(receptionistRole);
 			
-			User manager = new User();
-			manager.setPassword("test");
+			manager = new User();
+			manager.setPassword("password");
 			manager.setFirstName("Manager");
 			manager.setLastName("Manager");
 			manager.setUserName("manager");
 			manager.setEnabled(true);
-			manager.setRoles(Arrays.asList(managerUserRole));
+			manager.setRoles(Arrays.asList(managerRole));
 			userService.createUser(manager);
 			
-			
-			User user = new User();
-			user.setFirstName("Test");
-			user.setLastName("Test");
-			user.setUserName("test");
+			admin = new User();
+			admin.setFirstName("admin");
+			admin.setLastName("admin");
+			admin.setUserName("admin");
 			// user.setPassword(passwordEncoder.encode("test")); //TODO use encoder
-			user.setPassword("test");
-			user.setRoles(Arrays.asList(adminUserRole));
-			user.setEnabled(true);
-			userService.createUser(user);
+			admin.setPassword("password");
+			admin.setRoles(Arrays.asList(adminRole));
+			admin.setEnabled(true);
+			userService.createUser(admin);
 			
-			
-			
-			List<User> allUsers = userService.getAllUsers();
-			
-			for (User user2 : allUsers) {
-				System.err.println(user2);
-			}
-			
-			 List<Role> allRoles = userService.getAllRoles();
-			 
-			 for (Role role : allRoles) {
-				System.err.println(role);
-			}
-			
-			
-			System.err.println("");
-			
-			
+			receptionist = new User();
+			receptionist.setFirstName("receptionist");
+			receptionist.setLastName("receptionist");
+			receptionist.setUserName("receptionist");
+			// user.setPassword(passwordEncoder.encode("test")); //TODO use encoder
+			receptionist.setPassword("password");
+			receptionist.setRoles(Arrays.asList(receptionistRole));
+			receptionist.setEnabled(true);
+			userService.createUser(receptionist);
 		}
 	  
 		private Privilege createPrivilegeIfNotFound(String name) {
@@ -225,30 +209,120 @@ public class ReservationControllerTest {
 		
 	   @Test
 //	   @WithMockUser(roles={"ADMIN"})
-	    public void testCancelReservationPermissions_forbidden() throws Exception {
-	        this.mockMvc.perform(get("/cancelReservation/{id}", new Integer(1)).with(user("test").roles("MISSING_ROLE")))
+	    public void testReservationManagerAndReceptionistPermissions_forbidden() throws Exception {
+	        this.mockMvc.perform(get("/cancelReservation/{id}", new Integer(1)).with(user("manager").roles("MISSING_ROLE")))
 	        .andDo(print())
 	        .andExpect(status().isForbidden()); 
-	    }
-	   
-	   
-	   @Test
-	    public void testCancelReservationPermissions_allowed() throws Exception {
-	        this.mockMvc.perform(get("/cancelReservation/{id}", new Integer(1)).with(user("test").roles("ADMIN")))
+	        
+	        this.mockMvc.perform(get("/cancelReservation/{id}", new Integer(1)).with(user("admin").roles("ADMIN")))
 	        .andDo(print())
-	        .andExpect(status().isOk()); 
+	        .andExpect(status().isForbidden()); 
+	        
+	        this.mockMvc.perform(get("/realiseReservation/{id}", new Integer(1)).with(user("manager").roles("MISSING_ROLE")))
+	        .andDo(print())
+	        .andExpect(status().isForbidden()); 
+	        
+	        this.mockMvc.perform(get("/realiseReservation/{id}", new Integer(1)).with(user("admin").roles("ADMIN")))
+	        .andDo(print())
+	        .andExpect(status().isForbidden()); 
+	        
+	        
+	        this.mockMvc.perform(get("/reservation/{id}", new Integer(1)).with(user("manager").roles("MISSING_ROLE")))
+	        .andDo(print())
+	        .andExpect(status().isForbidden()); 
+	        
+	        this.mockMvc.perform(get("/reservation/{id}", new Integer(1)).with(user("admin").roles("ADMIN")))
+	        .andDo(print())
+	        .andExpect(status().isForbidden()); 
+	        
 	        
 	    }
 	   
-	   
-	   
 	   @Test
-//	   @WithMockUser(roles={"MANAGER"})
-	    public void testCancelReservationPermissions_manager() throws Exception {
+	    public void testReservationManagerAndReceptionistPermissions_allowed() throws Exception {
 	        this.mockMvc.perform(get("/cancelReservation/{id}", new Integer(1)).with(user("manager").roles("MANAGER")))
 	        .andDo(print())
 	        .andExpect(status().isOk()); 
+	        
+	        this.mockMvc.perform(get("/cancelReservation/{id}", new Integer(1)).with(user("receptionist").roles("RECEPTIONIST")))
+	        .andDo(print())
+	        .andExpect(status().isOk()); 
+	        
+	        
+	        this.mockMvc.perform(get("/realiseReservation/{id}", new Integer(1)).with(user("manager").roles("MANAGER")))
+	        .andDo(print())
+	        .andExpect(status().isOk()); 
+	        
+	        this.mockMvc.perform(get("/realiseReservation/{id}", new Integer(1)).with(user("receptionist").roles("RECEPTIONIST")))
+	        .andDo(print())
+	        .andExpect(status().isOk()); 
+	        
+	        this.mockMvc.perform(get("/reservation/{id}", new Integer(1)).with(user("manager").roles("MANAGER")))
+	        .andDo(print())
+	        .andExpect(status().isOk()); 
+	        
+	        this.mockMvc.perform(get("/reservation/{id}", new Integer(1)).with(user("receptionist").roles("RECEPTIONIST")))
+	        .andDo(print())
+	        .andExpect(status().isOk()); 
+	        
+	        
 	    }
+	   
+//	   @Test
+//	    public void testGetRealiseReservationPermissions_forbidden() throws Exception {
+//	        this.mockMvc.perform(get("/realiseReservation/{id}", new Integer(1)).with(user("manager").roles("MISSING_ROLE")))
+//	        .andDo(print())
+//	        .andExpect(status().isForbidden()); 
+//	        
+//	        this.mockMvc.perform(get("/realiseReservation/{id}", new Integer(1)).with(user("admin").roles("ADMIN")))
+//	        .andDo(print())
+//	        .andExpect(status().isForbidden()); 
+//	    }
+	   
+//	   @Test
+//	    public void testGetRealiseReservationPermissions_allowed() throws Exception {
+//	        this.mockMvc.perform(get("/realiseReservation/{id}", new Integer(1)).with(user("manager").roles("MANAGER")))
+//	        .andDo(print())
+//	        .andExpect(status().isOk()); 
+//	        
+//	        this.mockMvc.perform(get("/realiseReservation/{id}", new Integer(1)).with(user("receptionist").roles("RECEPTIONIST")))
+//	        .andDo(print())
+//	        .andExpect(status().isOk()); 
+//	    }
+	   
+//	   @Test
+//	    public void testAddReservationPermissions_allowed() throws Exception {
+//	        this.mockMvc.perform(get("/reservation/{id}", new Integer(1)).with(user("manager").roles("MANAGER")))
+//	        .andDo(print())
+//	        .andExpect(status().isOk()); 
+//	        
+//	        this.mockMvc.perform(get("/reservation/{id}", new Integer(1)).with(user("receptionist").roles("RECEPTIONIST")))
+//	        .andDo(print())
+//	        .andExpect(status().isOk()); 
+//	    }
+	   
+//	   @Test
+//	    public void testAddReservationPermissions_forbidden() throws Exception {
+//	        this.mockMvc.perform(get("/reservation/{id}", new Integer(1)).with(user("manager").roles("MISSING_ROLE")))
+//	        .andDo(print())
+//	        .andExpect(status().isForbidden()); 
+//	        
+//	        this.mockMvc.perform(get("/reservation/{id}", new Integer(1)).with(user("admin").roles("ADMIN")))
+//	        .andDo(print())
+//	        .andExpect(status().isForbidden()); 
+//	    }
+//	   
+	   
+	   
+	   
+	   
+//	   @Test
+//	   @WithMockUser(roles={"MANAGER"})
+//	    public void testCancelReservationPermissions_manager() throws Exception {
+//	        this.mockMvc.perform(get("/cancelReservation/{id}", new Integer(1)).with(user("manager").roles("MANAGER")))
+//	        .andDo(print())
+//	        .andExpect(status().isOk()); 
+//	    }
 	   
 	   
 	   
@@ -284,17 +358,14 @@ public class ReservationControllerTest {
 //	                .andExpect(status().isOk());
 	        
 	    	//Forbidden
-	        this.mockMvc.perform(get("/realiseReservation/{id}", new Integer(1)).with(user("test").roles("MISSING_ROLE")))
-	        .andDo(print())
-	        .andExpect(status().isForbidden()); 
-	        
-	        System.err.println("");
-	        
-	        
-	        this.mockMvc.perform(get("/realiseReservation/{id}", new Integer(1)).with(user("test").roles("ADMIN")))
-	        .andDo(print())
-	        .andExpect(status().isOk()); 
-	        
+//	        this.mockMvc.perform(get("/realiseReservation/{id}", new Integer(1)).with(user("test").roles("MISSING_ROLE")))
+//	        .andDo(print())
+//	        .andExpect(status().isForbidden()); 
+//	        
+//	        this.mockMvc.perform(get("/realiseReservation/{id}", new Integer(1)).with(user("test").roles("ADMIN")))
+//	        .andDo(print())
+//	        .andExpect(status().isOk()); 
+//	        
 	        
 	    	
 	        // Send password change request

@@ -69,6 +69,7 @@ public class ReservationController {
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true, 10));
 	}
 
+	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_MANAGER')")
 	@RequestMapping(value = { "/reservation", "/reservation/{id}", "/reservation/start/{startDate}/end/{endDate}" })
 	public String addReservationModel(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<Date> startDate,
 			@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<Date> endDate, @PathVariable Optional<Integer> id, Model model) {
@@ -110,8 +111,7 @@ public class ReservationController {
 	}
 
 	@RequestMapping(value = { "/realiseReservation/{id}" }, method = RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_ADMIN')")
-//	@PreAuthorize("hasAuthority('WRITE_PRIVILEGE')")
+	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_MANAGER')")
 	public String getRealiseReservation(@PathVariable Optional<Integer> id, Model model) {
 		Reservation reservation = bookingService.getReservation(id);
 		model.addAttribute("reservation", reservation);
@@ -146,9 +146,7 @@ public class ReservationController {
 		return "realiseReservation";
 	}
 
-	@Secured({"ROLE_RECEPTIONIST", "ROLE_ADMIN", "ROLE_MANAGER"})
-//	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_ADMIN', 'ROLE_MANAGER')")
-//	@RolesAllowed("MANAGER")
+	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_MANAGER')")
 	@RequestMapping(value = { "/cancelReservation/{id}" })
 	public String cancelReservation(@PathVariable Optional<Integer> id, Model model, HttpServletRequest request) {
 
@@ -226,8 +224,7 @@ public class ReservationController {
 	}
 
 	@PostMapping("/realiseReservation")
-//	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_ADMIN')")
-	@PreAuthorize("hasAuthority('READ')")
+	@PreAuthorize("hasAnyRole('ROLE_RECEPTIONIST', 'ROLE_ADMIN')")
 	public ModelAndView realiseReservation(@ModelAttribute Reservation reservation, BindingResult bindingResult) {
 		Reservation reservation2 = bookingService.getReservation(reservation.getId());
 
