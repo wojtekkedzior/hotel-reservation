@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import hotelreservation.DateConvertor;
@@ -41,6 +43,7 @@ public class RoomController {
 	private DateConvertor dateConvertor;
 
 	@RequestMapping(value = { "/amenity", "/amenity/{id}" })
+	@PreAuthorize("hasAuthority('createAmenity')")
 	public String addAmenityModel(Model model, @PathVariable Optional<Integer> id) {
 		if (!id.isPresent()) {
 			model.addAttribute("amenity", new Amenity());
@@ -56,6 +59,7 @@ public class RoomController {
 	}
 
 	@RequestMapping(value = { "/amenityType", "/amenityType/{id}" })
+	@PreAuthorize("hasAuthority('createAmenityType')")
 	public String addAmenityTypeModel(Model model, @PathVariable Optional<Integer> id) {
 		if (!id.isPresent()) {
 			model.addAttribute("amenityType", new AmenityType());
@@ -76,6 +80,7 @@ public class RoomController {
 	}
 
 	@RequestMapping(value = { "/room", "room/{id}" })
+	@PreAuthorize("hasAuthority('createRoom')")
 	public String roomModel(Model model, @PathVariable Optional<Integer> id) {
 		if (!id.isPresent()) {
 			model.addAttribute("room", new Room());
@@ -91,6 +96,7 @@ public class RoomController {
 	}
 
 	@RequestMapping(value = { "/roomType", "/roomType/{id}" })
+	@PreAuthorize("hasAuthority('createRoomType')")
 	public String roomTypeModel(Model model, @PathVariable Optional<Integer> id) {
 		if (!id.isPresent()) {
 			model.addAttribute("roomType", new RoomType());
@@ -113,6 +119,7 @@ public class RoomController {
 	}
 
 	@RequestMapping(value = { "/roomRate", "/roomRate/{id}" })
+	@PreAuthorize("hasAuthority('createRoomRate')")
 	public String addRoomRateModel(Model model, @PathVariable Optional<Integer> id) throws ParseException {
 		if (!id.isPresent()) {
 			model.addAttribute("roomRate", new RoomRate());
@@ -134,30 +141,35 @@ public class RoomController {
 	}
 
 	@PostMapping("/addAmenityType")
+	@PreAuthorize("hasAuthority('createAmenityType')")
 	public ModelAndView addAmenityType(@ModelAttribute AmenityType amenityType, BindingResult bindingResult) {
 		AmenityType createAmenityType = roomService.createAmenityType(amenityType);
 		return new ModelAndView("redirect:/amenityType/" + createAmenityType.getId());
 	}
 
 	@PostMapping("/addAmenity")
+	@PreAuthorize("hasAuthority('createAmenity')")
 	public ModelAndView addAmenity(@ModelAttribute Amenity amenity, BindingResult bindingResult) {
 		Amenity createAmenity = roomService.createAmenity(amenity);
 		return new ModelAndView("redirect:/amenity/" + createAmenity.getId());
 	}
 
 	@PostMapping("/addRoomType")
+	@PreAuthorize("hasAuthority('createRoomType')")
 	public ModelAndView addRoomType(@ModelAttribute RoomType roomType, BindingResult bindingResult) {
 		roomService.createRoomType(roomType);
 		return new ModelAndView("redirect:/roomType/" + roomType.getId());
 	}
 
 	@PostMapping("/addRoom")
+	@PreAuthorize("hasAuthority('createRoom')")
 	public ModelAndView addRoom(@ModelAttribute Room room, BindingResult bindingResult) {
 		roomService.createRoom(room);
 		return new ModelAndView("redirect:/room/" + room.getId());
 	}
 
 	@PostMapping("/addRoomRate")
+	@PreAuthorize("hasAuthority('createRoomRate')")
 	public ModelAndView addRoomRate(@ModelAttribute RoomRate roomRate, BindingResult bindingResult) {
 		if(bindingResult.hasErrors()) {
 			log.error(bindingResult.toString());
@@ -167,6 +179,7 @@ public class RoomController {
 	}
 
 	@RequestMapping(value = "/amenityDelete/{id}", method = RequestMethod.DELETE)
+	@PreAuthorize("hasAuthority('deleteAmenity')")
 	public ModelAndView deleteAminity(@PathVariable Optional<Integer> id) {
 		if (id.isPresent()) {
 			roomService.deleteAmenity(new Long(id.get()));
@@ -175,6 +188,7 @@ public class RoomController {
 	}
 
 	@RequestMapping(value = "/amenityTypeDelete/{id}", method = RequestMethod.DELETE)
+	@PreAuthorize("hasAuthority('deleteAmenityType')")
 	public ModelAndView deleteAminityType(@PathVariable Optional<Integer> id) {
 		if (id.isPresent()) {
 			roomService.deleteAmenityType(new Long(id.get()));
@@ -183,6 +197,7 @@ public class RoomController {
 	}
 
 	@RequestMapping(value = "/roomDelete/{id}", method = RequestMethod.DELETE)
+	@PreAuthorize("hasAuthority('deleteRoom')")
 	public ModelAndView deleteRoom(@PathVariable Optional<Integer> id) {
 		if (id.isPresent()) {
 			roomService.deleteRoom(new Long(id.get()));
@@ -191,6 +206,7 @@ public class RoomController {
 	}
 
 	@RequestMapping(value = "/roomTypeDelete/{id}", method = RequestMethod.DELETE)
+	@PreAuthorize("hasAuthority('deleteRoomType')")
 	public ModelAndView deleteRoomType(@PathVariable Optional<Integer> id) {
 		if (id.isPresent()) {
 			roomService.deleteRoomType(new Long(id.get()));
@@ -199,10 +215,12 @@ public class RoomController {
 	}
 
 	@RequestMapping(value = "/roomRateDelete/{id}", method = RequestMethod.DELETE)
+	@PreAuthorize("hasAuthority('deleteRoomRate')")
 	public ModelAndView deleteRoomRate(@PathVariable Optional<Integer> id) {
 		if (id.isPresent()) {
 			roomService.deleteRoomRate(new Long(id.get()));
 		}
+		//TODO wha thappens with all the histortical bookings that refer to this room rate?
 		return new ModelAndView("redirect:/roomRate");
 	}
 }
