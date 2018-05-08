@@ -31,6 +31,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import hotelreservation.Application;
 import hotelreservation.DateConvertor;
+import hotelreservation.model.Amenity;
+import hotelreservation.model.AmenityType;
 import hotelreservation.model.Contact;
 import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;
@@ -124,9 +126,15 @@ public class RoomControllerTest {
 		Status operational = new Status("Operational", "Room is in operation");
 		roomService.createStatus(operational);
 
+		AmenityType amenityType = new AmenityType("room amenity", "comfort");
+		roomService.createAmenityType(amenityType);
+
 		Room standardRoomOne = new Room(1, operational, roomTypeStandard, user);
 		standardRoomOne.setName("Room 1");
 		standardRoomOne.setDescription("The Best Room Description");
+//		List<Amenity> roomAmenities = new ArrayList<Amenity>();
+//		Amenity pillow = new Amenity("pillow", "pillow", amenityType);
+		standardRoomOne.setRoomAmenities(Arrays.asList(new Amenity("pillow", "pillow", amenityType)));
 		roomService.createRoom(standardRoomOne);
 
 		RoomRate roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
@@ -147,7 +155,7 @@ public class RoomControllerTest {
 		reservationOne.setRoomRates(roomRates);
 
 		try {
-			bookingService.createReservation(reservationOne);
+//			bookingService.createReservation(reservationOne);
 		} catch (Exception e) {
 			fail();
 		}
@@ -187,6 +195,7 @@ public class RoomControllerTest {
 		adminPrivileges.add(deleteAmenityType);
 		adminPrivileges.add(createAmenity);
 		adminPrivileges.add(createAmenityType);
+		adminPrivileges.add(createRoom);
 
 		managerPrivileges.add(createRoomRate);
 
@@ -236,9 +245,11 @@ public class RoomControllerTest {
 	@Test
 	@WithUserDetails("admin")
 	public void testAdminRolePermissions_allowed() throws Exception {
-//		mvc.perform(delete("/amenityDelete/1")).andExpect(status().isOk());
-//		mvc.perform(delete("/amenityTypeDelete/1")).andExpect(status().isOk());
-//		mvc.perform(delete("/roomDelete/1")).andExpect(status().isOk());
+		mvc.perform(get("/amenity/1")).andExpect(status().isOk());
+		mvc.perform(get("/amenityType/1")).andExpect(status().isOk());
+		
+		mvc.perform(get("/room/1")).andExpect(status().isOk());
+//		mvc.perform(post("/addAmenity").flashAttr("reservation", new ReservationCancellation())).andExpect(status().isOk());
 	}
 
 	@Test
