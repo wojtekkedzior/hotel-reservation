@@ -11,6 +11,7 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
@@ -196,6 +197,7 @@ public class RoomControllerTest {
 		adminPrivileges.add(createAmenity);
 		adminPrivileges.add(createAmenityType);
 		adminPrivileges.add(createRoom);
+		adminPrivileges.add(createRoomType);
 
 		managerPrivileges.add(createRoomRate);
 
@@ -249,50 +251,91 @@ public class RoomControllerTest {
 		mvc.perform(get("/amenityType/1")).andExpect(status().isOk());
 		
 		mvc.perform(get("/room/1")).andExpect(status().isOk());
-//		mvc.perform(post("/addAmenity").flashAttr("reservation", new ReservationCancellation())).andExpect(status().isOk());
+		mvc.perform(get("/roomType/1")).andExpect(status().isOk());
+		
+		mvc.perform(post("/addAmenityType").flashAttr("amenityType", new AmenityType())).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/addAmenity").flashAttr("amenity", new Amenity())).andExpect(status().is3xxRedirection());
+
+		mvc.perform(post("/addRoomType").flashAttr("roomType", new RoomType())).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/addRoom").flashAttr("room", new Room())).andExpect(status().is3xxRedirection());
+		
+		mvc.perform(delete("/amenityDelete/1")).andExpect(status().is3xxRedirection());
+		mvc.perform(delete("/amenityTypeDelete/1")).andExpect(status().is3xxRedirection());
+		
+		mvc.perform(delete("/roomDelete/1")).andExpect(status().is3xxRedirection());
+		mvc.perform(delete("/roomTypeDelete/1")).andExpect(status().is3xxRedirection());
+		
+		mvc.perform(delete("/roomRateDelete/1")).andExpect(status().is3xxRedirection());
 	}
 
 	@Test
 	@WithUserDetails("admin")
 	public void testAdminRolePermissions_forbidden() throws Exception {
-		
-//		mvc.perform(get("/realiseReservation/1")).andExpect(status().isForbidden());
-//		mvc.perform(post("/realiseReservation").flashAttr("reservation", reservationOne)).andExpect(status().isForbidden());
-//		mvc.perform(get("/cancelReservation/1")).andExpect(status().isForbidden());
-//		mvc.perform(get("/checkoutReservation/1")).andExpect(status().isForbidden());
-//		mvc.perform(post("/cancelReservation/1").flashAttr("reservation", new ReservationCancellation())).andExpect(status().isForbidden());
+		mvc.perform(get("/roomRate/1")).andExpect(status().isForbidden());
+		mvc.perform(post("/addRoomRate").flashAttr("roomRate", new RoomRate())).andExpect(status().isForbidden());
 	}
 
 	@Test
 	@WithUserDetails("manager")
 	public void testManagerRolePermissions_allowed() throws Exception {
 		mvc.perform(get("/roomRate/1")).andExpect(status().isOk());
+		mvc.perform(post("/addRoomRate").flashAttr("roomRate", new RoomRate(new Room(), Currency.CZK, 10, new Date()))).andExpect(status().is3xxRedirection());
 	}
 
 	@Test
 	@WithUserDetails("manager")
 	public void testManagerRolePermissions_forbidden() throws Exception {
-//		mvc.perform(delete("/roomRate/1")).andExpect(status().isForbidden());
+		mvc.perform(get("/amenity/1")).andExpect(status().isForbidden());
+		mvc.perform(get("/amenityType/1")).andExpect(status().isForbidden());
+		
+		mvc.perform(get("/room/1")).andExpect(status().isForbidden());
+		mvc.perform(get("/roomType/1")).andExpect(status().isForbidden());
+		
+		mvc.perform(post("/addAmenityType").flashAttr("amenityType", new AmenityType())).andExpect(status().isForbidden());
+		mvc.perform(post("/addAmenity").flashAttr("amenity", new Amenity())).andExpect(status().isForbidden());
+
+		mvc.perform(post("/addRoomType").flashAttr("roomType", new RoomType())).andExpect(status().isForbidden());
+		mvc.perform(post("/addRoom").flashAttr("room", new Room())).andExpect(status().isForbidden());
+		
+		mvc.perform(delete("/amenityDelete/1")).andExpect(status().isForbidden());
+		mvc.perform(delete("/amenityTypeDelete/1")).andExpect(status().isForbidden());
+		
+		mvc.perform(delete("/roomDelete/1")).andExpect(status().isForbidden());
+		mvc.perform(delete("/roomTypeDelete/1")).andExpect(status().isForbidden());
+		
+		mvc.perform(delete("/roomRateDelete/1")).andExpect(status().isForbidden());
 	}
 
 	@Test
 	@WithUserDetails("receptionist")
 	public void testReceptionistRolePermissions_allowed() throws Exception {
-//		mvc.perform(get("/reservation/1")).andExpect(status().isOk());
-//		mvc.perform(get("/realiseReservation/1")).andExpect(status().isOk());
-//		mvc.perform(post("/realiseReservation").flashAttr("reservation", reservationOne)).andExpect(status().is3xxRedirection());
-//		mvc.perform(get("/cancelReservation/1")).andExpect(status().isOk());
-//		mvc.perform(get("/checkoutReservation/1")).andExpect(status().isOk());
-//
-//		ReservationCancellation cancellation = new ReservationCancellation();
-//		cancellation.setReservation(reservationOne);
-//		mvc.perform(post("/cancelReservation/1").flashAttr("reservation", cancellation)).andExpect(status().is3xxRedirection());
+		//nothing here
 	}
 
 	@Test
 	@WithUserDetails("receptionist")
 	public void testReceptionistRolePermissions_forbidden() throws Exception {
-//		mvc.perform(delete("/reservationDelete/{id}", new Integer(1))).andExpect(status().isForbidden());
+		mvc.perform(get("/amenity/1")).andExpect(status().isForbidden());
+		mvc.perform(get("/amenityType/1")).andExpect(status().isForbidden());
+		
+		mvc.perform(get("/room/1")).andExpect(status().isForbidden());
+		mvc.perform(get("/roomType/1")).andExpect(status().isForbidden());
+		
+		mvc.perform(post("/addAmenityType").flashAttr("amenityType", new AmenityType())).andExpect(status().isForbidden());
+		mvc.perform(post("/addAmenity").flashAttr("amenity", new Amenity())).andExpect(status().isForbidden());
+
+		mvc.perform(post("/addRoomType").flashAttr("roomType", new RoomType())).andExpect(status().isForbidden());
+		mvc.perform(post("/addRoom").flashAttr("room", new Room())).andExpect(status().isForbidden());
+		
+		mvc.perform(post("/addRoomRate").flashAttr("roomRate", new RoomRate(new Room(), Currency.CZK, 10, new Date()))).andExpect(status().isForbidden());
+		
+		mvc.perform(delete("/amenityDelete/1")).andExpect(status().isForbidden());
+		mvc.perform(delete("/amenityTypeDelete/1")).andExpect(status().isForbidden());
+		
+		mvc.perform(delete("/roomDelete/1")).andExpect(status().isForbidden());
+		mvc.perform(delete("/roomTypeDelete/1")).andExpect(status().isForbidden());
+		
+		mvc.perform(delete("/roomRateDelete/1")).andExpect(status().isForbidden());
 	}
 
 	@Test
