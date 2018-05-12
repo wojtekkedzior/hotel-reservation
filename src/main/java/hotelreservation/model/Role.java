@@ -22,8 +22,8 @@ public class Role {
 	private String description;
 	private boolean enabled;
 
-	@ManyToMany(mappedBy = "roles")
-	private Collection<User> users;
+//	@ManyToMany(mappedBy = "roles")
+//	private Collection<User> users;
 
 	@ManyToMany
 	private Collection<Privilege> privileges;

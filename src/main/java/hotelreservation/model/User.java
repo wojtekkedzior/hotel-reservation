@@ -18,59 +18,65 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(uniqueConstraints=@UniqueConstraint(columnNames = {"userName"}, name = "uq_userName"))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "userName" }, name = "uq_userName"))
 public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	
+
 	private long id;
 
 	private String userName;
-	
+
 	private String firstName;
 	private String lastName;
-	
+
 	private String password;
 
 	private String name;
 	private boolean enabled;
-	
+
 	@OneToOne
 	private User createdBy;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdOn;
 
 	@OneToOne
 	private User disabledBy;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date disabledOn;
-	
-	@Temporal(TemporalType.TIMESTAMP) 
+
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastloggedOn;
 
-    @ManyToMany
-    private Collection<Role> roles;
-	
-	public User() {}
+	@ManyToMany
+	private Collection<Role> roles;
+
+	public User() {
+	}
 
 	public User(String usernName, String name) {
 		this.userName = usernName;
 		this.name = name;
-		
+
 		createdOn = new Date();
 		enabled = true;
 	}
-	
+
 	public User(String usernName, String name, User createdBy) {
 		this.userName = usernName;
 		this.name = name;
 		this.createdBy = createdBy;
-		
+
 		createdOn = new Date();
 		enabled = true;
+	}
+
+	@Override
+	public String toString() {
+		return "";
 	}
 
 }
