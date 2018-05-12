@@ -11,7 +11,6 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
@@ -39,7 +38,6 @@ import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;
 import hotelreservation.model.Privilege;
 import hotelreservation.model.Reservation;
-import hotelreservation.model.ReservationCancellation;
 import hotelreservation.model.Role;
 import hotelreservation.model.Room;
 import hotelreservation.model.RoomRate;

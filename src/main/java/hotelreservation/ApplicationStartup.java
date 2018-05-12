@@ -45,15 +45,15 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private Role superAdminRole;
-	private Role adminUserRole;
+	private Role adminRole;
 
-	private Role managerUserRole;
-	private Role receptionUserRole;
+	private Role managerRole;
+	private Role receptionistRole;
 
 	private User superAdmin;
 	private User admin;
 	private User manager;
-	private User receptionistOne;
+	private User receptionist;
 	private User receptionistTwo;
 
 	private Status operational;
@@ -158,6 +158,120 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		addHotelamenitites();
 		addRoomamenitites();
 	}
+	
+	private void addPrivileges() {
+		Privilege createAmenity = new Privilege("createAmenity");
+		Privilege createAmenityType = new Privilege("createAmenityType");
+		Privilege createRoom = new Privilege("createRoom");
+		Privilege createRoomType = new Privilege("createRoomType");
+		Privilege createRoomRate = new Privilege("createRoomRate");
+		Privilege deleteAmenity = new Privilege("deleteAmenity");
+		Privilege deleteAmenityType = new Privilege("deleteAmenityType");
+		Privilege deleteRoom = new Privilege("deleteRoom");
+		Privilege deleteRoomType = new Privilege("deleteRoomType");
+		Privilege deleteRoomRate = new Privilege("deleteRoomRate");
+		Privilege getReservation = new Privilege("getReservation");
+		Privilege createReservation = new Privilege("createReservation");
+		Privilege cancelReservation = new Privilege("cancelReservation");
+		Privilege realiseReservation = new Privilege("realiseReservation");
+		Privilege checkoutReservation = new Privilege("checkoutReservation");
+		Privilege deleteReservation = new Privilege("deleteReservation");
+		Privilege viewAdmin = new Privilege("viewAdmin");
+		
+		userService.createPrivilege(createAmenity);
+		userService.createPrivilege(createAmenityType);
+		userService.createPrivilege(createRoom);
+		userService.createPrivilege(createRoomType);
+		userService.createPrivilege(createRoomRate);
+		userService.createPrivilege(deleteAmenity);
+		userService.createPrivilege(deleteAmenityType);
+		userService.createPrivilege(deleteRoom);
+		userService.createPrivilege(deleteRoomType);
+		userService.createPrivilege(deleteRoomRate);
+		userService.createPrivilege(getReservation);
+		userService.createPrivilege(createReservation);
+		userService.createPrivilege(cancelReservation);
+		userService.createPrivilege(realiseReservation);
+		userService.createPrivilege(checkoutReservation);
+		userService.createPrivilege(deleteReservation);
+		userService.createPrivilege(viewAdmin);
+
+		Collection<Privilege> adminPrivileges = new ArrayList<Privilege>();
+		Collection<Privilege> managerPrivileges = new ArrayList<Privilege>();
+		Collection<Privilege> receptionistPrivileges = new ArrayList<Privilege>();
+
+		adminPrivileges.add(deleteRoom);
+		adminPrivileges.add(deleteRoomType);
+		adminPrivileges.add(deleteAmenity);
+		adminPrivileges.add(deleteRoomRate);
+		adminPrivileges.add(deleteAmenityType);
+		adminPrivileges.add(createAmenity);
+		adminPrivileges.add(createAmenityType);
+		adminPrivileges.add(createRoom);
+		adminPrivileges.add(createRoomType);
+		adminPrivileges.add(deleteReservation);
+		adminPrivileges.add(viewAdmin);
+
+		
+		managerPrivileges.add(getReservation);
+		managerPrivileges.add(createReservation);
+		managerPrivileges.add(cancelReservation);
+		managerPrivileges.add(realiseReservation);
+		managerPrivileges.add(cancelReservation);
+		managerPrivileges.add(checkoutReservation);
+		managerPrivileges.add(viewAdmin);
+		managerPrivileges.add(createRoomRate);
+
+		
+		receptionistPrivileges.add(getReservation);
+		receptionistPrivileges.add(createReservation);
+		receptionistPrivileges.add(cancelReservation);
+		receptionistPrivileges.add(realiseReservation);
+		receptionistPrivileges.add(cancelReservation);
+		receptionistPrivileges.add(checkoutReservation);
+		
+		
+		adminRole = new Role("admin", "admin desc", true);
+		managerRole = new Role("manager", "manager desc", true);
+		receptionistRole = new Role("receptionist", "receptionist", true);
+
+		adminRole.setPrivileges(adminPrivileges);
+		managerRole.setPrivileges(managerPrivileges);
+		receptionistRole.setPrivileges(receptionistPrivileges);
+
+		userService.createRole(adminRole);
+		userService.createRole(managerRole);
+		userService.createRole(receptionistRole);
+
+		manager = new User();
+		manager.setPassword("password");
+		manager.setFirstName("Manager");
+		manager.setLastName("Manager");
+		manager.setUserName("manager");
+		manager.setEnabled(true);
+		manager.setRoles(Arrays.asList(managerRole));
+		userService.createUser(manager);
+
+		admin = new User();
+		admin.setFirstName("admin");
+		admin.setLastName("admin");
+		admin.setUserName("admin");
+		// user.setPassword(passwordEncoder.encode("test")); //TODO use encoder
+		admin.setPassword("password");
+		admin.setRoles(Arrays.asList(adminRole));
+		admin.setEnabled(true);
+		userService.createUser(admin);
+
+		receptionist = new User();
+		receptionist.setFirstName("receptionist");
+		receptionist.setLastName("receptionist");
+		receptionist.setUserName("receptionist");
+		// user.setPassword(passwordEncoder.encode("test")); //TODO use encoder
+		receptionist.setPassword("password");
+		receptionist.setRoles(Arrays.asList(receptionistRole));
+		receptionist.setEnabled(true);
+		userService.createUser(receptionist);
+	}
 
 	private void addRoomamenitites() {
 		pillow = new Amenity("pillow", "pillow", amenityTypeRoomBasic);
@@ -209,7 +323,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		roomService.createAmenityType(amenityTypeHotel);
 	}
 	
-	private void addPrivileges() {
+	private void addPrivileges2() {
 		// TODO Auto-generated method stub
 		Privilege realiseReservationPrivilege = createPrivilegeIfNotFound("REALISE_RESERVATION");
 		Privilege cancelReservationPrivilege = createPrivilegeIfNotFound("CANCEL_RESERVATION");
@@ -217,52 +331,52 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		
 		superAdminRole = new Role("superAdmin", "superAdmin desc", true);
 
-		adminUserRole = new Role("admin", "admin desc", true); 
-		adminUserRole.setPrivileges(Arrays.asList(realiseReservationPrivilege,  cancelReservationPrivilege));
+//		adminUserRole = new Role("admin", "admin desc", true); 
+//		adminUserRole.setPrivileges(Arrays.asList(realiseReservationPrivilege,  cancelReservationPrivilege));
 
-		managerUserRole = new Role("manager", "manager desc", true);
-		managerUserRole.setPrivileges(Arrays.asList(realiseReservationPrivilege,  cancelReservationPrivilege));
+		managerRole = new Role("manager", "manager desc", true);
+		managerRole.setPrivileges(Arrays.asList(realiseReservationPrivilege,  cancelReservationPrivilege));
 		
-		receptionUserRole = new Role("reception", "reception desc", true);
-		receptionUserRole.setPrivileges(Arrays.asList(realiseReservationPrivilege,  cancelReservationPrivilege));
-
-		
-		userService.createRole(superAdminRole);
-		userService.createRole(adminUserRole);
-
-		userService.createRole(managerUserRole);
-		userService.createRole(receptionUserRole);
-		
-		
-		
-		// SuperAdmin will be added by a script in the future
-		superAdmin = new User("superadmin", "Mr Super Admin");
-		superAdmin.setRoles(Arrays.asList(superAdminRole));
-
-		admin = new User("admin", "Mr Admin");
-		admin.setRoles(Arrays.asList(adminUserRole));
-		
-		manager = new User("manager", "Mr Manager");
-		manager.setRoles(Arrays.asList(managerUserRole));
-		
-		receptionistOne = new User("receptionistOne", "Mr Receptionist One");
-		receptionistOne.setRoles(Arrays.asList(receptionUserRole));
-		
-		receptionistTwo = new User("receptionistTwo", "Mr Receptionist Two");
-		receptionistTwo.setRoles(Arrays.asList(receptionUserRole));
+		receptionistRole = new Role("reception", "reception desc", true);
+		receptionistRole.setPrivileges(Arrays.asList(realiseReservationPrivilege,  cancelReservationPrivilege));
 
 		
-		admin.setCreatedBy(superAdmin);
-		manager.setCreatedBy(admin);
-		receptionistOne.setCreatedBy(admin);
-		receptionistTwo.setCreatedBy(admin);
+//		userService.createRole(superAdminRole);
+//		userService.createRole(adminUserRole);
 
-		userService.createUser(superAdmin);
-		userService.createUser(admin, superAdminRole.getId());
-		userService.createUser(manager, adminUserRole.getId());
+//		userService.createRole(managerRole);
+//		userService.createRole(receptionistRole);
+		
+		
+		
+//		// SuperAdmin will be added by a script in the future
+//		superAdmin = new User("superadmin", "Mr Super Admin");
+//		superAdmin.setRoles(Arrays.asList(superAdminRole));
+//
+//		admin = new User("admin", "Mr Admin");
+//		admin.setRoles(Arrays.asList(adminUserRole));
+//		
+//		manager = new User("manager", "Mr Manager");
+//		manager.setRoles(Arrays.asList(managerRole));
+//		
+//		receptionistOne = new User("receptionistOne", "Mr Receptionist One");
+//		receptionistOne.setRoles(Arrays.asList(receptionistRole));
+//		
+//		receptionistTwo = new User("receptionistTwo", "Mr Receptionist Two");
+//		receptionistTwo.setRoles(Arrays.asList(receptionistRole));
+//
+//		
+//		admin.setCreatedBy(superAdmin);
+//		manager.setCreatedBy(admin);
+//		receptionistOne.setCreatedBy(admin);
+//		receptionistTwo.setCreatedBy(admin);
 
-		userService.createUser(receptionistOne, managerUserRole.getId());
-		userService.createUser(receptionistTwo, managerUserRole.getId());
+//		userService.createUser(superAdmin);
+//		userService.createUser(admin, superAdminRole.getId());
+//		userService.createUser(manager, adminUserRole.getId());
+//
+//		userService.createUser(receptionistOne, managerUserRole.getId());
+//		userService.createUser(receptionistTwo, managerUserRole.getId());
 		
 		
 		
@@ -312,41 +426,41 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 //		return role;
 //	}
 
-	private void addRoles() {
-		superAdminRole = new Role("superAdmin", "superAdmin desc", true);
-		adminUserRole = new Role("admin2", "admin desc", true); //TODO needs better naming
+//	private void addRoles() {
+//		superAdminRole = new Role("superAdmin", "superAdmin desc", true);
+//		adminUserRole = new Role("admin2", "admin desc", true); //TODO needs better naming
+//
+//		managerRole = new Role("manager", "manager desc", true);
+//		receptionistRole = new Role("reception", "reception desc", true);
+//
+//		userService.createRole(superAdminRole);
+//		userService.createRole(adminUserRole);
+//
+//		userService.createRole(managerRole);
+//		userService.createRole(receptionistRole);
+//	}
 
-		managerUserRole = new Role("manager", "manager desc", true);
-		receptionUserRole = new Role("reception", "reception desc", true);
-
-		userService.createRole(superAdminRole);
-		userService.createRole(adminUserRole);
-
-		userService.createRole(managerUserRole);
-		userService.createRole(receptionUserRole);
-	}
-
-	private void addUsers() {
-		// SuperAdmin will be added by a script in the future
-		superAdmin = new User("superadmin", "Mr Super Admin");
-
-		admin = new User("admin", "Mr Admin");
-		manager = new User("manager", "Mr Manager");
-		receptionistOne = new User("receptionistOne", "Mr Receptionist One");
-		receptionistTwo = new User("receptionistTwo", "Mr Receptionist Two");
-
-		admin.setCreatedBy(superAdmin);
-		manager.setCreatedBy(admin);
-		receptionistOne.setCreatedBy(admin);
-		receptionistTwo.setCreatedBy(admin);
-
-		userService.createUser(superAdmin);
-		userService.createUser(admin, superAdminRole.getId());
-		userService.createUser(manager, adminUserRole.getId());
-
-		userService.createUser(receptionistOne, managerUserRole.getId());
-		userService.createUser(receptionistTwo, managerUserRole.getId());
-	}
+//	private void addUsers() {
+//		// SuperAdmin will be added by a script in the future
+//		superAdmin = new User("superadmin", "Mr Super Admin");
+//
+//		admin = new User("admin", "Mr Admin");
+//		manager = new User("manager", "Mr Manager");
+//		receptionistOne = new User("receptionistOne", "Mr Receptionist One");
+//		receptionistTwo = new User("receptionistTwo", "Mr Receptionist Two");
+//
+//		admin.setCreatedBy(superAdmin);
+//		manager.setCreatedBy(admin);
+//		receptionistOne.setCreatedBy(admin);
+//		receptionistTwo.setCreatedBy(admin);
+//
+//		userService.createUser(superAdmin);
+//		userService.createUser(admin, superAdminRole.getId());
+//		userService.createUser(manager, adminUserRole.getId());
+//
+//		userService.createUser(receptionistOne, managerRole.getId());
+//		userService.createUser(receptionistTwo, managerRole.getId());
+//	}
 
 	private void addStatuses() {
 		operational = new Status("Operational", "Room is in operation");

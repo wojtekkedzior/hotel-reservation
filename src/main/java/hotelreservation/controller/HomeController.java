@@ -16,7 +16,7 @@ public class HomeController {
 
 	//TODO move to new controller which will handle security and other bits and pieces
 	@RequestMapping("/")
-	@PreAuthorize("hasAnyRole('receptionist', 'manager', 'admin')")
+//	@PreAuthorize("hasAnyRole('receptionist', 'manager', 'admin')")
 	public ModelAndView redirectIndexToHome(HttpServletRequest request) {
 	     if (request.isUserInRole("ROLE_ADMIN")) {
 //	            return "redirect:/events/";
