@@ -236,19 +236,19 @@ public class AdminControllerTest {
 	@Test
 	@WithUserDetails("manager")
 	public void testAdminCanAccessAdmin() throws Exception {
-		mvc.perform(get("/admin")).andExpect(status().is3xxRedirection());
+		mvc.perform(get("/admin")).andExpect(status().isOk());
 	}
 	
 	@Test
 	@WithUserDetails("manager")
 	public void testManagerCanAccessAdmin() throws Exception {
-		mvc.perform(get("/admin")).andExpect(status().is3xxRedirection());
+		mvc.perform(get("/admin")).andExpect(status().isOk());
 	}
 	
 	@Test
 	@WithUserDetails("manager")
 	public void testReceptionistForbiddenToAccessAdmin() throws Exception {
-		mvc.perform(get("/admin")).andExpect(status().is3xxRedirection());
+		mvc.perform(get("/admin")).andExpect(status().isOk());
 	}
 	
 	@Test

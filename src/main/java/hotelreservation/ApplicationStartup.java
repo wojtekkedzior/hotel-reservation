@@ -9,8 +9,6 @@ import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +24,12 @@ import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;
 import hotelreservation.model.Privilege;
 import hotelreservation.model.Reservation;
+import hotelreservation.model.Role;
 import hotelreservation.model.Room;
 import hotelreservation.model.RoomRate;
 import hotelreservation.model.RoomType;
 import hotelreservation.model.Status;
 import hotelreservation.model.User;
-import hotelreservation.model.Role;
 import hotelreservation.model.enums.Currency;
 import hotelreservation.model.enums.IdType;
 import hotelreservation.model.enums.ReservationStatus;
@@ -44,17 +42,14 @@ import hotelreservation.service.UserService;
 public class ApplicationStartup implements ApplicationListener<ApplicationReadyEvent> {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private Role superAdminRole;
 	private Role adminRole;
 
 	private Role managerRole;
 	private Role receptionistRole;
 
-	private User superAdmin;
 	private User admin;
 	private User manager;
 	private User receptionist;
-	private User receptionistTwo;
 
 	private Status operational;
 	private Status underMaintenance;
@@ -176,6 +171,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		Privilege realiseReservation = new Privilege("realiseReservation");
 		Privilege checkoutReservation = new Privilege("checkoutReservation");
 		Privilege deleteReservation = new Privilege("deleteReservation");
+		Privilege createUser = new Privilege("createUser");
+		Privilege deleteUser = new Privilege("deleteUser");
 		Privilege viewAdmin = new Privilege("viewAdmin");
 		
 		userService.createPrivilege(createAmenity);
@@ -195,6 +192,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		userService.createPrivilege(checkoutReservation);
 		userService.createPrivilege(deleteReservation);
 		userService.createPrivilege(viewAdmin);
+		userService.createPrivilege(createUser);
+		userService.createPrivilege(deleteUser);
 
 		Collection<Privilege> adminPrivileges = new ArrayList<Privilege>();
 		Collection<Privilege> managerPrivileges = new ArrayList<Privilege>();
@@ -211,6 +210,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		adminPrivileges.add(createRoomType);
 		adminPrivileges.add(deleteReservation);
 		adminPrivileges.add(viewAdmin);
+		adminPrivileges.add(createUser);
+		adminPrivileges.add(deleteUser);
 
 		
 		managerPrivileges.add(getReservation);
@@ -221,6 +222,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		managerPrivileges.add(checkoutReservation);
 		managerPrivileges.add(viewAdmin);
 		managerPrivileges.add(createRoomRate);
+		managerPrivileges.add(createUser);
 
 		
 		receptionistPrivileges.add(getReservation);
@@ -329,8 +331,6 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		Privilege cancelReservationPrivilege = createPrivilegeIfNotFound("CANCEL_RESERVATION");
 		
 		
-		superAdminRole = new Role("superAdmin", "superAdmin desc", true);
-
 //		adminUserRole = new Role("admin", "admin desc", true); 
 //		adminUserRole.setPrivileges(Arrays.asList(realiseReservationPrivilege,  cancelReservationPrivilege));
 

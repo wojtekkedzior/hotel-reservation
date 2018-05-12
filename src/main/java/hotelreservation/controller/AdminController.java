@@ -37,6 +37,7 @@ public class AdminController {
 		model.addAttribute("reservationsStartingToday", findByStartDate);
 		
 		log.info("admin ready");
-		return "redirect:/admin";
+		return "adminOverview";
+//		return "redirect:/admin";
 	}
 }
