@@ -32,6 +32,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     
     @Bean
     public TemplateEngine templateEngine() {
+    	if(templateEngine == null) { //ugly got for unit tests
+    		return null;
+    	}
 		templateEngine.addDialect(new SpringSecurityDialect());
 		return templateEngine;
     }
