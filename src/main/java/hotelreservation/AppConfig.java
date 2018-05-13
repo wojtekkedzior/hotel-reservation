@@ -23,15 +23,27 @@ public class AppConfig extends WebSecurityConfigurerAdapter {
 //          .formLogin();
       
       http
-      .authorizeRequests()
-//          .antMatchers("/**").hasAnyRole("ADMIN", "MANAGER", "RECEPTIONIST")
-          .anyRequest().authenticated()
-          .and()
+//      .authorizeRequests()
+////          .antMatchers("/**").hasAnyRole("ADMIN", "MANAGER", "RECEPTIONIST")
+//          .anyRequest().authenticated()
+//          .and()
       .formLogin()
-          .permitAll()
+      .loginPage("/login.html")
+      .failureUrl("/login-error.html")
+//          .permitAll()
           .and()
       .logout()
-          .permitAll();
+      .logoutSuccessUrl("/index.html");
+//          .permitAll();
+      
+//      
+//      http
+//      .formLogin()
+//      .loginPage("/login.html")
+//      .failureUrl("/login-error.html")
+//    .and()
+//      .logout()
+//      .logoutSuccessUrl("/index.html");
       
       http.csrf().disable();
   }
