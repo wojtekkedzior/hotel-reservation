@@ -1,10 +1,18 @@
 package hotelreservation;
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 
 
 
@@ -29,7 +37,7 @@ public class AppConfig extends WebSecurityConfigurerAdapter {
 //          .and()
       .formLogin()
       .loginPage("/login.html")
-      .failureUrl("/login-error.html")
+      .failureUrl("/error.html")
 //          .permitAll()
           .and()
       .logout()
@@ -46,5 +54,24 @@ public class AppConfig extends WebSecurityConfigurerAdapter {
 //      .logoutSuccessUrl("/index.html");
       
       http.csrf().disable();
+      
+      http.exceptionHandling().accessDeniedHandler(new AccessDeniedHandlerImpl() {
+          @Override
+          public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+              super.handle(request, response, accessDeniedException);
+
+              System.err.println(request.getRemoteUser());
+              System.err.println(accessDeniedException);
+              
+            //This is the correct place to check users getting denied Access Excetions 
+          }
+
+          @Override
+          public void setErrorPage(String errorPage) {
+              super.setErrorPage(errorPage);
+
+              System.err.println();
+          }
+      });
   }
 }
