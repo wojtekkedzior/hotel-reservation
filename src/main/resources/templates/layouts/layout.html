@@ -22,7 +22,7 @@
 						<li th:classappend="${module == 'reservation' ? 'active' : ''}"><a href="#" th:href="@{/reservationDashBoard}">Reservation</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
-						<li><a href="/signin" th:href="@{/signin}"> <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;Sign in
+						<li  th:if="not ${#authorization.expression('isAuthenticated()')}"><a href="/signin" th:href="@{/signin}"> <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;Sign in
 						</a></li>
 						<li th:if="${#authorization.expression('isAuthenticated()')}"><a href="/logout" th:href="@{#}" onclick="$('#form').submit();"> <span
 								class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout
