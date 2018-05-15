@@ -50,30 +50,6 @@ public class UsersController {
 		return "user";
 	}
 	
-//	@RequestMapping(value = { "/role", "/role/{id}" })
-//	@PreAuthorize("hasAuthority('createRole')")
-//	public String getRoles(Model model, @PathVariable Optional<Integer> id) {
-//
-//		if(!id.isPresent()) {
-//			model.addAttribute("role", new Role());
-//		} else {
-//			Role role = userService.getRoleById(id);
-//			if(role == null) {
-//				model.addAttribute("user", new User());
-//			} else {
-//				model.addAttribute("role", role);
-//			}
-//		}
-//		
-//		model.addAttribute("user", new User());
-//		
-//		model.addAttribute("users", userService.getAllUsers());
-//		model.addAttribute("roles", userService.getAllRoles());
-//
-//		return "user";
-//	}
-	
-	
 	/*
 	 * ---------------------------------------------------------------------------------------------------------------------------
 	 */
@@ -87,14 +63,6 @@ public class UsersController {
 		return new ModelAndView("redirect:/user/" + user.getId());
 	}
 
-//	@PostMapping("/addRole")
-//	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERADMIN')")  
-//	public ModelAndView addRole(@ModelAttribute Role role, BindingResult bindingResult) {
-//		//check that ID == null 
-//		userService.createRole(role);
-//		return new ModelAndView("redirect:/userType/" + role.getId());
-//	}
-	
 	/*
 	 * ---------------------------------------------------------------------------------------------------------------------------
 	 */
@@ -107,13 +75,4 @@ public class UsersController {
 		} 
 		return new ModelAndView("redirect:/user");
 	}
-	
-//	@RequestMapping(value="/roleDelete/{id}", method=RequestMethod.DELETE)
-//	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERADMIN')")  
-//	public ModelAndView deleteRole(@PathVariable Optional<Integer> id) {
-//		if(id.isPresent()) {
-//			userService.deleteRole(new Long(id.get()));
-//		} 
-//		return new ModelAndView("redirect:/user");
-//	}
 }

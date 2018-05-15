@@ -73,10 +73,4 @@ public class User {
 		createdOn = new Date();
 		enabled = true;
 	}
-
-	@Override
-	public String toString() {
-		return "";
-	}
-
 }

@@ -12,35 +12,19 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class HomeController {
-	
+
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	//TODO move to new controller which will handle security and other bits and pieces
-	@RequestMapping("/")
-//	@PreAuthorize("hasAnyRole('receptionist', 'manager', 'admin')")
+	@RequestMapping("/") 
+	//TODO this needs to be secured
 	public ModelAndView redirectIndexToHome(HttpServletRequest request) {
-	     if (request.isUserInRole("ROLE_ADMIN")) {
-//	            return "redirect:/events/";
-	        }
-//	        return "redirect:/"; 
-	        
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("redirect:/reservationDashBoard");
 		return modelAndView;
 	}
-	
-	
-	  // Login form
-	  @RequestMapping("/login")
-	  public String login() {
-	    return "login";
-	  }
 
-	  // Login form with error
-	  @RequestMapping("/login-error.html")
-	  public String loginError(Model model) {
-	    model.addAttribute("loginError", true);
-	    return "login.html";
-	  }
-	
+	@RequestMapping("/login")
+	public String login() {
+		return "login";
+	}
 }

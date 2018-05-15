@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
@@ -33,7 +32,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     
     @Bean
     public TemplateEngine templateEngine() {
-    	if(templateEngine == null) { //ugly got for unit tests
+    	if(templateEngine == null) { //ugly - for unit tests - templateEngine is not Autowired in tests for some reason
     		return null;
     	}
 		templateEngine.addDialect(new SpringSecurityDialect());

@@ -13,18 +13,26 @@ public class DateConvertor {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	public Date asDate(LocalDate localDate) {
-		return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+		Date date = Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+		log.debug("converted localDate: " + localDate + " to: " + date);
+		return date;
 	}
 
 	public Date asDate(LocalDateTime localDateTime) {
-		return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+		Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+		log.debug("converted localDate: " + localDateTime + " to: " + date);
+		return date;
 	}
 
 	public LocalDate asLocalDate(Date date) {
-		return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+		LocalDate d = Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+		log.debug("converted localDate: " + d + " to: " + date);
+		return d;
 	}
 
 	public LocalDateTime asLocalDateTime(Date date) {
-		return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+		LocalDateTime d = Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+		log.debug("converted localDate: " + d + " to: " + date);
+		return d;
 	}
 }

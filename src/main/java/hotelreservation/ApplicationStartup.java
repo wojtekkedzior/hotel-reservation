@@ -127,10 +127,9 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 
 	@Override
 	public void onApplicationEvent(ApplicationReadyEvent event) {
+		log.debug("loading test data - start");
+		
 		addPrivileges();
-//		addRoles();
-//		addUsers();
-
 		addStatuses();
 
 		addAmenityTypes();
@@ -147,6 +146,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		addReservation();
 		addReservations(6);
 		createMultiRoomReservation();
+		
+		log.debug("loading test data - end");
 	}
 
 	private void addamenities() {
@@ -212,7 +213,6 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		adminPrivileges.add(viewAdmin);
 		adminPrivileges.add(createUser);
 		adminPrivileges.add(deleteUser);
-
 		
 		managerPrivileges.add(getReservation);
 		managerPrivileges.add(createReservation);
@@ -223,7 +223,6 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		managerPrivileges.add(viewAdmin);
 		managerPrivileges.add(createRoomRate);
 		managerPrivileges.add(createUser);
-
 		
 		receptionistPrivileges.add(getReservation);
 		receptionistPrivileges.add(createReservation);
@@ -231,7 +230,6 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		receptionistPrivileges.add(realiseReservation);
 		receptionistPrivileges.add(cancelReservation);
 		receptionistPrivileges.add(checkoutReservation);
-		
 		
 		adminRole = new Role("admin", "admin desc", true);
 		managerRole = new Role("manager", "manager desc", true);
@@ -325,142 +323,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		roomService.createAmenityType(amenityTypeHotel);
 	}
 	
-	private void addPrivileges2() {
-		// TODO Auto-generated method stub
-		Privilege realiseReservationPrivilege = createPrivilegeIfNotFound("REALISE_RESERVATION");
-		Privilege cancelReservationPrivilege = createPrivilegeIfNotFound("CANCEL_RESERVATION");
-		
-		
-//		adminUserRole = new Role("admin", "admin desc", true); 
-//		adminUserRole.setPrivileges(Arrays.asList(realiseReservationPrivilege,  cancelReservationPrivilege));
-
-		managerRole = new Role("manager", "manager desc", true);
-		managerRole.setPrivileges(Arrays.asList(realiseReservationPrivilege,  cancelReservationPrivilege));
-		
-		receptionistRole = new Role("reception", "reception desc", true);
-		receptionistRole.setPrivileges(Arrays.asList(realiseReservationPrivilege,  cancelReservationPrivilege));
-
-		
-//		userService.createRole(superAdminRole);
-//		userService.createRole(adminUserRole);
-
-//		userService.createRole(managerRole);
-//		userService.createRole(receptionistRole);
-		
-		
-		
-//		// SuperAdmin will be added by a script in the future
-//		superAdmin = new User("superadmin", "Mr Super Admin");
-//		superAdmin.setRoles(Arrays.asList(superAdminRole));
-//
-//		admin = new User("admin", "Mr Admin");
-//		admin.setRoles(Arrays.asList(adminUserRole));
-//		
-//		manager = new User("manager", "Mr Manager");
-//		manager.setRoles(Arrays.asList(managerRole));
-//		
-//		receptionistOne = new User("receptionistOne", "Mr Receptionist One");
-//		receptionistOne.setRoles(Arrays.asList(receptionistRole));
-//		
-//		receptionistTwo = new User("receptionistTwo", "Mr Receptionist Two");
-//		receptionistTwo.setRoles(Arrays.asList(receptionistRole));
-//
-//		
-//		admin.setCreatedBy(superAdmin);
-//		manager.setCreatedBy(admin);
-//		receptionistOne.setCreatedBy(admin);
-//		receptionistTwo.setCreatedBy(admin);
-
-//		userService.createUser(superAdmin);
-//		userService.createUser(admin, superAdminRole.getId());
-//		userService.createUser(manager, adminUserRole.getId());
-//
-//		userService.createUser(receptionistOne, managerUserRole.getId());
-//		userService.createUser(receptionistTwo, managerUserRole.getId());
-		
-		
-		
-		
-		
-		
-//		List<Privilege> adminPrivileges = Arrays.asList(readPrivilege, writePrivilege);
-//		createRoleIfNotFound("ROLE_SUPERADMIN", adminPrivileges);
-//		createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
-//		
-//		createRoleIfNotFound("ROLE_MANAGER", adminPrivileges);
-//		createRoleIfNotFound("ROLE_RECEPTIONIST", Arrays.asList(readPrivilege));
-//
-////		Role adminRole = roleRepo.findByName("ROLE_ADMIN");
-//		User user = new User();
-//		user.setFirstName("Test");
-//		user.setLastName("Test");
-//		user.setUserName("test");
-//		// user.setPassword(passwordEncoder.encode("test")); //TODO use encoder
-//		user.setPassword("test");
-//		user.setRoles(Arrays.asList(adminRole));
-//		user.setEnabled(true);
-////		userRepository.save(user);
-//		
-		
-		
-	}
 	
-	private Privilege createPrivilegeIfNotFound(String name) {
-
-		Privilege privilege = userService.getPrivilegeByName(name);
-		if (privilege == null) {
-			privilege = new Privilege(name);
-			userService.createPrivilege(privilege);
-		}
-		return privilege;
-	}
-
-//	private Role createRoleIfNotFound(String name, Collection<Privilege> privileges) {
-//
-//		Role role = userService.getRoleByName(name);
-//		if (role == null) {
-//			role = new Role(name, "ada", true);
-//			role.setPrivileges(privileges);
-//			userService.createRole(role);
-//		}
-//		return role;
-//	}
-
-//	private void addRoles() {
-//		superAdminRole = new Role("superAdmin", "superAdmin desc", true);
-//		adminUserRole = new Role("admin2", "admin desc", true); //TODO needs better naming
-//
-//		managerRole = new Role("manager", "manager desc", true);
-//		receptionistRole = new Role("reception", "reception desc", true);
-//
-//		userService.createRole(superAdminRole);
-//		userService.createRole(adminUserRole);
-//
-//		userService.createRole(managerRole);
-//		userService.createRole(receptionistRole);
-//	}
-
-//	private void addUsers() {
-//		// SuperAdmin will be added by a script in the future
-//		superAdmin = new User("superadmin", "Mr Super Admin");
-//
-//		admin = new User("admin", "Mr Admin");
-//		manager = new User("manager", "Mr Manager");
-//		receptionistOne = new User("receptionistOne", "Mr Receptionist One");
-//		receptionistTwo = new User("receptionistTwo", "Mr Receptionist Two");
-//
-//		admin.setCreatedBy(superAdmin);
-//		manager.setCreatedBy(admin);
-//		receptionistOne.setCreatedBy(admin);
-//		receptionistTwo.setCreatedBy(admin);
-//
-//		userService.createUser(superAdmin);
-//		userService.createUser(admin, superAdminRole.getId());
-//		userService.createUser(manager, adminUserRole.getId());
-//
-//		userService.createUser(receptionistOne, managerRole.getId());
-//		userService.createUser(receptionistTwo, managerRole.getId());
-//	}
 
 	private void addStatuses() {
 		operational = new Status("Operational", "Room is in operation");
@@ -660,7 +523,6 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		Reservation reservation = bookingService.getReservation(3);
 		reservation.setReservationStatus(ReservationStatus.InProgress);
 		bookingService.saveReservation(reservation);
-		
 	}
 	
 	private void createMultiRoomReservation () {

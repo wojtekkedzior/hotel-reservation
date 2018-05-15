@@ -51,14 +51,6 @@ public class RoomRate {
 		this.value = value;
 		this.day = day;
 	}
-	
-	//getting the room in the generated toString causes a loop because the room has a user, who has roles who has users etc
-	@Override
-	public String toString() {
-		return "RoomRate [id=" + id + ", description=" + description + ", room=" + room.getId() + ", currency=" + currency + ", value=" + value + ", day=" + day + "]";
-	}
-	
-	
 	 
 	//TODO implement toString() and hash() and debug why in the addReseration.html the id has to be the value and the value be the id.  
 	//The idea is that either toString() or hash() are not returning the correct object based on the value, which after all is very repetative.

@@ -1,7 +1,5 @@
 package hotelreservation;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -15,8 +13,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @ComponentScan({ "hotelreservation" })
 public class Application extends SpringBootServletInitializer {
 	
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
-
 	public static void main(final String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
