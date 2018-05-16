@@ -13,7 +13,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MyAccessDeniedHandler implements AccessDeniedHandler {
+public class HotelReservationAccessDeniedHandler implements AccessDeniedHandler {
 	
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 

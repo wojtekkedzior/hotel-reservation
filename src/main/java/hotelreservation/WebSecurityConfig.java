@@ -10,10 +10,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class AppConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
-	private MyAccessDeniedHandler accessDeniedHandler;
+	private HotelReservationAccessDeniedHandler accessDeniedHandler;
 
 	@Override
   protected void configure(HttpSecurity http) throws Exception {

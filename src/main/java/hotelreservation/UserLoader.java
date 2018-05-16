@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Profile("dev")
-public class InitialDataLoader implements ApplicationListener<ContextRefreshedEvent> {
+public class UserLoader implements ApplicationListener<ContextRefreshedEvent> {
 
 	// Rename this class to UserLoader and make it so that it just loads the users as once the app is running we don't want to override all the users
 
