@@ -1,15 +1,6 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layouts/layout">
 <body>
-	<div layout:fragment="side_menu" class="first">
-		<p>
-			<a th:href="@{/dashboard}">Dashboard</a>
-		</p>
-
-		<p>
-			<a th:href="@{/reservation}">New Reservation</a>
-		</p>
-	</div>
-
 	<div layout:fragment="content">
 				<p>
 				Total: <input th:value="${total}" type="number" readonly="readonly" /> Currency : <input th:value="${currency}" type="text" readonly="readonly" />
@@ -26,7 +17,6 @@
 				<p>Bar usage: </p>
 				<p>any other extras?</p>
 				<p>payment being accepted by: </p>
-				
 				
 				<p>
 					<!-- hidden field to make sure the ID gets passed back to the controller when submit is called. -->

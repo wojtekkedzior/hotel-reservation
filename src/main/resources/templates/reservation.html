@@ -1,5 +1,5 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layouts/layout">
-
 
 <head>
 <script th:inline="javascript">
@@ -33,20 +33,7 @@
 </script>
 </head>
 
-
-
 <body>
-
-	<div layout:fragment="side_menu" class="first">
-		<p>
-			<a th:href="@{/dashboard}">Dashboard</a>
-		</p>
-
-		<p>
-			<a th:href="@{/reservation}">New Reservation</a>
-		</p>
-	</div>
-
 	<div layout:fragment="content">
 		<div class="column">
 
@@ -84,7 +71,7 @@
 				<p>
 					<!-- hidden field to make sure the ID gets passed back to the controller when submit is called. -->
 					<input type="number" th:field="${reservation.id}" hidden="true" /> <input type="date" th:field="${startDate}" th:value="2008-03-09" hidden="true" />
-					Guest First Name: <input type="text" th:field="${reservation.mainGuest.firstName}" required="required"/> Guest Last Name: <input type="text"
+					Guest First Name: <input type="text" th:field="${reservation.mainGuest.firstName}" required="required" /> Guest Last Name: <input type="text"
 						th:field="${reservation.mainGuest.lastName}" required="required" />
 				</p>
 
