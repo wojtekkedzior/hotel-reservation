@@ -23,14 +23,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //          .anyRequest().authenticated()
 //          .and()
       .formLogin()
+      .defaultSuccessUrl("/reservationDashBoard", true)
       .loginPage("/login.html")
       .failureUrl("/error.html")
-          .and()
+   .and()
       .logout()
       .logoutSuccessUrl("/index.html")
-      .and()
-      	.exceptionHandling().accessDeniedHandler(accessDeniedHandler)
-      .and()
-      	.csrf().disable();
+   .and()
+      .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+   .and()
+      .csrf().disable();
   }
+	
+
 }
