@@ -3,6 +3,7 @@ package hotelservation.controller;
 import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -251,5 +252,13 @@ public class HomeControllerTest {
 	public void testInvalidUserIsForbidden() throws Exception {
 		mvc.perform(get("/")).andExpect(status().is3xxRedirection());
 	}
+	
+	@Test
+	@WithMockUser(username="nonExistentUser", roles = "receptionist")
+	public void testLogin() throws Exception {
+		mvc.perform(get("/signin")).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/login"));
+	}
+	
+	
 
 }
