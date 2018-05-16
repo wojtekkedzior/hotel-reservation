@@ -2,6 +2,8 @@ package hotelservation.controller;
 
 import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
@@ -255,6 +257,12 @@ public class AdminControllerTest {
 	@WithMockUser(username="nonExistentUser", roles = "receptionist")
 	public void testInvalidUserIsForbidden() throws Exception {
 		mvc.perform(get("/admin")).andExpect(status().isForbidden());
+	}
+	
+	@Test
+	@WithUserDetails("manager")
+	public void testLogout() throws Exception {
+		mvc.perform(post("/logout")).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/login"));
 	}
 
 }

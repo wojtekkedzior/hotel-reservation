@@ -293,7 +293,7 @@ public class ReservationController {
 
 		bookingService.cancelReservation(resFromDB, reservationCancellation);
 
-		return new ModelAndView("redirect:/reservationDashBoard");
+		return new ModelAndView("redirect:/dashboard");
 	}
 
 	@PostMapping("/checkoutReservation/{reservationID}")
@@ -307,6 +307,6 @@ public class ReservationController {
 
 		bookingService.checkoutReservation(resFromDB, reservationCheckout);
 
-		return new ModelAndView("redirect:/reservationDashBoard");
+		return new ModelAndView("redirect:/dashboard");
 	}
 }

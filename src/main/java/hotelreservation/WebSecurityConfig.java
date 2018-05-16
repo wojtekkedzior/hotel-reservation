@@ -18,22 +18,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
   protected void configure(HttpSecurity http) throws Exception {
       http
-//      .authorizeRequests()
-////          .antMatchers("/**").hasAnyRole("ADMIN", "MANAGER", "RECEPTIONIST")
-//          .anyRequest().authenticated()
-//          .and()
+      .authorizeRequests()
+        .anyRequest().authenticated()
+        .and()
       .formLogin()
-      .defaultSuccessUrl("/dashboard", true)
-      .loginPage("/login.html")
-      .failureUrl("/error.html")
-   .and()
-      .logout()
-      .logoutSuccessUrl("/index.html")
-   .and()
-      .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
-   .and()
-      .csrf().disable();
+      	.defaultSuccessUrl("/dashboard", true)
+      	.loginPage("/login")
+      	.failureUrl("/error.html")
+      .and()
+      	.logout()
+      	.logoutUrl("/logout")
+      	.logoutSuccessUrl("/login").permitAll()
+      .and()
+      	.exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+      .and()
+      	.csrf().disable();
   }
 	
+	
+//    @Autowired
+//	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+//	      BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//          auth.userDetailsService(myAppUserDetailsService).passwordEncoder(passwordEncoder);
+//}
 
 }
