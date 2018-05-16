@@ -40,4 +40,9 @@ public class AdminController {
 		return "adminOverview";
 //		return "redirect:/admin";
 	}
+	
+	@RequestMapping("/")
+	public String handleRoot(Model model) {
+		return "redirect:/dashboard";
+	}
 }

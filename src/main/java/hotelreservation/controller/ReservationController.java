@@ -158,7 +158,8 @@ public class ReservationController {
 		return "cancelReservation";
 	}
 
-	@RequestMapping(value = { "reservationDashBoard" })
+	@RequestMapping(value = {"/dashboard"})
+	@PreAuthorize("hasAuthority('viewReservationDashBoard')")
 	public String getReservationDashBoard(Model model) {
 		log.info("loading dashboard");
 
@@ -230,7 +231,7 @@ public class ReservationController {
 
 		bookingService.saveReservation(reservation2);
 
-		return new ModelAndView("redirect:/reservationDashBoard");
+		return new ModelAndView("redirect:/dashboard");
 	}
 
 	@PostMapping("/reservation")
@@ -241,7 +242,7 @@ public class ReservationController {
 
 		bookingService.createReservation(reservation);
 
-		return new ModelAndView("redirect:/reservationDashBoard");
+		return new ModelAndView("redirect:/dashboard");
 	}
 
 	// TODO only super-admin type user should be able to fully delete a reservation. Move to super admin controller? 

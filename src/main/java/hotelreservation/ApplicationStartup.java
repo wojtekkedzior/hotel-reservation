@@ -175,6 +175,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		Privilege createUser = new Privilege("createUser");
 		Privilege deleteUser = new Privilege("deleteUser");
 		Privilege viewAdmin = new Privilege("viewAdmin");
+		Privilege viewReservationDashBoard = new Privilege("viewReservationDashBoard");
 		
 		userService.createPrivilege(createAmenity);
 		userService.createPrivilege(createAmenityType);
@@ -195,6 +196,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		userService.createPrivilege(viewAdmin);
 		userService.createPrivilege(createUser);
 		userService.createPrivilege(deleteUser);
+		userService.createPrivilege(viewReservationDashBoard);
 
 		Collection<Privilege> adminPrivileges = new ArrayList<Privilege>();
 		Collection<Privilege> managerPrivileges = new ArrayList<Privilege>();
@@ -213,6 +215,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		adminPrivileges.add(viewAdmin);
 		adminPrivileges.add(createUser);
 		adminPrivileges.add(deleteUser);
+		adminPrivileges.add(viewReservationDashBoard);
 		
 		managerPrivileges.add(getReservation);
 		managerPrivileges.add(createReservation);
@@ -223,6 +226,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		managerPrivileges.add(viewAdmin);
 		managerPrivileges.add(createRoomRate);
 		managerPrivileges.add(createUser);
+		managerPrivileges.add(viewReservationDashBoard);
 		
 		receptionistPrivileges.add(getReservation);
 		receptionistPrivileges.add(createReservation);
@@ -230,6 +234,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		receptionistPrivileges.add(realiseReservation);
 		receptionistPrivileges.add(cancelReservation);
 		receptionistPrivileges.add(checkoutReservation);
+		receptionistPrivileges.add(viewReservationDashBoard);
 		
 		adminRole = new Role("admin", "admin desc", true);
 		managerRole = new Role("manager", "manager desc", true);

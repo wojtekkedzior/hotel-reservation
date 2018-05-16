@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -156,6 +157,7 @@ public class ReservationControllerTest {
 	private void addPrivileges() {
 		Privilege getReservation = new Privilege("getReservation");
 		Privilege createReservation = new Privilege("createReservation");
+		Privilege viewReservationDashBoard = new Privilege("viewReservationDashBoard");
 
 		Privilege cancelReservation = new Privilege("cancelReservation");
 		Privilege realiseReservation = new Privilege("realiseReservation");
@@ -169,12 +171,14 @@ public class ReservationControllerTest {
 		userService.createPrivilege(realiseReservation);
 		userService.createPrivilege(checkoutReservation);
 		userService.createPrivilege(deleteReservation);
+		userService.createPrivilege(viewReservationDashBoard);
 
 		Collection<Privilege> adminPrivileges = new ArrayList<Privilege>();
 		Collection<Privilege> managerPrivileges = new ArrayList<Privilege>();
 		Collection<Privilege> receptionistPrivileges = new ArrayList<Privilege>();
 
 		adminPrivileges.add(deleteReservation);
+		adminPrivileges.add(viewReservationDashBoard);
 
 		managerPrivileges.add(getReservation);
 		managerPrivileges.add(createReservation);
@@ -182,6 +186,7 @@ public class ReservationControllerTest {
 		managerPrivileges.add(realiseReservation);
 		managerPrivileges.add(cancelReservation);
 		managerPrivileges.add(checkoutReservation);
+		managerPrivileges.add(viewReservationDashBoard);
 
 		receptionistPrivileges.add(getReservation);
 		receptionistPrivileges.add(createReservation);
@@ -189,6 +194,7 @@ public class ReservationControllerTest {
 		receptionistPrivileges.add(realiseReservation);
 		receptionistPrivileges.add(cancelReservation);
 		receptionistPrivileges.add(checkoutReservation);
+		receptionistPrivileges.add(viewReservationDashBoard);
 
 		adminRole = new Role("admin", "admin desc", true);
 		managerRole = new Role("manager", "manager desc", true);
@@ -236,6 +242,9 @@ public class ReservationControllerTest {
 	@WithUserDetails("admin")
 	public void testAdminRolePermissions_allowed() throws Exception {
 		mvc.perform(delete("/reservationDelete/1")).andExpect(status().is3xxRedirection());
+		
+		mvc.perform(get("/dashboard")).andExpect(status().isOk());
+		mvc.perform(get("/")).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/dashboard"));
 	}
 
 	@Test
@@ -257,6 +266,9 @@ public class ReservationControllerTest {
 		mvc.perform(post("/realiseReservation").flashAttr("reservation", reservationOne)).andExpect(status().is3xxRedirection());
 		mvc.perform(get("/cancelReservation/1")).andExpect(status().isOk());
 		mvc.perform(get("/checkoutReservation/1")).andExpect(status().isOk());
+		
+		mvc.perform(get("/dashboard")).andExpect(status().isOk());
+		mvc.perform(get("/")).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/dashboard"));
 
 		ReservationCancellation cancellation = new ReservationCancellation();
 		cancellation.setReservation(reservationOne);
@@ -277,6 +289,9 @@ public class ReservationControllerTest {
 		mvc.perform(post("/realiseReservation").flashAttr("reservation", reservationOne)).andExpect(status().is3xxRedirection());
 		mvc.perform(get("/cancelReservation/1")).andExpect(status().isOk());
 		mvc.perform(get("/checkoutReservation/1")).andExpect(status().isOk());
+		
+		mvc.perform(get("/dashboard")).andExpect(status().isOk());
+		mvc.perform(get("/")).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/dashboard"));
 
 		ReservationCancellation cancellation = new ReservationCancellation();
 		cancellation.setReservation(reservationOne);

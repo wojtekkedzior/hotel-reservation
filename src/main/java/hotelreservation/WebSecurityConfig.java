@@ -23,7 +23,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //          .anyRequest().authenticated()
 //          .and()
       .formLogin()
-      .defaultSuccessUrl("/reservationDashBoard", true)
+      .defaultSuccessUrl("/dashboard", true)
       .loginPage("/login.html")
       .failureUrl("/error.html")
    .and()
