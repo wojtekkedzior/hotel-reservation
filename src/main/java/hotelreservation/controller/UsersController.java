@@ -41,6 +41,7 @@ public class UsersController {
 			} else {
 				model.addAttribute("user", user);
 			}
+			log.info("getting user: " + user);
 		}
 
 		model.addAttribute("role", new Role()); //TODO this will be a multi select so have to select all available roles
@@ -58,7 +59,7 @@ public class UsersController {
 	@PreAuthorize("hasAuthority('createUser')")
 	public ModelAndView addUser(@ModelAttribute User user,  Authentication authentication, BindingResult bindingResult) {
 		//TODO check that ID == null 
-		System.err.println(authentication.getName());
+		log.info("creating user: " + user);
 		userService.createUser(user);
 		return new ModelAndView("redirect:/user/" + user.getId());
 	}
@@ -70,6 +71,7 @@ public class UsersController {
 	@RequestMapping(value="/userDelete/{id}", method=RequestMethod.DELETE)
 	@PreAuthorize("hasAuthority('deleteUser')")
 	public ModelAndView deleteUser(@PathVariable Optional<Integer> id) {
+		log.info("deleting user: " + id);
 		if(id.isPresent()) {
 			userService.deleteUser(new Long(id.get()));
 		} 
