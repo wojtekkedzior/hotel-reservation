@@ -18,8 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
 
 import hotelreservation.Application;
 import hotelreservation.DateConvertor;
@@ -103,12 +101,6 @@ public class BookingServiceTest {
 
 	@Before
 	public void setup() {
-//	    mvc = MockMvcBuilders
-//                .webAppContextSetup(context)
-//                .apply(springSecurity())
-//                .build();
-	    
-	    
 		managerUserType = new Role("manager", "manager desc", true);
 		userService.createRole(managerUserType);
 
@@ -653,44 +645,4 @@ public class BookingServiceTest {
 	public void testCancelReservationMidway() {
 		
 	}
-	
-    @Autowired
-    private WebApplicationContext context;
-
-    private MockMvc mvc;
-    
-    
-//    @Test
-//    @WithMockUser(roles={"ADMIN"})
-//    public void testTwo() {
-//        userService.methodTwo("This is Admin");
-//    } 
-    
-
-//	
-	@Test
-	public void givenUserMemberNotInOrganization_whenGetOrganization_thenForbidden() {
-//	    Response response = givenAuth("john", "123").get("http://localhost:8081/organizations/2");
-//	    assertEquals(403, response.getStatusCode());
-		
-//		RequestBuilder request = get("/110")
-//			    .with(user("ADMIN").roles("USER"));
-//
-//			mvc
-//			    .perform(request)
-//			    .andExpect(status().isUnAuthorized());
-	}
-
-//    @Test
-//    public void givenAuthProviders_whenGetPingWithBadCred_then401() {
-//        ResponseEntity<String> result = makeRestCallToGetPing("user", "bad_password");
-//
-//        assertThat(result.getStatusCodeValue()).isEqualTo(401);
-//    }
-//
-//    private ResponseEntity<String> makeRestCallToGetPing(String username, String password) {
-//        return restTemplate.withBasicAuth(username, password)
-//            .getForEntity("/api/ping", String.class, Collections.emptyMap());
-//    }
-    
 }

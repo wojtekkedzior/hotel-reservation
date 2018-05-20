@@ -1,12 +1,13 @@
 package hotelreservation.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,32 +19,39 @@ import org.springframework.stereotype.Service;
 import hotelreservation.model.Privilege;
 import hotelreservation.model.Role;
 import hotelreservation.model.User;
-import hotelreservation.repository.RoleRepo;
 import hotelreservation.repository.UserRepo;
 
 @Service("userDetailsService")
 @Transactional
 public class MyUserDetailsService implements UserDetailsService {
+	
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private UserRepo userRepo;
 
-	@Autowired
-	private RoleRepo roleRepo;
-
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-
 		User user = userRepo.findByUserName(userName);
-		if (user == null) { // TODO should take you to the login screen
-			return new org.springframework.security.core.userdetails.User(" ", " ", true, true, true, true, getAuthorities(Arrays.asList(roleRepo.findByName("ROLE_USER"))));
+		
+		log.info("Login attempt for user: " + userName);
+		
+		if (user == null) { 
+			log.error("User: " + userName + " doesn't exist");
+			throw new UsernameNotFoundException("Username: " + userName + " was not found");
 		}
 
 		List<GrantedAuthority> grantedAuthorities = getAuthorities(user.getRoles());
 		for (Role role : user.getRoles()) {
 			grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
 		}
+		
+		log.info("User: " + userName + " found");
 
+		if(log.isDebugEnabled()) {
+			log.info("User: " + userName + " found and has the following authorities: " + grantedAuthorities);
+		}
+		
 		return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), user.isEnabled(), true, true, true, grantedAuthorities);
 	}
 
@@ -57,7 +65,8 @@ public class MyUserDetailsService implements UserDetailsService {
 		List<String> privileges = new ArrayList<>();
 		List<Privilege> collection = new ArrayList<>();
 		for (Role role : roles) {
-			collection.addAll(role.getPrivileges());
+			if(role.getPrivileges() != null)
+				collection.addAll(role.getPrivileges());
 		}
 		for (Privilege item : collection) {
 			privileges.add(item.getName());
