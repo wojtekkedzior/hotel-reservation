@@ -38,7 +38,6 @@ public class AdminController {
 		
 		log.info("admin ready");
 		return "adminOverview";
-//		return "redirect:/admin";
 	}
 	
 	@RequestMapping("/")
