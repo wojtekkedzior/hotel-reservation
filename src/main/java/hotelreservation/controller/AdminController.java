@@ -44,4 +44,8 @@ public class AdminController {
 	public String handleRoot(Model model) {
 		return "redirect:/dashboard";
 	}
+	
+	
+	//A controller method to instant block all bookings going forward until manually unblokced. Admin only. in pace to rpevent if a mistaken 
+	//rate has been entered and/or an employee makes a mistake or lowers the price on purpose.
 }
