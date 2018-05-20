@@ -9,7 +9,22 @@
 			<p>
 				Total: <input th:value="${total}" type="number" readonly="readonly" /> Currency : <input th:value="${currency}" type="text" readonly="readonly" />
 			</p>
+			
+			<div>
+				<table>
+					<tr>
+						<td><label>Date</label></td>
+						<td><label>Room</label></td>
+						<td><label>Price</label></td>
+					</tr>
 
+					<tr th:each="roomRate, iterstat: ${reservation.roomRates}">
+						<td th:text="${roomRate.day}"></td>
+						<td th:text="${roomRate.room.description}"></td>
+						<td th:text="${roomRate.value}"></td>
+					</tr>
+				</table>
+			</div>
 
 			<form action="#" th:action="@{/addOccupant}" th:object="${reservation}" method="post">
 				<p>
