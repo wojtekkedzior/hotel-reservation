@@ -626,7 +626,7 @@ public class BookingServiceTest {
 		cancellation.setReason("canceled");
 		cancellation.setReservation(reservationOne);
 		
-		bookingService.cancelReservation(reservationOne, cancellation);
+		bookingService.cancelReservation(cancellation);
 		
 		assertEquals(ReservationStatus.Cancelled, reservationOne.getReservationStatus());
 		availableRoomRates = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)), dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));

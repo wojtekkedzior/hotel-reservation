@@ -148,23 +148,25 @@ public class BookingService {
 		return reservationRepo.findByReservationStatus(reservationStatus);
 	}
 	
-	//This method prodbaby doesnt even need the reservation as the cancel reason has this relationship
-	public void cancelReservation(Reservation reservation, ReservationCancellation reservationCancellation) {
+	public void cancelReservation(ReservationCancellation reservationCancellation) {
+		log.info("Cancelling reservation: " + reservationCancellation.getReservation().getId());
 		reservationCancellationRepo.save(reservationCancellation);
 		
-		switch (reservation.getReservationStatus()) {
+		switch (reservationCancellation.getReservation().getReservationStatus()) {
 		case UpComing:
-			reservation.setReservationStatus(ReservationStatus.Cancelled);
+			reservationCancellation.getReservation().setReservationStatus(ReservationStatus.Cancelled);
 			break;
 		case InProgress:
-			reservation.setReservationStatus(ReservationStatus.Abandoned);
+			reservationCancellation.getReservation().setReservationStatus(ReservationStatus.Abandoned);
 			break;
 		default:
 			break;
 		}
 		
-		reservation.setRoomRates(null);
-		reservationRepo.save(reservation);
+		reservationCancellation.getReservation().setRoomRates(null);
+		reservationRepo.save(reservationCancellation.getReservation());
+		
+		log.info("Cancelled reservation: " + reservationCancellation.getReservation().getId());
 	}
 
 	public void checkoutReservation(Reservation resFromDB, ReservationCheckout reservationCheckout) {

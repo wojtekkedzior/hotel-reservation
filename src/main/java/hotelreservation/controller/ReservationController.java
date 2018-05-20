@@ -291,7 +291,7 @@ public class ReservationController {
 		reservationCancellation.setId(0); // TODO need to figure out why the ID is being set. in this case the reservation ID is also placed into the ReservationCancellation
 		reservationCancellation.setReservation(resFromDB);
 
-		bookingService.cancelReservation(resFromDB, reservationCancellation);
+		bookingService.cancelReservation(reservationCancellation);
 
 		return new ModelAndView("redirect:/dashboard");
 	}
