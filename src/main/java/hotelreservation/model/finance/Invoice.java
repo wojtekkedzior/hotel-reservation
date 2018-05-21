@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import hotelreservation.model.Guest;
 import hotelreservation.model.User;
 import hotelreservation.model.enums.InvoiceStatus;
+import hotelreservation.model.enums.PaymentType;
 import lombok.Data;
 
 @Data
@@ -36,5 +37,8 @@ public class Invoice {
 	
 	@ManyToOne
 	private Guest madeOutTo;
+	
+	@Enumerated(EnumType.STRING)
+	private PaymentType paymentType;
 	
 }
