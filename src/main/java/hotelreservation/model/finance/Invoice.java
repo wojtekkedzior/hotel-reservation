@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import hotelreservation.model.Guest;
 import hotelreservation.model.User;
@@ -41,6 +42,7 @@ public class Invoice {
 	@Enumerated(EnumType.STRING)
 	private PaymentType paymentType;
 	
+	@OneToOne
 	private Payment payment;
 	
 }
