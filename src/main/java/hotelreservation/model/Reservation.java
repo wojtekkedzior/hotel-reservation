@@ -63,6 +63,8 @@ public class Reservation {
 	//but how would having a start and end date help when dealing with a reservation over non-consecutive days?  this will get complicated
 	//logic to determin the reservation type (consecutive days vs non-consecutive) can also get tricky.
 
+	//TODO add cc here
+	
 	public Reservation() {}
 	
 	

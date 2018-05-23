@@ -305,6 +305,9 @@ public class ReservationController {
 		reservationCheckout.setReservation(resFromDB);
 		reservationCheckout.setCheckedout(new Date());
 
+		//check if payment exists for this reservation
+		//check if invoice exists for this reservation
+		
 		bookingService.checkoutReservation(resFromDB, reservationCheckout);
 
 		return new ModelAndView("redirect:/dashboard");

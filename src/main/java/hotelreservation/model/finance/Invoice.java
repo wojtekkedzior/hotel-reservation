@@ -28,17 +28,19 @@ public class Invoice {
 	@ManyToOne
 	private User createdBy;
 	
-	@ManyToOne
+/*	@ManyToOne
 	private User settledBy;
 	
 	//potentiall not needed as there should be an audit log.
 	@ManyToOne
-	private User adjustedBy;
+	private User adjustedBy;*/
 	
 	@ManyToOne
 	private Guest madeOutTo;
 	
 	@Enumerated(EnumType.STRING)
 	private PaymentType paymentType;
+	
+	private Payment payment;
 	
 }
