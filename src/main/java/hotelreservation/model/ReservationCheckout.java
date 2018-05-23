@@ -14,6 +14,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import hotelreservation.model.finance.Invoice;
+import hotelreservation.model.finance.Payment;
 import lombok.Data;
 
 @Entity
@@ -35,8 +36,8 @@ public class ReservationCheckout {
 	@ManyToOne
 	private User checkedOutBy;
 	
-/*	@OneToOne
-	private Invoice invoice;*/
+	@OneToOne
+	private Payment payment;
 	
 	//Any payment details such as fully paid? anything outstanding? bar/room charges?
 

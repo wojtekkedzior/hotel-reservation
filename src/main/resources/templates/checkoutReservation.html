@@ -2,24 +2,40 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layouts/layout">
 <body>
 	<div layout:fragment="content">
-				<p>
-				Total: <input th:value="${total}" type="number" readonly="readonly" /> Currency : <input th:value="${currency}" type="text" readonly="readonly" />
-			</p>
-			
+		<p>
+			Total: <input th:value="${total}" type="number" readonly="readonly" /> Currency : <input th:value="${currency}" type="text" readonly="readonly" />
+		</p>
+
 		<div class="column">
 
-			<form action="#" th:action="@{/checkoutReservation/}+${reservation.id}" th:object="${reservationCheckout}" method="post">
+
+
+			<form action="#" th:action="@{/createPayment/}+${reservation.id}" th:object="${payment}" method="post">
+				<p>
+					Payment Types: <select class="form-control" th:field="${payment.paymentType}" id="dropOperator">
+						<option th:each="paymentType : ${formsOfPayment}" th:value="${paymentType.toString()}" th:text="${paymentType.toString()}"></option>
+					</select>
+				</p>
+				
+				<p>
+					<input type="number" th:field="${reservation.id}" hidden="true" />
+					<input type="submit" value="Create Payment" />
+				</p>
+
+			</form>
+
+<!-- 			<form action="#" th:action="@{/checkoutReservation/}+${reservation.id}" th:object="${reservationCheckout}" method="post">
 				<p>
 					Notes: <input type="text" th:field="*{notes}" />
 				</p>
 				
-				<p>Form of paymnet: </p>
-				<p>Bar usage: </p>
-				<p>any other extras?</p>
-				<p>payment being accepted by: </p>
 				
+
+				<p>Bar usage:</p>
+				<p>any other extras?</p>
+				<p>payment being accepted by:</p>
 				<p>
-					<!-- hidden field to make sure the ID gets passed back to the controller when submit is called. -->
+					hidden field to make sure the ID gets passed back to the controller when submit is called.
 					<input type="number" id="reservationID" th:name="reservationID" th:field="${reservation.id}" hidden="true" />
 				</p>
 				<p>
@@ -28,7 +44,20 @@
 				<p>
 					<input type="submit" value="viewInvoice" />
 				</p>
-			</form>
+			</form> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
 		</div>
 
 		<div class="column"></div>

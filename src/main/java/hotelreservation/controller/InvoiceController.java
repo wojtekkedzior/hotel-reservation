@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,14 +16,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import hotelreservation.model.Guest;
-import hotelreservation.model.Reservation;
-import hotelreservation.model.ReservationCheckout;
 import hotelreservation.model.finance.Payment;
+import hotelreservation.service.InvoiceService;
+
 
 @Controller
 public class InvoiceController {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	
+	@Autowired
+	private InvoiceService invoiceService;
 	
 	@RequestMapping(value = { "/invoice/{id}" }, method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('retrieveInvoice')")
@@ -31,14 +34,16 @@ public class InvoiceController {
 		return "invoice";
 	}
 	
-	@PostMapping("/createPayment")
+	@PostMapping("/createPayment/{id}")
 	@PreAuthorize("hasAuthority('createPayment')")
-	public ModelAndView createPayment(@ModelAttribute Payment payment, BindingResult bindingResult) {
+	public ModelAndView createPayment(@ModelAttribute Payment payment, @PathVariable Optional<Integer> id, BindingResult bindingResult) {
+		
+		invoiceService.savePayment(payment);
 
 		//TODO use credit card in reservation?
 		// gather all payment details and call createpayment.  if successful generate invoice and show 'show invoice' button to download/display the invoice
 		//payment needs to have any extra costs 
 		
-		return new ModelAndView("redirect:/realiseReservation/" + payment.getId());
+		return new ModelAndView("redirect:/checkoutReservation/" + id.get());
 	}
 }

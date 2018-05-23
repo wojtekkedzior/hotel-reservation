@@ -176,6 +176,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		Privilege deleteUser = new Privilege("deleteUser");
 		Privilege viewAdmin = new Privilege("viewAdmin");
 		Privilege viewReservationDashBoard = new Privilege("viewReservationDashBoard");
+		Privilege createPayment = new Privilege("createPayment");
 		
 		userService.createPrivilege(createAmenity);
 		userService.createPrivilege(createAmenityType);
@@ -197,6 +198,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		userService.createPrivilege(createUser);
 		userService.createPrivilege(deleteUser);
 		userService.createPrivilege(viewReservationDashBoard);
+		userService.createPrivilege(createPayment);
 
 		Collection<Privilege> adminPrivileges = new ArrayList<Privilege>();
 		Collection<Privilege> managerPrivileges = new ArrayList<Privilege>();
@@ -227,6 +229,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		managerPrivileges.add(createRoomRate);
 		managerPrivileges.add(createUser);
 		managerPrivileges.add(viewReservationDashBoard);
+		managerPrivileges.add(createPayment);
 		
 		receptionistPrivileges.add(getReservation);
 		receptionistPrivileges.add(createReservation);
@@ -235,6 +238,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		receptionistPrivileges.add(cancelReservation);
 		receptionistPrivileges.add(checkoutReservation);
 		receptionistPrivileges.add(viewReservationDashBoard);
+		receptionistPrivileges.add(createPayment);
 		
 		adminRole = new Role("admin", "admin desc", true);
 		managerRole = new Role("manager", "manager desc", true);
@@ -248,15 +252,6 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		userService.createRole(managerRole);
 		userService.createRole(receptionistRole);
 
-		manager = new User();
-		manager.setPassword("password");
-		manager.setFirstName("Manager");
-		manager.setLastName("Manager");
-		manager.setUserName("manager");
-		manager.setEnabled(true);
-		manager.setRoles(Arrays.asList(managerRole));
-		userService.createUser(manager);
-
 		admin = new User();
 		admin.setFirstName("admin");
 		admin.setLastName("admin");
@@ -266,6 +261,15 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		admin.setRoles(Arrays.asList(adminRole));
 		admin.setEnabled(true);
 		userService.createUser(admin);
+		
+		manager = new User();
+		manager.setPassword("password");
+		manager.setFirstName("Manager");
+		manager.setLastName("Manager");
+		manager.setUserName("manager");
+		manager.setEnabled(true);
+		manager.setRoles(Arrays.asList(managerRole));
+		userService.createUser(manager);
 
 		receptionist = new User();
 		receptionist.setFirstName("receptionist");

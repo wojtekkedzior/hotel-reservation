@@ -11,6 +11,7 @@ import javax.persistence.OneToOne;
 
 import hotelreservation.model.Charges;
 import hotelreservation.model.Reservation;
+import hotelreservation.model.enums.PaymentType;
 import lombok.Data;
 
 @Entity
@@ -20,6 +21,8 @@ public class Payment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
+	
+	private PaymentType paymentType;
 	
 	@OneToMany
 	private List<Charges> extraCharges;

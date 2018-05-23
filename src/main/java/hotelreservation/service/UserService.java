@@ -30,21 +30,12 @@ public class UserService {
 	
 	@Autowired
 	private PrivilegeRepo privilegeRepo;
-
-	public User createUser(User user, long userTypeId) {
-		Role role = roleRepo.findOne(userTypeId);
-		user.setRoles(Arrays.asList(role));
-		return userRepo.save(user);
-	}
 	
 	//TODO remove as the super admin user should be added by an sql script
 	public User createUser(User user) {
-//		UserType userType = userTypeRepo.findOne(userTypeId);
-//		user.setUserType(userType);
-		
 		user.setCreatedOn(new Date());
 		//TODO set created BY
-		
+//		user.setCreatedBy(createdBy);
 		
 		return userRepo.save(user);
 	}

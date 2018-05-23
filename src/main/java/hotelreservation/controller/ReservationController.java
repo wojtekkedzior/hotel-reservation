@@ -41,7 +41,9 @@ import hotelreservation.model.ReservationCheckout;
 import hotelreservation.model.Room;
 import hotelreservation.model.RoomRate;
 import hotelreservation.model.enums.IdType;
+import hotelreservation.model.enums.PaymentType;
 import hotelreservation.model.enums.ReservationStatus;
+import hotelreservation.model.finance.Payment;
 import hotelreservation.service.BookingService;
 import hotelreservation.service.GuestService;
 import hotelreservation.service.RoomService;
@@ -178,6 +180,8 @@ public class ReservationController {
 		Reservation reservation = bookingService.getReservation(id);
 		model.addAttribute("reservation", reservation);
 		model.addAttribute("reservationCheckout", new ReservationCheckout());
+		model.addAttribute("payment", new Payment());
+		model.addAttribute("formsOfPayment", PaymentType.values());
 
 		int total = 0;
 
