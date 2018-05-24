@@ -37,6 +37,11 @@ public class InvoiceController {
 	@PostMapping("/createPayment/{id}")
 	@PreAuthorize("hasAuthority('createPayment')")
 	public ModelAndView createPayment(@ModelAttribute Payment payment, @PathVariable Optional<Integer> id, BindingResult bindingResult) {
+		log.info("creating paymeny for reservation: " + id);
+
+		//TODO still need to understand why the id field of payment is getting set to the value of the id field which is meant for the reservation.
+		//obviously it's in the naming convention
+		payment.setId(0);
 		
 		invoiceService.savePayment(payment);
 

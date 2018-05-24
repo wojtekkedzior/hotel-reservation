@@ -16,6 +16,7 @@ public class InvoiceService {
 	private PaymentRepo paymentRepo;
 
 	public void savePayment(Payment payment) {
+		log.info("Saving payment: " + payment.getId());
 		paymentRepo.save(payment);
 	}
 
