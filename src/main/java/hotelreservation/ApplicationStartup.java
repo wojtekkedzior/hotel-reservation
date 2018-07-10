@@ -501,7 +501,6 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	}
 	
 	private void addReservations(int reservations) {
-		
 		for (int i = 2; i <= reservations; i++) {
 			LocalDate startDate = LocalDate.of(2018, Month.MARCH, 3);
 			LocalDate endDate = LocalDate.of(2018, Month.MARCH, 20);

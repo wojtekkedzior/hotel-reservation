@@ -12,7 +12,6 @@ import javax.persistence.OneToOne;
 import hotelreservation.model.Guest;
 import hotelreservation.model.User;
 import hotelreservation.model.enums.InvoiceStatus;
-import hotelreservation.model.enums.PaymentType;
 import lombok.Data;
 
 @Data
@@ -39,9 +38,8 @@ public class Invoice {
 	@ManyToOne
 	private Guest madeOutTo;
 	
-	@Enumerated(EnumType.STRING)
-	private PaymentType paymentType;
-	
+	//should be a list of payments? So an invoice is made up of a list of payments. 
+	//makes sense especially when someone wants to pay half CC and half cash. 
 	@OneToOne
 	private Payment payment;
 	
