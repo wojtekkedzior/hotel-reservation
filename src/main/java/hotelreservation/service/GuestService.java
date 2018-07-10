@@ -40,31 +40,43 @@ public class GuestService {
 	}
 
 	public Guest findGuest(long id) {
-		return guestRepo.findOne(id);
+		if(guestRepo.findById(id).isPresent()) {
+			return guestRepo.findById(id).get();
+		} else {
+			return null; //TODO
+		}
 	}
 	
 	public Contact findContact(long id) {
-		return contactRepo.findOne(id);
+		if(contactRepo.findById(id).isPresent()) {
+			return contactRepo.findById(id).get();
+		} else {
+			return null; //TODO
+		}
 	}
 	
 	public Identification findIdentification(long id) {
-		return identificationRepo.findOne(id);
+		if(identificationRepo.findById(id).isPresent()) {
+			return identificationRepo.findById(id).get();
+		} else {
+			return null;
+		}
 	}
 	
 	public void deleteGuest(Optional<Integer> id) {
-		guestRepo.delete(guestRepo.findOne(new Long(id.get())));
+		guestRepo.delete(guestRepo.findById(new Long(id.get())).get());
 	}
 	
 	public void deleteContact(Optional<Integer> id) {
-		contactRepo.delete(contactRepo.findOne(new Long(id.get())));
+		contactRepo.delete(contactRepo.findById(new Long(id.get())).get());
 	}
 	
 	public void deleteIdentification(Optional<Integer> id) {
-		identificationRepo.delete(identificationRepo.findOne(new Long(id.get())));
+		identificationRepo.delete(identificationRepo.findById(new Long(id.get())).get());
 	}
 
 	public void deleteContact(long id) {
-		contactRepo.delete(id);
+		contactRepo.deleteById(id);
 		
 	}
 

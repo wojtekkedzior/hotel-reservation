@@ -1,7 +1,6 @@
 package hotelreservation.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -63,19 +62,19 @@ public class UserService {
 	}
 
 	public User getUserById(Optional<Integer> id) {
-		return userRepo.findOne(new Long(id.get()));
+		return userRepo.findById(new Long(id.get())).get();
 	}
 	
 	public Role getRoleById(Optional<Integer> id) {
-		return roleRepo.findOne(new Long(id.get()));
+		return roleRepo.findById(new Long(id.get())).get();
 	}
 
 	public void deleteUser(Long id) {
-		userRepo.delete(id);
+		userRepo.deleteById(id);
 	}
 
 	public void deleteRole(Long id) {
-		roleRepo.delete(id);
+		roleRepo.deleteById(id);
 	}
 
 	public Privilege getPrivilegeByName(String name) {

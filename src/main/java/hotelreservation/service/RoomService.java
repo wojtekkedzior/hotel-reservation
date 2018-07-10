@@ -85,7 +85,7 @@ public class RoomService {
 	}
 
 	public RoomType getRoomTypeById(long id) {
-		return roomTypeRepo.findOne(id);
+		return roomTypeRepo.findById(id).get();
 	}
 
 	public void deleteRoomType(RoomType roomType) {
@@ -98,7 +98,11 @@ public class RoomService {
 	}
 
 	public Room getRoomById(long id) {
-		return roomRepo.findOne(id);
+		if(roomRepo.findById(id).isPresent()) {
+			return roomRepo.findById(id).get();
+		} else {
+			return null;
+		}
 	}
 
 	public AmenityType createAmenityType(AmenityType amenityType) {
@@ -143,7 +147,7 @@ public class RoomService {
 	}
 
 	public Status getRoomStatus(Room room) {
-		return roomRepo.findOne(room.getId()).getStatus();
+		return roomRepo.findById(room.getId()).get().getStatus();
 	}
 
 	public void createRoomRate(RoomRate roomRate) {
@@ -217,31 +221,35 @@ public class RoomService {
 	}
 	
 	public Amenity getAmenityById(Long id) {
-		return amenityRepo.findOne(id);
+		if(amenityRepo.findById(id).isPresent()) {
+			return amenityRepo.findById(id).get();
+		} else {
+			return null;
+		}
 	}
 
 	public AmenityType getAmenityTypeById(Long id) {
-		return amenityTypeRepo.findOne(id);
+		return amenityTypeRepo.findById(id).get();
 	}
 
 	public Room getGetRoomById(Long id) {
-		return roomRepo.findOne(id);
+		return roomRepo.findById(id).get();
 	}
 	
 	public void deleteAmenity(Long id) {
-		amenityRepo.delete(id);
+		amenityRepo.deleteById(id);
 	}
 
 	public void deleteAmenityType(Long id) {
-		amenityTypeRepo.delete(id);
+		amenityTypeRepo.deleteById(id);
 	}
 	
 	public void deleteRoomType(Long id) {
-		roomTypeRepo.delete(id);
+		roomTypeRepo.deleteById(id);
 	}
 
 	public void deleteRoom(Long id) {
-		roomRepo.delete(id);
+		roomRepo.deleteById(id);
 	}
 
 	public void deleteRoom(Room room) {
@@ -249,18 +257,18 @@ public class RoomService {
 	}
 
 	public void deleteRoomRate(Long id) {
-		roomRateRepo.delete(id);
+		roomRateRepo.deleteById(id);
 	}
 
 	public RoomRate getRoomRateById(Long id) {
-		return roomRateRepo.findOne(id);
+		return roomRateRepo.findById(id).get();
 	}
 
 	public Status getStatusById(Long id) {
-		return statusRepo.findOne(id);
+		return statusRepo.findById(id).get();
 	}
 
 	public void deleteStatus(Long id) {
-		statusRepo.delete(id);
+		statusRepo.deleteById(id);
 	}
 }

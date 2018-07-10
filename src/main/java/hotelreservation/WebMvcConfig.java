@@ -6,16 +6,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 
 @Configuration
 @EnableWebMvc
-public class WebMvcConfig extends WebMvcConfigurerAdapter {
+public class WebMvcConfig implements WebMvcConfigurer {
 	
-	@Autowired 
-	TemplateEngine templateEngine;
+/*	@Autowired 
+	TemplateEngine templateEngine;*/
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -33,14 +33,14 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
                         "classpath:/static/js/");
     }
     
-    @Bean
+/*    @Bean
     public TemplateEngine templateEngine() {
     	if(templateEngine == null) { //ugly - for unit tests - templateEngine is not Autowired in tests for some reason
     		return null;
     	}
 		templateEngine.addDialect(new SpringSecurityDialect());
 		return templateEngine;
-    }
+    }*/
     
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {

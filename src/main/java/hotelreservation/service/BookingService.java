@@ -70,7 +70,7 @@ public class BookingService {
 	}
 
 	public void createReservation(Reservation reservation) {
-		if(guestRepo.exists(reservation.getId())) {
+		if(guestRepo.existsById(reservation.getId())) {
 			reservationRepo.save(reservation);
 			//TODO set modified dates etc here too
 			return;
@@ -125,7 +125,7 @@ public class BookingService {
 	}
 
 	public Reservation getReservation(Optional<Integer> reservationId) {
-		return reservationRepo.findOne(new Long(reservationId.get()));
+		return reservationRepo.findById(new Long(reservationId.get())).get();
 	}
  
 	public List<Reservation> getReservationsStartingToday() {
@@ -133,7 +133,7 @@ public class BookingService {
 	}
 
 	public Reservation getReservation(long id) {
-		return reservationRepo.findOne(id);
+		return reservationRepo.findById(id).get();
 	}
 
 	public void deleteReservation(Reservation reservation) {
