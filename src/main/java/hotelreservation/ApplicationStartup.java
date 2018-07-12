@@ -257,13 +257,13 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		admin.setLastName("admin");
 		admin.setUserName("admin");
 		// user.setPassword(passwordEncoder.encode("test")); //TODO use encoder
-		admin.setPassword("password");
+		admin.setPassword("{noop}password");
 		admin.setRoles(Arrays.asList(adminRole));
 		admin.setEnabled(true);
 		userService.createUser(admin);
 		
 		manager = new User();
-		manager.setPassword("password");
+		manager.setPassword("{noop}password");
 		manager.setFirstName("Manager");
 		manager.setLastName("Manager");
 		manager.setUserName("manager");
@@ -276,7 +276,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		receptionist.setLastName("receptionist");
 		receptionist.setUserName("receptionist");
 		// user.setPassword(passwordEncoder.encode("test")); //TODO use encoder
-		receptionist.setPassword("password");
+		receptionist.setPassword("{noop}password");
 		receptionist.setRoles(Arrays.asList(receptionistRole));
 		receptionist.setEnabled(true);
 		userService.createUser(receptionist);
