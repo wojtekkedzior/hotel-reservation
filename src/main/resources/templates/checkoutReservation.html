@@ -10,56 +10,99 @@
 
 
 
+			<div th:each="payment : ${reservationPayments}">
+				<p>
+					Room Number: <label th:text="${payment.type} + ' - ' + ${payment.type}"></label>
+				</p>
+
+
+				<div>
+					<table>
+						<tr>
+							<td><label>Charge</label></td>
+							<td><label>Price</label></td>
+							<td><label>Date</label></td>
+						</tr>
+
+						<tr th:each="reservationCharge : ${payment.reservatioCharges}">
+							<td th:text="${reservationCharge.id}"></td>
+							<!-- 						<td th:text="${roomRate.room.description}"></td>
+						<td th:text="${roomRate.value}"></td> -->
+						</tr>
+					</table>
+				</div>
+
+				<p>
+					Sub Total: <input th:id="'roomRateSelectSubTotal-' + ${roomRateCombo.key.roomNumber}" type="number" />
+				</p>
+			</div>
+
+
 			<form action="#" th:action="@{/createPayment/}+${reservation.id}" th:object="${payment}" method="post">
 				<p>
 					Payment Types: <select class="form-control" th:field="${payment.paymentType}" id="dropOperator">
 						<option th:each="paymentType : ${formsOfPayment}" th:value="${paymentType.toString()}" th:text="${paymentType.toString()}"></option>
 					</select>
 				</p>
-				
+
 				<p>
 					<input type="submit" value="Create Payment" />
 				</p>
 
 			</form>
 
-<!-- 			<form action="#" th:action="@{/checkoutReservation/}+${reservation.id}" th:object="${reservationCheckout}" method="post">
+		</div>
+
+
+
+		<div class="column">
+
+			<form action="#" th:action="@{/addChargeToReservation/}+${reservation.id}" th:object="${reservation}" method="post">
 				<p>
-					Notes: <input type="text" th:field="*{notes}" />
+					Charges: <select class="form-control" th:field="${reservationCharge}" id="dropOperator">
+						<option th:each="charge : ${charges}" th:value="${charge.toString()}" th:text="${charge.toString()}"></option>
+					</select>
 				</p>
-				
-				
 
-				<p>Bar usage:</p>
-				<p>any other extras?</p>
-				<p>payment being accepted by:</p>
+
 				<p>
-					hidden field to make sure the ID gets passed back to the controller when submit is called.
-					<input type="number" id="reservationID" th:name="reservationID" th:field="${reservation.id}" hidden="true" />
+					<!-- hidden field to make sure the ID gets passed back to the controller when submit is called. -->
+					<input type="number" th:field="${reservation.id}" hidden="true" />
 				</p>
+
+
 				<p>
-					<input type="submit" value="Submit" />
+					<input type="submit" value="Add Charge" />
 				</p>
-				<p>
-					<input type="submit" value="viewInvoice" />
-				</p>
-			</form> -->
+			</form>
 
 
+			<div>
+				<table>
+					<tr>
+						<td><label>Charge</label></td>
+						<td><label>Price</label></td>
+						<td><label>Date</label></td>
+					</tr>
 
-
-
-
-
-
-
-
-
-
+					<tr th:each="reservationCharge : ${reservationCharges}">
+						<td th:text="${reservationCharge.id}"></td>
+						<!-- 						<td th:text="${roomRate.room.description}"></td>
+						<td th:text="${roomRate.value}"></td> -->
+					</tr>
+				</table>
+			</div>
 
 		</div>
 
-		<div class="column"></div>
+
+
+
+
+
 	</div>
+
+
+
 </body>
 </html>

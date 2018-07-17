@@ -16,7 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import hotelreservation.model.Reservation;
+import hotelreservation.model.ReservationCharge;
 import hotelreservation.model.finance.Payment;
+import hotelreservation.service.BookingService;
 import hotelreservation.service.InvoiceService;
 
 
@@ -26,6 +29,9 @@ public class InvoiceController {
 	
 	@Autowired
 	private InvoiceService invoiceService;
+
+	@Autowired
+	private BookingService bookingService;
 	
 	@RequestMapping(value = { "/invoice/{id}" }, method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('retrieveInvoice')")
@@ -50,5 +56,20 @@ public class InvoiceController {
 		//payment needs to have any extra costs 
 		
 		return new ModelAndView("redirect:/checkoutReservation/" + id.get());
+	}
+	
+	@PostMapping("/addChargeToReservation/{reservationID}")
+	@PreAuthorize("hasAuthority('checkoutReservation')")
+	public ModelAndView addChargeToReservation(@ModelAttribute ReservationCharge reservationCharge, @PathVariable Optional<Integer> reservationID) {
+		Reservation reservation = bookingService.getReservation(reservationID);
+		reservationCharge.setId(0); // TODO need to figure out why the ID is being set. in this case the reservation ID is also placed into the ReservationCancellation
+		reservationCharge.setReservation(reservation);
+		
+		invoiceService.saveChargeToReservation(reservationCharge);
+		
+		//check if payment exists for this reservation
+		//check if invoice exists for this reservation
+		
+		return new ModelAndView("redirect:/checkoutReservation/" + reservationID.get());
 	}
 }

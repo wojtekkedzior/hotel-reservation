@@ -9,8 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import hotelreservation.model.Charges;
 import hotelreservation.model.Reservation;
+import hotelreservation.model.ReservationCharge;
 import hotelreservation.model.enums.PaymentType;
 import lombok.Data;
 
@@ -25,7 +25,7 @@ public class Payment {
 	private PaymentType paymentType;
 	
 	@OneToMany
-	private List<Charges> extraCharges;
+	private List<ReservationCharge> reservatioCharges;
 	
 	@ManyToOne
 	private Reservation reservation;

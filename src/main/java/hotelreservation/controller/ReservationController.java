@@ -32,11 +32,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import hotelreservation.model.Charge;
 import hotelreservation.model.Contact;
 import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;
 import hotelreservation.model.Reservation;
 import hotelreservation.model.ReservationCancellation;
+import hotelreservation.model.ReservationCharge;
 import hotelreservation.model.ReservationCheckout;
 import hotelreservation.model.Room;
 import hotelreservation.model.RoomRate;
@@ -46,6 +48,7 @@ import hotelreservation.model.enums.ReservationStatus;
 import hotelreservation.model.finance.Payment;
 import hotelreservation.service.BookingService;
 import hotelreservation.service.GuestService;
+import hotelreservation.service.InvoiceService;
 import hotelreservation.service.RoomService;
 
 
@@ -61,6 +64,9 @@ public class ReservationController {
 
 	@Autowired
 	private GuestService guestService;
+
+	@Autowired
+	private InvoiceService invoiceService;
 
 	// TODO figure out what is this for since I thought that dates worked prior to having this copied and pasted in.
 	@InitBinder
@@ -181,7 +187,12 @@ public class ReservationController {
 		model.addAttribute("reservation", reservation);
 		model.addAttribute("reservationCheckout", new ReservationCheckout());
 		model.addAttribute("payment", new Payment());
+		model.addAttribute("reservationPayments", invoiceService.getAllPayments(reservation));
 		model.addAttribute("formsOfPayment", PaymentType.values());
+		model.addAttribute("charges", new ArrayList<Charge>());
+		model.addAttribute("reservationCharge",  new ReservationCharge());
+		model.addAttribute("reservationCharges",  invoiceService.getAllReservationCharges(reservation));
+		model.addAttribute("reservationCharges",  invoiceService.getAllReservationCharges(reservation));
 
 		int total = 0;
 
@@ -316,4 +327,5 @@ public class ReservationController {
 
 		return new ModelAndView("redirect:/dashboard");
 	}
+	
 }
