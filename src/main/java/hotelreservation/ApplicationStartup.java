@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 import hotelreservation.model.Amenity;
 import hotelreservation.model.AmenityType;
+import hotelreservation.model.Charge;
 import hotelreservation.model.Contact;
 import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;
@@ -34,6 +35,7 @@ import hotelreservation.model.enums.Currency;
 import hotelreservation.model.enums.IdType;
 import hotelreservation.model.enums.ReservationStatus;
 import hotelreservation.service.BookingService;
+import hotelreservation.service.InvoiceService;
 import hotelreservation.service.RoomService;
 import hotelreservation.service.UserService;
 
@@ -109,6 +111,11 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	private Guest guestTwo;
 	private Guest guestThree;
 	private Guest guestFour;
+	
+	//Charges
+	private Charge coke;
+	private Charge roomServiceDelivery;
+	private Charge brokenTable;
 
 	// Reservations
 	private Reservation reservationOne;
@@ -124,6 +131,9 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 
 	@Autowired
 	private DateConvertor dateConvertor;
+	
+	@Autowired
+	private InvoiceService invoiceService;
 
 	@Override
 	public void onApplicationEvent(ApplicationReadyEvent event) {
@@ -131,6 +141,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		
 		addPrivileges();
 		addStatuses();
+		addCharges();
 
 		addAmenityTypes();
 		addamenities();
@@ -148,6 +159,16 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		createMultiRoomReservation();
 		
 		log.debug("loading test data - end");
+	}
+
+	private void addCharges() {
+		coke = new Charge(Currency.CZK, 50);
+		roomServiceDelivery = new Charge(Currency.CZK, 1000);
+		brokenTable = new Charge(Currency.CZK, 5000);
+		
+		invoiceService.createCharge(coke);
+		invoiceService.createCharge(roomServiceDelivery);
+		invoiceService.createCharge(brokenTable);
 	}
 
 	private void addamenities() {

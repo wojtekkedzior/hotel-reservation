@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layouts/layout">
+<body>
+	<div layout:fragment="content">
+		<p>
+			Total: <input th:value="${total}" type="number" readonly="readonly" /> Currency : <input th:value="${currency}" type="text" readonly="readonly" />
+		</p>
+
+		<div class="column">
+
+		
+<!-- 				<div>
+					<table>
+						<tr>
+							<td><label>Charge</label></td>
+							<td><label>Price</label></td>
+							<td><label>Date</label></td>
+						</tr>
+						
+						<tr>
+						</tr>
+						
+
+						<tr th:each="reservationCharge : ${outstandingCharges}">
+							<td th:text="${reservationCharge.id}"></td>
+													<td th:text="${roomRate.room.description}"></td>
+						<td th:text="${roomRate.value}"></td>
+						</tr>
+					</table>
+				</div>
+
+				<p>
+					Sub Total: <input th:id="'roomRateSelectSubTotal-' + ${roomRateCombo.key.roomNumber}" type="number"  />
+				</p> -->
+			
+
+
+			<form action="#" th:action="@{/createPayment/}+${reservation.id}" th:object="${payment}" method="post">
+				<p>
+					Payment Types: <select class="form-control" th:field="${payment.paymentType}" id="dropOperator">
+						<option th:each="paymentType : ${formsOfPayment}" th:value="${paymentType.toString()}" th:text="${paymentType.toString()}"></option>
+					</select>
+				</p>
+				
+				
+										<div>
+					<table>
+						<tr>
+							<td><label>Select</label></td>
+							<td><label>Price</label></td>
+							<td><label>Quantity</label></td>
+						</tr>
+						
+						<tr>
+						</tr>
+
+						<tr th:each="reservationCharge, stat : ${outstandingCharges}">
+							<td > 
+								 <input type="checkbox" th:value="${reservationCharge.id}" th:field="*{reservationCharges[__${stat.index}__]}"/>
+								<label th:text="${reservationCharge.id}"></label>
+							 </td>
+							 
+ 							<td > 
+								<label th:text="${reservationCharge.charge.value}"></label>
+							 </td>
+ 							<td > 
+								<label th:text="${reservationCharge.quantity}"></label>
+							 </td>
+						</tr>
+						
+						
+					</table>
+				</div>
+				
+				
+
+				<p>
+					<input type="submit" value="Create Payment" />
+				</p>
+
+			</form>
+
+		</div>
+
+
+
+		<div class="column">
+
+
+		</div>
+
+	</div>
+
+
+
+</body>
+</html>

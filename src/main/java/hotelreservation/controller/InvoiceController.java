@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import hotelreservation.model.Reservation;
 import hotelreservation.model.ReservationCharge;
+import hotelreservation.model.enums.PaymentType;
 import hotelreservation.model.finance.Payment;
 import hotelreservation.service.BookingService;
 import hotelreservation.service.InvoiceService;
@@ -40,17 +42,42 @@ public class InvoiceController {
 		return "invoice";
 	}
 	
+	
+	@RequestMapping(value = { "/payment/{id}" }, method = RequestMethod.GET)
+	@PreAuthorize("hasAuthority('createPayment')")
+	public String getPayment(@PathVariable Optional<Integer> id, Model model) {
+		Reservation reservation = bookingService.getReservation(id);
+		
+		model.addAttribute("reservation", reservation);
+		model.addAttribute("outstandingCharges", invoiceService.getOutstandingCharges(reservation));
+		model.addAttribute("payment", new Payment());
+		model.addAttribute("formsOfPayment", PaymentType.values());
+		model.addAttribute("reservationCharge",  invoiceService.getAllReservationCharges(reservation));
+		
+		
+		return "payment";
+	}
+	
+	
+	//To make @RequestParam(value = "charges" , required = false) int[] charges , just add name="charges to an input field of type checkbox"
+	
+	
 	@PostMapping("/createPayment/{id}")
 	@PreAuthorize("hasAuthority('createPayment')")
-	public ModelAndView createPayment(@ModelAttribute Payment payment, @PathVariable Optional<Integer> id, BindingResult bindingResult) {
+	public ModelAndView createPayment(@ModelAttribute Payment payment,  @PathVariable Optional<Integer> id, BindingResult bindingResult) {
 		log.info("creating paymeny for reservation: " + id);
+		
+		Reservation reservation = bookingService.getReservation(id);
 
 		//TODO still need to understand why the id field of payment is getting set to the value of the id field which is meant for the reservation.
 		//obviously it's in the naming convention
 		payment.setId(0);
-		
+		payment.setReservation(reservation);
 		invoiceService.savePayment(payment);
 
+		
+		
+		
 		//TODO use credit card in reservation?
 		// gather all payment details and call createpayment.  if successful generate invoice and show 'show invoice' button to download/display the invoice
 		//payment needs to have any extra costs 

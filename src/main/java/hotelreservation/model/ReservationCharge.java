@@ -21,10 +21,9 @@ public class ReservationCharge {
 	
 	@OneToOne
 	private Charge charge;
+	
+	private int quantity;
 		
-	//Item
-	//Price
-	//currency
 	//date
 	//accepted By
 	//charged By

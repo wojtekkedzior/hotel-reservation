@@ -25,7 +25,7 @@ public class Payment {
 	private PaymentType paymentType;
 	
 	@OneToMany
-	private List<ReservationCharge> reservatioCharges;
+	private List<ReservationCharge> reservationCharges;
 	
 	@ManyToOne
 	private Reservation reservation;
