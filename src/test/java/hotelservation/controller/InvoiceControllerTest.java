@@ -154,6 +154,8 @@ public class InvoiceControllerTest {
 		roomRates.add(roomRateThree);
 		roomRates.add(roomRateFour);
 		reservationOne.setRoomRates(roomRates);
+		
+		bookingService.saveReservation(reservationOne);
 
 		try {
 			// bookingService.createReservation(reservationOne);
