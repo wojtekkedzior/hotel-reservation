@@ -6,13 +6,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
 import hotelreservation.model.Charge;
 import hotelreservation.model.Reservation;
 import hotelreservation.model.ReservationCharge;
-import hotelreservation.model.Room;
 import hotelreservation.model.finance.Payment;
 import hotelreservation.repository.ChargeRepo;
 import hotelreservation.repository.PaymentRepo;
@@ -46,21 +44,16 @@ public class InvoiceService {
 
 	public List<Payment> getAllPayments(Reservation reservation) {
 		List<Payment> payemnts = paymentRepo.findByReservation(reservation); 
-//		System.err.println(payemnts);
-		
 		return payemnts;
 	}
 
 	public List<ReservationCharge> getOutstandingCharges(Reservation reservation) {
 		List<ReservationCharge> charges = new ArrayList<ReservationCharge>();
 		
-//		List<Payment> payments = getAllPayments(reservation);
-		List<ReservationCharge> chargesForReservation = getAllReservationCharges(reservation);
-		
-		for (ReservationCharge reservationCharge : chargesForReservation) {
-			Payment p = paymentRepo.findByReservationAndReservationCharges(reservation, reservationCharge);
+		for (ReservationCharge reservationCharge : getAllReservationCharges(reservation)) {
+			Payment payment = paymentRepo.findByReservationAndReservationCharges(reservation, reservationCharge);
 			
-			if(p == null) {
+			if(payment == null) {
 				charges.add(reservationCharge);
 			} 
 		}
