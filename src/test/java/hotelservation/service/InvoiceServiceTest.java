@@ -7,7 +7,6 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
@@ -37,6 +36,7 @@ import hotelreservation.model.Status;
 import hotelreservation.model.User;
 import hotelreservation.model.enums.Currency;
 import hotelreservation.model.enums.IdType;
+import hotelreservation.model.enums.PaymentType;
 import hotelreservation.model.enums.ReservationStatus;
 import hotelreservation.model.finance.Payment;
 import hotelreservation.repository.PrivilegeRepo;
@@ -88,9 +88,6 @@ public class InvoiceServiceTest {
 	private Room standardRoomTwo;
 	private Room standardRoomThree;
 	private RoomType roomTypeStandard;
-	
-	private Date startDate;
-	private Date endDate;
 	
 	private AmenityType amenityTypeRoomBasic;
 	private Amenity pillow;
@@ -186,9 +183,6 @@ public class InvoiceServiceTest {
 
 		bookingService.createGuest(guestOne);
 		bookingService.createGuest(mainGuest);
-		
-		startDate = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1));
-		endDate = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 31));
 	}
 	
 	@Test
@@ -221,8 +215,8 @@ public class InvoiceServiceTest {
 		reservationChargeTwo.setQuantity(1);
 		reservationChargeTwo.setReservation(reservationOne);
 		
-		invoiceService.saveChargeToReservation(reservationChargeOne);
-		invoiceService.saveChargeToReservation(reservationChargeTwo);
+		invoiceService.createReservationCharge(reservationChargeOne);
+		invoiceService.createReservationCharge(reservationChargeTwo);
 		
 		//Two unpaid charges for the given reservation.
 		assertEquals(2, invoiceService.getOutstandingCharges(reservationOne).size());
@@ -266,9 +260,92 @@ public class InvoiceServiceTest {
 		reservationChargeTwo.setQuantity(1);
 		reservationChargeTwo.setReservation(reservationOne);
 		
-		invoiceService.saveChargeToReservation(reservationChargeOne);
-		invoiceService.saveChargeToReservation(reservationChargeTwo);
+		invoiceService.createReservationCharge(reservationChargeOne);
+		invoiceService.createReservationCharge(reservationChargeTwo);
 		
-		assertEquals(2, invoiceService.getAllReservationCharges(reservationOne).size());
+		assertEquals(2, invoiceService.getAllReservationChargesForAReservation(reservationOne).size());
+	}
+	
+	@Test
+	public void testGetAllPaymentsForReservation() {
+		reservationOne = new Reservation();
+		reservationOne.setMainGuest(mainGuest);
+		reservationOne.setCreatedBy(user);
+		reservationOne.setReservationStatus(ReservationStatus.UpComing);
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 15)));
+		reservationOne.setRoomRates(new ArrayList<RoomRate>());
+		
+		bookingService.createReservation(reservationOne);
+		
+		Charge chargeOne = new Charge(Currency.CZK, 100);
+		Charge chargeTwo = new Charge(Currency.CZK, 200);
+		Charge chargeThree = new Charge(Currency.CZK, 300);
+		
+		invoiceService.createCharge(chargeOne);
+		invoiceService.createCharge(chargeTwo);
+		invoiceService.createCharge(chargeThree);
+		
+		ReservationCharge reservationChargeOne = new ReservationCharge();
+		reservationChargeOne.setCharge(chargeOne);
+		reservationChargeOne.setQuantity(1);
+		reservationChargeOne.setReservation(reservationOne);
+		
+		ReservationCharge reservationChargeTwo = new ReservationCharge();
+		reservationChargeTwo.setCharge(chargeTwo);
+		reservationChargeTwo.setQuantity(1);
+		reservationChargeTwo.setReservation(reservationOne);
+		
+		invoiceService.createReservationCharge(reservationChargeOne);
+		invoiceService.createReservationCharge(reservationChargeTwo);
+		
+		Payment payment = new Payment();
+		payment.setReservation(reservationOne);
+		payment.setReservationCharges(Arrays.asList(reservationChargeOne));
+		invoiceService.savePayment(payment);
+		
+		assertEquals(1, invoiceService.getAllPaymentsForReservation(reservationOne).size());
+	}
+	
+	@Test
+	public void testCRUDCharge() {
+		Charge chargeOne = new Charge(Currency.CZK, 100);
+		invoiceService.createCharge(chargeOne);
+		
+		assertEquals(1, invoiceService.getAllCharges().size());
+		
+		chargeOne.setCurrency(Currency.USD);
+		assertEquals(Currency.USD, invoiceService.getAllCharges().get(0).getCurrency());
+		
+		invoiceService.deleteCharge(chargeOne);
+		assertEquals(0, invoiceService.getAllCharges().size());
+	}
+	
+	@Test
+	public void testCRUDReservationCharge() {
+		ReservationCharge chargeOne = new ReservationCharge();
+		invoiceService.createReservationCharge(chargeOne);
+		
+		assertEquals(1, invoiceService.getAllReservationCharges().size());
+		
+		chargeOne.setQuantity(100);
+		assertEquals(100, invoiceService.getAllReservationCharges().get(0).getQuantity());
+		
+		invoiceService.deleteReservationCharge(chargeOne);
+		assertEquals(0, invoiceService.getAllReservationCharges().size());
+	}
+	
+	@Test
+	public void testCRUDPayment() {
+		Payment payment = new Payment();
+		invoiceService.savePayment(payment);
+		
+		assertEquals(1, invoiceService.getAllPayments().size());
+		
+		payment.setPaymentType(PaymentType.Cash);
+		assertEquals(PaymentType.Cash, invoiceService.getAllPayments().get(0).getPaymentType());
+		
+		invoiceService.deletePayment(payment);
+		assertEquals(0, invoiceService.getAllPayments().size());
 	}
 }

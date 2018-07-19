@@ -52,7 +52,7 @@ public class InvoiceController {
 		model.addAttribute("outstandingCharges", invoiceService.getOutstandingCharges(reservation));
 		model.addAttribute("payment", new Payment());
 		model.addAttribute("formsOfPayment", PaymentType.values());
-		model.addAttribute("reservationCharge",  invoiceService.getAllReservationCharges(reservation));
+		model.addAttribute("reservationCharge",  invoiceService.getAllReservationChargesForAReservation(reservation));
 		
 		
 		return "payment";
@@ -92,7 +92,7 @@ public class InvoiceController {
 		reservationCharge.setId(0); // TODO need to figure out why the ID is being set. in this case the reservation ID is also placed into the ReservationCancellation
 		reservationCharge.setReservation(reservation);
 		
-		invoiceService.saveChargeToReservation(reservationCharge);
+		invoiceService.createReservationCharge(reservationCharge);
 		
 		//check if payment exists for this reservation
 		//check if invoice exists for this reservation

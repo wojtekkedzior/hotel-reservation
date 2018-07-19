@@ -28,29 +28,50 @@ public class InvoiceService {
 
 	@Autowired
 	private ChargeRepo chargeRepo;
+	
+	public void createCharge(Charge charge) {
+		chargeRepo.save(charge);
+	}
 
+	public void createReservationCharge(ReservationCharge charge) {
+		reservationChargeRepo.save(charge);
+	}
+	
 	public void savePayment(Payment payment) {
 		log.info("Saving payment: " + payment.getId());
 		paymentRepo.save(payment);
 	}
-
-	public void saveChargeToReservation(ReservationCharge charge) {
-		reservationChargeRepo.save(charge);
+	
+	public List<Charge> getAllCharges() {
+		List<Charge> target = new ArrayList<Charge>();
+		chargeRepo.findAll().forEach(target::add);
+		return target;
+	}
+	
+	public List<ReservationCharge> getAllReservationCharges() {
+		List<ReservationCharge> target = new ArrayList<ReservationCharge>();
+		reservationChargeRepo.findAll().forEach(target::add);
+		return target;
+	}
+	
+	public List<Payment> getAllPayments() {
+		List<Payment> target = new ArrayList<Payment>();
+		paymentRepo.findAll().forEach(target::add);
+		return target;
 	}
 
-	public List<ReservationCharge> getAllReservationCharges(Reservation reservation) {
+	public List<ReservationCharge> getAllReservationChargesForAReservation(Reservation reservation) {
 		return reservationChargeRepo.findByReservation(reservation);
 	}
 
-	public List<Payment> getAllPayments(Reservation reservation) {
-		List<Payment> payemnts = paymentRepo.findByReservation(reservation); 
-		return payemnts;
+	public List<Payment> getAllPaymentsForReservation(Reservation reservation) {
+		return paymentRepo.findByReservation(reservation);
 	}
 
 	public List<ReservationCharge> getOutstandingCharges(Reservation reservation) {
 		List<ReservationCharge> charges = new ArrayList<ReservationCharge>();
 		
-		for (ReservationCharge reservationCharge : getAllReservationCharges(reservation)) {
+		for (ReservationCharge reservationCharge : getAllReservationChargesForAReservation(reservation)) {
 			Payment payment = paymentRepo.findByReservationAndReservationCharges(reservation, reservationCharge);
 			
 			if(payment == null) {
@@ -61,14 +82,15 @@ public class InvoiceService {
 		return charges;
 	}
 
-	public void createCharge(Charge charge) {
-		chargeRepo.save(charge);
+	public void deleteCharge(Charge charge) {
+		chargeRepo.delete(charge);
 	}
-
-	public List<Charge> getAllCharges() {
-		List<Charge> target = new ArrayList<Charge>();
-		chargeRepo.findAll().forEach(target::add);
-
-		return target;
+	
+	public void deleteReservationCharge(ReservationCharge reservationCharge) {
+		reservationChargeRepo.delete(reservationCharge);
+	}
+	
+	public void deletePayment(Payment payment) {
+		paymentRepo.delete(payment);
 	}
 }

@@ -186,10 +186,10 @@ public class ReservationController {
 		Reservation reservation = bookingService.getReservation(id);
 		model.addAttribute("reservation", reservation);
 		model.addAttribute("reservationCheckout", new ReservationCheckout());
-		model.addAttribute("reservationPayments", invoiceService.getAllPayments(reservation));
+		model.addAttribute("reservationPayments", invoiceService.getAllPaymentsForReservation(reservation));
 		model.addAttribute("charges", invoiceService.getAllCharges());
 		model.addAttribute("reservationCharge",  new ReservationCharge());
-		model.addAttribute("reservationCharges",  invoiceService.getAllReservationCharges(reservation));
+		model.addAttribute("reservationCharges",  invoiceService.getAllReservationChargesForAReservation(reservation));
 
 		int total = 0;
 
