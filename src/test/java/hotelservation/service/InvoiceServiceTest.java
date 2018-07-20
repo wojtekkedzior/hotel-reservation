@@ -133,7 +133,6 @@ public class InvoiceServiceTest {
 		userService.createRole(managerUserType);
 
 		user = new User();
-//		user.setUserType(managerUserType);
 		userService.createUser(user);
 
 		amenityTypeRoomBasic = new AmenityType("Basic", "Basic Room amenity Type");

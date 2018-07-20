@@ -46,26 +46,27 @@ public class RoomServiceTest {
 	@Autowired
 	private DateConvertor dateConvertor;
 	
+	private RoomType roomType;
+	private Role managerUserType;
+	private User createdBy;
+	private Room room;
+	private Status status;
+	
 	@Before
 	public void setup() {
-	}
-	
-
-	@Test
-	public void testCRUDRoom() {
-		Status status = new Status("Status name", "Status Description");
-		roomService.createStatus(status);
-
-		RoomType roomType = new RoomType("Standard", "Standard room");
+		roomType = new RoomType("Standard", "Standard room");
 		roomService.createRoomType(roomType);
 
-		Role managerUserType = new Role("manager", "manager desc", true);
+		managerUserType = new Role("manager", "manager desc", true);
 		userService.createRole(managerUserType);
 
-		User createdBy = new User();
+		createdBy = new User();
 		userService.createUser(createdBy);
-
-		Room room = new Room();
+		
+		status = new Status("Status name", "Status Description");
+		roomService.createStatus(status);
+		
+		room = new Room();
 		room.setRoomNumber(1);
 		room.setName("The Best Room");
 		room.setDescription("The Best Room Description");
@@ -74,7 +75,10 @@ public class RoomServiceTest {
 		room.setCreatedBy(createdBy);
 		room.setCreatedOn(new Date());
 		roomService.createRoom(room);
+	}
 
+	@Test
+	public void testCRUDRoom() {
 		Room createdRoom = roomService.getRoomById(room.getId());
 		assertEquals(room, createdRoom);
 
@@ -88,9 +92,6 @@ public class RoomServiceTest {
 	
 	@Test
 	public void testCRUDRoomType() {
-		RoomType roomType = new RoomType("Standard", "Standard room");
-		roomService.createRoomType(roomType);
-
 		assertEquals(1, roomService.getAllRoomTypes().size());
 		assertEquals(roomType, roomService.getAllRoomTypes().get(0));
 
@@ -100,8 +101,11 @@ public class RoomServiceTest {
 		RoomType updatedRoomType = roomService.getRoomTypeById(roomType.getId());
 		assertEquals(roomType, updatedRoomType);
 
+		//TODO something odd here with the contraint as if you delete the roomtype it's ok untill you try to retrive all room types
+		
+		roomService.deleteRoom(room.getId());
 		roomService.deleteRoomType(roomType);
-
+		
 		assertTrue(roomService.getAllRoomTypes().isEmpty());
 	}
 	
@@ -110,18 +114,17 @@ public class RoomServiceTest {
 		Status status = new Status("Status name", "Status Description");
 		roomService.createStatus(status);
 
-		List<Status> target = roomService.getAllStatuses();
-		assertTrue(target.size() == 1);
-		assertEquals(status, target.get(0));
+		assertEquals(2, roomService.getAllStatuses().size());
+		assertEquals(status, roomService.getStatusById(status.getId()));
 		
 		status.setName("Other Status");
-		Status status2 = roomService.getStatusById(status.getId());
-		assertEquals(status2, status);
+		
+		Status updatedStatus = roomService.getStatusById(status.getId());
+		assertEquals(updatedStatus, status);
 		
 		roomService.deleteStatus(status.getId());
 
-		target = roomService.getAllStatuses();
-		assertTrue(target.isEmpty());
+		assertEquals(1, roomService.getAllStatuses().size());
 	}
 	
 	@Test
@@ -171,15 +174,6 @@ public class RoomServiceTest {
 		Status status = new Status("Status name", "Status Description");
 		roomService.createStatus(status);
 
-		RoomType roomType = new RoomType("Standard", "Standard room");
-		roomService.createRoomType(roomType);
-
-		Role managerUserType = new Role("manager", "manager desc", true);
-		userService.createRole(managerUserType);
-
-		User createdBy = new User();
-		userService.createUser(createdBy);
-
 		Room room = new Room();
 		room.setRoomNumber(1);
 		room.setName("The Best Room");
@@ -214,8 +208,8 @@ public class RoomServiceTest {
 		Status status = new Status("status", "status");
 		roomService.createStatus(status);
 		
-		assertEquals(1, roomService.getAllStatuses().size());
-		assertEquals(status, roomService.getAllStatuses().get(0));
+		assertEquals(2, roomService.getAllStatuses().size());
+		assertEquals(status, roomService.getStatusById(status.getId()));
 
 		status.setName("Fancy");
 		status.setDescription("Fancy");
@@ -224,7 +218,7 @@ public class RoomServiceTest {
 		assertEquals(status, updatedStatus);
 
 		roomService.deleteStatus(status.getId());
-		assertTrue(roomService.getAllStatuses().isEmpty());
+		assertEquals(1, roomService.getAllStatuses().size());
 	}
 
 	@Test
@@ -232,15 +226,6 @@ public class RoomServiceTest {
 		Status status = new Status("Status name", "Status Description");
 		roomService.createStatus(status);
 
-		RoomType roomType = new RoomType("Standard", "Standard room");
-		roomService.createRoomType(roomType);
-
-		Role managerUserType = new Role("manager", "manager desc", true);
-		userService.createRole(managerUserType);
-
-		User createdBy = new User();
-		userService.createUser(createdBy);
-		
 		Room room = new Room();
 		room.setRoomNumber(1);
 		room.setName("The Best Room");
@@ -272,15 +257,6 @@ public class RoomServiceTest {
 		Status status = new Status("Status name", "Status Description");
 		roomService.createStatus(status);
 
-		RoomType roomType = new RoomType("Standard", "Standard room");
-		roomService.createRoomType(roomType);
-
-		Role managerUserType = new Role("manager", "manager desc", true);
-		userService.createRole(managerUserType);
-
-		User createdBy = new User();
-		userService.createUser(createdBy);
-
 		Room room = new Room();
 		room.setRoomNumber(1);
 		room.setName("The Best Room");
@@ -298,15 +274,6 @@ public class RoomServiceTest {
 	public void testGetRoomStatus() {
 		Status status = new Status("Status name", "Status Description");
 		roomService.createStatus(status);
-
-		RoomType roomType = new RoomType("Standard", "Standard room");
-		roomService.createRoomType(roomType);
-
-		Role managerUserType = new Role("manager", "manager desc", true);
-		userService.createRole(managerUserType);
-
-		User createdBy = new User();
-		userService.createUser(createdBy);
 
 		Room room = new Room();
 		room.setRoomNumber(1);
