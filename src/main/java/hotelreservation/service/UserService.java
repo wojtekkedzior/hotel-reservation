@@ -42,7 +42,11 @@ public class UserService {
 	public Role createRole(Role userType) {
 		return roleRepo.save(userType);
 	}
-
+	
+	public void createPrivilege(Privilege privilege) {
+		privilegeRepo.save(privilege);
+	}
+	
 	public List<Role> getAllRoles() {
 		Iterable<Role> findAll = roleRepo.findAll();
 
@@ -73,9 +77,7 @@ public class UserService {
 		return privilegeRepo.findByName(name);
 	}
 
-	public void createPrivilege(Privilege privilege) {
-		privilegeRepo.save(privilege);
-	}
+
 
 	public void deleteUser(User user) {
 		userRepo.delete(user);
@@ -84,4 +86,19 @@ public class UserService {
 	public void deleteRole(Role role) {
 		roleRepo.delete(role);
 	}
+	
+	public void deletePrivilege(Privilege privilege) {
+		privilegeRepo.delete(privilege);
+	}
+
+	public List<Privilege> getAllPrivileges() {
+		Iterable<Privilege> findAll = privilegeRepo.findAll();
+
+		List<Privilege> target = new ArrayList<Privilege>();
+		findAll.forEach(target::add);
+
+		return target;
+	}
+
+
 }

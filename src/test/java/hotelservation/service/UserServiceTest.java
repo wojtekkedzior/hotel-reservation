@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import hotelreservation.Application;
+import hotelreservation.model.Privilege;
 import hotelreservation.model.Role;
 import hotelreservation.model.User;
 import hotelreservation.service.UserService;
@@ -108,5 +109,21 @@ public class UserServiceTest {
 		
 		userService.deleteRole(role);
 		assertEquals(0, userService.getAllUsers().size());
+	}
+	
+	@Test
+	public void testCRUDPrivileges() {
+		Privilege privilege = new Privilege();
+		userService.createPrivilege(privilege);
+		
+		assertEquals(1, userService.getAllPrivileges().size());
+		
+		privilege.setName("updatedName");
+		
+		assertEquals(1, userService.getAllPrivileges().size());
+		assertEquals("updatedName", userService.getAllPrivileges().get(0).getName());
+		
+		userService.deletePrivilege(privilege);
+		assertEquals(0, userService.getAllPrivileges().size());
 	}
 }
