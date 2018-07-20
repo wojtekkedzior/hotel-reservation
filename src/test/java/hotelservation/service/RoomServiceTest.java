@@ -8,7 +8,6 @@ import static org.junit.Assert.fail;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Date;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -171,19 +170,6 @@ public class RoomServiceTest {
 	
 	@Test
 	public void testCRUDRoomRate() {
-		Status status = new Status("Status name", "Status Description");
-		roomService.createStatus(status);
-
-		Room room = new Room();
-		room.setRoomNumber(1);
-		room.setName("The Best Room");
-		room.setDescription("The Best Room Description");
-		room.setStatus(status);
-		room.setRoomType(roomType);
-		room.setCreatedBy(createdBy);
-		room.setCreatedOn(new Date());
-		roomService.createRoom(room);
-		
 		RoomRate roomRate = new RoomRate(room, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
 		roomService.createRoomRate(roomRate);
 		
@@ -205,10 +191,7 @@ public class RoomServiceTest {
 	
 	@Test
 	public void testCreateStatus() {
-		Status status = new Status("status", "status");
-		roomService.createStatus(status);
-		
-		assertEquals(2, roomService.getAllStatuses().size());
+		assertEquals(1, roomService.getAllStatuses().size());
 		assertEquals(status, roomService.getStatusById(status.getId()));
 
 		status.setName("Fancy");
@@ -217,25 +200,13 @@ public class RoomServiceTest {
 		Status updatedStatus = roomService.getStatusById(status.getId());
 		assertEquals(status, updatedStatus);
 
-		roomService.deleteStatus(status.getId());
-		assertEquals(1, roomService.getAllStatuses().size());
+		roomService.deleteRoom(room.getId());
+		roomService.deleteStatus(status.getId()); 
+		assertEquals(0, roomService.getAllStatuses().size());
 	}
 
 	@Test
 	public void testAddDuplicateRoomRate() {
-		Status status = new Status("Status name", "Status Description");
-		roomService.createStatus(status);
-
-		Room room = new Room();
-		room.setRoomNumber(1);
-		room.setName("The Best Room");
-		room.setDescription("The Best Room Description");
-		room.setStatus(status);
-		room.setRoomType(roomType);
-		room.setCreatedBy(createdBy);
-		room.setCreatedOn(new Date());
-		roomService.createRoom(room);
-
 		Date day = dateConvertor.asDate(LocalDate.of(2017, Month.MARCH, 15));
 		RoomRate roomRate = new RoomRate(room, Currency.CZK, 1000, day);
 		roomService.createRoomRate(roomRate);
@@ -248,43 +219,16 @@ public class RoomServiceTest {
 			roomService.createRoomRate(roomRate1);
 			fail();
 		} catch (Exception e) {
-			System.err.println(e);
 		}
 	}
 
 	@Test
 	public void testGetRoomByStatus() {
-		Status status = new Status("Status name", "Status Description");
-		roomService.createStatus(status);
-
-		Room room = new Room();
-		room.setRoomNumber(1);
-		room.setName("The Best Room");
-		room.setDescription("The Best Room Description");
-		room.setStatus(status);
-		room.setRoomType(roomType);
-		room.setCreatedBy(createdBy);
-		room.setCreatedOn(new Date());
-		roomService.createRoom(room);
-
 		assertTrue(roomService.getByRoomsByStatus(status).size() == 1);
 	}
 
 	@Test
 	public void testGetRoomStatus() {
-		Status status = new Status("Status name", "Status Description");
-		roomService.createStatus(status);
-
-		Room room = new Room();
-		room.setRoomNumber(1);
-		room.setName("The Best Room");
-		room.setDescription("The Best Room Description");
-		room.setStatus(status);
-		room.setRoomType(roomType);
-		 room.setCreatedBy(createdBy);
-		room.setCreatedOn(new Date());
-		roomService.createRoom(room);
-
 		assertEquals(status, roomService.getRoomStatus(room));
 	}
 }
