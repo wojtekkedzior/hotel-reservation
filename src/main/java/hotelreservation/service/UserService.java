@@ -75,11 +75,6 @@ public class UserService {
 
 	public void createPrivilege(Privilege privilege) {
 		privilegeRepo.save(privilege);
-		
-	}
-
-	public Role getRoleByName(String name) {
-		return roleRepo.findByName(name);
 	}
 
 	public void deleteUser(User user) {

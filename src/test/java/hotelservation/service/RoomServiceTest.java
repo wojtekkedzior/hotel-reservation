@@ -122,7 +122,6 @@ public class RoomServiceTest {
 		assertEquals(updatedStatus, status);
 		
 		roomService.deleteStatus(status.getId());
-
 		assertEquals(1, roomService.getAllStatuses().size());
 	}
 	
@@ -144,7 +143,6 @@ public class RoomServiceTest {
 		assertEquals(amenity, updatedAmenity);
 
 		roomService.deleteAmenity(amenity.getId());
-
 		assertTrue(roomService.getAllAmenities().isEmpty());
 	}
 	

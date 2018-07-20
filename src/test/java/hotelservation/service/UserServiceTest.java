@@ -93,4 +93,20 @@ public class UserServiceTest {
 		userService.deleteUser(user);
 		assertEquals(0, userService.getAllUsers().size());
 	}
+	
+	@Test
+	public void testCRUDRole() {
+		Role role = new Role();
+		userService.createRole(role);
+		
+		assertEquals(1, userService.getAllRoles().size());
+		
+		role.setName("updatedName");
+		
+		assertEquals(1, userService.getAllRoles().size());
+		assertEquals("updatedName", userService.getAllRoles().get(0).getName());
+		
+		userService.deleteRole(role);
+		assertEquals(0, userService.getAllUsers().size());
+	}
 }
