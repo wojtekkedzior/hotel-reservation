@@ -109,8 +109,8 @@ public class RoomService {
 		return amenityTypeRepo.save(amenityType);
 	}
 
-	public Amenity createAmenity(Amenity ammenity) {
-		return amenityRepo.save(ammenity);
+	public Amenity createAmenity(Amenity amenity) {
+		return amenityRepo.save(amenity);
 	}
 
 	public List<AmenityType> getAllAmenityTypes() {

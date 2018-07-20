@@ -20,12 +20,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import hotelreservation.Application;
 import hotelreservation.DateConvertor;
+import hotelreservation.model.Amenity;
+import hotelreservation.model.AmenityType;
+import hotelreservation.model.Role;
 import hotelreservation.model.Room;
 import hotelreservation.model.RoomRate;
 import hotelreservation.model.RoomType;
 import hotelreservation.model.Status;
 import hotelreservation.model.User;
-import hotelreservation.model.Role;
 import hotelreservation.model.enums.Currency;
 import hotelreservation.service.RoomService;
 import hotelreservation.service.UserService;
@@ -61,7 +63,7 @@ public class RoomServiceTest {
 		userService.createRole(managerUserType);
 
 		User createdBy = new User();
-//		createdBy.setUserType(managerUserType);
+		userService.createUser(createdBy);
 
 		Room room = new Room();
 		room.setRoomNumber(1);
@@ -89,11 +91,8 @@ public class RoomServiceTest {
 		RoomType roomType = new RoomType("Standard", "Standard room");
 		roomService.createRoomType(roomType);
 
-		// when
-		List<RoomType> target = roomService.getAllRoomTypes();
-
-		assertTrue(target.size() == 1);
-		assertEquals(roomType, target.get(0));
+		assertEquals(1, roomService.getAllRoomTypes().size());
+		assertEquals(roomType, roomService.getAllRoomTypes().get(0));
 
 		roomType.setName("Fancy");
 		roomType.setDescription("Fancy room");
@@ -103,8 +102,7 @@ public class RoomServiceTest {
 
 		roomService.deleteRoomType(roomType);
 
-		target = roomService.getAllRoomTypes();
-		assertTrue(target.isEmpty());
+		assertTrue(roomService.getAllRoomTypes().isEmpty());
 	}
 	
 	@Test
@@ -128,29 +126,105 @@ public class RoomServiceTest {
 	
 	@Test
 	public void testCRUDAmenity() {
+		AmenityType standard = new AmenityType("standard", "standard");
+		roomService.createAmenityType(standard);
 		
+		Amenity amenity = new Amenity("pillow", "extra fluffy", standard);
+		roomService.createAmenity(amenity);
+
+		assertEquals(1, roomService.getAllAmenities().size());
+		assertEquals(amenity, roomService.getAllAmenities().get(0));
+
+		amenity.setName("Fancy");
+		amenity.setDescription("Fancy");
+
+		Amenity updatedAmenity = roomService.getAmenityById(amenity.getId());
+		assertEquals(amenity, updatedAmenity);
+
+		roomService.deleteAmenity(amenity.getId());
+
+		assertTrue(roomService.getAllAmenities().isEmpty());
 	}
 	
 	@Test
 	public void testCRUDAmenityType() {
+		AmenityType amenityType = new AmenityType("standard", "standard");
+		roomService.createAmenityType(amenityType);
 		
+		assertEquals(1, roomService.getAllAmenityTypes().size());
+		assertEquals(amenityType, roomService.getAllAmenityTypes().get(0));
+
+		amenityType.setName("Fancy");
+		amenityType.setDescription("Fancy");
+
+		AmenityType updatedAmenityType = roomService.getAmenityTypeById(amenityType.getId());
+		assertEquals(amenityType, updatedAmenityType);
+		
+		System.err.println(roomService.getAllAmenityTypes());
+
+		roomService.deleteAmenityType(amenityType.getId());
+		assertTrue(roomService.getAllAmenityTypes().isEmpty());
 	}
 	
 	@Test
 	public void testCRUDRoomRate() {
+		Status status = new Status("Status name", "Status Description");
+		roomService.createStatus(status);
+
+		RoomType roomType = new RoomType("Standard", "Standard room");
+		roomService.createRoomType(roomType);
+
+		Role managerUserType = new Role("manager", "manager desc", true);
+		userService.createRole(managerUserType);
+
+		User createdBy = new User();
+		userService.createUser(createdBy);
+
+		Room room = new Room();
+		room.setRoomNumber(1);
+		room.setName("The Best Room");
+		room.setDescription("The Best Room Description");
+		room.setStatus(status);
+		room.setRoomType(roomType);
+		room.setCreatedBy(createdBy);
+		room.setCreatedOn(new Date());
+		roomService.createRoom(room);
 		
+		RoomRate roomRate = new RoomRate(room, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		roomService.createRoomRate(roomRate);
+		
+		Date startDate = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1));
+		Date endDate = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4));
+		
+		assertEquals(1, roomService.getRoomRates(startDate, endDate).size());
+		assertEquals(roomRate, roomService.getRoomRates(startDate, endDate).get(0));
+
+		roomRate.setValue(500);
+		roomRate.setDescription("Fancy");
+
+		RoomRate updatedRoomRate = roomService.getRoomRateById(roomRate.getId());
+		assertEquals(roomRate, updatedRoomRate);
+
+		roomService.deleteRoomRate(roomRate.getId());
+		assertTrue(roomService.getRoomRates(startDate, endDate).isEmpty());
 	}
 	
 	@Test
 	public void testCreateStatus() {
-	
-	}
+		Status status = new Status("status", "status");
+		roomService.createStatus(status);
+		
+		assertEquals(1, roomService.getAllStatuses().size());
+		assertEquals(status, roomService.getAllStatuses().get(0));
 
+		status.setName("Fancy");
+		status.setDescription("Fancy");
 
+		Status updatedStatus = roomService.getStatusById(status.getId());
+		assertEquals(status, updatedStatus);
 
-
-	@Test
-	public void testAddAllUserTypes() {
+		roomService.deleteStatus(status.getId());
+		assertTrue(roomService.getAllStatuses().isEmpty());
 	}
 
 	@Test
@@ -164,12 +238,16 @@ public class RoomServiceTest {
 		Role managerUserType = new Role("manager", "manager desc", true);
 		userService.createRole(managerUserType);
 
+		User createdBy = new User();
+		userService.createUser(createdBy);
+		
 		Room room = new Room();
 		room.setRoomNumber(1);
 		room.setName("The Best Room");
 		room.setDescription("The Best Room Description");
 		room.setStatus(status);
 		room.setRoomType(roomType);
+		room.setCreatedBy(createdBy);
 		room.setCreatedOn(new Date());
 		roomService.createRoom(room);
 
@@ -201,7 +279,7 @@ public class RoomServiceTest {
 		userService.createRole(managerUserType);
 
 		User createdBy = new User();
-//		createdBy.setUserType(managerUserType);
+		userService.createUser(createdBy);
 
 		Room room = new Room();
 		room.setRoomNumber(1);
@@ -209,7 +287,7 @@ public class RoomServiceTest {
 		room.setDescription("The Best Room Description");
 		room.setStatus(status);
 		room.setRoomType(roomType);
-		// room.setCreatedBy(createdBy);
+		room.setCreatedBy(createdBy);
 		room.setCreatedOn(new Date());
 		roomService.createRoom(room);
 
@@ -228,7 +306,7 @@ public class RoomServiceTest {
 		userService.createRole(managerUserType);
 
 		User createdBy = new User();
-//		createdBy.setUserType(managerUserType);
+		userService.createUser(createdBy);
 
 		Room room = new Room();
 		room.setRoomNumber(1);
@@ -236,7 +314,7 @@ public class RoomServiceTest {
 		room.setDescription("The Best Room Description");
 		room.setStatus(status);
 		room.setRoomType(roomType);
-		// room.setCreatedBy(createdBy);
+		 room.setCreatedBy(createdBy);
 		room.setCreatedOn(new Date());
 		roomService.createRoom(room);
 

@@ -69,14 +69,6 @@ public class UserService {
 		return roleRepo.findById(new Long(id.get())).get();
 	}
 
-	public void deleteUser(Long id) {
-		userRepo.deleteById(id);
-	}
-
-	public void deleteRole(Long id) {
-		roleRepo.deleteById(id);
-	}
-
 	public Privilege getPrivilegeByName(String name) {
 		return privilegeRepo.findByName(name);
 	}
@@ -88,5 +80,13 @@ public class UserService {
 
 	public Role getRoleByName(String name) {
 		return roleRepo.findByName(name);
+	}
+
+	public void deleteUser(User user) {
+		userRepo.delete(user);
+	}
+
+	public void deleteRole(Role role) {
+		roleRepo.delete(role);
 	}
 }

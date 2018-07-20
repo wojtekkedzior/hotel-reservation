@@ -73,7 +73,8 @@ public class UsersController {
 	public ModelAndView deleteUser(@PathVariable Optional<Integer> id) {
 		log.info("deleting user: " + id);
 		if(id.isPresent()) {
-			userService.deleteUser(new Long(id.get()));
+			User userById = userService.getUserById(id);
+			userService.deleteUser(userById);
 		} 
 		return new ModelAndView("redirect:/user");
 	}

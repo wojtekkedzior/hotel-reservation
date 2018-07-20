@@ -1,5 +1,7 @@
 package hotelservation.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -14,6 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import hotelreservation.Application;
 import hotelreservation.model.Role;
+import hotelreservation.model.User;
 import hotelreservation.service.UserService;
 
 @RunWith(SpringRunner.class)
@@ -26,16 +29,6 @@ public class UserServiceTest {
 	
 	@Before
 	public void setup() {
-	}
-
-	@Test
-	public void testCRUDUser() {
-		
-	}
-	
-	@Test
-	public void testCRUDUserType() {
-		
 	}
 
 	@Test
@@ -52,24 +45,13 @@ public class UserServiceTest {
 
 	@Test
 	public void testDisabledUser() {
-		// given
-		Role userType = new Role("UserType name", "UserTypeDescription", true);
-		userService.createRole(userType);
+		Role role = new Role("Role Name", "RoleDescription", true);
+		userService.createRole(role);
 
-		// when
-		List<Role> target =  userService.getAllRoles();
-		System.err.println(target.size());
-		assertTrue(target.size() == 1);
-//		assertEquals(userType, target.get(0)); //TODO needs fixing
+		assertTrue(userService.getAllRoles().get(0).isEnabled());
+		role.setEnabled(false);
 
-		userType.setEnabled(false);
-		userService.createRole(userType);
-
-		// when
-		target = userService.getAllRoles();
-
-		assertTrue(target.size() == 1);
-//		assertEquals(userType, target.get(0));  //TODO needs fixing
+		assertFalse(userService.getAllRoles().get(0).isEnabled());
 	}
 	
 	@Test
@@ -94,5 +76,21 @@ public class UserServiceTest {
 		assertTrue(target.contains(adminUserType));
 		assertTrue(target.contains(managerUserType));
 		assertTrue(target.contains(receptionUserType));
+	}
+	
+	@Test
+	public void testCRUDUser() {
+		User user = new User("username", "name");
+		userService.createUser(user);
+		
+		assertEquals(1, userService.getAllUsers().size());
+		
+		user.setFirstName("updatedFirstName");
+		
+		assertEquals(1, userService.getAllUsers().size());
+		assertEquals("updatedFirstName", userService.getAllUsers().get(0).getFirstName());
+		
+		userService.deleteUser(user);
+		assertEquals(0, userService.getAllUsers().size());
 	}
 }
