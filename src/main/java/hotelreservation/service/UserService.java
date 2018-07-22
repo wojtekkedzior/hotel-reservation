@@ -77,8 +77,6 @@ public class UserService {
 		return privilegeRepo.findByName(name);
 	}
 
-
-
 	public void deleteUser(User user) {
 		userRepo.delete(user);
 	}
@@ -99,6 +97,4 @@ public class UserService {
 
 		return target;
 	}
-
-
 }

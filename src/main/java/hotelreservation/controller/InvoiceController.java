@@ -58,9 +58,7 @@ public class InvoiceController {
 		return "payment";
 	}
 	
-	
 	//To make @RequestParam(value = "charges" , required = false) int[] charges , just add name="charges to an input field of type checkbox"
-	
 	
 	@PostMapping("/createPayment/{id}")
 	@PreAuthorize("hasAuthority('createPayment')")
@@ -74,8 +72,6 @@ public class InvoiceController {
 		payment.setId(0);
 		payment.setReservation(reservation);
 		invoiceService.savePayment(payment);
-
-		
 		
 		
 		//TODO use credit card in reservation?

@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import hotelreservation.DateConvertor;
+import hotelreservation.NotFoundException;
 import hotelreservation.model.Contact;
 import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;
@@ -125,7 +126,13 @@ public class BookingService {
 	}
 
 	public Reservation getReservation(Optional<Integer> reservationId) {
-		return reservationRepo.findById(new Long(reservationId.get())).get();
+		Optional<Reservation> reservation = reservationRepo.findById(new Long(reservationId.get()));
+		
+		if (!reservation.isPresent()) {
+			throw new NotFoundException();
+		}
+		
+		return reservation.get(); 
 	}
  
 	public List<Reservation> getReservationsStartingToday() {

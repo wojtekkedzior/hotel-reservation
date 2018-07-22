@@ -215,7 +215,6 @@ public class ReservationController {
 		guest.setId(0);
 
 		// TODO need to make use of the binding results (in all Post handlers)
-		System.err.println(bindingResult); // need to handle binding results
 
 		guestService.saveContact(guest.getContact());
 		guestService.saveIdentification(guest.getIdentification());

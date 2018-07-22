@@ -18,9 +18,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import hotelreservation.model.enums.ReservationStatus;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class Reservation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
