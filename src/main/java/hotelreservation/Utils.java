@@ -5,11 +5,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DateConvertor {
+public class Utils {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	public Date asDate(LocalDate localDate) {
@@ -34,5 +37,9 @@ public class DateConvertor {
 		LocalDateTime d = Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
 		log.debug("converted localDate: " + d + " to: " + date);
 		return d;
+	}
+
+	public <T> List<T> toList(final Iterable<T> iterable) {
+		return StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toList());
 	}
 }

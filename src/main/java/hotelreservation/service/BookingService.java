@@ -1,7 +1,6 @@
 package hotelreservation.service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,8 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import hotelreservation.DateConvertor;
 import hotelreservation.NotFoundException;
+import hotelreservation.Utils;
 import hotelreservation.model.Contact;
 import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;
@@ -53,7 +52,7 @@ public class BookingService {
 	private ReservationCancellationRepo reservationCancellationRepo;
 	
 	@Autowired
-	private DateConvertor dateConvertor;
+	private Utils utils;
 
 	@Autowired
 	private ReservationCheckoutRepo reservationCheckoutRepo;
@@ -91,10 +90,10 @@ public class BookingService {
 		Map<LocalDate, RoomRate> roomRatesAsMap = new HashMap<LocalDate, RoomRate>();
 		
 		for (RoomRate roomRate : roomRates) {
-			roomRatesAsMap.put(dateConvertor.asLocalDate(roomRate.getDay()), roomRate);
+			roomRatesAsMap.put(utils.asLocalDate(roomRate.getDay()), roomRate);
 		}
 		
-		LocalDate startDate = dateConvertor.asLocalDate(reservation.getStartDate());
+		LocalDate startDate = utils.asLocalDate(reservation.getStartDate());
 		
 		for (int i = 0; i < roomRates.size(); i++) {
 			if(!roomRatesAsMap.containsKey(startDate)) {
@@ -120,9 +119,7 @@ public class BookingService {
 	}
 
 	public List<Reservation> getAllReservations() {
-		List<Reservation> target = new ArrayList<Reservation>();
-		reservationRepo.findAll().forEach(target::add);
-		return target;
+		return utils.toList(reservationRepo.findAll());
 	}
 
 	public Reservation getReservation(Optional<Integer> reservationId) {

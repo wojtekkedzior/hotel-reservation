@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import hotelreservation.DateConvertor;
+import hotelreservation.Utils;
 import hotelreservation.model.Amenity;
 import hotelreservation.model.AmenityType;
 import hotelreservation.model.Room;
@@ -39,7 +39,7 @@ public class RoomController {
 	private RoomService roomService;
 
 	@Autowired
-	private DateConvertor dateConvertor;
+	private Utils dateConvertor;
 
 	@RequestMapping(value = { "/amenity", "/amenity/{id}" })
 	@PreAuthorize("hasAuthority('createAmenity')")

@@ -130,7 +130,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	private BookingService bookingService;
 
 	@Autowired
-	private DateConvertor dateConvertor;
+	private Utils dateConvertor;
 	
 	@Autowired
 	private InvoiceService invoiceService;

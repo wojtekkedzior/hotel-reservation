@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import hotelreservation.NotFoundException;
+import hotelreservation.Utils;
 import hotelreservation.model.Amenity;
 import hotelreservation.model.AmenityType;
 import hotelreservation.model.Reservation;
@@ -56,6 +57,9 @@ public class RoomService {
 	
 	@Autowired
 	private ReservationRepo reservationRepo;
+	
+	@Autowired
+	private Utils utils;
 
 	public List<Amenity> getRoomAmenities() {
 		List<Amenity> roomAmenities = new ArrayList<>();
@@ -175,9 +179,7 @@ public class RoomService {
 	}
 	
 	public List<AmenityType> getAllAmenityTypes() {
-		List<AmenityType> target = new ArrayList<AmenityType>();
-		amenityTypeRepo.findAll().forEach(target::add);
-		return target;
+		return utils.toList(amenityTypeRepo.findAll());
 	}
 	
 	public void deleteAmenityType(Long id) {
@@ -201,9 +203,7 @@ public class RoomService {
 	}
 	
 	public List<Room> getAllRooms() {
-		List<Room> target = new ArrayList<Room>();
-		roomRepo.findAll().forEach(target::add);
-		return target;
+		return utils.toList(roomRepo.findAll());
 	}
 	
 	public void deleteRoom(Long id) {
@@ -230,10 +230,7 @@ public class RoomService {
 	}
 	
 	public List<RoomType> getAllRoomTypes() {
-		List<RoomType> target = new ArrayList<RoomType>();
-		roomTypeRepo.findAll().forEach(target::add);
-
-		return target;
+		return utils.toList(roomTypeRepo.findAll());
 	}
 	
 	public void deleteRoomType(Long id) {
@@ -260,9 +257,7 @@ public class RoomService {
 	}
 
 	public List<RoomRate> getAllRoomRates() { 
-		List<RoomRate> target = new ArrayList<RoomRate>();
-		roomRateRepo.findAll().forEach(target::add);
-		return target;
+		return utils.toList(roomRateRepo.findAll());
 	}
 	
 	public void deleteRoomRate(Long id) {
@@ -285,9 +280,7 @@ public class RoomService {
 	}
 
 	public List<Status> getAllStatuses() {
-		List<Status> target = new ArrayList<Status>();
-		statusRepo.findAll().forEach(target::add);
-		return target;
+		return utils.toList(statusRepo.findAll());
 	}
 	
 	public void deleteStatus(Long id) {

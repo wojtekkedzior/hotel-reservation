@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import hotelreservation.model.Charge;
 import hotelreservation.model.Contact;
 import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;
@@ -43,9 +42,7 @@ import hotelreservation.model.ReservationCheckout;
 import hotelreservation.model.Room;
 import hotelreservation.model.RoomRate;
 import hotelreservation.model.enums.IdType;
-import hotelreservation.model.enums.PaymentType;
 import hotelreservation.model.enums.ReservationStatus;
-import hotelreservation.model.finance.Payment;
 import hotelreservation.service.BookingService;
 import hotelreservation.service.GuestService;
 import hotelreservation.service.InvoiceService;

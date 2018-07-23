@@ -1,6 +1,5 @@
 package hotelreservation.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import hotelreservation.NotFoundException;
+import hotelreservation.Utils;
 import hotelreservation.model.Contact;
 import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;
@@ -29,6 +29,9 @@ public class GuestService {
 	
 	@Autowired
 	private ContactRepo contactRepo;
+	
+	@Autowired
+	private Utils utils;
 	
 	public Contact saveContact(Contact contact) {
 		return contactRepo.save(contact);
@@ -70,21 +73,15 @@ public class GuestService {
 	}
 	
 	public List<Contact> getAllContacts() {
-		List<Contact> target = new ArrayList<Contact>();
-		contactRepo.findAll().forEach(target::add);
-		return target;
+		return utils.toList(contactRepo.findAll());
 	}
 	
 	public List<Guest> getAllGuests() {
-		List<Guest> target = new ArrayList<Guest>();
-		guestRepo.findAll().forEach(target::add);
-		return target;
+		return utils.toList(guestRepo.findAll());
 	}
 	
 	public List<Identification> getAllIdentifications() {
-		List<Identification> target = new ArrayList<Identification>();
-		identificationRepo.findAll().forEach(target::add);
-		return target;
+		return utils.toList(identificationRepo.findAll());
 	}
 	
 	public void deleteGuest(Optional<Integer> id) {

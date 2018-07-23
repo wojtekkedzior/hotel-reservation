@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import hotelreservation.Utils;
 import hotelreservation.model.Charge;
 import hotelreservation.model.Reservation;
 import hotelreservation.model.ReservationCharge;
@@ -29,6 +30,9 @@ public class InvoiceService {
 	@Autowired
 	private ChargeRepo chargeRepo;
 	
+	@Autowired
+	private Utils utils;
+	
 	public void createCharge(Charge charge) {
 		chargeRepo.save(charge);
 	}
@@ -43,21 +47,15 @@ public class InvoiceService {
 	}
 	
 	public List<Charge> getAllCharges() {
-		List<Charge> target = new ArrayList<Charge>();
-		chargeRepo.findAll().forEach(target::add);
-		return target;
+		return utils.toList(chargeRepo.findAll());
 	}
 	
 	public List<ReservationCharge> getAllReservationCharges() {
-		List<ReservationCharge> target = new ArrayList<ReservationCharge>();
-		reservationChargeRepo.findAll().forEach(target::add);
-		return target;
+		return utils.toList(reservationChargeRepo.findAll());
 	}
 	
 	public List<Payment> getAllPayments() {
-		List<Payment> target = new ArrayList<Payment>();
-		paymentRepo.findAll().forEach(target::add);
-		return target;
+		return utils.toList(paymentRepo.findAll());
 	}
 
 	public List<ReservationCharge> getAllReservationChargesForAReservation(Reservation reservation) {

@@ -17,8 +17,8 @@ public class Application extends org.springframework.boot.web.servlet.support.Sp
 	}
 
 	@Bean
-	public DateConvertor dateConvertor() {
-		return new DateConvertor();
+	public Utils dateConvertor() {
+		return new Utils();
 	}
 
 	@Override

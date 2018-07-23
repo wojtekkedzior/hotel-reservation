@@ -17,7 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import hotelreservation.Application;
-import hotelreservation.DateConvertor;
+import hotelreservation.Utils;
 import hotelreservation.NotFoundException;
 import hotelreservation.model.Amenity;
 import hotelreservation.model.AmenityType;
@@ -43,7 +43,7 @@ public class RoomServiceTest {
 	private UserService userService;
 
 	@Autowired
-	private DateConvertor dateConvertor;
+	private Utils dateConvertor;
 	
 	private RoomType roomType;
 	private Role managerUserType;

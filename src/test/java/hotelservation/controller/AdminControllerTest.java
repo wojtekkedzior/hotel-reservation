@@ -30,7 +30,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import hotelreservation.Application;
-import hotelreservation.DateConvertor;
+import hotelreservation.Utils;
 import hotelreservation.model.Contact;
 import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;
@@ -80,7 +80,7 @@ public class AdminControllerTest {
 	private BookingService bookingService;
 
 	@Autowired
-	private DateConvertor dateConvertor;
+	private Utils dateConvertor;
 
 	@Autowired
 	private PlatformTransactionManager txManager;

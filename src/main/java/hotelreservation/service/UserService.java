@@ -1,6 +1,5 @@
 package hotelreservation.service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import hotelreservation.NotFoundException;
+import hotelreservation.Utils;
 import hotelreservation.model.Privilege;
 import hotelreservation.model.Role;
 import hotelreservation.model.User;
@@ -31,6 +31,9 @@ public class UserService {
 	@Autowired
 	private PrivilegeRepo privilegeRepo;
 	
+	@Autowired
+	private Utils utils;
+	
 	//TODO remove as the super admin user should be added by an sql script
 	public User createUser(User user) {
 		user.setCreatedOn(new Date());
@@ -49,21 +52,11 @@ public class UserService {
 	}
 	
 	public List<Role> getAllRoles() {
-		Iterable<Role> findAll = roleRepo.findAll();
-
-		List<Role> target = new ArrayList<Role>();
-		findAll.forEach(target::add);
-
-		return target;
+		return utils.toList(roleRepo.findAll());
 	}
 
 	public List<User> getAllUsers() {
-		Iterable<User> findAll = userRepo.findAll();
-
-		List<User> target = new ArrayList<User>();
-		findAll.forEach(target::add);
-
-		return target;
+		return utils.toList(userRepo.findAll());
 	}
 
 	public User getUserById(Integer id) {
@@ -95,11 +88,6 @@ public class UserService {
 	}
 
 	public List<Privilege> getAllPrivileges() {
-		Iterable<Privilege> findAll = privilegeRepo.findAll();
-
-		List<Privilege> target = new ArrayList<Privilege>();
-		findAll.forEach(target::add);
-
-		return target;
+		return utils.toList(privilegeRepo.findAll());
 	}
 }
