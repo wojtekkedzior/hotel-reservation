@@ -72,7 +72,6 @@ public class RoomService {
 	public List<Room> getByRoomsByStatus(Status status) {
 		List<Room> target = new ArrayList<Room>();
 		roomRepo.findByStatus(status).forEach(target::add);
-
 		return target;
 	}
 
@@ -141,11 +140,12 @@ public class RoomService {
 	}
 	
 	public Amenity getAmenityById(long id) {
+		log.info("Looking for Amenity with ID: " + id);
 		Optional<Amenity> findById = amenityRepo.findById(id);
 		if(findById.isPresent()) {
 			return findById.get();
 		} else {
-			throw new NotFoundException();
+			throw new NotFoundException(id);
 		}
 	}
 	
@@ -165,25 +165,24 @@ public class RoomService {
 	}
 	
 	public AmenityType getAmenityTypeById(long id) {
+		log.info("Looking for AmenityType with ID: " + id);
 		Optional<AmenityType> findById = amenityTypeRepo.findById(id);
 		if(findById.isPresent()) {
 			return findById.get();
 		} else {
-			throw new NotFoundException();
+			throw new NotFoundException(id);
 		}
 	}
 	
 	public List<AmenityType> getAllAmenityTypes() {
 		List<AmenityType> target = new ArrayList<AmenityType>();
 		amenityTypeRepo.findAll().forEach(target::add);
-
 		return target;
 	}
 	
 	public void deleteAmenityType(Long id) {
 		amenityTypeRepo.deleteById(id);
 	}
-	
 	
 	//---- Room
 	public Room createRoom(Room room) {
@@ -192,11 +191,12 @@ public class RoomService {
 	}
 	
 	public Room getRoomById(long id) {
+		log.info("Looking for Room with ID: " + id);
 		Optional<Room> findById = roomRepo.findById(id);
 		if(findById.isPresent()) {
 			return findById.get();
 		} else {
-			throw new NotFoundException();
+			throw new NotFoundException(id);
 		}
 	}
 	
@@ -220,11 +220,12 @@ public class RoomService {
 	}
 	
 	public RoomType getRoomTypeById(long id) {
+		log.info("Looking for RoomType with ID: " + id);
 		Optional<RoomType> findById = roomTypeRepo.findById(id);
 		if(findById.isPresent()) {
 			return findById.get();
 		} else {
-			throw new NotFoundException();
+			throw new NotFoundException(id);
 		}
 	}
 	
@@ -249,11 +250,12 @@ public class RoomService {
 	}
 
 	public RoomRate getRoomRateById(long id) {
+		log.info("Looking for RoomRate with ID: " + id);
 		Optional<RoomRate> findById = roomRateRepo.findById(id);
 		if(findById.isPresent()) {
 			return findById.get();
 		} else {
-			throw new NotFoundException();
+			throw new NotFoundException(id);
 		}
 	}
 
@@ -273,11 +275,12 @@ public class RoomService {
 	}
 	
 	public Status getStatusById(long id) {
+		log.info("Looking for Status with ID: " + id);
 		Optional<Status> findById = statusRepo.findById(id);
 		if(findById.isPresent()) {
 			return findById.get();
 		} else {
-			throw new NotFoundException();
+			throw new NotFoundException(id);
 		}
 	}
 

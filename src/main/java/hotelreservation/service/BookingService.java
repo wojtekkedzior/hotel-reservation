@@ -129,7 +129,7 @@ public class BookingService {
 		Optional<Reservation> reservation = reservationRepo.findById(new Long(reservationId.get()));
 		
 		if (!reservation.isPresent()) {
-			throw new NotFoundException();
+			throw new NotFoundException(reservationId.get());
 		}
 		
 		return reservation.get(); 
