@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import hotelreservation.NotFoundException;
 import hotelreservation.model.Amenity;
 import hotelreservation.model.AmenityType;
 import hotelreservation.model.Reservation;
@@ -55,78 +57,6 @@ public class RoomService {
 	@Autowired
 	private ReservationRepo reservationRepo;
 
-	public RoomType createRoomType(RoomType roomType) {
-		return roomTypeRepo.save(roomType);
-	}
-
-	public List<Room> getAllRooms() {
-		List<Room> target = new ArrayList<Room>();
-		roomRepo.findAll().forEach(target::add);
-
-		return target;
-	}
-
-	public Status createStatus(Status status) {
-		return statusRepo.save(status);
-	}
-
-	public List<Status> getAllStatuses() {
-		List<Status> target = new ArrayList<Status>();
-		statusRepo.findAll().forEach(target::add);
-
-		return target;
-	}
-
-	public List<RoomType> getAllRoomTypes() {
-		List<RoomType> target = new ArrayList<RoomType>();
-		roomTypeRepo.findAll().forEach(target::add);
-
-		return target;
-	}
-
-	public RoomType getRoomTypeById(long id) {
-		return roomTypeRepo.findById(id).get();
-	}
-
-	public void deleteRoomType(RoomType roomType) {
-		roomTypeRepo.delete(roomType);
-	}
-
-	public Room createRoom(Room room) {
-		room.setCreatedOn(new Date());
-		return roomRepo.save(room);
-	}
-
-	public Room getRoomById(long id) {
-		if(roomRepo.findById(id).isPresent()) {
-			return roomRepo.findById(id).get();
-		} else {
-			return null;
-		}
-	}
-
-	public AmenityType createAmenityType(AmenityType amenityType) {
-		return amenityTypeRepo.save(amenityType);
-	}
-
-	public Amenity createAmenity(Amenity amenity) {
-		return amenityRepo.save(amenity);
-	}
-
-	public List<AmenityType> getAllAmenityTypes() {
-		List<AmenityType> target = new ArrayList<AmenityType>();
-		amenityTypeRepo.findAll().forEach(target::add);
-
-		return target;
-	}
-
-	public List<Amenity> getAllAmenities() {
-		List<Amenity> target = new ArrayList<Amenity>();
-		amenityRepo.findAll().forEach(target::add);
-
-		return target;
-	}
-
 	public List<Amenity> getRoomAmenities() {
 		List<Amenity> roomAmenities = new ArrayList<>();
 
@@ -144,14 +74,6 @@ public class RoomService {
 		roomRepo.findByStatus(status).forEach(target::add);
 
 		return target;
-	}
-
-	public Status getRoomStatus(Room room) {
-		return roomRepo.findById(room.getId()).get().getStatus();
-	}
-
-	public void createRoomRate(RoomRate roomRate) {
-		roomRateRepo.save(roomRate);
 	}
 
 	public List<RoomRate> getRoomRates(Date start, Date end) {
@@ -213,61 +135,158 @@ public class RoomService {
 		return ratesForAllRooms;
 	}
 
-	public List<RoomRate> getAllRoomRates() { 
-		List<RoomRate> target = new ArrayList<RoomRate>();
-		roomRateRepo.findAll().forEach(target::add);
-
-		return target;
+	//---- Amenity
+	public Amenity createAmenity(Amenity amenity) {
+		return amenityRepo.save(amenity);
 	}
 	
-	public Amenity getAmenityById(Long id) {
-		if(amenityRepo.findById(id).isPresent()) {
-			return amenityRepo.findById(id).get();
+	public Amenity getAmenityById(long id) {
+		Optional<Amenity> findById = amenityRepo.findById(id);
+		if(findById.isPresent()) {
+			return findById.get();
 		} else {
-			return null;
+			throw new NotFoundException();
 		}
 	}
-
-	public AmenityType getAmenityTypeById(Long id) {
-		return amenityTypeRepo.findById(id).get();
-	}
-
-	public Room getGetRoomById(Long id) {
-		return roomRepo.findById(id).get();
+	
+	public List<Amenity> getAllAmenities() {
+		List<Amenity> target = new ArrayList<Amenity>();
+		amenityRepo.findAll().forEach(target::add);
+		return target;
 	}
 	
 	public void deleteAmenity(Long id) {
 		amenityRepo.deleteById(id);
 	}
+	
+	//---- AmenityType
+	public AmenityType createAmenityType(AmenityType amenityType) {
+		return amenityTypeRepo.save(amenityType);
+	}
+	
+	public AmenityType getAmenityTypeById(long id) {
+		Optional<AmenityType> findById = amenityTypeRepo.findById(id);
+		if(findById.isPresent()) {
+			return findById.get();
+		} else {
+			throw new NotFoundException();
+		}
+	}
+	
+	public List<AmenityType> getAllAmenityTypes() {
+		List<AmenityType> target = new ArrayList<AmenityType>();
+		amenityTypeRepo.findAll().forEach(target::add);
 
+		return target;
+	}
+	
 	public void deleteAmenityType(Long id) {
 		amenityTypeRepo.deleteById(id);
+	}
+	
+	
+	//---- Room
+	public Room createRoom(Room room) {
+		room.setCreatedOn(new Date());
+		return roomRepo.save(room);
+	}
+	
+	public Room getRoomById(long id) {
+		Optional<Room> findById = roomRepo.findById(id);
+		if(findById.isPresent()) {
+			return findById.get();
+		} else {
+			throw new NotFoundException();
+		}
+	}
+	
+	public List<Room> getAllRooms() {
+		List<Room> target = new ArrayList<Room>();
+		roomRepo.findAll().forEach(target::add);
+		return target;
+	}
+	
+	public void deleteRoom(Long id) {
+		roomRepo.deleteById(id);
+	}
+	
+	public void deleteRoom(Room room) {
+		roomRepo.delete(room);
+	}
+	
+	//---- RoomType
+	public RoomType createRoomType(RoomType roomType) {
+		return roomTypeRepo.save(roomType);
+	}
+	
+	public RoomType getRoomTypeById(long id) {
+		Optional<RoomType> findById = roomTypeRepo.findById(id);
+		if(findById.isPresent()) {
+			return findById.get();
+		} else {
+			throw new NotFoundException();
+		}
+	}
+	
+	public List<RoomType> getAllRoomTypes() {
+		List<RoomType> target = new ArrayList<RoomType>();
+		roomTypeRepo.findAll().forEach(target::add);
+
+		return target;
 	}
 	
 	public void deleteRoomType(Long id) {
 		roomTypeRepo.deleteById(id);
 	}
-
-	public void deleteRoom(Long id) {
-		roomRepo.deleteById(id);
+	
+	public void deleteRoomType(RoomType roomType) {
+		roomTypeRepo.delete(roomType);
+	}
+	
+	//---- Room Rate
+	public void createRoomRate(RoomRate roomRate) {
+		roomRateRepo.save(roomRate);
 	}
 
-	public void deleteRoom(Room room) {
-		roomRepo.delete(room);
+	public RoomRate getRoomRateById(long id) {
+		Optional<RoomRate> findById = roomRateRepo.findById(id);
+		if(findById.isPresent()) {
+			return findById.get();
+		} else {
+			throw new NotFoundException();
+		}
 	}
 
+	public List<RoomRate> getAllRoomRates() { 
+		List<RoomRate> target = new ArrayList<RoomRate>();
+		roomRateRepo.findAll().forEach(target::add);
+		return target;
+	}
+	
 	public void deleteRoomRate(Long id) {
 		roomRateRepo.deleteById(id);
 	}
-
-	public RoomRate getRoomRateById(Long id) {
-		return roomRateRepo.findById(id).get();
+	
+	//---- Status
+	public Status createStatus(Status status) {
+		return statusRepo.save(status);
+	}
+	
+	public Status getStatusById(long id) {
+		Optional<Status> findById = statusRepo.findById(id);
+		if(findById.isPresent()) {
+			return findById.get();
+		} else {
+			throw new NotFoundException();
+		}
 	}
 
-	public Status getStatusById(Long id) {
-		return statusRepo.findById(id).get();
+	public List<Status> getAllStatuses() {
+		List<Status> target = new ArrayList<Status>();
+		statusRepo.findAll().forEach(target::add);
+		return target;
 	}
-
+	
 	public void deleteStatus(Long id) {
 		statusRepo.deleteById(id);
 	}

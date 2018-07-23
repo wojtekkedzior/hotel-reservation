@@ -246,7 +246,7 @@ public class RoomControllerTest {
 	@Test
 	@WithUserDetails("admin")
 	public void testAdminRolePermissions_allowed() throws Exception {
-		mvc.perform(get("/amenity/1")).andExpect(status().isOk());
+		mvc.perform(get("/amenity/1")).andExpect(status().is4xxClientError());
 		mvc.perform(get("/amenityType/1")).andExpect(status().isOk());
 		
 		mvc.perform(get("/room/1")).andExpect(status().isOk());

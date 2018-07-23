@@ -19,6 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import hotelreservation.Application;
 import hotelreservation.DateConvertor;
+import hotelreservation.NotFoundException;
 import hotelreservation.model.Amenity;
 import hotelreservation.model.AmenityType;
 import hotelreservation.model.Role;
@@ -76,7 +77,7 @@ public class RoomServiceTest {
 		roomService.createRoom(room);
 	}
 
-	@Test
+	@Test()
 	public void testCRUDRoom() {
 		Room createdRoom = roomService.getRoomById(room.getId());
 		assertEquals(room, createdRoom);
@@ -86,7 +87,8 @@ public class RoomServiceTest {
 		assertEquals(createdRoom.getName(), "New Best Room");
 
 		roomService.deleteRoom(createdRoom);
-		assertNull(roomService.getRoomById(room.getId()));
+		
+		assertTrue(roomService.getAllRooms().isEmpty());
 	}
 	
 	@Test
@@ -225,8 +227,35 @@ public class RoomServiceTest {
 		assertTrue(roomService.getByRoomsByStatus(status).size() == 1);
 	}
 
-	@Test
-	public void testGetRoomStatus() {
-		assertEquals(status, roomService.getRoomStatus(room));
+	@Test(expected = NotFoundException.class)
+	public void testGetNonExistantAmenity() {
+		roomService.getAmenityById(99);
 	}
+
+	@Test(expected = NotFoundException.class)
+	public void testGetNonExistantAmenityType() {
+		roomService.getAmenityTypeById(99);
+	}
+	
+	@Test(expected = NotFoundException.class)
+	public void testGetNonExistentRoom() {
+		roomService.getRoomById(99);
+	}
+	
+	@Test(expected = NotFoundException.class)
+	public void testGetNonExistentRoomType() {
+		roomService.getRoomTypeById(99);
+	}
+	
+	@Test(expected = NotFoundException.class)
+	public void testGetNonExistentRoomRate() {
+		roomService.getRoomRateById(99);
+	}
+	
+	@Test(expected = NotFoundException.class)
+	public void testGetNonExistentStatus() {
+		roomService.getStatusById(99);
+	}
+	
+	
 }
