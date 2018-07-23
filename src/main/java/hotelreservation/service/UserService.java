@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import hotelreservation.NotDeletedException;
 import hotelreservation.NotFoundException;
 import hotelreservation.Utils;
 import hotelreservation.model.Privilege;
@@ -80,10 +81,18 @@ public class UserService {
 	}
 
 	public void deleteUser(User user) {
+		if(!userRepo.existsById(user.getId())) {
+			throw new NotDeletedException(user.getId());
+		}
+		
 		userRepo.delete(user);
 	}
 
 	public void deleteRole(Role role) {
+		if(!roleRepo.existsById(role.getId())) {
+			throw new NotDeletedException(role.getId());
+		}
+		
 		roleRepo.delete(role);
 	}
 

@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import hotelreservation.NotDeletedException;
 import hotelreservation.NotFoundException;
 import hotelreservation.Utils;
 import hotelreservation.model.Amenity;
@@ -159,7 +160,10 @@ public class RoomService {
 		return target;
 	}
 	
-	public void deleteAmenity(Long id) {
+	public void deleteAmenity(long id) {
+		if(!amenityRepo.existsById(id)) {
+			throw new NotDeletedException(id);
+		}
 		amenityRepo.deleteById(id);
 	}
 	
@@ -182,7 +186,10 @@ public class RoomService {
 		return utils.toList(amenityTypeRepo.findAll());
 	}
 	
-	public void deleteAmenityType(Long id) {
+	public void deleteAmenityType(long id) {
+		if(!amenityTypeRepo.existsById(id)) {
+			throw new NotDeletedException(id);
+		}
 		amenityTypeRepo.deleteById(id);
 	}
 	
@@ -206,11 +213,17 @@ public class RoomService {
 		return utils.toList(roomRepo.findAll());
 	}
 	
-	public void deleteRoom(Long id) {
+	public void deleteRoomById(long id) {
+		if(!roomRepo.existsById(id)) {
+			throw new NotDeletedException(id);
+		}
 		roomRepo.deleteById(id);
 	}
 	
 	public void deleteRoom(Room room) {
+		if(!roomRepo.existsById(room.getId())) {
+			throw new NotDeletedException(room.getId());
+		}
 		roomRepo.delete(room);
 	}
 	
@@ -234,10 +247,16 @@ public class RoomService {
 	}
 	
 	public void deleteRoomType(Long id) {
+		if(!roomTypeRepo.existsById(id)) {
+			throw new NotDeletedException(id);
+		}
 		roomTypeRepo.deleteById(id);
 	}
 	
 	public void deleteRoomType(RoomType roomType) {
+		if(!roomTypeRepo.existsById(roomType.getId())) {
+			throw new NotDeletedException(roomType.getId());
+		}
 		roomTypeRepo.delete(roomType);
 	}
 	
@@ -260,7 +279,10 @@ public class RoomService {
 		return utils.toList(roomRateRepo.findAll());
 	}
 	
-	public void deleteRoomRate(Long id) {
+	public void deleteRoomRate(long id) {
+		if(!roomRateRepo.existsById(id)) {
+			throw new NotDeletedException(id);
+		}
 		roomRateRepo.deleteById(id);
 	}
 	
@@ -283,7 +305,10 @@ public class RoomService {
 		return utils.toList(statusRepo.findAll());
 	}
 	
-	public void deleteStatus(Long id) {
+	public void deleteStatus(long id) {
+		if(!statusRepo.existsById(id)) {
+			throw new NotDeletedException(id);
+		}
 		statusRepo.deleteById(id);
 	}
 }

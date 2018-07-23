@@ -20,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import hotelreservation.Application;
+import hotelreservation.NotDeletedException;
 import hotelreservation.Utils;
 import hotelreservation.NotFoundException;
 import hotelreservation.model.Amenity;
@@ -650,5 +651,10 @@ public class BookingServiceTest {
 	@Test(expected = NotFoundException.class)
 	public void testGetNonExistentReservation() {
 		bookingService.getReservation(99);
+	}
+	
+	@Test(expected = NotDeletedException.class)
+	public void testDeleteNonExistentReservation() {
+		bookingService.deleteReservation(new Reservation());
 	}
 }

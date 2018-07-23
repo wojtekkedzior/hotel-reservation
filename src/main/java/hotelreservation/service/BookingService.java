@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import hotelreservation.NotDeletedException;
 import hotelreservation.NotFoundException;
 import hotelreservation.Utils;
 import hotelreservation.model.Contact;
@@ -142,6 +143,9 @@ public class BookingService {
 	}
 
 	public void deleteReservation(Reservation reservation) {
+		if(!reservationRepo.existsById(reservation.getId())) {
+			throw new NotDeletedException(reservation.getId());
+		}
 		reservationRepo.delete(reservation);
 	}
 

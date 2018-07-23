@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import hotelreservation.NotDeletedException;
 import hotelreservation.Utils;
 import hotelreservation.model.Charge;
 import hotelreservation.model.Reservation;
@@ -81,14 +82,23 @@ public class InvoiceService {
 	}
 
 	public void deleteCharge(Charge charge) {
+		if(!chargeRepo.existsById(charge.getId())) {
+			throw new NotDeletedException(charge.getId());
+		}
 		chargeRepo.delete(charge);
 	}
 	
 	public void deleteReservationCharge(ReservationCharge reservationCharge) {
+		if(!reservationChargeRepo.existsById(reservationCharge.getId())) {
+			throw new NotDeletedException(reservationCharge.getId());
+		}
 		reservationChargeRepo.delete(reservationCharge);
 	}
 	
 	public void deletePayment(Payment payment) {
+		if(!paymentRepo.existsById(payment.getId())) {
+			throw new NotDeletedException(payment.getId());
+		}
 		paymentRepo.delete(payment);
 	}
 }

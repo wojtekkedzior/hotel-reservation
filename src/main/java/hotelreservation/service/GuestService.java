@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import hotelreservation.NotDeletedException;
 import hotelreservation.NotFoundException;
 import hotelreservation.Utils;
 import hotelreservation.model.Contact;
@@ -85,18 +86,23 @@ public class GuestService {
 	}
 	
 	public void deleteGuest(Optional<Integer> id) {
+		if(!guestRepo.existsById(new Long(id.get()))) {
+			throw new NotDeletedException(id.get());
+		}
 		guestRepo.delete(guestRepo.findById(new Long(id.get())).get());
 	}
 	
-	public void deleteContact(Optional<Integer> id) {
-		contactRepo.delete(contactRepo.findById(new Long(id.get())).get());
-	}
-	
 	public void deleteIdentification(Optional<Integer> id) {
+		if(!identificationRepo.existsById(new Long(id.get()))) {
+			throw new NotDeletedException(id.get());
+		}
 		identificationRepo.delete(identificationRepo.findById(new Long(id.get())).get());
 	}
 
 	public void deleteContact(long id) {
+		if(!contactRepo.existsById(id)) {
+			throw new NotDeletedException(id);
+		}
 		contactRepo.deleteById(id);
 	}
 }

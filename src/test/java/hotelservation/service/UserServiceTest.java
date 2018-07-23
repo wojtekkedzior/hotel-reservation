@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import hotelreservation.Application;
+import hotelreservation.NotDeletedException;
 import hotelreservation.NotFoundException;
 import hotelreservation.model.Privilege;
 import hotelreservation.model.Role;
@@ -140,5 +141,15 @@ public class UserServiceTest {
 	@Test(expected = NotFoundException.class)
 	public void testGetNonExistentRoleRate() {
 		userService.getRoleById(99);
+	}
+	
+	@Test(expected = NotDeletedException.class)
+	public void testDeleteNonExistentUser() {
+		userService.deleteUser(new User());
+	}
+	
+	@Test(expected = NotDeletedException.class)
+	public void testDeleteNonExistentRole() {
+		userService.deleteRole(new Role());
 	}
 }

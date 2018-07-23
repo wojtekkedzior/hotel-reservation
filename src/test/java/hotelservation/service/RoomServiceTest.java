@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import hotelreservation.Application;
+import hotelreservation.NotDeletedException;
 import hotelreservation.Utils;
 import hotelreservation.NotFoundException;
 import hotelreservation.model.Amenity;
@@ -103,7 +104,7 @@ public class RoomServiceTest {
 
 		//TODO something odd here with the contraint as if you delete the roomtype it's ok untill you try to retrive all room types
 		
-		roomService.deleteRoom(room.getId());
+		roomService.deleteRoomById(room.getId());
 		roomService.deleteRoomType(roomType);
 		
 		assertTrue(roomService.getAllRoomTypes().isEmpty());
@@ -199,7 +200,7 @@ public class RoomServiceTest {
 		Status updatedStatus = roomService.getStatusById(status.getId());
 		assertEquals(status, updatedStatus);
 
-		roomService.deleteRoom(room.getId());
+		roomService.deleteRoomById(room.getId());
 		roomService.deleteStatus(status.getId()); 
 		assertEquals(0, roomService.getAllStatuses().size());
 	}
@@ -257,4 +258,33 @@ public class RoomServiceTest {
 	}
 	
 	
+	@Test(expected = NotDeletedException.class)
+	public void testDeleteNonExistentAmenity() {
+		roomService.deleteAmenity(99);
+	}
+	
+	@Test(expected = NotDeletedException.class)
+	public void testDeleteNonExistentAmenityType() {
+		roomService.deleteAmenityType(99);
+	}
+	
+	@Test(expected = NotDeletedException.class)
+	public void testDeleteNonExistentRoomById() {
+		roomService.deleteRoomById(99);
+	}
+	
+	@Test(expected = NotDeletedException.class)
+	public void testDeleteNonExistentRoom() {
+		roomService.deleteRoom(new Room());
+	}
+	
+	@Test(expected = NotDeletedException.class)
+	public void testDeleteNonExistentRoomRate() {
+		roomService.deleteRoomRate(99);
+	}
+	
+	@Test(expected = NotDeletedException.class)
+	public void testDeleteNonExistentStatus() {
+		roomService.deleteStatus(99);
+	}
 }

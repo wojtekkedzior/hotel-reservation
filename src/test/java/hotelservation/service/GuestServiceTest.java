@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import hotelreservation.Application;
+import hotelreservation.NotDeletedException;
 import hotelreservation.NotFoundException;
 import hotelreservation.model.Contact;
 import hotelreservation.model.Guest;
@@ -44,12 +45,12 @@ public class GuestServiceTest {
 	
 	@Test
 	public void testCRUDContact() {
-		Contact saveContact = guestService.saveContact(contact);
-		assertEquals(saveContact, guestService.getContactById(contact.getId()));
+		guestService.saveContact(contact);
+		assertEquals(contact, guestService.getContactById(contact.getId()));
 		
-		saveContact.setCountry("new Country");
-		guestService.saveContact(saveContact);
-		assertEquals(saveContact, guestService.getContactById(contact.getId()));
+		contact.setCountry("new Country");
+		guestService.saveContact(contact);
+		assertEquals(contact, guestService.getContactById(contact.getId()));
 		
 		guestService.deleteContact(new Long(contact.getId()).intValue());
 		assertTrue(guestService.getAllContacts().isEmpty());
@@ -80,6 +81,10 @@ public class GuestServiceTest {
 		guestService.saveGuest(guest);
 		assertEquals(guest, guestService.getGuestById(guest.getId()));
 		
+		//TODO cascading delete
+		guestService.saveContact(contact);
+		guestService.saveIdentification(identification);
+		
 		guestService.deleteGuest(Optional.of(new Long(guest.getId()).intValue()));
 		assertTrue(guestService.getAllGuests().isEmpty());
 	}
@@ -97,5 +102,20 @@ public class GuestServiceTest {
 	@Test(expected = NotFoundException.class)
 	public void testGetNonExistentIdentification() {
 		guestService.getIdentificationById(99);
+	}
+	
+	@Test(expected = NotDeletedException.class)
+	public void testDeleteNonExistentGuest() {
+		guestService.deleteGuest(Optional.of(new Integer(99)));
+	}
+	
+	@Test(expected = NotDeletedException.class)
+	public void testDeleteNonExistentIdentification() {
+		guestService.deleteIdentification(Optional.of(new Integer(99)));
+	}
+	
+	@Test(expected = NotDeletedException.class)
+	public void testDeleteNonExistentContact() {
+		guestService.deleteContact(99);
 	}
 }

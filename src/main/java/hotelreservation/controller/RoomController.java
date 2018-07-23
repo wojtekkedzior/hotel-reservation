@@ -199,7 +199,7 @@ public class RoomController {
 	@PreAuthorize("hasAuthority('deleteRoom')")
 	public ModelAndView deleteRoom(@PathVariable Optional<Integer> id) {
 		if (id.isPresent()) {
-			roomService.deleteRoom(new Long(id.get()));
+			roomService.deleteRoomById(new Long(id.get()));
 		}
 		return new ModelAndView("redirect:/room");
 	}

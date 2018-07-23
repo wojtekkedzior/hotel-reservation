@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import hotelreservation.Application;
+import hotelreservation.NotDeletedException;
 import hotelreservation.Utils;
 import hotelreservation.model.Amenity;
 import hotelreservation.model.AmenityType;
@@ -346,5 +347,20 @@ public class InvoiceServiceTest {
 		
 		invoiceService.deletePayment(payment);
 		assertEquals(0, invoiceService.getAllPayments().size());
+	}
+	
+	@Test(expected = NotDeletedException.class)
+	public void testDeleteNonExistentCharge() {
+		invoiceService.deleteCharge(new Charge());
+	}
+	
+	@Test(expected = NotDeletedException.class)
+	public void testDeleteNonExistentReservationCharge() {
+		invoiceService.deleteReservationCharge(new ReservationCharge());
+	}
+	
+	@Test(expected = NotDeletedException.class)
+	public void testDeleteNonExistentPayment() {
+		invoiceService.deletePayment(new Payment());
 	}
 }
