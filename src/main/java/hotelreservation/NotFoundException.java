@@ -11,4 +11,6 @@ public class NotFoundException extends RuntimeException {
 	 */
 	private static final long serialVersionUID = 7864223292536407819L;
     // ...
+	
+	private long id;
 }

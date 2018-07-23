@@ -84,7 +84,7 @@ public class RoomController {
 		if (!id.isPresent()) {
 			model.addAttribute("room", new Room());
 		} else {
-			Room room = roomService.getGetRoomById(new Long(id.get()));
+			Room room = roomService.getRoomById(new Long(id.get()));
 			model.addAttribute("room", room == null ? new Room() : room);
 		}
 

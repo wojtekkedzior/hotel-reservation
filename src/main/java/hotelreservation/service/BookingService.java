@@ -139,8 +139,9 @@ public class BookingService {
 		return reservationRepo.findByStartDate(new Date());
 	}
 
+	//wrapper for app setup. //TODO replace with impl above
 	public Reservation getReservation(long id) {
-		return reservationRepo.findById(id).get();
+		return getReservation(Optional.of(new Long(id).intValue()));
 	}
 
 	public void deleteReservation(Reservation reservation) {

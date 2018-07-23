@@ -21,6 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import hotelreservation.Application;
 import hotelreservation.DateConvertor;
+import hotelreservation.NotFoundException;
 import hotelreservation.model.Amenity;
 import hotelreservation.model.AmenityType;
 import hotelreservation.model.Contact;
@@ -644,5 +645,10 @@ public class BookingServiceTest {
 	@Test
 	public void testCancelReservationMidway() {
 		
+	}
+	
+	@Test(expected = NotFoundException.class)
+	public void testGetNonExistentReservation() {
+		bookingService.getReservation(99);
 	}
 }
