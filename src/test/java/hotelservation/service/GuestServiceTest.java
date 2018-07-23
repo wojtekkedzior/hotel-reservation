@@ -1,7 +1,7 @@
 package hotelservation.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Optional;
 
@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import hotelreservation.Application;
+import hotelreservation.NotFoundException;
 import hotelreservation.model.Contact;
 import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;
@@ -44,28 +45,27 @@ public class GuestServiceTest {
 	@Test
 	public void testCRUDContact() {
 		Contact saveContact = guestService.saveContact(contact);
-		assertEquals(saveContact, guestService.findContact(contact.getId()));
+		assertEquals(saveContact, guestService.getContactById(contact.getId()));
 		
 		saveContact.setCountry("new Country");
 		guestService.saveContact(saveContact);
-		assertEquals(saveContact, guestService.findContact(contact.getId()));
+		assertEquals(saveContact, guestService.getContactById(contact.getId()));
 		
 		guestService.deleteContact(new Long(contact.getId()).intValue());
-		assertNull(guestService.findContact(contact.getId()));
+		assertTrue(guestService.getAllContacts().isEmpty());
 	}
-	
 	
 	@Test
 	public void testCRUDIdentity() {
 		guestService.saveIdentification(identification);
-		assertEquals(identification, guestService.findIdentification(identification.getId()));
+		assertEquals(identification, guestService.getIdentificationById(identification.getId()));
 		
 		identification.setIdType(IdType.Passport);
 		guestService.saveIdentification(identification);
-		assertEquals(identification, guestService.findIdentification(identification.getId()));
+		assertEquals(identification, guestService.getIdentificationById(identification.getId()));
 		
 		guestService.deleteIdentification(Optional.of(new Long(identification.getId()).intValue()));
-		assertNull(guestService.findIdentification(identification.getId()));
+		assertTrue(guestService.getAllIdentifications().isEmpty());
 	}
 	
 	@Test
@@ -74,14 +74,28 @@ public class GuestServiceTest {
 		guest.setLastName("guestLastName");
 		
 		guestService.saveGuest(guest);
-		assertEquals(guest, guestService.findGuest(guest.getId()));
+		assertEquals(guest, guestService.getGuestById(guest.getId()));
 		
 		guest.setFirstName("bob");
 		guestService.saveGuest(guest);
-		assertEquals(guest, guestService.findGuest(guest.getId()));
+		assertEquals(guest, guestService.getGuestById(guest.getId()));
 		
 		guestService.deleteGuest(Optional.of(new Long(guest.getId()).intValue()));
-		assertNull(guestService.findGuest(guest.getId()));
+		assertTrue(guestService.getAllGuests().isEmpty());
 	}
 	
+	@Test(expected = NotFoundException.class)
+	public void testGetNonExistentGuest() {
+		guestService.getGuestById(99);
+	}
+	
+	@Test(expected = NotFoundException.class)
+	public void testGetNonExistentContact() {
+		guestService.getContactById(99);
+	}
+	
+	@Test(expected = NotFoundException.class)
+	public void testGetNonExistentIdentification() {
+		guestService.getIdentificationById(99);
+	}
 }
