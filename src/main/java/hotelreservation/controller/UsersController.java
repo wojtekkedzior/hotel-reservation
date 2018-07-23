@@ -35,7 +35,7 @@ public class UsersController {
 			User user = new User();
 			model.addAttribute("user", user);
 		} else {
-			User user = userService.getUserById(id);
+			User user = userService.getUserById(id.get());
 			if(user == null) {
 				model.addAttribute("user", new User());
 			} else {
@@ -73,7 +73,7 @@ public class UsersController {
 	public ModelAndView deleteUser(@PathVariable Optional<Integer> id) {
 		log.info("deleting user: " + id);
 		if(id.isPresent()) {
-			User userById = userService.getUserById(id);
+			User userById = userService.getUserById(id.get());
 			userService.deleteUser(userById);
 		} 
 		return new ModelAndView("redirect:/user");

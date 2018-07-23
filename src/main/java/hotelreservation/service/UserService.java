@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import hotelreservation.NotFoundException;
 import hotelreservation.model.Privilege;
 import hotelreservation.model.Role;
 import hotelreservation.model.User;
@@ -65,16 +66,24 @@ public class UserService {
 		return target;
 	}
 
-	public User getUserById(Optional<Integer> id) {
-		return userRepo.findById(new Long(id.get())).get();
+	public User getUserById(Integer id) {
+		log.info("Looking for User with ID: " + id);
+		Optional<User> findById = userRepo.findById(new Long(id));
+		if(findById.isPresent()) {
+			return findById.get();
+		} else {
+			throw new NotFoundException(id);
+		}
 	}
 	
-	public Role getRoleById(Optional<Integer> id) {
-		return roleRepo.findById(new Long(id.get())).get();
-	}
-
-	public Privilege getPrivilegeByName(String name) {
-		return privilegeRepo.findByName(name);
+	public Role getRoleById(Integer id) {
+		log.info("Looking for Role with ID: " + id);
+		Optional<Role> findById = roleRepo.findById(new Long(id));
+		if(findById.isPresent()) {
+			return findById.get();
+		} else {
+			throw new NotFoundException(id);
+		}
 	}
 
 	public void deleteUser(User user) {
@@ -83,10 +92,6 @@ public class UserService {
 
 	public void deleteRole(Role role) {
 		roleRepo.delete(role);
-	}
-	
-	public void deletePrivilege(Privilege privilege) {
-		privilegeRepo.delete(privilege);
 	}
 
 	public List<Privilege> getAllPrivileges() {

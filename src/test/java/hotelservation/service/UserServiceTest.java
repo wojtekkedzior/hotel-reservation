@@ -15,9 +15,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import hotelreservation.Application;
+import hotelreservation.NotFoundException;
 import hotelreservation.model.Privilege;
 import hotelreservation.model.Role;
 import hotelreservation.model.User;
+import hotelreservation.repository.PrivilegeRepo;
 import hotelreservation.service.UserService;
 
 @RunWith(SpringRunner.class)
@@ -27,6 +29,9 @@ public class UserServiceTest {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private PrivilegeRepo privilegeRepo;
 	
 	@Before
 	public void setup() {
@@ -123,7 +128,17 @@ public class UserServiceTest {
 		assertEquals(1, userService.getAllPrivileges().size());
 		assertEquals("updatedName", userService.getAllPrivileges().get(0).getName());
 		
-		userService.deletePrivilege(privilege);
+		privilegeRepo.delete(privilege);
 		assertEquals(0, userService.getAllPrivileges().size());
+	}
+	
+	@Test(expected = NotFoundException.class)
+	public void testGetNonExistentUserType() {
+		userService.getUserById(99);
+	}
+	
+	@Test(expected = NotFoundException.class)
+	public void testGetNonExistentRoleRate() {
+		userService.getRoleById(99);
 	}
 }
