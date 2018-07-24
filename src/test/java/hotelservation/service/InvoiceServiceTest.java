@@ -19,6 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import hotelreservation.Application;
 import hotelreservation.NotDeletedException;
+import hotelreservation.NotFoundException;
 import hotelreservation.Utils;
 import hotelreservation.model.Amenity;
 import hotelreservation.model.AmenityType;
@@ -224,7 +225,7 @@ public class InvoiceServiceTest {
 		Payment payment = new Payment();
 		payment.setReservation(reservationOne);
 		payment.setReservationCharges(Arrays.asList(reservationChargeOne));
-		invoiceService.savePayment(payment);
+		invoiceService.createPayment(payment);
 		
 		//1 unpaid charge and 1 paid charge for the given reservation.
 		assertEquals(1, invoiceService.getOutstandingCharges(reservationOne).size());
@@ -302,7 +303,7 @@ public class InvoiceServiceTest {
 		Payment payment = new Payment();
 		payment.setReservation(reservationOne);
 		payment.setReservationCharges(Arrays.asList(reservationChargeOne));
-		invoiceService.savePayment(payment);
+		invoiceService.createPayment(payment);
 		
 		assertEquals(1, invoiceService.getAllPaymentsForReservation(reservationOne).size());
 	}
@@ -338,7 +339,7 @@ public class InvoiceServiceTest {
 	@Test
 	public void testCRUDPayment() {
 		Payment payment = new Payment();
-		invoiceService.savePayment(payment);
+		invoiceService.createPayment(payment);
 		
 		assertEquals(1, invoiceService.getAllPayments().size());
 		
@@ -347,6 +348,21 @@ public class InvoiceServiceTest {
 		
 		invoiceService.deletePayment(payment);
 		assertEquals(0, invoiceService.getAllPayments().size());
+	}
+	
+	@Test(expected = NotFoundException.class)
+	public void testGetNonExistentGuest() {
+		invoiceService.getChargeById(99);
+	}
+	
+	@Test(expected = NotFoundException.class)
+	public void testGetNonExistentContact() {
+		invoiceService.getReservationChargeById(99);
+	}
+	
+	@Test(expected = NotFoundException.class)
+	public void testGetNonExistentIdentification() {
+		invoiceService.getPaymentById(99);
 	}
 	
 	@Test(expected = NotDeletedException.class)

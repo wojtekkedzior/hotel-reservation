@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import hotelreservation.NotDeletedException;
+import hotelreservation.NotFoundException;
 import hotelreservation.Utils;
 import hotelreservation.model.Charge;
 import hotelreservation.model.Reservation;
@@ -42,7 +43,7 @@ public class InvoiceService {
 		reservationChargeRepo.save(charge);
 	}
 	
-	public void savePayment(Payment payment) {
+	public void createPayment(Payment payment) {
 		log.info("Saving payment: " + payment.getId());
 		paymentRepo.save(payment);
 	}
@@ -57,6 +58,33 @@ public class InvoiceService {
 	
 	public List<Payment> getAllPayments() {
 		return utils.toList(paymentRepo.findAll());
+	}
+	
+	public Charge getChargeById(long id) {
+		log.info("Looking for Charge with ID: " + id);
+		if(chargeRepo.findById(id).isPresent()) {
+			return chargeRepo.findById(id).get();
+		} else {
+			throw new NotFoundException(id);
+		}
+	}
+	
+	public ReservationCharge getReservationChargeById(long id) {
+		log.info("Looking for ReservationCharge with ID: " + id);
+		if(reservationChargeRepo.findById(id).isPresent()) {
+			return reservationChargeRepo.findById(id).get();
+		} else {
+			throw new NotFoundException(id);
+		}		
+	}
+	
+	public Payment getPaymentById(long id) {
+		log.info("Looking for Payment with ID: " + id);
+		if(paymentRepo.findById(id).isPresent()) {
+			return paymentRepo.findById(id).get();
+		} else {
+			throw new NotFoundException(id);
+		}		
 	}
 
 	public List<ReservationCharge> getAllReservationChargesForAReservation(Reservation reservation) {

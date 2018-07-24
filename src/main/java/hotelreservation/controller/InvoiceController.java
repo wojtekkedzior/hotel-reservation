@@ -69,7 +69,7 @@ public class InvoiceController {
 		//obviously it's in the naming convention
 		payment.setId(0);
 		payment.setReservation(reservation);
-		invoiceService.savePayment(payment);
+		invoiceService.createPayment(payment);
 		
 		
 		//TODO use credit card in reservation?
