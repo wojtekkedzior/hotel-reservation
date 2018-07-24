@@ -162,9 +162,9 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	}
 
 	private void addCharges() {
-		coke = new Charge(Currency.CZK, 50);
-		roomServiceDelivery = new Charge(Currency.CZK, 1000);
-		brokenTable = new Charge(Currency.CZK, 5000);
+		coke = new Charge(Currency.CZK, 50, "coke", "coke desc");
+		roomServiceDelivery = new Charge(Currency.CZK, 1000, "room service delivery", "room service delivery desc");
+		brokenTable = new Charge(Currency.CZK, 5000, "broken table", "a very broke table");
 		
 		invoiceService.createCharge(coke);
 		invoiceService.createCharge(roomServiceDelivery);

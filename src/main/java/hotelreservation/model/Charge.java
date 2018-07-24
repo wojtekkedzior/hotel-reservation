@@ -17,6 +17,9 @@ public class Charge {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
+	private String name;
+	private String description;
+	
 	@Enumerated(EnumType.STRING)
 	private Currency currency;
 	
@@ -24,9 +27,11 @@ public class Charge {
 	
 	public Charge() {}
 
-	public Charge(Currency currency, int value) {
+	public Charge(Currency currency, int value, String name, String description) {
 		this.currency = currency;
 		this.value = value;
+		this.name = name;
+		this.description = description;
 	}
 	
 	

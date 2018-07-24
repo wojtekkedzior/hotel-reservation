@@ -198,9 +198,9 @@ public class InvoiceServiceTest {
 		
 		bookingService.createReservation(reservationOne);
 		
-		Charge chargeOne = new Charge(Currency.CZK, 100);
-		Charge chargeTwo = new Charge(Currency.CZK, 200);
-		Charge chargeThree = new Charge(Currency.CZK, 300);
+		Charge chargeOne = new Charge(Currency.CZK, 100, "chargeOne", "chargeOneDesc");
+		Charge chargeTwo = new Charge(Currency.CZK, 200, "chargeTwo", "chargeTwoDesc");
+		Charge chargeThree = new Charge(Currency.CZK, 300, "chargeThree", "chargeThreeDesc");
 		
 		invoiceService.createCharge(chargeOne);
 		invoiceService.createCharge(chargeTwo);
@@ -243,9 +243,9 @@ public class InvoiceServiceTest {
 		
 		bookingService.createReservation(reservationOne);
 		
-		Charge chargeOne = new Charge(Currency.CZK, 100);
-		Charge chargeTwo = new Charge(Currency.CZK, 200);
-		Charge chargeThree = new Charge(Currency.CZK, 300);
+		Charge chargeOne = new Charge(Currency.CZK, 100, "chargeOne", "chargeOneDesc");
+		Charge chargeTwo = new Charge(Currency.CZK, 200, "chargeTwo", "chargeTwoDesc");
+		Charge chargeThree = new Charge(Currency.CZK, 300, "chargeThree", "chargeThreeDesc");
 		
 		invoiceService.createCharge(chargeOne);
 		invoiceService.createCharge(chargeTwo);
@@ -279,9 +279,9 @@ public class InvoiceServiceTest {
 		
 		bookingService.createReservation(reservationOne);
 		
-		Charge chargeOne = new Charge(Currency.CZK, 100);
-		Charge chargeTwo = new Charge(Currency.CZK, 200);
-		Charge chargeThree = new Charge(Currency.CZK, 300);
+		Charge chargeOne = new Charge(Currency.CZK, 100, "chargeOne", "chargeOneDesc");
+		Charge chargeTwo = new Charge(Currency.CZK, 200, "chargeTwo", "chargeTwoDesc");
+		Charge chargeThree = new Charge(Currency.CZK, 300, "chargeThree", "chargeThreeDesc");
 		
 		invoiceService.createCharge(chargeOne);
 		invoiceService.createCharge(chargeTwo);
@@ -310,7 +310,7 @@ public class InvoiceServiceTest {
 	
 	@Test
 	public void testCRUDCharge() {
-		Charge chargeOne = new Charge(Currency.CZK, 100);
+		Charge chargeOne = new Charge(Currency.CZK, 100, "chargeOne", "chargeOneDesc");
 		invoiceService.createCharge(chargeOne);
 		
 		assertEquals(1, invoiceService.getAllCharges().size());

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layouts/layout">
 <body>
 	<div layout:fragment="content">
-<!-- 		<p>
+		<!-- 		<p>
 			Total: <input th:value="${total}" type="number" readonly="readonly" /> Currency : <input th:value="${currency}" type="text" readonly="readonly" />
 		</p> -->
 
@@ -30,12 +30,13 @@
 				</div>
 
 				<p>
-					Sub Total: <!-- <input th:id="'roomRateSelectSubTotal-' + ${roomRateCombo.key.roomNumber}" type="number"  /> -->
+					Sub Total:
+					<!-- <input th:id="'roomRateSelectSubTotal-' + ${roomRateCombo.key.roomNumber}" type="number"  /> -->
 				</p>
 			</div>
 
 
-<!-- 			<form action="#" th:action="@{/createPayment/}+${reservation.id}" th:object="${payment}" method="post">
+			<!-- 			<form action="#" th:action="@{/createPayment/}+${reservation.id}" th:object="${payment}" method="post">
 				<p>
 					Payment Types: <select class="form-control" th:field="${payment.paymentType}" id="dropOperator">
 						<option th:each="paymentType : ${formsOfPayment}" th:value="${paymentType.toString()}" th:text="${paymentType.toString()}"></option>
@@ -47,28 +48,24 @@
 				</p>
 
 			</form> -->
-			
+
 			<a th:id="createPayment" th:href="@{/payment/}+${reservation.id}" th:text="CreatePayment"> </a>
 
 		</div>
-
-
 
 		<div class="column">
 
 			<form action="#" th:action="@{/addChargeToReservation/}+${reservation.id}" th:object="${reservationCharge}" method="post">
 				<p>
 					Charges: <select class="form-control" th:field="${reservationCharge.charge}" id="dropOperator">
-						<option th:each="charge : ${charges}" th:value="${charge.id}" th:text="${charge.toString()}"></option>
+						<option th:each="charge : ${charges}" th:value="${charge.id}" th:text="${charge.name} + ' - ' + ${charge.value} + ' ' + ${charge.currency}"></option>
 					</select>
 				</p>
-
 
 				<p>
 					<!-- hidden field to make sure the ID gets passed back to the controller when submit is called. -->
 					<input type="number" th:field="${reservation.id}" hidden="true" />
 				</p>
-
 
 				<p>
 					<input type="submit" value="Add Charge" />
@@ -81,27 +78,22 @@
 					<tr>
 						<td><label>Charge</label></td>
 						<td><label>Price</label></td>
-						<td><label>Date</label></td>
+						<td><label>Currency</label></td>
+						<td><label>Quantity</label></td>
 					</tr>
 
 					<tr th:each="reservationCharge : ${reservationCharges}">
 						<td th:text="${reservationCharge.id}"></td>
-						<!-- 						<td th:text="${roomRate.room.description}"></td>
-						<td th:text="${roomRate.value}"></td> -->
+						<td th:text="${reservationCharge.charge.value}"></td>
+						<td th:text="${reservationCharge.charge.currency}"></td>
+						<td th:text="${reservationCharge.quantity}"></td>
 					</tr>
 				</table>
 			</div>
 
 		</div>
 
-
-
-
-
-
 	</div>
-
-
 
 </body>
 </html>
