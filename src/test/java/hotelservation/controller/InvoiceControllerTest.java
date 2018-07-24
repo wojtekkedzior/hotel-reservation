@@ -312,5 +312,10 @@ public class InvoiceControllerTest {
 		
 		mvc.perform(post("/createPayment/1").flashAttr("payment", new Payment())).andExpect(status().isForbidden());
 	}
-
+	
+	@Test
+	@WithUserDetails("manager")
+	public void testCantCreatePaymentWithNoCharges() throws Exception {
+		mvc.perform(post("/createPayment/1").flashAttr("payment", new Payment())).andExpect(status().isPreconditionRequired());
+	}
 }

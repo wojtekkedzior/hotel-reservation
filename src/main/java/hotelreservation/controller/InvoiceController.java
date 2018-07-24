@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import hotelreservation.PaymentNotCreatedException;
 import hotelreservation.model.Reservation;
 import hotelreservation.model.ReservationCharge;
 import hotelreservation.model.enums.PaymentType;
@@ -62,6 +63,10 @@ public class InvoiceController {
 	@PreAuthorize("hasAuthority('createPayment')")
 	public ModelAndView createPayment(@ModelAttribute Payment payment,  @PathVariable Optional<Integer> id, BindingResult bindingResult) {
 		log.info("creating paymeny for reservation: " + id);
+		
+		if(payment.getReservationCharges() == null || payment.getReservationCharges().isEmpty()) {
+			throw new PaymentNotCreatedException(id.get());
+		}
 		
 		Reservation reservation = bookingService.getReservation(id);
 

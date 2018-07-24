@@ -46,6 +46,7 @@ public class InvoiceService {
 	public void createPayment(Payment payment) {
 		log.info("Saving payment: " + payment.getId());
 		paymentRepo.save(payment);
+		log.info("Payment saved: " + payment.getId());
 	}
 	
 	public List<Charge> getAllCharges() {
