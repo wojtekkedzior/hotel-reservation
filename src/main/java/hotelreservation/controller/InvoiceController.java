@@ -38,7 +38,6 @@ public class InvoiceController {
 	@RequestMapping(value = { "/invoice/{id}" }, method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('retrieveInvoice')")
 	public String getInvoice(@PathVariable Optional<Integer> id, Model model) {
-
 		return "invoice";
 	}
 	
@@ -52,7 +51,6 @@ public class InvoiceController {
 		model.addAttribute("payment", new Payment());
 		model.addAttribute("formsOfPayment", PaymentType.values());
 		model.addAttribute("reservationCharge",  invoiceService.getAllReservationChargesForAReservation(reservation));
-		
 		
 		return "payment";
 	}
@@ -76,7 +74,6 @@ public class InvoiceController {
 		payment.setReservation(reservation);
 		invoiceService.createPayment(payment);
 		
-		
 		//TODO use credit card in reservation?
 		// gather all payment details and call createpayment.  if successful generate invoice and show 'show invoice' button to download/display the invoice
 		//payment needs to have any extra costs 
@@ -92,10 +89,6 @@ public class InvoiceController {
 		reservationCharge.setReservation(reservation);
 		
 		invoiceService.createReservationCharge(reservationCharge);
-		
-		//check if payment exists for this reservation
-		//check if invoice exists for this reservation
-		
 		return new ModelAndView("redirect:/checkoutReservation/" + reservationID.get());
 	}
 }
