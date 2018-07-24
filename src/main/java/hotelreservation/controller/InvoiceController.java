@@ -41,7 +41,6 @@ public class InvoiceController {
 		return "invoice";
 	}
 	
-	
 	@RequestMapping(value = { "/payment/{id}" }, method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('createPayment')")
 	public String getPayment(@PathVariable Optional<Integer> id, Model model) {
