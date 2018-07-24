@@ -242,7 +242,7 @@ public class InvoiceControllerTest {
 	public void testManagerRolePermissions_allowed() throws Exception {
 //		mvc.perform(get("/roomRate/1")).andExpect(status().isOk());
 //		mvc.perform(post("/addRoomRate").flashAttr("roomRate", new RoomRate(new Room(), Currency.CZK, 10, new Date()))).andExpect(status().is3xxRedirection());
-		mvc.perform(post("/createPayment/1").flashAttr("payment", new Payment())).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/createPayment/1").flashAttr("payment", new Payment())).andExpect(status().is4xxClientError());
 	}
 
 	@Test
@@ -272,7 +272,7 @@ public class InvoiceControllerTest {
 	@Test
 	@WithUserDetails("receptionist")
 	public void testReceptionistRolePermissions_allowed() throws Exception {
-		mvc.perform(post("/createPayment/1").flashAttr("payment", new Payment())).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/createPayment/1").flashAttr("payment", new Payment())).andExpect(status().is4xxClientError());
 	}
 
 	@Test
