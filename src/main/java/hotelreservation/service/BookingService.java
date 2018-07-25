@@ -72,25 +72,15 @@ public class BookingService {
 	}
 
 	public void createReservation(Reservation reservation) {
-		if(guestRepo.existsById(reservation.getId())) { //TODO why guestRepo? should be reservationrepo
-			reservationRepo.save(reservation);
-			//TODO set modified dates etc here too
-			return;
-		}
-		
-		if (reservation.getMainGuest().getId() == 0) {
-			guestRepo.save(reservation.getMainGuest());
-		}
-		
 		if(reservation.getStartDate() == null || reservation.getEndDate() == null) {
 			throw new MissingOrInvalidArgumentException("Start and/or end dates cannot be empty");
 		} else if(reservation.getStartDate().after(reservation.getEndDate())) {
 			throw new MissingOrInvalidArgumentException("Start and/or end dates cannot be empty");
 		}
 		
-		//TODO validate reservation has start and end date
-		
-		//TODO createReservation should fail if there are not available rooms.
+		if (reservation.getMainGuest().getId() == 0) {
+			guestRepo.save(reservation.getMainGuest());
+		}
 		
 		//Check if room rates have sequential days
 		List<RoomRate> roomRates = reservation.getRoomRates();
@@ -123,6 +113,7 @@ public class BookingService {
 		
 		reservation.setCreatedOn(new Date());
 		reservation.setReservationStatus(ReservationStatus.UpComing);
+		
 		reservationRepo.save(reservation);
 	}
 
