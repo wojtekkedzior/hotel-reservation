@@ -40,14 +40,10 @@ public class UserServiceTest {
 
 	@Test
 	public void whenFindByName_thenReturnEmployee() {
-		// given
 		Role userType = new Role("UserType name", "UserTypeDescription", true);
 		userService.createRole(userType);
 
-		List<Role> target = userService.getAllRoles();
-
-		assertTrue(target.size() == 1);
-//		assertEquals(userType, target.get(0)); //TODO needs fixing
+		assertTrue(userService.getAllRoles().size() == 1);
 	}
 
 	@Test
@@ -76,7 +72,6 @@ public class UserServiceTest {
 		userService.createRole(receptionUserType);
 		
 		List<Role> target =  userService.getAllRoles();
-		System.err.println(target.size());
 		assertTrue(target.size() == 4);
 		
 		assertTrue(target.contains(superAdminUserType));

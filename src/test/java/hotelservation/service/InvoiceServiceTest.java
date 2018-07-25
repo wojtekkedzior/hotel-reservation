@@ -75,6 +75,9 @@ public class InvoiceServiceTest {
 	@Autowired
 	private BookingService bookingService;
 	
+	@Autowired
+	private Utils dateConvertor;
+	
 	private Role role;
 	private User user;
 	private Privilege priv1;
@@ -84,7 +87,6 @@ public class InvoiceServiceTest {
 	private Guest guestOne;
 	
 	private Reservation reservationOne;
-	
 	
 	private Room standardRoomOne;
 	private Room standardRoomTwo;
@@ -102,10 +104,14 @@ public class InvoiceServiceTest {
 	private Contact contactOne;
 	private Contact contactTwo;
 	
-	@Autowired
-	private Utils dateConvertor;
-	
 	private List<Privilege> privileges;
+	
+	private Charge chargeOne;
+	private Charge chargeTwo;
+	private Charge chargeThree;
+	
+	private ReservationCharge reservationChargeOne = new ReservationCharge();
+	private ReservationCharge reservationChargeTwo = new ReservationCharge();
 
 	@Before
 	public void setup() {
@@ -129,7 +135,6 @@ public class InvoiceServiceTest {
 		privileges = new ArrayList<Privilege>();
 		privileges.add(priv1);
 		privileges.add(priv2);
-		
 		
 		managerUserType = new Role("manager", "manager desc", true);
 		userService.createRole(managerUserType);
@@ -184,10 +189,7 @@ public class InvoiceServiceTest {
 
 		bookingService.createGuest(guestOne);
 		bookingService.createGuest(mainGuest);
-	}
-	
-	@Test
-	public void testGetOutstandingCharges() {
+		
 		reservationOne = new Reservation();
 		reservationOne.setMainGuest(mainGuest);
 		reservationOne.setCreatedBy(user);
@@ -198,23 +200,26 @@ public class InvoiceServiceTest {
 		
 		bookingService.createReservation(reservationOne);
 		
-		Charge chargeOne = new Charge(Currency.CZK, 100, "chargeOne", "chargeOneDesc");
-		Charge chargeTwo = new Charge(Currency.CZK, 200, "chargeTwo", "chargeTwoDesc");
-		Charge chargeThree = new Charge(Currency.CZK, 300, "chargeThree", "chargeThreeDesc");
+		chargeOne = new Charge(Currency.CZK, 100, "chargeOne", "chargeOneDesc");
+		chargeTwo = new Charge(Currency.CZK, 200, "chargeTwo", "chargeTwoDesc");
+		chargeThree = new Charge(Currency.CZK, 300, "chargeThree", "chargeThreeDesc");
 		
-		invoiceService.createCharge(chargeOne);
-		invoiceService.createCharge(chargeTwo);
-		invoiceService.createCharge(chargeThree);
-		
-		ReservationCharge reservationChargeOne = new ReservationCharge();
+		reservationChargeOne = new ReservationCharge();
 		reservationChargeOne.setCharge(chargeOne);
 		reservationChargeOne.setQuantity(1);
 		reservationChargeOne.setReservation(reservationOne);
 		
-		ReservationCharge reservationChargeTwo = new ReservationCharge();
+		reservationChargeTwo = new ReservationCharge();
 		reservationChargeTwo.setCharge(chargeTwo);
 		reservationChargeTwo.setQuantity(1);
 		reservationChargeTwo.setReservation(reservationOne);
+	}
+	
+	@Test
+	public void testGetOutstandingCharges() {
+		invoiceService.createCharge(chargeOne);
+		invoiceService.createCharge(chargeTwo);
+		invoiceService.createCharge(chargeThree);
 		
 		invoiceService.createReservationCharge(reservationChargeOne);
 		invoiceService.createReservationCharge(reservationChargeTwo);
@@ -233,33 +238,9 @@ public class InvoiceServiceTest {
 	
 	@Test
 	public void testGetAllReservationChargesForReservation() {
-		reservationOne = new Reservation();
-		reservationOne.setMainGuest(mainGuest);
-		reservationOne.setCreatedBy(user);
-		reservationOne.setReservationStatus(ReservationStatus.UpComing);
-		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 15)));
-		reservationOne.setRoomRates(new ArrayList<RoomRate>());
-		
-		bookingService.createReservation(reservationOne);
-		
-		Charge chargeOne = new Charge(Currency.CZK, 100, "chargeOne", "chargeOneDesc");
-		Charge chargeTwo = new Charge(Currency.CZK, 200, "chargeTwo", "chargeTwoDesc");
-		Charge chargeThree = new Charge(Currency.CZK, 300, "chargeThree", "chargeThreeDesc");
-		
 		invoiceService.createCharge(chargeOne);
 		invoiceService.createCharge(chargeTwo);
 		invoiceService.createCharge(chargeThree);
-		
-		ReservationCharge reservationChargeOne = new ReservationCharge();
-		reservationChargeOne.setCharge(chargeOne);
-		reservationChargeOne.setQuantity(1);
-		reservationChargeOne.setReservation(reservationOne);
-		
-		ReservationCharge reservationChargeTwo = new ReservationCharge();
-		reservationChargeTwo.setCharge(chargeTwo);
-		reservationChargeTwo.setQuantity(1);
-		reservationChargeTwo.setReservation(reservationOne);
 		
 		invoiceService.createReservationCharge(reservationChargeOne);
 		invoiceService.createReservationCharge(reservationChargeTwo);
@@ -269,33 +250,9 @@ public class InvoiceServiceTest {
 	
 	@Test
 	public void testGetAllPaymentsForReservation() {
-		reservationOne = new Reservation();
-		reservationOne.setMainGuest(mainGuest);
-		reservationOne.setCreatedBy(user);
-		reservationOne.setReservationStatus(ReservationStatus.UpComing);
-		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 15)));
-		reservationOne.setRoomRates(new ArrayList<RoomRate>());
-		
-		bookingService.createReservation(reservationOne);
-		
-		Charge chargeOne = new Charge(Currency.CZK, 100, "chargeOne", "chargeOneDesc");
-		Charge chargeTwo = new Charge(Currency.CZK, 200, "chargeTwo", "chargeTwoDesc");
-		Charge chargeThree = new Charge(Currency.CZK, 300, "chargeThree", "chargeThreeDesc");
-		
 		invoiceService.createCharge(chargeOne);
 		invoiceService.createCharge(chargeTwo);
 		invoiceService.createCharge(chargeThree);
-		
-		ReservationCharge reservationChargeOne = new ReservationCharge();
-		reservationChargeOne.setCharge(chargeOne);
-		reservationChargeOne.setQuantity(1);
-		reservationChargeOne.setReservation(reservationOne);
-		
-		ReservationCharge reservationChargeTwo = new ReservationCharge();
-		reservationChargeTwo.setCharge(chargeTwo);
-		reservationChargeTwo.setQuantity(1);
-		reservationChargeTwo.setReservation(reservationOne);
 		
 		invoiceService.createReservationCharge(reservationChargeOne);
 		invoiceService.createReservationCharge(reservationChargeTwo);
