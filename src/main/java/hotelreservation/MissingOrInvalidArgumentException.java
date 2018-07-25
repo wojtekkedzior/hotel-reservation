@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value=HttpStatus.PRECONDITION_REQUIRED, reason="No charges for payment")  // 428
-public class PaymentNotCreatedException extends RuntimeException {
+public class MissingOrInvalidArgumentException extends RuntimeException {
 
 	/**
 	 * 
@@ -13,13 +13,21 @@ public class PaymentNotCreatedException extends RuntimeException {
     // ...
 	
 	private long id;
+	private String message;
 	
-	public PaymentNotCreatedException(long id) {
+	public MissingOrInvalidArgumentException(long id) {
 		this.id = id;
+	}
+	
+	public MissingOrInvalidArgumentException(String message) {
+		this.message = message;
 	}
 
 	@Override
 	public String toString() {
-		return "Nothing to delete with [id=" + id + "]";
+		return "MissingOrInvalidArgumentException [id=" + id + ", message=" + message + "]";
 	}
+
+	
+	
 }

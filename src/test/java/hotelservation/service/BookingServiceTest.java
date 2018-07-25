@@ -20,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import hotelreservation.Application;
+import hotelreservation.MissingOrInvalidArgumentException;
 import hotelreservation.NotDeletedException;
 import hotelreservation.Utils;
 import hotelreservation.NotFoundException;
@@ -485,6 +486,7 @@ public class BookingServiceTest {
 		roomService.createRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo));
 
 		Date startDate = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1));
@@ -556,6 +558,42 @@ public class BookingServiceTest {
 	@Test
 	public void testCancelReservationMidway() {
 		
+	}
+	
+	@Test(expected=MissingOrInvalidArgumentException.class)
+	public void testEmptyStartDate() {
+		roomService.createRoomRate(roomRateTwo);
+		roomService.createRoomRate(roomRateThree);
+
+		reservationOne.setStartDate(null);
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+
+		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
+		bookingService.createReservation(reservationOne);
+	}
+	
+	@Test(expected=MissingOrInvalidArgumentException.class)
+	public void testEmptyEndDate() {
+		roomService.createRoomRate(roomRateTwo);
+		roomService.createRoomRate(roomRateThree);
+
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationOne.setEndDate(null);
+
+		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
+		bookingService.createReservation(reservationOne);
+	}
+	
+	@Test(expected=MissingOrInvalidArgumentException.class)
+	public void testStartDateBeforeEndDate() {
+		roomService.createRoomRate(roomRateTwo);
+		roomService.createRoomRate(roomRateThree);
+
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+
+		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
+		bookingService.createReservation(reservationOne);
 	}
 	
 	@Test(expected = NotFoundException.class)

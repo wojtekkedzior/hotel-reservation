@@ -3,6 +3,8 @@ package hotelreservation.service;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import hotelreservation.repository.GuestRepo;
 import hotelreservation.repository.IdentificationRepo;
 
 @Service
+@Transactional
 public class GuestService {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	

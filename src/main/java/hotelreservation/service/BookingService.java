@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import hotelreservation.MissingOrInvalidArgumentException;
 import hotelreservation.NotDeletedException;
 import hotelreservation.NotFoundException;
 import hotelreservation.Utils;
@@ -71,7 +72,7 @@ public class BookingService {
 	}
 
 	public void createReservation(Reservation reservation) {
-		if(guestRepo.existsById(reservation.getId())) {
+		if(guestRepo.existsById(reservation.getId())) { //TODO why guestRepo? should be reservationrepo
 			reservationRepo.save(reservation);
 			//TODO set modified dates etc here too
 			return;
@@ -79,6 +80,12 @@ public class BookingService {
 		
 		if (reservation.getMainGuest().getId() == 0) {
 			guestRepo.save(reservation.getMainGuest());
+		}
+		
+		if(reservation.getStartDate() == null || reservation.getEndDate() == null) {
+			throw new MissingOrInvalidArgumentException("Start and/or end dates cannot be empty");
+		} else if(reservation.getStartDate().after(reservation.getEndDate())) {
+			throw new MissingOrInvalidArgumentException("Start and/or end dates cannot be empty");
 		}
 		
 		//TODO validate reservation has start and end date
@@ -98,7 +105,7 @@ public class BookingService {
 		
 		for (int i = 0; i < roomRates.size(); i++) {
 			if(!roomRatesAsMap.containsKey(startDate)) {
-				throw new IllegalArgumentException("Should not be able to save a reservation with non-sequential room rate dates");
+				throw new MissingOrInvalidArgumentException("Should not be able to save a reservation with non-sequential room rate dates");
 			} else {
 				startDate = startDate.plusDays(1);
 			}
@@ -109,7 +116,7 @@ public class BookingService {
 		for (Reservation reservation2 : findInProgressAndUpComingReservations) {
 			for (RoomRate roomRate : roomRates) {
 				if(reservation2.getRoomRates().contains(roomRate)) {
-					throw new IllegalArgumentException("No rooms available for the given day");
+					throw new MissingOrInvalidArgumentException("No rooms available for the given day");
 				} 
 			}
 		}
