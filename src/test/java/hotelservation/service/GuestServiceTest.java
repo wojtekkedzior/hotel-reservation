@@ -14,8 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import hotelreservation.Application;
-import hotelreservation.NotDeletedException;
-import hotelreservation.NotFoundException;
+import hotelreservation.exceptions.NotDeletedException;
+import hotelreservation.exceptions.NotFoundException;
 import hotelreservation.model.Contact;
 import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;

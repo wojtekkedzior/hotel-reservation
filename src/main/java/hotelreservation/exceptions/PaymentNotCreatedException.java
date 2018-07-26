@@ -1,10 +1,10 @@
-package hotelreservation;
+package hotelreservation.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value=HttpStatus.PRECONDITION_REQUIRED, reason="No charges for payment")  // 428
-public class MissingOrInvalidArgumentException extends RuntimeException {
+public class PaymentNotCreatedException extends RuntimeException {
 
 	/**
 	 * 
@@ -13,21 +13,13 @@ public class MissingOrInvalidArgumentException extends RuntimeException {
     // ...
 	
 	private long id;
-	private String message;
 	
-	public MissingOrInvalidArgumentException(long id) {
+	public PaymentNotCreatedException(long id) {
 		this.id = id;
-	}
-	
-	public MissingOrInvalidArgumentException(String message) {
-		this.message = message;
 	}
 
 	@Override
 	public String toString() {
-		return "MissingOrInvalidArgumentException [id=" + id + ", message=" + message + "]";
+		return "Nothing to delete with [id=" + id + "]";
 	}
-
-	
-	
 }

@@ -20,10 +20,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import hotelreservation.Application;
-import hotelreservation.MissingOrInvalidArgumentException;
-import hotelreservation.NotDeletedException;
 import hotelreservation.Utils;
-import hotelreservation.NotFoundException;
+import hotelreservation.exceptions.MissingOrInvalidArgumentException;
+import hotelreservation.exceptions.NotDeletedException;
+import hotelreservation.exceptions.NotFoundException;
 import hotelreservation.model.Amenity;
 import hotelreservation.model.AmenityType;
 import hotelreservation.model.Contact;

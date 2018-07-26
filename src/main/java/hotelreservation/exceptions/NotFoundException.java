@@ -1,10 +1,10 @@
-package hotelreservation;
+package hotelreservation.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(value=HttpStatus.NO_CONTENT, reason="Nothing to delete")  // 404
-public class NotDeletedException extends RuntimeException {
+@ResponseStatus(value=HttpStatus.NOT_FOUND, reason="No such Element")  // 404
+public class NotFoundException extends RuntimeException {
 
 	/**
 	 * 
@@ -14,12 +14,12 @@ public class NotDeletedException extends RuntimeException {
 	
 	private long id;
 	
-	public NotDeletedException(long id) {
+	public NotFoundException(long id) {
 		this.id = id;
 	}
 
 	@Override
 	public String toString() {
-		return "Nothing to delete with [id=" + id + "]";
+		return "NotFoundException [id=" + id + "]";
 	}
 }

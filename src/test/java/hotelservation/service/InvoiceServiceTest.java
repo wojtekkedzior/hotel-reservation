@@ -18,9 +18,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import hotelreservation.Application;
-import hotelreservation.NotDeletedException;
-import hotelreservation.NotFoundException;
 import hotelreservation.Utils;
+import hotelreservation.exceptions.NotDeletedException;
+import hotelreservation.exceptions.NotFoundException;
 import hotelreservation.model.Amenity;
 import hotelreservation.model.AmenityType;
 import hotelreservation.model.Charge;
