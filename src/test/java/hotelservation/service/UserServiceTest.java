@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import hotelreservation.Application;
+import hotelreservation.exceptions.MissingOrInvalidArgumentException;
 import hotelreservation.exceptions.NotDeletedException;
 import hotelreservation.exceptions.NotFoundException;
 import hotelreservation.model.Privilege;
@@ -83,6 +84,7 @@ public class UserServiceTest {
 	@Test
 	public void testCRUDUser() {
 		User user = new User("username", "name");
+		user.setPassword("{noop}password");
 		userService.createUser(user);
 		
 		assertEquals(1, userService.getAllUsers().size());
@@ -94,6 +96,11 @@ public class UserServiceTest {
 		
 		userService.deleteUser(user);
 		assertEquals(0, userService.getAllUsers().size());
+	}
+	
+	@Test(expected=MissingOrInvalidArgumentException.class)
+	public void testCreateUserWithoutPassword() {
+		userService.createUser(new User());
 	}
 	
 	@Test

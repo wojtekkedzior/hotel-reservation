@@ -112,7 +112,7 @@ public class UserControllerTest {
 		bookingService.createGuest(mainGuest);
 
 		User user = new User();
-		// user.setUserType(managerUserType);
+		user.setPassword("{noop}password");
 		userService.createUser(user);
 
 		reservationOne.setMainGuest(mainGuest);
@@ -221,7 +221,7 @@ public class UserControllerTest {
 	@WithUserDetails("admin")
 	public void testAdminRolePermissions_allowed() throws Exception {
 		mvc.perform(get("/user/1")).andExpect(status().isOk());
-		mvc.perform(post("/adduser").flashAttr("user", new User())).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/adduser").flashAttr("user", new User())).andExpect(status().is4xxClientError());
 		mvc.perform(delete("/userDelete/1")).andExpect(status().is3xxRedirection());
 	}
 
@@ -234,7 +234,7 @@ public class UserControllerTest {
 	@WithUserDetails("manager")
 	public void testManagerRolePermissions_allowed() throws Exception {
 		mvc.perform(get("/user/1")).andExpect(status().isOk());
-		mvc.perform(post("/adduser").flashAttr("user", new User())).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/adduser").flashAttr("user", new User())).andExpect(status().is4xxClientError());
 	}
 
 	@Test

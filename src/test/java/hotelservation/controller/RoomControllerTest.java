@@ -113,7 +113,7 @@ public class RoomControllerTest {
 		bookingService.createGuest(mainGuest);
 
 		User user = new User();
-		// user.setUserType(managerUserType);
+		user.setPassword("{noop}password");
 		userService.createUser(user);
 
 		reservationOne.setMainGuest(mainGuest);
