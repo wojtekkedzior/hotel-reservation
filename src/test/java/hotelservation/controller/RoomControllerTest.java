@@ -1,6 +1,5 @@
 package hotelservation.controller;
 
-import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -12,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,11 +32,7 @@ import hotelreservation.Application;
 import hotelreservation.Utils;
 import hotelreservation.model.Amenity;
 import hotelreservation.model.AmenityType;
-import hotelreservation.model.Contact;
-import hotelreservation.model.Guest;
-import hotelreservation.model.Identification;
 import hotelreservation.model.Privilege;
-import hotelreservation.model.Reservation;
 import hotelreservation.model.Role;
 import hotelreservation.model.Room;
 import hotelreservation.model.RoomRate;
@@ -46,9 +40,6 @@ import hotelreservation.model.RoomType;
 import hotelreservation.model.Status;
 import hotelreservation.model.User;
 import hotelreservation.model.enums.Currency;
-import hotelreservation.model.enums.IdType;
-import hotelreservation.model.enums.ReservationStatus;
-import hotelreservation.service.BookingService;
 import hotelreservation.service.MyUserDetailsService;
 import hotelreservation.service.RoomService;
 import hotelreservation.service.UserService;
@@ -68,8 +59,6 @@ public class RoomControllerTest {
 	private User manager;
 	private User receptionist;
 
-	private Reservation reservationOne;
-
 	@Autowired
 	private MockMvc mvc;
 
@@ -78,9 +67,6 @@ public class RoomControllerTest {
 
 	@Autowired
 	private RoomService roomService;
-
-	@Autowired
-	private BookingService bookingService;
 
 	@Autowired
 	private Utils dateConvertor;
@@ -100,65 +86,27 @@ public class RoomControllerTest {
 
 	@Before
 	public void setup() {
-		reservationOne = new Reservation();
-
-		Contact contactTwo = new Contact();
-
-		bookingService.createContact(contactTwo);
-
-		Identification idTwo = new Identification(IdType.DriversLicense, "twoIdNumber");
-		bookingService.createIdentification(idTwo);
-
-		Guest mainGuest = new Guest("GuestTWo First Name", "GuestTwo Last Name", contactTwo, idTwo);
-		bookingService.createGuest(mainGuest);
-
 		User user = new User();
 		user.setPassword("{noop}password");
 		userService.createUser(user);
 
-		reservationOne.setMainGuest(mainGuest);
-		reservationOne.setCreatedBy(user);
-		reservationOne.setReservationStatus(ReservationStatus.UpComing);
-
 		RoomType roomTypeStandard = new RoomType("Standard", "Standard room");
 		roomService.createRoomType(roomTypeStandard);
-
+		
 		Status operational = new Status("Operational", "Room is in operation");
 		roomService.createStatus(operational);
-
+		
 		AmenityType amenityType = new AmenityType("room amenity", "comfort");
 		roomService.createAmenityType(amenityType);
-
+		
 		Room standardRoomOne = new Room(1, operational, roomTypeStandard, user);
 		standardRoomOne.setName("Room 1");
 		standardRoomOne.setDescription("The Best Room Description");
-//		List<Amenity> roomAmenities = new ArrayList<Amenity>();
-//		Amenity pillow = new Amenity("pillow", "pillow", amenityType);
 		standardRoomOne.setRoomAmenities(Arrays.asList(new Amenity("pillow", "pillow", amenityType)));
 		roomService.createRoom(standardRoomOne);
-
+		
 		RoomRate roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		RoomRate roomRateThree = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
-		RoomRate roomRateFour = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
-
 		roomService.createRoomRate(roomRateTwo);
-		roomService.createRoomRate(roomRateThree);
-		roomService.createRoomRate(roomRateFour);
-
-		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
-
-		List<RoomRate> roomRates = new ArrayList<>();
-		roomRates.add(roomRateTwo);
-		roomRates.add(roomRateThree);
-		roomRates.add(roomRateFour);
-		reservationOne.setRoomRates(roomRates);
-
-		try {
-//			bookingService.createReservation(reservationOne);
-		} catch (Exception e) {
-			fail();
-		}
 	}
 
 	private void addPrivileges() {
@@ -200,7 +148,6 @@ public class RoomControllerTest {
 
 		managerPrivileges.add(createRoomRate);
 
-
 		adminRole = new Role("admin", "admin desc", true);
 		managerRole = new Role("manager", "manager desc", true);
 		receptionistRole = new Role("receptionist", "receptionist", true);
@@ -226,7 +173,6 @@ public class RoomControllerTest {
 		admin.setFirstName("admin");
 		admin.setLastName("admin");
 		admin.setUserName("admin");
-		// user.setPassword(passwordEncoder.encode("test")); //TODO use encoder
 		admin.setPassword("password");
 		admin.setRoles(Arrays.asList(adminRole));
 		admin.setEnabled(true);
@@ -236,7 +182,6 @@ public class RoomControllerTest {
 		receptionist.setFirstName("receptionist");
 		receptionist.setLastName("receptionist");
 		receptionist.setUserName("receptionist");
-		// user.setPassword(passwordEncoder.encode("test")); //TODO use encoder
 		receptionist.setPassword("password");
 		receptionist.setRoles(Arrays.asList(receptionistRole));
 		receptionist.setEnabled(true);

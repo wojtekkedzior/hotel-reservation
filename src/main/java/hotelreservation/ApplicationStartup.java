@@ -549,7 +549,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		//Make one reservation InProgress
 		Reservation reservation = bookingService.getReservation(3);
 		reservation.setReservationStatus(ReservationStatus.InProgress);
-		bookingService.saveReservation(reservation);
+		bookingService.createReservation(reservation);
 	}
 	
 	private void createMultiRoomReservation () {
