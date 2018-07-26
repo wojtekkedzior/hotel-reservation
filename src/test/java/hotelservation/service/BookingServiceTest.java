@@ -560,6 +560,82 @@ public class BookingServiceTest {
 	public void testCancelReservationMidway() {
 		
 	}
+
+	@Test 
+	public void testUpdateReservationWithNoRoomRates() {
+		roomService.createRoomRate(roomRateTwo);
+		roomService.createRoomRate(roomRateThree);
+
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+
+		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
+		bookingService.createReservation(reservationOne);
+		
+		reservationOne.setRoomRates(new ArrayList<RoomRate>());
+		
+		try {
+			bookingService.saveReservation(reservationOne);
+			fail();
+		} catch(MissingOrInvalidArgumentException e) {}
+	}
+	
+	@Test 
+	public void testUpdateReservationWithEmptyStartDate() {
+		roomService.createRoomRate(roomRateTwo);
+		roomService.createRoomRate(roomRateThree);
+
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+
+		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
+		bookingService.createReservation(reservationOne);
+		
+		reservationOne.setStartDate(null);
+		
+		try {
+			bookingService.saveReservation(reservationOne);
+			fail();
+		} catch(MissingOrInvalidArgumentException e) {}
+	}
+	
+	@Test 
+	public void testUpdateReservationWithEmptyEndDate() {
+		roomService.createRoomRate(roomRateTwo);
+		roomService.createRoomRate(roomRateThree);
+
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+
+		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
+		bookingService.createReservation(reservationOne);
+		
+		reservationOne.setEndDate(null);
+		
+		try {
+			bookingService.saveReservation(reservationOne);
+			fail();
+		} catch(MissingOrInvalidArgumentException e) {}
+	}
+	
+	@Test 
+	public void testUpdateReservationWithStartDateBeforeEndDate() {
+		roomService.createRoomRate(roomRateTwo);
+		roomService.createRoomRate(roomRateThree);
+
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+
+		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
+		bookingService.createReservation(reservationOne);
+		
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
+		
+		try {
+			bookingService.saveReservation(reservationOne);
+			fail();
+		} catch(MissingOrInvalidArgumentException e) {}
+	}
 	
 	@Test(expected=MissingOrInvalidArgumentException.class)
 	public void testEmptyStartDate() {

@@ -117,9 +117,47 @@ public class BookingService {
 		reservationRepo.save(reservation);
 	}
 	
-	//TODO validate
-	public void saveReservation(Reservation reservationOne) {
-		reservationRepo.save(reservationOne);
+	public void saveReservation(Reservation reservation) {
+		if(reservation.getStartDate() == null || reservation.getEndDate() == null) {
+			throw new MissingOrInvalidArgumentException("Start and/or end dates cannot be empty");
+		} else if(reservation.getStartDate().after(reservation.getEndDate())) {
+			throw new MissingOrInvalidArgumentException("Start and/or end dates cannot be empty");
+		}
+		
+		if(reservation.getRoomRates() == null || reservation.getRoomRates().isEmpty()) {
+			throw new MissingOrInvalidArgumentException("Can't have no room rates when updating a reservation");
+		}
+		
+		//Check if room rates have sequential days
+		List<RoomRate> roomRates = reservation.getRoomRates();
+		
+		Map<LocalDate, RoomRate> roomRatesAsMap = new HashMap<LocalDate, RoomRate>();
+		
+		for (RoomRate roomRate : roomRates) {
+			roomRatesAsMap.put(utils.asLocalDate(roomRate.getDay()), roomRate);
+		}
+		
+		LocalDate startDate = utils.asLocalDate(reservation.getStartDate());
+		
+		for (int i = 0; i < roomRates.size(); i++) {
+			if(!roomRatesAsMap.containsKey(startDate)) {
+				throw new MissingOrInvalidArgumentException("Should not be able to save a reservation with non-sequential room rate dates");
+			} else {
+				startDate = startDate.plusDays(1);
+			}
+		}
+		
+		//Check if roomRates are available
+		List<Reservation> findInProgressAndUpComingReservations = reservationRepo.findInProgressAndUpComingReservations();
+		for (Reservation reservation2 : findInProgressAndUpComingReservations) {
+			for (RoomRate roomRate : roomRates) {
+				if(reservation2.getRoomRates().contains(roomRate)) {
+					throw new MissingOrInvalidArgumentException("No rooms available for the given day");
+				} 
+			}
+		}
+		
+		reservationRepo.save(reservation);
 	}
 
 	public List<Reservation> getAllReservations() {
