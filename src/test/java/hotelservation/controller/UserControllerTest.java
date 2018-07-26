@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
 import org.junit.Before;
@@ -20,110 +19,46 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import hotelreservation.Application;
 import hotelreservation.model.Privilege;
-import hotelreservation.model.Role;
 import hotelreservation.model.User;
 import hotelreservation.service.MyUserDetailsService;
-import hotelreservation.service.UserService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = { Application.class, MyUserDetailsService.class })
 @DataJpaTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class UserControllerTest {
-
-	private Role adminRole;
-	private Role managerRole;
-	private Role receptionistRole;
-
-	private User admin;
-	private User manager;
-	private User receptionist;
+public class UserControllerTest extends BaseControllerSetup {
 
 	@Autowired
 	private MockMvc mvc;
 
-	@Autowired
-	private UserService userService;
+	@Override
+	Collection<Privilege> getPrivilegesForReceptionist() {
+		return new ArrayList<Privilege>();
+	}
 
-	@Autowired
-	private PlatformTransactionManager txManager;
+	@Override
+	Collection<Privilege> getPrivilegesForManager() {
+		Collection<Privilege> managerPrivileges = new ArrayList<Privilege>();
+		managerPrivileges.add(new Privilege("createUser"));
+		return managerPrivileges;
+	}
 
-	// Nasty hack - using @WithUserDetails causes the UserDetails service to be called as part of the securtiy chain, which happens before the @Before.
-	// Hopefully this will be fixed in some never version
-	@BeforeTransaction
-	public void setup1() {
-		new TransactionTemplate(txManager).execute(status -> {
-			addPrivileges();
-			return null;
-		});
+	@Override
+	Collection<Privilege> getPrivilegesForAdmin() {
+		Collection<Privilege> adminPrivileges = new ArrayList<Privilege>();
+		adminPrivileges.add(new Privilege("createUser"));
+		adminPrivileges.add(new Privilege("deleteUser"));
+		return adminPrivileges;
 	}
 
 	@Before
 	public void setup() {
 
-	}
-
-	private void addPrivileges() {
-		Privilege createUser = new Privilege("createUser");
-		Privilege deleteUser = new Privilege("deleteUser");
-		userService.createPrivilege(createUser);
-		userService.createPrivilege(deleteUser);
-
-		Collection<Privilege> adminPrivileges = new ArrayList<Privilege>();
-		Collection<Privilege> managerPrivileges = new ArrayList<Privilege>();
-		Collection<Privilege> receptionistPrivileges = new ArrayList<Privilege>();
-
-		adminPrivileges.add(createUser);
-		adminPrivileges.add(deleteUser);
-		
-		managerPrivileges.add(createUser);
-
-		adminRole = new Role("admin", "admin desc", true);
-		managerRole = new Role("manager", "manager desc", true);
-		receptionistRole = new Role("receptionist", "receptionist", true);
-
-		adminRole.setPrivileges(adminPrivileges);
-		managerRole.setPrivileges(managerPrivileges);
-		receptionistRole.setPrivileges(receptionistPrivileges);
-
-		userService.createRole(adminRole);
-		userService.createRole(managerRole);
-		userService.createRole(receptionistRole);
-
-		manager = new User();
-		manager.setPassword("password");
-		manager.setFirstName("Manager");
-		manager.setLastName("Manager");
-		manager.setUserName("manager");
-		manager.setEnabled(true);
-		manager.setRoles(Arrays.asList(managerRole));
-		userService.createUser(manager);
-
-		admin = new User();
-		admin.setFirstName("admin");
-		admin.setLastName("admin");
-		admin.setUserName("admin");
-		admin.setPassword("password");
-		admin.setRoles(Arrays.asList(adminRole));
-		admin.setEnabled(true);
-		userService.createUser(admin);
-
-		receptionist = new User();
-		receptionist.setFirstName("receptionist");
-		receptionist.setLastName("receptionist");
-		receptionist.setUserName("receptionist");
-		receptionist.setPassword("password");
-		receptionist.setRoles(Arrays.asList(receptionistRole));
-		receptionist.setEnabled(true);
-		userService.createUser(receptionist);
 	}
 
 	@Test
