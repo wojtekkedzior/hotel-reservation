@@ -61,6 +61,7 @@ public class RoomServiceTest {
 		userService.createRole(managerUserType);
 
 		createdBy = new User();
+		createdBy.setPassword("password");
 		userService.createUser(createdBy);
 		
 		status = new Status("Status name", "Status Description");

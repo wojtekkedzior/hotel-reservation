@@ -112,7 +112,7 @@ public class ReservationControllerTest {
 		bookingService.createGuest(mainGuest);
 
 		User user = new User();
-		// user.setUserType(managerUserType);
+		user.setPassword("password");
 		userService.createUser(user);
 
 		reservationOne.setMainGuest(mainGuest);
@@ -221,7 +221,6 @@ public class ReservationControllerTest {
 		admin.setFirstName("admin");
 		admin.setLastName("admin");
 		admin.setUserName("admin");
-		// user.setPassword(passwordEncoder.encode("test")); //TODO use encoder
 		admin.setPassword("password");
 		admin.setRoles(Arrays.asList(adminRole));
 		admin.setEnabled(true);
@@ -231,7 +230,6 @@ public class ReservationControllerTest {
 		receptionist.setFirstName("receptionist");
 		receptionist.setLastName("receptionist");
 		receptionist.setUserName("receptionist");
-		// user.setPassword(passwordEncoder.encode("test")); //TODO use encoder
 		receptionist.setPassword("password");
 		receptionist.setRoles(Arrays.asList(receptionistRole));
 		receptionist.setEnabled(true);

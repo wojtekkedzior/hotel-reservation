@@ -116,6 +116,11 @@ public class BookingService {
 		
 		reservationRepo.save(reservation);
 	}
+	
+	//TODO validate
+	public void saveReservation(Reservation reservationOne) {
+		reservationRepo.save(reservationOne);
+	}
 
 	public List<Reservation> getAllReservations() {
 		return utils.toList(reservationRepo.findAll());
@@ -145,10 +150,6 @@ public class BookingService {
 			throw new NotDeletedException(reservation.getId());
 		}
 		reservationRepo.delete(reservation);
-	}
-
-	public void saveReservation(Reservation reservationOne) {
-		reservationRepo.save(reservationOne);
 	}
 
 	public List<Reservation> getReservationsByStatus(ReservationStatus reservationStatus) {

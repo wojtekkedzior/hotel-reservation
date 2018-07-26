@@ -9,9 +9,11 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import hotelreservation.Utils;
+import hotelreservation.exceptions.MissingOrInvalidArgumentException;
 import hotelreservation.exceptions.NotDeletedException;
 import hotelreservation.exceptions.NotFoundException;
 import hotelreservation.model.Privilege;
@@ -37,12 +39,22 @@ public class UserService {
 	
 	@Autowired
 	private Utils utils;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	//TODO remove as the super admin user should be added by an sql script
 	public User createUser(User user) {
 		user.setCreatedOn(new Date());
 		//TODO set created BY
 //		user.setCreatedBy(createdBy);
+		String password = user.getPassword();
+		
+		if(password == null || password.isEmpty()) {
+			throw new MissingOrInvalidArgumentException("password can't be empty");
+		}
+			
+		user.setPassword(passwordEncoder.encode(password));
 		return userRepo.save(user);
 	}
 	
