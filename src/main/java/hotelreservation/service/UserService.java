@@ -37,13 +37,12 @@ public class UserService {
 	
 	@Autowired
 	private Utils utils;
-	
+
 	//TODO remove as the super admin user should be added by an sql script
 	public User createUser(User user) {
 		user.setCreatedOn(new Date());
 		//TODO set created BY
 //		user.setCreatedBy(createdBy);
-		
 		return userRepo.save(user);
 	}
 	
