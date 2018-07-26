@@ -98,7 +98,7 @@ public class BookingServiceTest {
 		userService.createRole(managerUserType);
 
 		user = new User();
-		user.setPassword("{noop}password");
+		user.setPassword("password");
 		userService.createUser(user);
 
 		amenityTypeRoomBasic = new AmenityType("Basic", "Basic Room amenity Type");

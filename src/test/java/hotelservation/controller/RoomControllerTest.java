@@ -87,7 +87,7 @@ public class RoomControllerTest {
 	@Before
 	public void setup() {
 		User user = new User();
-		user.setPassword("{noop}password");
+		user.setPassword("password");
 		userService.createUser(user);
 
 		RoomType roomTypeStandard = new RoomType("Standard", "Standard room");

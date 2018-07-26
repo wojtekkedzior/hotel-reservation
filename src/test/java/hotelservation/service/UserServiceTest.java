@@ -84,7 +84,7 @@ public class UserServiceTest {
 	@Test
 	public void testCRUDUser() {
 		User user = new User("username", "name");
-		user.setPassword("{noop}password");
+		user.setPassword("password");
 		userService.createUser(user);
 		
 		assertEquals(1, userService.getAllUsers().size());

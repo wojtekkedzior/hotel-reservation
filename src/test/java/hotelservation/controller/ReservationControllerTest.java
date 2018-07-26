@@ -112,7 +112,7 @@ public class ReservationControllerTest {
 		bookingService.createGuest(mainGuest);
 
 		User user = new User();
-		user.setPassword("{noop}password");
+		user.setPassword("password");
 		userService.createUser(user);
 
 		reservationOne.setMainGuest(mainGuest);

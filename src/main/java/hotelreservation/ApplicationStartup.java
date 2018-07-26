@@ -277,13 +277,13 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		admin.setFirstName("admin");
 		admin.setLastName("admin");
 		admin.setUserName("admin");
-		admin.setPassword("{noop}password");
+		admin.setPassword("password");
 		admin.setRoles(Arrays.asList(adminRole));
 		admin.setEnabled(true);
 		userService.createUser(admin);
 		
 		manager = new User();
-		manager.setPassword("{noop}password");
+		manager.setPassword("password");
 		manager.setFirstName("Manager");
 		manager.setLastName("Manager");
 		manager.setUserName("manager");
@@ -295,7 +295,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		receptionist.setFirstName("receptionist");
 		receptionist.setLastName("receptionist");
 		receptionist.setUserName("receptionist");
-		receptionist.setPassword("{noop}password");
+		receptionist.setPassword("password");
 		receptionist.setRoles(Arrays.asList(receptionistRole));
 		receptionist.setEnabled(true);
 		userService.createUser(receptionist);
@@ -549,7 +549,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		//Make one reservation InProgress
 		Reservation reservation = bookingService.getReservation(3);
 		reservation.setReservationStatus(ReservationStatus.InProgress);
-		bookingService.createReservation(reservation);
+		bookingService.saveReservation(reservation);
 	}
 	
 	private void createMultiRoomReservation () {
