@@ -237,7 +237,7 @@ public class ReservationController {
 
 		reservation2.setReservationStatus(ReservationStatus.InProgress);
 
-		bookingService.saveReservation(reservation2);
+		bookingService.updateReservation(reservation2);
 
 		return new ModelAndView("redirect:/dashboard");
 	}
