@@ -591,27 +591,17 @@ public class BookingServiceTest {
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
 		bookingService.createReservation(reservationOne);
 		
-		RoomRate roomRateFour = new RoomRate(standardRoomTwo, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		RoomRate roomRateFive = new RoomRate(standardRoomTwo, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
-
-		roomService.createRoomRate(roomRateFour);
-		roomService.createRoomRate(roomRateFive);
-		
 		List<RoomRate> roomRates = new ArrayList<RoomRate>();
-//		roomRates.add(roomRateFour);
-//		roomRates.add(roomRateFive);
-		
 		roomRates.add(roomRateTwo);
 		
 		reservationOne.setRoomRates(roomRates);
 		
 		try {
 			bookingService.updateReservation(reservationOne);
-//			fail();
 		} catch(MissingOrInvalidArgumentException e) {}
 		
 		List<RoomRate> availableRoomRates = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)), dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
-		assertEquals(2, availableRoomRates.size());
+		assertEquals(1, availableRoomRates.size());
 	}
 	
 	@Test 
@@ -646,7 +636,7 @@ public class BookingServiceTest {
 		reservationOne.setRoomRates(roomRates);
 		
 		try {
-			bookingService.saveReservation(reservationOne);
+			bookingService.updateReservation(reservationOne);
 		} catch(MissingOrInvalidArgumentException e) {
 			fail(e.toString());
 		}
