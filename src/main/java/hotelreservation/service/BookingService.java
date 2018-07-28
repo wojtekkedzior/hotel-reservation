@@ -149,6 +149,12 @@ public class BookingService {
 		
 		//Check if roomRates are available
 		List<Reservation> findInProgressAndUpComingReservations = reservationRepo.findInProgressAndUpComingReservations();
+		
+		if(findInProgressAndUpComingReservations.contains(reservation)) {
+			log.info("Updating existing resrvation, so removing it from list of In Progress and Up Coming. ID: " + reservation.getId());
+			findInProgressAndUpComingReservations.remove(reservation);
+		}
+		
 		for (Reservation reservation2 : findInProgressAndUpComingReservations) {
 			for (RoomRate roomRate : roomRates) {
 				if(reservation2.getRoomRates().contains(roomRate)) {

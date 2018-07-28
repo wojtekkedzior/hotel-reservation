@@ -185,7 +185,7 @@ public class ReservationControllerTest extends BaseControllerSetup {
 	public void testManagerRolePermissions_allowed() throws Exception {
 		mvc.perform(get("/reservation/1")).andExpect(status().isOk());
 		mvc.perform(get("/realiseReservation/1")).andExpect(status().isOk());
-		mvc.perform(post("/realiseReservation").flashAttr("reservation", reservationOne)).andExpect(status().is4xxClientError());
+		mvc.perform(post("/realiseReservation").flashAttr("reservation", reservationOne)).andExpect(status().is3xxRedirection());
 		mvc.perform(get("/cancelReservation/1")).andExpect(status().isOk());
 		mvc.perform(get("/checkoutReservation/1")).andExpect(status().isOk());
 		
@@ -208,7 +208,7 @@ public class ReservationControllerTest extends BaseControllerSetup {
 	public void testReceptionistRolePermissions_allowed() throws Exception {
 		mvc.perform(get("/reservation/1")).andExpect(status().isOk());
 		mvc.perform(get("/realiseReservation/1")).andExpect(status().isOk());
-		mvc.perform(post("/realiseReservation").flashAttr("reservation", reservationOne)).andExpect(status().is4xxClientError());
+		mvc.perform(post("/realiseReservation").flashAttr("reservation", reservationOne)).andExpect(status().is3xxRedirection());
 		mvc.perform(get("/cancelReservation/1")).andExpect(status().isOk());
 		mvc.perform(get("/checkoutReservation/1")).andExpect(status().isOk());
 		
