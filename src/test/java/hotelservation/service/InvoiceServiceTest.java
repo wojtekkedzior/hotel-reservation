@@ -195,10 +195,17 @@ public class InvoiceServiceTest {
 		reservationOne.setMainGuest(mainGuest);
 		reservationOne.setCreatedBy(user);
 		reservationOne.setReservationStatus(ReservationStatus.UpComing);
-		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 15)));
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
 		reservationOne.setRoomRates(new ArrayList<RoomRate>());
 		
+		RoomRate roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		RoomRate roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+
+		roomService.createRoomRate(roomRateOne);
+		roomService.createRoomRate(roomRateTwo);
+		
+		reservationOne.setRoomRates(Arrays.asList(roomRateOne, roomRateTwo));
 		bookingService.createReservation(reservationOne);
 		
 		chargeOne = new Charge(Currency.CZK, 100, "chargeOne", "chargeOneDesc");

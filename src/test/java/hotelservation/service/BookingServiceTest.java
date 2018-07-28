@@ -575,9 +575,39 @@ public class BookingServiceTest {
 		reservationOne.setRoomRates(new ArrayList<RoomRate>());
 		
 		try {
-			bookingService.saveReservation(reservationOne);
+			bookingService.updateReservation(reservationOne);
 			fail();
 		} catch(MissingOrInvalidArgumentException e) {}
+	}
+	
+	@Test 
+	public void testUpdateReservationWithDifferentRates() {
+		roomService.createRoomRate(roomRateTwo);
+		roomService.createRoomRate(roomRateThree);
+
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+
+		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
+		bookingService.createReservation(reservationOne);
+		
+		List<RoomRate> roomRates = new ArrayList<RoomRate>();
+		roomRates.add(roomRateTwo);
+		
+		reservationOne.setRoomRates(roomRates);
+		
+		try {
+			bookingService.updateReservation(reservationOne);
+		} catch(MissingOrInvalidArgumentException e) {}
+		
+		List<RoomRate> availableRoomRates = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)), dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		assertEquals(1, availableRoomRates.size());
+	}
+	
+	@Test 
+	public void testCreateReservationWithNotEnoughRates() {
+		
+		//TODO test a scenario where the rates don't cover the entire reservation stay.
 	}
 	
 	/**
@@ -606,7 +636,7 @@ public class BookingServiceTest {
 		reservationOne.setRoomRates(roomRates);
 		
 		try {
-			bookingService.saveReservation(reservationOne);
+			bookingService.updateReservation(reservationOne);
 		} catch(MissingOrInvalidArgumentException e) {
 			fail(e.toString());
 		}
@@ -631,7 +661,7 @@ public class BookingServiceTest {
 		reservationOne.setStartDate(null);
 		
 		try {
-			bookingService.saveReservation(reservationOne);
+			bookingService.updateReservation(reservationOne);
 			fail();
 		} catch(MissingOrInvalidArgumentException e) {}
 	}
@@ -650,7 +680,7 @@ public class BookingServiceTest {
 		reservationOne.setEndDate(null);
 		
 		try {
-			bookingService.saveReservation(reservationOne);
+			bookingService.updateReservation(reservationOne);
 			fail();
 		} catch(MissingOrInvalidArgumentException e) {}
 	}
@@ -669,7 +699,7 @@ public class BookingServiceTest {
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
 		
 		try {
-			bookingService.saveReservation(reservationOne);
+			bookingService.updateReservation(reservationOne);
 			fail();
 		} catch(MissingOrInvalidArgumentException e) {}
 	}
