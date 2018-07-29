@@ -69,8 +69,11 @@
 				</div>
 
 				<p>
-					<!-- hidden field to make sure the ID gets passed back to the controller when submit is called. -->
+					<!-- hidden field to make sure the ID gets passed back to the controller when submit is called.  -->
 					<input type="number" th:field="${reservation.id}" hidden="true" /> <input type="date" th:field="${startDate}" th:value="2008-03-09" hidden="true" />
+					<input type="number" th:field="${reservation.mainGuest.id}" hidden="true" /> 
+					<input type="text" th:field="${reservation.reservationStatus}" hidden="true" /> 
+					<input type="date" th:field="${reservation.createdOn}" hidden="true" /> 
 					Guest First Name: <input type="text" th:field="${reservation.mainGuest.firstName}" required="required" /> Guest Last Name: <input type="text"
 						th:field="${reservation.mainGuest.lastName}" required="required" />
 				</p>

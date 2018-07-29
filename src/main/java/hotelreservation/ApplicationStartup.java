@@ -33,7 +33,6 @@ import hotelreservation.model.Status;
 import hotelreservation.model.User;
 import hotelreservation.model.enums.Currency;
 import hotelreservation.model.enums.IdType;
-import hotelreservation.model.enums.ReservationStatus;
 import hotelreservation.service.BookingService;
 import hotelreservation.service.InvoiceService;
 import hotelreservation.service.RoomService;
@@ -548,8 +547,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		
 		//Make one reservation InProgress
 		Reservation reservation = bookingService.getReservation(3);
-		reservation.setReservationStatus(ReservationStatus.InProgress);
-		bookingService.updateReservation(reservation);
+		bookingService.realiseReservation(reservation);
 	}
 	
 	private void createMultiRoomReservation () {

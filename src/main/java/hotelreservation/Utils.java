@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,4 +43,11 @@ public class Utils {
 	public <T> List<T> toList(final Iterable<T> iterable) {
 		return StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toList());
 	}
+	
+	public <T> boolean contains(List<T> list, T item, Comparator<? super T> comparator) {
+	    return list.stream()
+	            .anyMatch(listItem -> comparator.compare(listItem, item) == 0
+	            );
+	}
+	
 }

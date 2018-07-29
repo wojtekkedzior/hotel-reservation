@@ -575,7 +575,7 @@ public class BookingServiceTest {
 		reservationOne.setRoomRates(new ArrayList<RoomRate>());
 		
 		try {
-			bookingService.updateReservation(reservationOne);
+			bookingService.createReservation(reservationOne);
 			fail();
 		} catch(MissingOrInvalidArgumentException e) {}
 	}
@@ -597,7 +597,7 @@ public class BookingServiceTest {
 		reservationOne.setRoomRates(roomRates);
 		
 		try {
-			bookingService.updateReservation(reservationOne);
+			bookingService.createReservation(reservationOne);
 		} catch(MissingOrInvalidArgumentException e) {}
 		
 		List<RoomRate> availableRoomRates = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)), dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
@@ -636,7 +636,7 @@ public class BookingServiceTest {
 		reservationOne.setRoomRates(roomRates);
 		
 		try {
-			bookingService.updateReservation(reservationOne);
+			bookingService.createReservation(reservationOne);
 		} catch(MissingOrInvalidArgumentException e) {
 			fail(e.toString());
 		}
@@ -661,7 +661,7 @@ public class BookingServiceTest {
 		reservationOne.setStartDate(null);
 		
 		try {
-			bookingService.updateReservation(reservationOne);
+			bookingService.createReservation(reservationOne);
 			fail();
 		} catch(MissingOrInvalidArgumentException e) {}
 	}
@@ -680,7 +680,7 @@ public class BookingServiceTest {
 		reservationOne.setEndDate(null);
 		
 		try {
-			bookingService.updateReservation(reservationOne);
+			bookingService.createReservation(reservationOne);
 			fail();
 		} catch(MissingOrInvalidArgumentException e) {}
 	}
@@ -699,7 +699,7 @@ public class BookingServiceTest {
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
 		
 		try {
-			bookingService.updateReservation(reservationOne);
+			bookingService.createReservation(reservationOne);
 			fail();
 		} catch(MissingOrInvalidArgumentException e) {}
 	}

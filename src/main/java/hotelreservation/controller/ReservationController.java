@@ -235,9 +235,7 @@ public class ReservationController {
 			// TODO return some erro message
 		}
 
-		reservation2.setReservationStatus(ReservationStatus.InProgress);
-
-		bookingService.updateReservation(reservation2);
+		bookingService.realiseReservation(reservation2);
 
 		return new ModelAndView("redirect:/dashboard");
 	}

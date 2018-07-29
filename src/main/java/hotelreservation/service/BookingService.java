@@ -1,6 +1,7 @@
 package hotelreservation.service;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -82,6 +83,19 @@ public class BookingService {
 			guestRepo.save(reservation.getMainGuest());
 		}
 		
+		if(reservation.getCreatedOn() == null) {
+			reservation.setCreatedOn(new Date());
+		}  else {
+			Optional<Reservation> findById = reservationRepo.findById(reservation.getId());
+			
+			if(!findById.isPresent()) {
+				throw new MissingOrInvalidArgumentException(reservation.getId());
+			} else {
+				reservation.setCreatedOn(findById.get().getCreatedOn());
+			}
+		}
+		 
+		
 		//Check if room rates have sequential days
 		List<RoomRate> roomRates = reservation.getRoomRates();
 		
@@ -107,11 +121,7 @@ public class BookingService {
 		
 		//Check if roomRates are available
 		List<Reservation> findInProgressAndUpComingReservations = reservationRepo.findInProgressAndUpComingReservations();
-		
-		if(findInProgressAndUpComingReservations.contains(reservation)) {
-			log.info("Updating existing resrvation, so removing it from list of In Progress and Up Coming. ID: " + reservation.getId());
-			findInProgressAndUpComingReservations.remove(reservation);
-		}
+		removeReservationIfPresent(reservation, findInProgressAndUpComingReservations);
 		
 		for (Reservation reservation2 : findInProgressAndUpComingReservations) {
 			for (RoomRate roomRate : roomRates) {
@@ -121,57 +131,26 @@ public class BookingService {
 			}
 		}
 		
-		reservation.setCreatedOn(new Date());
 		reservation.setReservationStatus(ReservationStatus.UpComing);
 		
 		reservationRepo.save(reservation);
 	}
-	
-	public void updateReservation(Reservation reservation) {
-		createReservation(reservation);
-		
-//		if(reservation.getStartDate() == null || reservation.getEndDate() == null) {
-//			throw new MissingOrInvalidArgumentException("Start and/or end dates cannot be empty");
-//		} else if(reservation.getStartDate().after(reservation.getEndDate())) {
-//			throw new MissingOrInvalidArgumentException("Start and/or end dates cannot be empty");
-//		}
-//		
-//		if(reservation.getRoomRates() == null || reservation.getRoomRates().isEmpty()) {
-//			throw new MissingOrInvalidArgumentException("Can't have no room rates when updating a reservation");
-//		}
-//		
-//		//Check if room rates have sequential days
-//		List<RoomRate> roomRates = reservation.getRoomRates();
-//		
-//		Map<LocalDate, RoomRate> roomRatesAsMap = new HashMap<LocalDate, RoomRate>();
-//		
-//		for (RoomRate roomRate : roomRates) {
-//			roomRatesAsMap.put(utils.asLocalDate(roomRate.getDay()), roomRate);
-//		}
-//		
-//		LocalDate startDate = utils.asLocalDate(reservation.getStartDate());
-//		
-//		for (int i = 0; i < roomRates.size(); i++) {
-//			if(!roomRatesAsMap.containsKey(startDate)) {
-//				throw new MissingOrInvalidArgumentException("Should not be able to save a reservation with non-sequential room rate dates");
-//			} else {
-//				startDate = startDate.plusDays(1);
-//			}
-//		}
-//		
-//		//Check if roomRates are available
-//		List<Reservation> findInProgressAndUpComingReservations = reservationRepo.findInProgressAndUpComingReservations();
-//		for (Reservation reservation2 : findInProgressAndUpComingReservations) {
-//			for (RoomRate roomRate : roomRates) {
-//				if(reservation2.getRoomRates().contains(roomRate)) {
-//					throw new MissingOrInvalidArgumentException("No rooms available for the given day");
-//				} 
-//			}
-//		}
-//		
-//		reservationRepo.save(reservation);
-	}
 
+	private void removeReservationIfPresent(Reservation reservation, List<Reservation> findInProgressAndUpComingReservations) {
+		Comparator<Reservation> comparator = new Comparator<Reservation>() {
+		    @Override
+		    public int compare(Reservation s1, Reservation s2) {
+		        return Long.compare(s1.getId(), s2.getId());
+		    }
+		};
+		
+		boolean contains = utils.contains(findInProgressAndUpComingReservations, reservation, comparator);
+		
+		if(contains) {
+			findInProgressAndUpComingReservations.remove(reservation);
+		}
+	}
+	
 	public List<Reservation> getAllReservations() {
 		return utils.toList(reservationRepo.findAll());
 	}
@@ -231,5 +210,10 @@ public class BookingService {
 		resFromDB.setReservationStatus(ReservationStatus.Fulfilled);
 		reservationRepo.save(resFromDB);
 		reservationCheckoutRepo.save(reservationCheckout);
+	}
+
+	public void realiseReservation(Reservation reservation) {
+		reservation.setReservationStatus(ReservationStatus.InProgress);
+		reservationRepo.save(reservation);
 	}
 }
