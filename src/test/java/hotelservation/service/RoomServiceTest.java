@@ -55,17 +55,17 @@ public class RoomServiceTest {
 	@Before
 	public void setup() {
 		roomType = new RoomType("Standard", "Standard room");
-		roomService.createRoomType(roomType);
+		roomService.saveRoomType(roomType);
 
 		managerUserType = new Role("manager", "manager desc", true);
-		userService.createRole(managerUserType);
+		userService.saveRole(managerUserType);
 
 		createdBy = new User();
 		createdBy.setPassword("password");
-		userService.createUser(createdBy);
+		userService.saveUser(createdBy);
 		
 		status = new Status("Status name", "Status Description");
-		roomService.createStatus(status);
+		roomService.saveStatus(status);
 		
 		room = new Room();
 		room.setRoomNumber(1);
@@ -75,7 +75,7 @@ public class RoomServiceTest {
 		room.setRoomType(roomType);
 		room.setCreatedBy(createdBy);
 		room.setCreatedOn(new Date());
-		roomService.createRoom(room);
+		roomService.saveRoom(room);
 	}
 
 	@Test()
@@ -114,7 +114,7 @@ public class RoomServiceTest {
 	@Test
 	public void testCRUDStatus() {
 		Status status = new Status("Status name", "Status Description");
-		roomService.createStatus(status);
+		roomService.saveStatus(status);
 
 		assertEquals(2, roomService.getAllStatuses().size());
 		assertEquals(status, roomService.getStatusById(status.getId()));
@@ -131,10 +131,10 @@ public class RoomServiceTest {
 	@Test
 	public void testCRUDAmenity() {
 		AmenityType standard = new AmenityType("standard", "standard");
-		roomService.createAmenityType(standard);
+		roomService.saveAmenityType(standard);
 		
 		Amenity amenity = new Amenity("pillow", "extra fluffy", standard);
-		roomService.createAmenity(amenity);
+		roomService.saveAmenity(amenity);
 
 		assertEquals(1, roomService.getAllAmenities().size());
 		assertEquals(amenity, roomService.getAllAmenities().get(0));
@@ -152,7 +152,7 @@ public class RoomServiceTest {
 	@Test
 	public void testCRUDAmenityType() {
 		AmenityType amenityType = new AmenityType("standard", "standard");
-		roomService.createAmenityType(amenityType);
+		roomService.saveAmenityType(amenityType);
 		
 		assertEquals(1, roomService.getAllAmenityTypes().size());
 		assertEquals(amenityType, roomService.getAllAmenityTypes().get(0));
@@ -172,7 +172,7 @@ public class RoomServiceTest {
 	@Test
 	public void testCRUDRoomRate() {
 		RoomRate roomRate = new RoomRate(room, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		roomService.createRoomRate(roomRate);
+		roomService.saveRoomRate(roomRate);
 		
 		Date startDate = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1));
 		Date endDate = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4));
@@ -210,14 +210,14 @@ public class RoomServiceTest {
 	public void testAddDuplicateRoomRate() {
 		Date day = dateConvertor.asDate(LocalDate.of(2017, Month.MARCH, 15));
 		RoomRate roomRate = new RoomRate(room, Currency.CZK, 1000, day);
-		roomService.createRoomRate(roomRate);
+		roomService.saveRoomRate(roomRate);
 
 		assertTrue(roomService.getAllRoomRates().size() == 1);
 
 		RoomRate roomRate1 = new RoomRate(room, Currency.CZK, 1000, day);
 
 		try {
-			roomService.createRoomRate(roomRate1);
+			roomService.saveRoomRate(roomRate1);
 			fail();
 		} catch (Exception e) {
 		}

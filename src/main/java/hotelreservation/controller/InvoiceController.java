@@ -72,7 +72,7 @@ public class InvoiceController {
 		//obviously it's in the naming convention
 		payment.setId(0);
 		payment.setReservation(reservation);
-		invoiceService.createPayment(payment);
+		invoiceService.savePayment(payment);
 		
 		//TODO use credit card in reservation?
 		// gather all payment details and call createpayment.  if successful generate invoice and show 'show invoice' button to download/display the invoice
@@ -88,7 +88,7 @@ public class InvoiceController {
 		reservationCharge.setId(0); // TODO need to figure out why the ID is being set. in this case the reservation ID is also placed into the ReservationCancellation
 		reservationCharge.setReservation(reservation);
 		
-		invoiceService.createReservationCharge(reservationCharge);
+		invoiceService.saveReservationCharge(reservationCharge);
 		return new ModelAndView("redirect:/checkoutReservation/" + reservationID.get());
 	}
 }

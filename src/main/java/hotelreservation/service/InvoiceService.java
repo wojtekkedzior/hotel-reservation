@@ -42,11 +42,11 @@ public class InvoiceService {
 		chargeRepo.save(charge);
 	}
 
-	public void createReservationCharge(ReservationCharge charge) {
+	public void saveReservationCharge(ReservationCharge charge) {
 		reservationChargeRepo.save(charge);
 	}
 	
-	public void createPayment(Payment payment) {
+	public void savePayment(Payment payment) {
 		log.info("Saving payment: " + payment.getId());
 		paymentRepo.save(payment);
 		log.info("Payment saved: " + payment.getId());

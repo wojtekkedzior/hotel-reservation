@@ -73,7 +73,7 @@ public class BookingService {
 		identificationRepo.save(identification);
 	}
 
-	public void createReservation(Reservation reservation) {
+	public void saveReservation(Reservation reservation) {
 		if(reservation.getStartDate() == null || reservation.getEndDate() == null) {
 			throw new MissingOrInvalidArgumentException("Start and/or end dates cannot be empty");
 		} else if(reservation.getStartDate().after(reservation.getEndDate())) {

@@ -142,28 +142,28 @@ public class RoomController {
 	@PostMapping("/addAmenityType")
 	@PreAuthorize("hasAuthority('createAmenityType')")
 	public ModelAndView addAmenityType(@ModelAttribute AmenityType amenityType, BindingResult bindingResult) {
-		AmenityType createAmenityType = roomService.createAmenityType(amenityType);
+		AmenityType createAmenityType = roomService.saveAmenityType(amenityType);
 		return new ModelAndView("redirect:/amenityType/" + createAmenityType.getId());
 	}
 
 	@PostMapping("/addAmenity")
 	@PreAuthorize("hasAuthority('createAmenity')")
 	public ModelAndView addAmenity(@ModelAttribute Amenity amenity, BindingResult bindingResult) {
-		Amenity createAmenity = roomService.createAmenity(amenity);
+		Amenity createAmenity = roomService.saveAmenity(amenity);
 		return new ModelAndView("redirect:/amenity/" + createAmenity.getId());
 	}
 
 	@PostMapping("/addRoomType")
 	@PreAuthorize("hasAuthority('createRoomType')")
 	public ModelAndView addRoomType(@ModelAttribute RoomType roomType, BindingResult bindingResult) {
-		roomService.createRoomType(roomType);
+		roomService.saveRoomType(roomType);
 		return new ModelAndView("redirect:/roomType/" + roomType.getId());
 	}
 
 	@PostMapping("/addRoom")
 	@PreAuthorize("hasAuthority('createRoom')")
 	public ModelAndView addRoom(@ModelAttribute Room room, BindingResult bindingResult) {
-		roomService.createRoom(room);
+		roomService.saveRoom(room);
 		return new ModelAndView("redirect:/room/" + room.getId());
 	}
 
@@ -173,7 +173,7 @@ public class RoomController {
 		if(bindingResult.hasErrors()) {
 			log.error(bindingResult.toString());
 		}
-		roomService.createRoomRate(roomRate);
+		roomService.saveRoomRate(roomRate);
 		return new ModelAndView("redirect:/roomRate/" + roomRate.getId());
 	}
 

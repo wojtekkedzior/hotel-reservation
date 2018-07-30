@@ -140,7 +140,7 @@ public class RoomService {
 	}
 
 	//---- Amenity
-	public Amenity createAmenity(Amenity amenity) {
+	public Amenity saveAmenity(Amenity amenity) {
 		return amenityRepo.save(amenity);
 	}
 	
@@ -168,7 +168,7 @@ public class RoomService {
 	}
 	
 	//---- AmenityType
-	public AmenityType createAmenityType(AmenityType amenityType) {
+	public AmenityType saveAmenityType(AmenityType amenityType) {
 		return amenityTypeRepo.save(amenityType);
 	}
 	
@@ -194,7 +194,7 @@ public class RoomService {
 	}
 	
 	//---- Room
-	public Room createRoom(Room room) {
+	public Room saveRoom(Room room) {
 		room.setCreatedOn(new Date());
 		return roomRepo.save(room);
 	}
@@ -228,7 +228,7 @@ public class RoomService {
 	}
 	
 	//---- RoomType
-	public RoomType createRoomType(RoomType roomType) {
+	public RoomType saveRoomType(RoomType roomType) {
 		return roomTypeRepo.save(roomType);
 	}
 	
@@ -261,7 +261,7 @@ public class RoomService {
 	}
 	
 	//---- Room Rate
-	public void createRoomRate(RoomRate roomRate) {
+	public void saveRoomRate(RoomRate roomRate) {
 		roomRateRepo.save(roomRate);
 	}
 
@@ -287,7 +287,7 @@ public class RoomService {
 	}
 	
 	//---- Status
-	public Status createStatus(Status status) {
+	public Status saveStatus(Status status) {
 		return statusRepo.save(status);
 	}
 	

@@ -219,7 +219,7 @@ public class ReservationController {
 
 		Reservation reservation2 = bookingService.getReservation(Optional.of(new Long(reservation.getId()).intValue()));
 		reservation2.getOccupants().add(guest);
-		bookingService.createReservation(reservation2);
+		bookingService.saveReservation(reservation2);
 
 		return new ModelAndView("redirect:/realiseReservation/" + reservation.getId());
 	}
@@ -246,7 +246,7 @@ public class ReservationController {
 		// TODO need to make use of the binding results (in all Post handlers)
 		System.err.println(bindingResult); // need to handle binding results
 
-		bookingService.createReservation(reservation);
+		bookingService.saveReservation(reservation);
 
 		return new ModelAndView("redirect:/dashboard");
 	}

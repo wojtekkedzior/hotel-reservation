@@ -42,7 +42,7 @@ public class UserServiceTest {
 	@Test
 	public void whenFindByName_thenReturnEmployee() {
 		Role userType = new Role("UserType name", "UserTypeDescription", true);
-		userService.createRole(userType);
+		userService.saveRole(userType);
 
 		assertTrue(userService.getAllRoles().size() == 1);
 	}
@@ -50,7 +50,7 @@ public class UserServiceTest {
 	@Test
 	public void testDisabledUser() {
 		Role role = new Role("Role Name", "RoleDescription", true);
-		userService.createRole(role);
+		userService.saveRole(role);
 
 		assertTrue(userService.getAllRoles().get(0).isEnabled());
 		role.setEnabled(false);
@@ -66,11 +66,11 @@ public class UserServiceTest {
 		Role managerUserType = new Role("manager", "manager desc", true);
 		Role receptionUserType = new Role("reception", "reception desc", true);
 		
-		userService.createRole(superAdminUserType);
-		userService.createRole(adminUserType);
+		userService.saveRole(superAdminUserType);
+		userService.saveRole(adminUserType);
 		
-		userService.createRole(managerUserType);
-		userService.createRole(receptionUserType);
+		userService.saveRole(managerUserType);
+		userService.saveRole(receptionUserType);
 		
 		List<Role> target =  userService.getAllRoles();
 		assertTrue(target.size() == 4);
@@ -85,7 +85,7 @@ public class UserServiceTest {
 	public void testCRUDUser() {
 		User user = new User("username", "name");
 		user.setPassword("password");
-		userService.createUser(user);
+		userService.saveUser(user);
 		
 		assertEquals(1, userService.getAllUsers().size());
 		
@@ -100,13 +100,13 @@ public class UserServiceTest {
 	
 	@Test(expected=MissingOrInvalidArgumentException.class)
 	public void testCreateUserWithoutPassword() {
-		userService.createUser(new User());
+		userService.saveUser(new User());
 	}
 	
 	@Test
 	public void testCRUDRole() {
 		Role role = new Role();
-		userService.createRole(role);
+		userService.saveRole(role);
 		
 		assertEquals(1, userService.getAllRoles().size());
 		
@@ -122,7 +122,7 @@ public class UserServiceTest {
 	@Test
 	public void testCRUDPrivileges() {
 		Privilege privilege = new Privilege();
-		userService.createPrivilege(privilege);
+		userService.savePrivilege(privilege);
 		
 		assertEquals(1, userService.getAllPrivileges().size());
 		

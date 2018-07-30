@@ -199,27 +199,27 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		Privilege viewReservationDashBoard = new Privilege("viewReservationDashBoard");
 		Privilege createPayment = new Privilege("createPayment");
 		
-		userService.createPrivilege(createAmenity);
-		userService.createPrivilege(createAmenityType);
-		userService.createPrivilege(createRoom);
-		userService.createPrivilege(createRoomType);
-		userService.createPrivilege(createRoomRate);
-		userService.createPrivilege(deleteAmenity);
-		userService.createPrivilege(deleteAmenityType);
-		userService.createPrivilege(deleteRoom);
-		userService.createPrivilege(deleteRoomType);
-		userService.createPrivilege(deleteRoomRate);
-		userService.createPrivilege(getReservation);
-		userService.createPrivilege(createReservation);
-		userService.createPrivilege(cancelReservation);
-		userService.createPrivilege(realiseReservation);
-		userService.createPrivilege(checkoutReservation);
-		userService.createPrivilege(deleteReservation);
-		userService.createPrivilege(viewAdmin);
-		userService.createPrivilege(createUser);
-		userService.createPrivilege(deleteUser);
-		userService.createPrivilege(viewReservationDashBoard);
-		userService.createPrivilege(createPayment);
+		userService.savePrivilege(createAmenity);
+		userService.savePrivilege(createAmenityType);
+		userService.savePrivilege(createRoom);
+		userService.savePrivilege(createRoomType);
+		userService.savePrivilege(createRoomRate);
+		userService.savePrivilege(deleteAmenity);
+		userService.savePrivilege(deleteAmenityType);
+		userService.savePrivilege(deleteRoom);
+		userService.savePrivilege(deleteRoomType);
+		userService.savePrivilege(deleteRoomRate);
+		userService.savePrivilege(getReservation);
+		userService.savePrivilege(createReservation);
+		userService.savePrivilege(cancelReservation);
+		userService.savePrivilege(realiseReservation);
+		userService.savePrivilege(checkoutReservation);
+		userService.savePrivilege(deleteReservation);
+		userService.savePrivilege(viewAdmin);
+		userService.savePrivilege(createUser);
+		userService.savePrivilege(deleteUser);
+		userService.savePrivilege(viewReservationDashBoard);
+		userService.savePrivilege(createPayment);
 
 		Collection<Privilege> adminPrivileges = new ArrayList<Privilege>();
 		Collection<Privilege> managerPrivileges = new ArrayList<Privilege>();
@@ -269,9 +269,9 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		managerRole.setPrivileges(managerPrivileges);
 		receptionistRole.setPrivileges(receptionistPrivileges);
 
-		userService.createRole(adminRole);
-		userService.createRole(managerRole);
-		userService.createRole(receptionistRole);
+		userService.saveRole(adminRole);
+		userService.saveRole(managerRole);
+		userService.saveRole(receptionistRole);
 
 		admin = new User();
 		admin.setFirstName("admin");
@@ -280,7 +280,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		admin.setPassword("password");
 		admin.setRoles(Arrays.asList(adminRole));
 		admin.setEnabled(true);
-		userService.createUser(admin);
+		userService.saveUser(admin);
 		
 		manager = new User();
 		manager.setPassword("password");
@@ -289,7 +289,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		manager.setUserName("manager");
 		manager.setEnabled(true);
 		manager.setRoles(Arrays.asList(managerRole));
-		userService.createUser(manager);
+		userService.saveUser(manager);
 
 		receptionist = new User();
 		receptionist.setFirstName("receptionist");
@@ -298,7 +298,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		receptionist.setPassword("password");
 		receptionist.setRoles(Arrays.asList(receptionistRole));
 		receptionist.setEnabled(true);
-		userService.createUser(receptionist);
+		userService.saveUser(receptionist);
 	}
 
 	private void addRoomamenitites() {
@@ -314,17 +314,17 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		rainShower = new Amenity("rainShower", "rainShower", amenityTypeRoomLuxury);
 		bathtub = new Amenity("bathtub", "bathtub", amenityTypeRoomLuxury);
 
-		roomService.createAmenity(pillow);
-		roomService.createAmenity(phone);
-		roomService.createAmenity(blanket);
-		roomService.createAmenity(safebox);
-		roomService.createAmenity(tv);
+		roomService.saveAmenity(pillow);
+		roomService.saveAmenity(phone);
+		roomService.saveAmenity(blanket);
+		roomService.saveAmenity(safebox);
+		roomService.saveAmenity(tv);
 
-		roomService.createAmenity(hairDryer);
-		roomService.createAmenity(miniBar);
-		roomService.createAmenity(internet);
-		roomService.createAmenity(rainShower);
-		roomService.createAmenity(bathtub);
+		roomService.saveAmenity(hairDryer);
+		roomService.saveAmenity(miniBar);
+		roomService.saveAmenity(internet);
+		roomService.saveAmenity(rainShower);
+		roomService.saveAmenity(bathtub);
 	}
 
 	private void addHotelamenitites() {
@@ -334,11 +334,11 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		sauna = new Amenity("sauna", "sauna", amenityTypeHotel);
 		conferenceRoom = new Amenity("conferenceRoom", "conferenceRoom", amenityTypeHotel);
 
-		roomService.createAmenity(wifi);
-		roomService.createAmenity(spaPool);
-		roomService.createAmenity(pool);
-		roomService.createAmenity(sauna);
-		roomService.createAmenity(conferenceRoom);
+		roomService.saveAmenity(wifi);
+		roomService.saveAmenity(spaPool);
+		roomService.saveAmenity(pool);
+		roomService.saveAmenity(sauna);
+		roomService.saveAmenity(conferenceRoom);
 	}
 
 	private void addAmenityTypes() {
@@ -346,9 +346,9 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		amenityTypeRoomLuxury = new AmenityType("Luxury", "Luxury Room amenity Type");
 		amenityTypeHotel = new AmenityType("Hotel", "Hotel amenity Type");
 
-		roomService.createAmenityType(amenityTypeRoomBasic);
-		roomService.createAmenityType(amenityTypeRoomLuxury);
-		roomService.createAmenityType(amenityTypeHotel);
+		roomService.saveAmenityType(amenityTypeRoomBasic);
+		roomService.saveAmenityType(amenityTypeRoomLuxury);
+		roomService.saveAmenityType(amenityTypeHotel);
 	}
 	
 	
@@ -359,18 +359,18 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		underConstruction = new Status("Under Conctruction", "Room is under cunstruction");
 		notOperational = new Status("Not Operational", "Room is not operational");
 
-		roomService.createStatus(operational);
-		roomService.createStatus(underMaintenance);
-		roomService.createStatus(underConstruction);
-		roomService.createStatus(notOperational);
+		roomService.saveStatus(operational);
+		roomService.saveStatus(underMaintenance);
+		roomService.saveStatus(underConstruction);
+		roomService.saveStatus(notOperational);
 	}
 
 	private void addRoomTypes() {
 		roomTypeStandard = new RoomType("Standard", "Standard room");
 		roomTypeLuxury = new RoomType("Luxury", "Luxury room");
 
-		roomService.createRoomType(roomTypeStandard);
-		roomService.createRoomType(roomTypeLuxury);
+		roomService.saveRoomType(roomTypeStandard);
+		roomService.saveRoomType(roomTypeLuxury);
 	}
 
 	private void addRooms() {
@@ -382,7 +382,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		standardRoomOneAmenitites.add(phone);
 		standardRoomOneAmenitites.add(blanket);
 		standardRoomOne.setRoomAmenities(standardRoomOneAmenitites);
-		roomService.createRoom(standardRoomOne);
+		roomService.saveRoom(standardRoomOne);
 
 		standardRoomTwo = new Room(2, operational, roomTypeStandard, admin);
 		standardRoomTwo.setName("Room 2");
@@ -392,13 +392,13 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		standardRoomTwoAmenitites.add(safebox);
 		standardRoomTwoAmenitites.add(blanket);
 		standardRoomTwo.setRoomAmenities(standardRoomTwoAmenitites);
-		roomService.createRoom(standardRoomTwo);
+		roomService.saveRoom(standardRoomTwo);
 		
 		standardRoomThree = new Room(3, operational, roomTypeStandard, admin);
 		standardRoomThree.setName("Room 3");
 		standardRoomThree.setDescription("The Third Best Room Description");
 		standardRoomThree.setRoomAmenities(standardRoomTwoAmenitites);
-		roomService.createRoom(standardRoomThree);
+		roomService.saveRoom(standardRoomThree);
 
 		// Luxury Rooms
 		luxuryRoomOne = new Room(11, operational, roomTypeLuxury, admin);
@@ -411,7 +411,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		luxuryRoomOneAmenitites.add(internet);
 		luxuryRoomOneAmenitites.add(rainShower);
 		luxuryRoomOne.setRoomAmenities(luxuryRoomOneAmenitites);
-		roomService.createRoom(luxuryRoomOne);
+		roomService.saveRoom(luxuryRoomOne);
 
 		luxuryRoomTwo = new Room(22, operational, roomTypeLuxury, admin);
 		luxuryRoomTwo.setName("Room 22");
@@ -423,13 +423,13 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		luxuryRoomTwoAmenitites.add(bathtub);
 		luxuryRoomTwoAmenitites.add(miniBar);
 		luxuryRoomTwo.setRoomAmenities(luxuryRoomTwoAmenitites);
-		roomService.createRoom(luxuryRoomTwo);
+		roomService.saveRoom(luxuryRoomTwo);
 		
 		luxuryRoomThree = new Room(33, operational, roomTypeLuxury, admin);
 		luxuryRoomThree.setName("Room 33");
 		luxuryRoomThree.setDescription("The Thid Best Luxury Room Description");
 		luxuryRoomThree.setRoomAmenities(luxuryRoomTwoAmenitites);
-		roomService.createRoom(luxuryRoomThree);
+		roomService.saveRoom(luxuryRoomThree);
 	}
 
 	private void addRoomRates() {
@@ -448,13 +448,13 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 				value = 1500;
 			}
 
-			roomService.createRoomRate(new RoomRate(standardRoomOne, Currency.CZK, value, cal.getTime()));
-			roomService.createRoomRate(new RoomRate(standardRoomTwo, Currency.CZK, value, cal.getTime()));
-			roomService.createRoomRate(new RoomRate(standardRoomThree, Currency.CZK, value, cal.getTime()));
+			roomService.saveRoomRate(new RoomRate(standardRoomOne, Currency.CZK, value, cal.getTime()));
+			roomService.saveRoomRate(new RoomRate(standardRoomTwo, Currency.CZK, value, cal.getTime()));
+			roomService.saveRoomRate(new RoomRate(standardRoomThree, Currency.CZK, value, cal.getTime()));
 
-			roomService.createRoomRate(new RoomRate(luxuryRoomOne, Currency.CZK, value * 2, cal.getTime()));
-			roomService.createRoomRate(new RoomRate(luxuryRoomTwo, Currency.CZK, value * 2, cal.getTime()));
-			roomService.createRoomRate(new RoomRate(luxuryRoomThree, Currency.CZK, value * 2, cal.getTime()));
+			roomService.saveRoomRate(new RoomRate(luxuryRoomOne, Currency.CZK, value * 2, cal.getTime()));
+			roomService.saveRoomRate(new RoomRate(luxuryRoomTwo, Currency.CZK, value * 2, cal.getTime()));
+			roomService.saveRoomRate(new RoomRate(luxuryRoomThree, Currency.CZK, value * 2, cal.getTime()));
 		}
 	}
 
@@ -516,7 +516,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 			}
 		}
 
-		bookingService.createReservation(reservationOne);
+		bookingService.saveReservation(reservationOne);
 	}
 	
 	private void addReservations(int reservations) {
@@ -543,7 +543,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 				}
 			}
 			
-			bookingService.createReservation(reservation);	
+			bookingService.saveReservation(reservation);	
 		}
 		
 		//Make one reservation InProgress
@@ -584,6 +584,6 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 			}
 		}
 		
-		bookingService.createReservation(reservation);	
+		bookingService.saveReservation(reservation);	
 	}
 }

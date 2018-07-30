@@ -91,25 +91,25 @@ public class RoomControllerTest extends BaseControllerSetup {
 	public void setup() {
 		User user = new User();
 		user.setPassword("password");
-		userService.createUser(user);
+		userService.saveUser(user);
 
 		RoomType roomTypeStandard = new RoomType("Standard", "Standard room");
-		roomService.createRoomType(roomTypeStandard);
+		roomService.saveRoomType(roomTypeStandard);
 		
 		Status operational = new Status("Operational", "Room is in operation");
-		roomService.createStatus(operational);
+		roomService.saveStatus(operational);
 		
 		AmenityType amenityType = new AmenityType("room amenity", "comfort");
-		roomService.createAmenityType(amenityType);
+		roomService.saveAmenityType(amenityType);
 		
 		Room standardRoomOne = new Room(1, operational, roomTypeStandard, user);
 		standardRoomOne.setName("Room 1");
 		standardRoomOne.setDescription("The Best Room Description");
 		standardRoomOne.setRoomAmenities(Arrays.asList(new Amenity("pillow", "pillow", amenityType)));
-		roomService.createRoom(standardRoomOne);
+		roomService.saveRoom(standardRoomOne);
 		
 		RoomRate roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		roomService.createRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateTwo);
 	}
 
 	@Test

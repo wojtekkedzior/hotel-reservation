@@ -119,30 +119,30 @@ public class ReservationControllerTest extends BaseControllerSetup {
 
 		User user = new User();
 		user.setPassword("password");
-		userService.createUser(user);
+		userService.saveUser(user);
 
 		reservationOne.setMainGuest(mainGuest);
 		reservationOne.setCreatedBy(user);
 		reservationOne.setReservationStatus(ReservationStatus.UpComing);
 
 		RoomType roomTypeStandard = new RoomType("Standard", "Standard room");
-		roomService.createRoomType(roomTypeStandard);
+		roomService.saveRoomType(roomTypeStandard);
 
 		Status operational = new Status("Operational", "Room is in operation");
-		roomService.createStatus(operational);
+		roomService.saveStatus(operational);
 
 		Room standardRoomOne = new Room(1, operational, roomTypeStandard, user);
 		standardRoomOne.setName("Room 1");
 		standardRoomOne.setDescription("The Best Room Description");
-		roomService.createRoom(standardRoomOne);
+		roomService.saveRoom(standardRoomOne);
 
 		RoomRate roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
 		RoomRate roomRateThree = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
 		RoomRate roomRateFour = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
 
-		roomService.createRoomRate(roomRateTwo);
-		roomService.createRoomRate(roomRateThree);
-		roomService.createRoomRate(roomRateFour);
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
+		roomService.saveRoomRate(roomRateFour);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
 		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
@@ -154,7 +154,7 @@ public class ReservationControllerTest extends BaseControllerSetup {
 		reservationOne.setRoomRates(roomRates);
 
 		try {
-			bookingService.createReservation(reservationOne);
+			bookingService.saveReservation(reservationOne);
 		} catch (Exception e) {
 			fail();
 		}

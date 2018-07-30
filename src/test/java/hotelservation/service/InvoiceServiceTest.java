@@ -137,41 +137,41 @@ public class InvoiceServiceTest {
 		privileges.add(priv2);
 		
 		managerUserType = new Role("manager", "manager desc", true);
-		userService.createRole(managerUserType);
+		userService.saveRole(managerUserType);
 
 		user = new User();
 		user.setPassword("password");
-		userService.createUser(user);
+		userService.saveUser(user);
 
 		amenityTypeRoomBasic = new AmenityType("Basic", "Basic Room amenity Type");
-		roomService.createAmenityType(amenityTypeRoomBasic);
+		roomService.saveAmenityType(amenityTypeRoomBasic);
 
 		pillow = new Amenity("pillow", "pillow", amenityTypeRoomBasic);
-		roomService.createAmenity(pillow);
+		roomService.saveAmenity(pillow);
 
 		roomTypeStandard = new RoomType("Standard", "Standard room");
-		roomService.createRoomType(roomTypeStandard);
+		roomService.saveRoomType(roomTypeStandard);
 
 		operational = new Status("Operational", "Room is in operation");
-		roomService.createStatus(operational);
+		roomService.saveStatus(operational);
 
 		standardRoomOne = new Room(1, operational, roomTypeStandard, user);
 		standardRoomOne.setName("Room 1");
 		standardRoomOne.setDescription("The Best Room Description");
 		standardRoomOne.setRoomAmenities(Arrays.asList(pillow));
-		roomService.createRoom(standardRoomOne);
+		roomService.saveRoom(standardRoomOne);
 		
 		standardRoomTwo = new Room(2, operational, roomTypeStandard, user);
 		standardRoomTwo.setName("Room 2");
 		standardRoomTwo.setDescription("The Best Room Description");
 		standardRoomTwo.setRoomAmenities(Arrays.asList(pillow));
-		roomService.createRoom(standardRoomTwo);
+		roomService.saveRoom(standardRoomTwo);
 		
 		standardRoomThree = new Room(3, operational, roomTypeStandard, user);
 		standardRoomThree.setName("Room 3");
 		standardRoomThree.setDescription("The Best Room Description");
 		standardRoomThree.setRoomAmenities(Arrays.asList(pillow));
-		roomService.createRoom(standardRoomThree);
+		roomService.saveRoom(standardRoomThree);
 
 		idOne = new Identification(IdType.IDCard, "oneIdNumber");
 		idTwo = new Identification(IdType.DriversLicense, "twoIdNumber");
@@ -202,11 +202,11 @@ public class InvoiceServiceTest {
 		RoomRate roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
 		RoomRate roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
 
-		roomService.createRoomRate(roomRateOne);
-		roomService.createRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateOne);
+		roomService.saveRoomRate(roomRateTwo);
 		
 		reservationOne.setRoomRates(Arrays.asList(roomRateOne, roomRateTwo));
-		bookingService.createReservation(reservationOne);
+		bookingService.saveReservation(reservationOne);
 		
 		chargeOne = new Charge(Currency.CZK, 100, "chargeOne", "chargeOneDesc");
 		chargeTwo = new Charge(Currency.CZK, 200, "chargeTwo", "chargeTwoDesc");
@@ -229,8 +229,8 @@ public class InvoiceServiceTest {
 		invoiceService.createCharge(chargeTwo);
 		invoiceService.createCharge(chargeThree);
 		
-		invoiceService.createReservationCharge(reservationChargeOne);
-		invoiceService.createReservationCharge(reservationChargeTwo);
+		invoiceService.saveReservationCharge(reservationChargeOne);
+		invoiceService.saveReservationCharge(reservationChargeTwo);
 		
 		//Two unpaid charges for the given reservation.
 		assertEquals(2, invoiceService.getOutstandingCharges(reservationOne).size());
@@ -238,7 +238,7 @@ public class InvoiceServiceTest {
 		Payment payment = new Payment();
 		payment.setReservation(reservationOne);
 		payment.setReservationCharges(Arrays.asList(reservationChargeOne));
-		invoiceService.createPayment(payment);
+		invoiceService.savePayment(payment);
 		
 		//1 unpaid charge and 1 paid charge for the given reservation.
 		assertEquals(1, invoiceService.getOutstandingCharges(reservationOne).size());
@@ -250,8 +250,8 @@ public class InvoiceServiceTest {
 		invoiceService.createCharge(chargeTwo);
 		invoiceService.createCharge(chargeThree);
 		
-		invoiceService.createReservationCharge(reservationChargeOne);
-		invoiceService.createReservationCharge(reservationChargeTwo);
+		invoiceService.saveReservationCharge(reservationChargeOne);
+		invoiceService.saveReservationCharge(reservationChargeTwo);
 		
 		assertEquals(2, invoiceService.getAllReservationChargesForAReservation(reservationOne).size());
 	}
@@ -262,13 +262,13 @@ public class InvoiceServiceTest {
 		invoiceService.createCharge(chargeTwo);
 		invoiceService.createCharge(chargeThree);
 		
-		invoiceService.createReservationCharge(reservationChargeOne);
-		invoiceService.createReservationCharge(reservationChargeTwo);
+		invoiceService.saveReservationCharge(reservationChargeOne);
+		invoiceService.saveReservationCharge(reservationChargeTwo);
 		
 		Payment payment = new Payment();
 		payment.setReservation(reservationOne);
 		payment.setReservationCharges(Arrays.asList(reservationChargeOne));
-		invoiceService.createPayment(payment);
+		invoiceService.savePayment(payment);
 		
 		assertEquals(1, invoiceService.getAllPaymentsForReservation(reservationOne).size());
 	}
@@ -290,7 +290,7 @@ public class InvoiceServiceTest {
 	@Test
 	public void testCRUDReservationCharge() {
 		ReservationCharge chargeOne = new ReservationCharge();
-		invoiceService.createReservationCharge(chargeOne);
+		invoiceService.saveReservationCharge(chargeOne);
 		
 		assertEquals(1, invoiceService.getAllReservationCharges().size());
 		
@@ -304,7 +304,7 @@ public class InvoiceServiceTest {
 	@Test
 	public void testCRUDPayment() {
 		Payment payment = new Payment();
-		invoiceService.createPayment(payment);
+		invoiceService.savePayment(payment);
 		
 		assertEquals(1, invoiceService.getAllPayments().size());
 		

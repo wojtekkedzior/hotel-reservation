@@ -96,41 +96,41 @@ public class BookingServiceTest {
 	@Before
 	public void setup() {
 		managerUserType = new Role("manager", "manager desc", true);
-		userService.createRole(managerUserType);
+		userService.saveRole(managerUserType);
 
 		user = new User();
 		user.setPassword("password");
-		userService.createUser(user);
+		userService.saveUser(user);
 
 		amenityTypeRoomBasic = new AmenityType("Basic", "Basic Room amenity Type");
-		roomService.createAmenityType(amenityTypeRoomBasic);
+		roomService.saveAmenityType(amenityTypeRoomBasic);
 
 		pillow = new Amenity("pillow", "pillow", amenityTypeRoomBasic);
-		roomService.createAmenity(pillow);
+		roomService.saveAmenity(pillow);
 
 		roomTypeStandard = new RoomType("Standard", "Standard room");
-		roomService.createRoomType(roomTypeStandard);
+		roomService.saveRoomType(roomTypeStandard);
 
 		operational = new Status("Operational", "Room is in operation");
-		roomService.createStatus(operational);
+		roomService.saveStatus(operational);
 
 		standardRoomOne = new Room(1, operational, roomTypeStandard, user);
 		standardRoomOne.setName("Room 1");
 		standardRoomOne.setDescription("The Best Room Description");
 		standardRoomOne.setRoomAmenities(Arrays.asList(pillow));
-		roomService.createRoom(standardRoomOne);
+		roomService.saveRoom(standardRoomOne);
 		
 		standardRoomTwo = new Room(2, operational, roomTypeStandard, user);
 		standardRoomTwo.setName("Room 2");
 		standardRoomTwo.setDescription("The Best Room Description");
 		standardRoomTwo.setRoomAmenities(Arrays.asList(pillow));
-		roomService.createRoom(standardRoomTwo);
+		roomService.saveRoom(standardRoomTwo);
 		
 		standardRoomThree = new Room(3, operational, roomTypeStandard, user);
 		standardRoomThree.setName("Room 3");
 		standardRoomThree.setDescription("The Best Room Description");
 		standardRoomThree.setRoomAmenities(Arrays.asList(pillow));
-		roomService.createRoom(standardRoomThree);
+		roomService.saveRoom(standardRoomThree);
 
 		idOne = new Identification(IdType.IDCard, "oneIdNumber");
 		idTwo = new Identification(IdType.DriversLicense, "twoIdNumber");
@@ -168,8 +168,8 @@ public class BookingServiceTest {
 		// no rate for the middle day
 		RoomRate roomRateFour = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
 
-		roomService.createRoomRate(roomRateTwo);
-		roomService.createRoomRate(roomRateFour);
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateFour);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
 		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
@@ -177,7 +177,7 @@ public class BookingServiceTest {
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateFour));
 
 		try {
-			bookingService.createReservation(reservationOne);
+			bookingService.saveReservation(reservationOne);
 			fail("Should not be able to save a reservation with non-sequential room rate dates");
 		} catch (Exception e) {
 
@@ -186,17 +186,17 @@ public class BookingServiceTest {
 
 	@Test
 	public void testCreateReservation_OverLapExistingReservation_OnEndDate() {
-		roomService.createRoomRate(roomRateTwo);
-		roomService.createRoomRate(roomRateThree);
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
 		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
-		bookingService.createReservation(reservationOne);
+		bookingService.saveReservation(reservationOne);
 
 		RoomRate roomRateFour = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
-		roomService.createRoomRate(roomRateFour);
+		roomService.saveRoomRate(roomRateFour);
 
 		reservationTwo = new Reservation();
 		reservationTwo.setMainGuest(mainGuest);
@@ -208,7 +208,7 @@ public class BookingServiceTest {
 		reservationTwo.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
 
 		try {
-			bookingService.createReservation(reservationTwo);
+			bookingService.saveReservation(reservationTwo);
 			fail("No rooms available for the given day");
 		} catch (Exception e) {
 		}
@@ -216,17 +216,17 @@ public class BookingServiceTest {
 
 	@Test
 	public void testCreateReservation_OverLapExistingReservation_OnStartDate() {
-		roomService.createRoomRate(roomRateTwo);
-		roomService.createRoomRate(roomRateThree);
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
 		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
-		bookingService.createReservation(reservationOne);
+		bookingService.saveReservation(reservationOne);
 
 		RoomRate roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1)));
-		roomService.createRoomRate(roomRateOne);
+		roomService.saveRoomRate(roomRateOne);
 
 		reservationTwo = new Reservation();
 		reservationTwo.setMainGuest(mainGuest);
@@ -238,7 +238,7 @@ public class BookingServiceTest {
 		reservationTwo.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
 
 		try {
-			bookingService.createReservation(reservationTwo);
+			bookingService.saveReservation(reservationTwo);
 			fail("No rooms available for the given day");
 		} catch (Exception e) {
 		}
@@ -246,19 +246,19 @@ public class BookingServiceTest {
 
 	@Test
 	public void testCreateReservation_OverLapWholeExistingReservation() {
-		roomService.createRoomRate(roomRateTwo);
-		roomService.createRoomRate(roomRateThree);
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
 		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
-		bookingService.createReservation(reservationOne);
+		bookingService.saveReservation(reservationOne);
 
 		RoomRate roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1)));
 		RoomRate roomRateFour = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
-		roomService.createRoomRate(roomRateOne);
-		roomService.createRoomRate(roomRateFour);
+		roomService.saveRoomRate(roomRateOne);
+		roomService.saveRoomRate(roomRateFour);
 
 		reservationTwo = new Reservation();
 		reservationTwo.setMainGuest(mainGuest);
@@ -270,7 +270,7 @@ public class BookingServiceTest {
 		reservationTwo.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
 
 		try {
-			bookingService.createReservation(reservationTwo);
+			bookingService.saveReservation(reservationTwo);
 			fail("No rooms available for the given day");
 		} catch (Exception e) {
 		}
@@ -313,40 +313,40 @@ public class BookingServiceTest {
 		RoomRate roomRate30 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 30)));
 		RoomRate roomRate31 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 31)));
 
-		roomService.createRoomRate(roomRate1);
-		roomService.createRoomRate(roomRate2);
-		roomService.createRoomRate(roomRate3);
-		roomService.createRoomRate(roomRate4);
-		roomService.createRoomRate(roomRate5);
-		roomService.createRoomRate(roomRate6);
-		roomService.createRoomRate(roomRate7);
-		roomService.createRoomRate(roomRate8);
-		roomService.createRoomRate(roomRate9);
+		roomService.saveRoomRate(roomRate1);
+		roomService.saveRoomRate(roomRate2);
+		roomService.saveRoomRate(roomRate3);
+		roomService.saveRoomRate(roomRate4);
+		roomService.saveRoomRate(roomRate5);
+		roomService.saveRoomRate(roomRate6);
+		roomService.saveRoomRate(roomRate7);
+		roomService.saveRoomRate(roomRate8);
+		roomService.saveRoomRate(roomRate9);
 
-		roomService.createRoomRate(roomRate10);
-		roomService.createRoomRate(roomRate11);
-		roomService.createRoomRate(roomRate12);
-		roomService.createRoomRate(roomRate13);
-		roomService.createRoomRate(roomRate14);
-		roomService.createRoomRate(roomRate15);
-		roomService.createRoomRate(roomRate16);
-		roomService.createRoomRate(roomRate17);
-		roomService.createRoomRate(roomRate18);
-		roomService.createRoomRate(roomRate19);
+		roomService.saveRoomRate(roomRate10);
+		roomService.saveRoomRate(roomRate11);
+		roomService.saveRoomRate(roomRate12);
+		roomService.saveRoomRate(roomRate13);
+		roomService.saveRoomRate(roomRate14);
+		roomService.saveRoomRate(roomRate15);
+		roomService.saveRoomRate(roomRate16);
+		roomService.saveRoomRate(roomRate17);
+		roomService.saveRoomRate(roomRate18);
+		roomService.saveRoomRate(roomRate19);
 
-		roomService.createRoomRate(roomRate20);
-		roomService.createRoomRate(roomRate21);
-		roomService.createRoomRate(roomRate22);
-		roomService.createRoomRate(roomRate23);
-		roomService.createRoomRate(roomRate24);
-		roomService.createRoomRate(roomRate25);
-		roomService.createRoomRate(roomRate26);
-		roomService.createRoomRate(roomRate27);
-		roomService.createRoomRate(roomRate28);
-		roomService.createRoomRate(roomRate29);
+		roomService.saveRoomRate(roomRate20);
+		roomService.saveRoomRate(roomRate21);
+		roomService.saveRoomRate(roomRate22);
+		roomService.saveRoomRate(roomRate23);
+		roomService.saveRoomRate(roomRate24);
+		roomService.saveRoomRate(roomRate25);
+		roomService.saveRoomRate(roomRate26);
+		roomService.saveRoomRate(roomRate27);
+		roomService.saveRoomRate(roomRate28);
+		roomService.saveRoomRate(roomRate29);
 
-		roomService.createRoomRate(roomRate30);
-		roomService.createRoomRate(roomRate31);
+		roomService.saveRoomRate(roomRate30);
+		roomService.saveRoomRate(roomRate31);
 
 		// ...|..........|................ reservationOne
 		// ...............|...|........... reservationTwo
@@ -363,7 +363,7 @@ public class BookingServiceTest {
 				Arrays.asList(roomRate4, roomRate5, roomRate6, roomRate7, roomRate8, roomRate9, roomRate10, roomRate11, roomRate12, roomRate13, roomRate14, roomRate15));
 
 		assertEquals(31, roomService.getAvailableRoomRates(startDate, endDate).size());
-		bookingService.createReservation(reservationOne);
+		bookingService.saveReservation(reservationOne);
 		assertEquals(19, roomService.getAvailableRoomRates(startDate, endDate).size());
 
 		reservationTwo.setMainGuest(mainGuest);
@@ -373,7 +373,7 @@ public class BookingServiceTest {
 		reservationTwo.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 20)));
 		reservationTwo.setRoomRates(Arrays.asList(roomRate16, roomRate17, roomRate18, roomRate19, roomRate20));
 
-		bookingService.createReservation(reservationTwo);
+		bookingService.saveReservation(reservationTwo);
 		assertEquals(14, roomService.getAvailableRoomRates(startDate, endDate).size());
 
 		reservationThree.setMainGuest(mainGuest);
@@ -384,7 +384,7 @@ public class BookingServiceTest {
 		reservationThree
 				.setRoomRates(Arrays.asList(roomRate21, roomRate22, roomRate23, roomRate24, roomRate25, roomRate26, roomRate27, roomRate28, roomRate29, roomRate30, roomRate31));
 
-		bookingService.createReservation(reservationThree);
+		bookingService.saveReservation(reservationThree);
 		assertEquals(3, roomService.getAvailableRoomRates(startDate, endDate).size());
 
 		reservationFour.setMainGuest(mainGuest);
@@ -394,7 +394,7 @@ public class BookingServiceTest {
 		reservationFour.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
 		reservationFour.setRoomRates(Arrays.asList(roomRate1, roomRate2, roomRate3));
 
-		bookingService.createReservation(reservationFour);
+		bookingService.saveReservation(reservationFour);
 		assertEquals(0, roomService.getAvailableRoomRates(startDate, endDate).size());
 		assertEquals(4, bookingService.getAllReservations().size());
 	}
@@ -437,7 +437,7 @@ public class BookingServiceTest {
 
 		for(int i = 1; i <= 31; i++) {
 			RoomRate roomRate = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, i)));
-			roomService.createRoomRate(roomRate);
+			roomService.saveRoomRate(roomRate);
 
 			if(i >= 4 && i <= 15 ) {
 				reservationOne.getRoomRates().add(roomRate);
@@ -446,7 +446,7 @@ public class BookingServiceTest {
 		
 		for(int i = 1; i <= 31; i++) {
 			RoomRate roomRate = new RoomRate(standardRoomTwo, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, i)));
-			roomService.createRoomRate(roomRate);
+			roomService.saveRoomRate(roomRate);
 
 			if(i >= 2 && i <= 6 ) {
 				reservationTwo.getRoomRates().add(roomRate);
@@ -459,7 +459,7 @@ public class BookingServiceTest {
 		
 		for(int i = 1; i <= 31; i++) {
 			RoomRate roomRate = new RoomRate(standardRoomThree, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, i)));
-			roomService.createRoomRate(roomRate);
+			roomService.saveRoomRate(roomRate);
 
 			if(i >= 2 && i <= 25 ) {
 				reservationFour.getRoomRates().add(roomRate);
@@ -467,16 +467,16 @@ public class BookingServiceTest {
 		}
 		
 		assertEquals(93, roomService.getAvailableRoomRates(startDate, endDate).size());
-		bookingService.createReservation(reservationOne);
+		bookingService.saveReservation(reservationOne);
 		
 		assertEquals(81, roomService.getAvailableRoomRates(startDate, endDate).size());
-		bookingService.createReservation(reservationTwo);
+		bookingService.saveReservation(reservationTwo);
 		
 		assertEquals(76, roomService.getAvailableRoomRates(startDate, endDate).size());
-		bookingService.createReservation(reservationThree);
+		bookingService.saveReservation(reservationThree);
 		
 		assertEquals(65, roomService.getAvailableRoomRates(startDate, endDate).size());
-		bookingService.createReservation(reservationFour);
+		bookingService.saveReservation(reservationFour);
 
 		assertEquals(41, roomService.getAvailableRoomRates(startDate, endDate).size());
 		assertEquals(4, bookingService.getAllReservations().size());
@@ -484,8 +484,8 @@ public class BookingServiceTest {
 	
 	@Test
 	public void testFindAvailableRoomRates() {
-		roomService.createRoomRate(roomRateTwo);
-		roomService.createRoomRate(roomRateThree);
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
 		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
@@ -496,7 +496,7 @@ public class BookingServiceTest {
 
 		assertEquals(2, roomService.getAvailableRoomRates(startDate, endDate).size());
 
-		bookingService.createReservation(reservationOne);
+		bookingService.saveReservation(reservationOne);
 
 		assertEquals(1, roomService.getAvailableRoomRates(startDate, endDate).size());
 		assertTrue(roomService.getAvailableRoomRates(startDate, endDate).get(0).equals(roomRateThree));
@@ -504,14 +504,14 @@ public class BookingServiceTest {
 	
 	@Test
 	public void testDeleteReservation() {
-		roomService.createRoomRate(roomRateTwo);
-		roomService.createRoomRate(roomRateThree);
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
 		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
-		bookingService.createReservation(reservationOne);
+		bookingService.saveReservation(reservationOne);
 		
 		assertTrue(bookingService.getAllReservations().size() == 1);
 		
@@ -521,14 +521,14 @@ public class BookingServiceTest {
 	
 	@Test
 	public void testCancelReservation() {
-		roomService.createRoomRate(roomRateTwo);
-		roomService.createRoomRate(roomRateThree);
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
 		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
-		bookingService.createReservation(reservationOne);
+		bookingService.saveReservation(reservationOne);
 		
 		assertTrue(bookingService.getAllReservations().size() == 1);
 		
@@ -564,33 +564,33 @@ public class BookingServiceTest {
 
 	@Test 
 	public void testUpdateReservationWithNoRoomRates() {
-		roomService.createRoomRate(roomRateTwo);
-		roomService.createRoomRate(roomRateThree);
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
 		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
-		bookingService.createReservation(reservationOne);
+		bookingService.saveReservation(reservationOne);
 		
 		reservationOne.setRoomRates(new ArrayList<RoomRate>());
 		
 		try {
-			bookingService.createReservation(reservationOne);
+			bookingService.saveReservation(reservationOne);
 			fail();
 		} catch(MissingOrInvalidArgumentException e) {}
 	}
 	
 	@Test 
 	public void testUpdateReservationWithDifferentRates() {
-		roomService.createRoomRate(roomRateTwo);
-		roomService.createRoomRate(roomRateThree);
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
 		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
-		bookingService.createReservation(reservationOne);
+		bookingService.saveReservation(reservationOne);
 		
 		List<RoomRate> roomRates = new ArrayList<RoomRate>();
 		roomRates.add(roomRateTwo);
@@ -598,7 +598,7 @@ public class BookingServiceTest {
 		reservationOne.setRoomRates(roomRates);
 		
 		try {
-			bookingService.createReservation(reservationOne);
+			bookingService.saveReservation(reservationOne);
 		} catch(MissingOrInvalidArgumentException e) {}
 		
 		List<RoomRate> availableRoomRates = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)), dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
@@ -607,14 +607,14 @@ public class BookingServiceTest {
 	
 	@Test(expected=MissingOrInvalidArgumentException.class)
 	public void testCreateReservationWithNotEnoughRates() {
-		roomService.createRoomRate(roomRateTwo);
-		roomService.createRoomRate(roomRateThree);
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
 		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
-		bookingService.createReservation(reservationOne);
+		bookingService.saveReservation(reservationOne);
 	}
 	
 	/**
@@ -622,17 +622,17 @@ public class BookingServiceTest {
 	 */
 	@Test 
 	public void testUpdateReservationWithChangingSameRoomRatesDifferentStartDate() {
-		roomService.createRoomRate(roomRateTwo);
-		roomService.createRoomRate(roomRateThree);
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
 		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
-		bookingService.createReservation(reservationOne);
+		bookingService.saveReservation(reservationOne);
 		
 		RoomRate roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1)));
-		roomService.createRoomRate(roomRateOne);
+		roomService.saveRoomRate(roomRateOne);
 		
 		ArrayList<RoomRate> roomRates = new ArrayList<RoomRate>();
 		roomRates.add(roomRateOne);
@@ -643,7 +643,7 @@ public class BookingServiceTest {
 		reservationOne.setRoomRates(roomRates);
 		
 		try {
-			bookingService.createReservation(reservationOne);
+			bookingService.saveReservation(reservationOne);
 		} catch(MissingOrInvalidArgumentException e) {
 			fail(e.toString());
 		}
@@ -659,17 +659,17 @@ public class BookingServiceTest {
 	 */
 	@Test 
 	public void testUpdateReservationWithChangingSameRoomRatesDifferentEndDate() {
-		roomService.createRoomRate(roomRateTwo);
-		roomService.createRoomRate(roomRateThree);
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
 		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
-		bookingService.createReservation(reservationOne);
+		bookingService.saveReservation(reservationOne);
 		
 		RoomRate roomRateFour = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
-		roomService.createRoomRate(roomRateFour);
+		roomService.saveRoomRate(roomRateFour);
 		
 		ArrayList<RoomRate> roomRates = new ArrayList<RoomRate>();
 		roomRates.add(roomRateThree);
@@ -680,7 +680,7 @@ public class BookingServiceTest {
 		reservationOne.setRoomRates(roomRates);
 		
 		try {
-			bookingService.createReservation(reservationOne);
+			bookingService.saveReservation(reservationOne);
 		} catch(MissingOrInvalidArgumentException e) {
 			fail(e.toString());
 		}
@@ -693,95 +693,95 @@ public class BookingServiceTest {
 	
 	@Test 
 	public void testUpdateReservationWithEmptyStartDate() {
-		roomService.createRoomRate(roomRateTwo);
-		roomService.createRoomRate(roomRateThree);
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
 		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
-		bookingService.createReservation(reservationOne);
+		bookingService.saveReservation(reservationOne);
 		
 		reservationOne.setStartDate(null);
 		
 		try {
-			bookingService.createReservation(reservationOne);
+			bookingService.saveReservation(reservationOne);
 			fail();
 		} catch(MissingOrInvalidArgumentException e) {}
 	}
 	
 	@Test 
 	public void testUpdateReservationWithEmptyEndDate() {
-		roomService.createRoomRate(roomRateTwo);
-		roomService.createRoomRate(roomRateThree);
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
 		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
-		bookingService.createReservation(reservationOne);
+		bookingService.saveReservation(reservationOne);
 		
 		reservationOne.setEndDate(null);
 		
 		try {
-			bookingService.createReservation(reservationOne);
+			bookingService.saveReservation(reservationOne);
 			fail();
 		} catch(MissingOrInvalidArgumentException e) {}
 	}
 	
 	@Test 
 	public void testUpdateReservationWithStartDateBeforeEndDate() {
-		roomService.createRoomRate(roomRateTwo);
-		roomService.createRoomRate(roomRateThree);
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
 		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
-		bookingService.createReservation(reservationOne);
+		bookingService.saveReservation(reservationOne);
 		
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
 		
 		try {
-			bookingService.createReservation(reservationOne);
+			bookingService.saveReservation(reservationOne);
 			fail();
 		} catch(MissingOrInvalidArgumentException e) {}
 	}
 	
 	@Test(expected=MissingOrInvalidArgumentException.class)
 	public void testEmptyStartDate() {
-		roomService.createRoomRate(roomRateTwo);
-		roomService.createRoomRate(roomRateThree);
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(null);
 		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
-		bookingService.createReservation(reservationOne);
+		bookingService.saveReservation(reservationOne);
 	}
 	
 	@Test(expected=MissingOrInvalidArgumentException.class)
 	public void testEmptyEndDate() {
-		roomService.createRoomRate(roomRateTwo);
-		roomService.createRoomRate(roomRateThree);
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
 		reservationOne.setEndDate(null);
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
-		bookingService.createReservation(reservationOne);
+		bookingService.saveReservation(reservationOne);
 	}
 	
 	@Test(expected=MissingOrInvalidArgumentException.class)
 	public void testStartDateBeforeEndDate() {
-		roomService.createRoomRate(roomRateTwo);
-		roomService.createRoomRate(roomRateThree);
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
 		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
-		bookingService.createReservation(reservationOne);
+		bookingService.saveReservation(reservationOne);
 	}
 	
 	@Test(expected = NotFoundException.class)

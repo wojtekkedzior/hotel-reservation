@@ -44,7 +44,7 @@ public class UserService {
 	private PasswordEncoder passwordEncoder;
 
 	//TODO remove as the super admin user should be added by an sql script
-	public User createUser(User user) {
+	public User saveUser(User user) {
 		user.setCreatedOn(new Date());
 		//TODO set created BY
 //		user.setCreatedBy(createdBy);
@@ -58,11 +58,11 @@ public class UserService {
 		return userRepo.save(user);
 	}
 	
-	public Role createRole(Role userType) {
+	public Role saveRole(Role userType) {
 		return roleRepo.save(userType);
 	}
 	
-	public void createPrivilege(Privilege privilege) {
+	public void savePrivilege(Privilege privilege) {
 		privilegeRepo.save(privilege);
 	}
 	

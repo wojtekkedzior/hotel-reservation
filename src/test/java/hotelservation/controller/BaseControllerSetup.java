@@ -53,15 +53,15 @@ public abstract class BaseControllerSetup {
 		Collection<Privilege> receptionistPrivileges = getPrivilegesForReceptionist();
 		
 		for (Privilege privilege : adminPrivileges) {
-			userService.createPrivilege(privilege);
+			userService.savePrivilege(privilege);
 		}
 		
 		for (Privilege privilege : managerPrivileges) {
-			userService.createPrivilege(privilege);
+			userService.savePrivilege(privilege);
 		}
 		
 		for (Privilege privilege : receptionistPrivileges) {
-			userService.createPrivilege(privilege);
+			userService.savePrivilege(privilege);
 		}
 
 		adminRole = new Role("admin", "admin desc", true);
@@ -72,9 +72,9 @@ public abstract class BaseControllerSetup {
 		managerRole.setPrivileges(managerPrivileges);
 		receptionistRole.setPrivileges(receptionistPrivileges);
 
-		userService.createRole(adminRole);
-		userService.createRole(managerRole);
-		userService.createRole(receptionistRole);
+		userService.saveRole(adminRole);
+		userService.saveRole(managerRole);
+		userService.saveRole(receptionistRole);
 
 		manager = new User();
 		manager.setPassword("password");
@@ -83,7 +83,7 @@ public abstract class BaseControllerSetup {
 		manager.setUserName("manager");
 		manager.setEnabled(true);
 		manager.setRoles(Arrays.asList(managerRole));
-		userService.createUser(manager);
+		userService.saveUser(manager);
 
 		admin = new User();
 		admin.setFirstName("admin");
@@ -92,7 +92,7 @@ public abstract class BaseControllerSetup {
 		admin.setPassword("password");
 		admin.setRoles(Arrays.asList(adminRole));
 		admin.setEnabled(true);
-		userService.createUser(admin);
+		userService.saveUser(admin);
 
 		receptionist = new User();
 		receptionist.setFirstName("receptionist");
@@ -101,6 +101,6 @@ public abstract class BaseControllerSetup {
 		receptionist.setPassword("password");
 		receptionist.setRoles(Arrays.asList(receptionistRole));
 		receptionist.setEnabled(true);
-		userService.createUser(receptionist);
+		userService.saveUser(receptionist);
 	}
 }
