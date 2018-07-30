@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -546,7 +547,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		}
 		
 		//Make one reservation InProgress
-		Reservation reservation = bookingService.getReservation(3);
+		Reservation reservation = bookingService.getReservation(Optional.of(3));
 		bookingService.realiseReservation(reservation);
 	}
 	

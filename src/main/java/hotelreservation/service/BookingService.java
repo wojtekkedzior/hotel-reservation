@@ -176,11 +176,6 @@ public class BookingService {
 		return reservationRepo.findByStartDate(new Date());
 	}
 
-	//wrapper for app setup. //TODO replace with impl above
-	public Reservation getReservation(long id) {
-		return getReservation(Optional.of(new Long(id).intValue()));
-	}
-
 	public void deleteReservation(Reservation reservation) {
 		if(!reservationRepo.existsById(reservation.getId())) {
 			throw new NotDeletedException(reservation.getId());

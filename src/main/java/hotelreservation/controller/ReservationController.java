@@ -217,7 +217,7 @@ public class ReservationController {
 		guestService.saveIdentification(guest.getIdentification());
 		guestService.saveGuest(guest);
 
-		Reservation reservation2 = bookingService.getReservation(reservation.getId());
+		Reservation reservation2 = bookingService.getReservation(Optional.of(new Long(reservation.getId()).intValue()));
 		reservation2.getOccupants().add(guest);
 		bookingService.createReservation(reservation2);
 
@@ -227,7 +227,7 @@ public class ReservationController {
 	@PostMapping("/realiseReservation")
 	@PreAuthorize("hasAuthority('realiseReservation')")
 	public ModelAndView realiseReservation(@ModelAttribute Reservation reservation, BindingResult bindingResult) {
-		Reservation reservation2 = bookingService.getReservation(reservation.getId());
+		Reservation reservation2 = bookingService.getReservation(Optional.of(new Long(reservation.getId()).intValue()));
 
 		if (reservation2.getReservationStatus().equals(ReservationStatus.UpComing) || reservation2.getReservationStatus().equals(ReservationStatus.InProgress)) {
 			// TODO can't realise a cancelled or in progress reservation
@@ -271,7 +271,7 @@ public class ReservationController {
 
 			Guest guestToDelete = null;
 
-			Reservation resFromDB = bookingService.getReservation(reservation.getId());
+			Reservation resFromDB = bookingService.getReservation(Optional.of(new Long(reservation.getId()).intValue()));
 			// TODO ugly
 			for (Guest occupant : resFromDB.getOccupants()) {
 				if (occupant.getId() == id.get()) {

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -785,7 +786,7 @@ public class BookingServiceTest {
 	
 	@Test(expected = NotFoundException.class)
 	public void testGetNonExistentReservation() {
-		bookingService.getReservation(99);
+		bookingService.getReservation(Optional.of(99));
 	}
 	
 	@Test(expected = NotDeletedException.class)
