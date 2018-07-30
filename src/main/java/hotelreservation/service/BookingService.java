@@ -1,6 +1,7 @@
 package hotelreservation.service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -94,7 +95,6 @@ public class BookingService {
 				reservation.setCreatedOn(findById.get().getCreatedOn());
 			}
 		}
-		 
 		
 		//Check if room rates have sequential days
 		List<RoomRate> roomRates = reservation.getRoomRates();
@@ -106,6 +106,13 @@ public class BookingService {
 		}
 		
 		LocalDate startDate = utils.asLocalDate(reservation.getStartDate());
+		
+		long between = ChronoUnit.DAYS.between(startDate,utils.asLocalDate(reservation.getEndDate()));
+		between += 1;
+		
+		if(roomRates.size() != between) {
+			throw new MissingOrInvalidArgumentException("Not enough rates for the given time frame");
+		}
 		
 		for (int i = 0; i < roomRates.size(); i++) {
 			if(!roomRatesAsMap.containsKey(startDate)) {

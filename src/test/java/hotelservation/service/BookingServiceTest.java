@@ -487,7 +487,7 @@ public class BookingServiceTest {
 		roomService.createRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo));
 
 		Date startDate = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1));
@@ -604,17 +604,60 @@ public class BookingServiceTest {
 		assertEquals(1, availableRoomRates.size());
 	}
 	
-	@Test 
+	@Test(expected=MissingOrInvalidArgumentException.class)
 	public void testCreateReservationWithNotEnoughRates() {
-		
-		//TODO test a scenario where the rates don't cover the entire reservation stay.
+		roomService.createRoomRate(roomRateTwo);
+		roomService.createRoomRate(roomRateThree);
+
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
+
+		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
+		bookingService.createReservation(reservationOne);
 	}
 	
 	/**
-	 * going from -||--to --||  This should ensure that the roomrate for the 2nd is free
+	 * going from -||--  to  ||--  This should ensure that the roomrate for the 2nd is free
 	 */
 	@Test 
-	public void testUpdateReservationWithChangingSameRoomRatesEndDate() {
+	public void testUpdateReservationWithChangingSameRoomRatesDifferentStartDate() {
+		roomService.createRoomRate(roomRateTwo);
+		roomService.createRoomRate(roomRateThree);
+
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+
+		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
+		bookingService.createReservation(reservationOne);
+		
+		RoomRate roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1)));
+		roomService.createRoomRate(roomRateOne);
+		
+		ArrayList<RoomRate> roomRates = new ArrayList<RoomRate>();
+		roomRates.add(roomRateOne);
+		roomRates.add(roomRateTwo);
+
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationOne.setRoomRates(roomRates);
+		
+		try {
+			bookingService.createReservation(reservationOne);
+		} catch(MissingOrInvalidArgumentException e) {
+			fail(e.toString());
+		}
+		
+		List<RoomRate> availableRoomRates = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1)), dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		
+		assertEquals(1, availableRoomRates.size());
+		assertTrue(availableRoomRates.contains(roomRateThree));
+	}
+	
+	/**
+	 * going from -||-  to  --||  This should ensure that the roomrate for the 2nd is free
+	 */
+	@Test 
+	public void testUpdateReservationWithChangingSameRoomRatesDifferentEndDate() {
 		roomService.createRoomRate(roomRateTwo);
 		roomService.createRoomRate(roomRateThree);
 
