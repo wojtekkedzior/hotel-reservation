@@ -58,6 +58,17 @@ public class UserService {
 		return userRepo.save(user);
 	}
 	
+	public void saveUser(User user, String name) {
+		User userByUserName = userRepo.findByUserName(name);
+		
+		if(userByUserName == null) {
+			throw new MissingOrInvalidArgumentException("missing name");
+		} 
+		
+		user.setCreatedBy(userByUserName);
+		saveUser(user);
+	}
+	
 	public Role saveRole(Role userType) {
 		return roleRepo.save(userType);
 	}
