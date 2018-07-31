@@ -60,7 +60,8 @@ public class UsersController {
 	public ModelAndView addUser(@ModelAttribute User user,  Authentication authentication, BindingResult bindingResult) {
 		//TODO check that ID == null 
 		log.info("creating user: " + user);
-		userService.saveUser(user);
+		
+		userService.saveUser(user, authentication.getName());
 		return new ModelAndView("redirect:/user/" + user.getId());
 	}
 

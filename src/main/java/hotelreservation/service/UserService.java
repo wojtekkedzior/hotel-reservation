@@ -43,19 +43,30 @@ public class UserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	//TODO remove as the super admin user should be added by an sql script
-	public User saveUser(User user) {
-		user.setCreatedOn(new Date());
-		//TODO set created BY
-//		user.setCreatedBy(createdBy);
+	public void saveUser(User user, String name) {
+		if(user.getCreatedBy() == null) {
+			User userByUserName = userRepo.findByUserName(name);
+			if(userByUserName == null) {
+				throw new MissingOrInvalidArgumentException("missing name");
+			} 
+			
+			user.setCreatedBy(userByUserName);
+		}
+		
 		String password = user.getPassword();
 		
 		if(password == null || password.isEmpty()) {
 			throw new MissingOrInvalidArgumentException("password can't be empty");
 		}
-			
+		
 		user.setPassword(passwordEncoder.encode(password));
-		return userRepo.save(user);
+		
+		if(user.getUserName() == null || user.getUserName().isEmpty()) {
+			throw new MissingOrInvalidArgumentException("Username can't be empty");
+		}
+		
+		user.setCreatedOn(new Date());
+		userRepo.save(user);
 	}
 	
 	public Role saveRole(Role userType) {

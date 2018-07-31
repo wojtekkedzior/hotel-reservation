@@ -27,7 +27,7 @@ import hotelreservation.service.UserService;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @SpringBootTest(classes = Application.class)
-public class UserServiceTest {
+public class UserServiceTest extends BaseServiceTest {
 
 	@Autowired
 	private UserService userService;
@@ -37,6 +37,7 @@ public class UserServiceTest {
 	
 	@Before
 	public void setup() {
+		createAdminUser();
 	}
 
 	@Test
@@ -85,22 +86,54 @@ public class UserServiceTest {
 	public void testCRUDUser() {
 		User user = new User("username", "name");
 		user.setPassword("password");
-		userService.saveUser(user);
+		userService.saveUser(user, superAdmin.getUserName());
 		
-		assertEquals(1, userService.getAllUsers().size());
+		assertEquals(2, userService.getAllUsers().size());
 		
 		user.setFirstName("updatedFirstName");
 		
-		assertEquals(1, userService.getAllUsers().size());
-		assertEquals("updatedFirstName", userService.getAllUsers().get(0).getFirstName());
+		assertEquals(2, userService.getAllUsers().size());
 		
 		userService.deleteUser(user);
-		assertEquals(0, userService.getAllUsers().size());
+		assertEquals(1, userService.getAllUsers().size());
+		assertEquals(superAdmin, userService.getAllUsers().get(0));
+	}
+	
+	@Test(expected=MissingOrInvalidArgumentException.class)
+	public void testCreateUserWithNonExistentUser() {
+		User user = new User("username", "name");
+		user.setPassword("password");
+		userService.saveUser(user, "nonExistentUser");
+		
+		assertEquals(1, userService.getAllUsers().size());
+	}
+	
+	@Test
+	public void testCreateUserByExisitngUser() {
+		User user = new User("username", "name");
+		user.setPassword("password");
+		userService.saveUser(user, superAdmin.getUserName());
+		
+		assertEquals(2, userService.getAllUsers().size());
+		
+		User newUser = new User("userUserName", "newName");
+		newUser.setPassword("password");
+		userService.saveUser(newUser, user.getUserName());
+		
+		assertEquals(3, userService.getAllUsers().size());
+		assertEquals(user, newUser.getCreatedBy());
 	}
 	
 	@Test(expected=MissingOrInvalidArgumentException.class)
 	public void testCreateUserWithoutPassword() {
-		userService.saveUser(new User());
+		userService.saveUser(new User(), superAdmin.getUserName());
+	}
+	
+	@Test(expected=MissingOrInvalidArgumentException.class)
+	public void testCreateUserWithoutUserName() {
+		User user = new User();
+		user.setPassword("password");
+		userService.saveUser(user, superAdmin.getUserName());
 	}
 	
 	@Test
@@ -116,7 +149,8 @@ public class UserServiceTest {
 		assertEquals("updatedName", userService.getAllRoles().get(0).getName());
 		
 		userService.deleteRole(role);
-		assertEquals(0, userService.getAllUsers().size());
+		assertEquals(1, userService.getAllUsers().size());
+		assertEquals(superAdmin, userService.getAllUsers().get(0));
 	}
 	
 	@Test
