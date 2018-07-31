@@ -99,6 +99,31 @@ public class UserServiceTest {
 	}
 	
 	@Test(expected=MissingOrInvalidArgumentException.class)
+	public void testCreateUserWithNonExistentUser() {
+		User user = new User("username", "name");
+		user.setPassword("password");
+		userService.saveUser(user, "nonExistentUser");
+		
+		assertEquals(1, userService.getAllUsers().size());
+	}
+	
+	@Test
+	public void testCreateUserByExisitngUser() {
+		User user = new User("username", "name");
+		user.setPassword("password");
+		userService.saveUser(user);
+		
+		assertEquals(1, userService.getAllUsers().size());
+		
+		User newUser = new User("userUserName", "newName");
+		newUser.setPassword("password");
+		userService.saveUser(newUser, user.getUserName());
+		
+		assertEquals(2, userService.getAllUsers().size());
+		assertEquals(user, newUser.getCreatedBy());
+	}
+	
+	@Test(expected=MissingOrInvalidArgumentException.class)
 	public void testCreateUserWithoutPassword() {
 		userService.saveUser(new User());
 	}
