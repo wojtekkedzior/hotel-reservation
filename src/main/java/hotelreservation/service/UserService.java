@@ -65,6 +65,8 @@ public class UserService {
 			throw new MissingOrInvalidArgumentException("Username can't be empty");
 		}
 		
+		//TODO ensure that the 'create by' user is actually allowed to create a user of the selected Type
+		
 		user.setCreatedOn(new Date());
 		userRepo.save(user);
 	}
