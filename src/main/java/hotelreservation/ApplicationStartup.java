@@ -173,11 +173,10 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	}
 	
 	public void createAdminUser() {
-		User superAdmin = new User();
+		superAdmin = new User();
 		superAdmin.setUserName("superAdmin");
 		superAdmin.setCreatedOn(new Date());
-		String password = superAdmin.getPassword();
-		superAdmin.setPassword(passwordEncoder.encode(password));
+		superAdmin.setPassword(passwordEncoder.encode("password"));
 		userRepo.save(superAdmin);
 	}
 
