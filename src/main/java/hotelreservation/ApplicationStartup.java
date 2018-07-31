@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import hotelreservation.model.Amenity;
@@ -34,6 +36,7 @@ import hotelreservation.model.Status;
 import hotelreservation.model.User;
 import hotelreservation.model.enums.Currency;
 import hotelreservation.model.enums.IdType;
+import hotelreservation.repository.UserRepo;
 import hotelreservation.service.BookingService;
 import hotelreservation.service.InvoiceService;
 import hotelreservation.service.RoomService;
@@ -49,6 +52,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	private Role managerRole;
 	private Role receptionistRole;
 
+	private User superAdmin;
 	private User admin;
 	private User manager;
 	private User receptionist;
@@ -134,11 +138,18 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	
 	@Autowired
 	private InvoiceService invoiceService;
-
+	
+	@Autowired
+	private UserRepo userRepo;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
 	@Override
 	public void onApplicationEvent(ApplicationReadyEvent event) {
 		log.debug("loading test data - start");
 		
+		createAdminUser();
 		addPrivileges();
 		addStatuses();
 		addCharges();
@@ -159,6 +170,15 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		createMultiRoomReservation();
 		
 		log.debug("loading test data - end");
+	}
+	
+	public void createAdminUser() {
+		User superAdmin = new User();
+		superAdmin.setUserName("superAdmin");
+		superAdmin.setCreatedOn(new Date());
+		String password = superAdmin.getPassword();
+		superAdmin.setPassword(passwordEncoder.encode(password));
+		userRepo.save(superAdmin);
 	}
 
 	private void addCharges() {
@@ -280,7 +300,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		admin.setPassword("password");
 		admin.setRoles(Arrays.asList(adminRole));
 		admin.setEnabled(true);
-		userService.saveUser(admin);
+		userService.saveUser(admin, superAdmin.getUserName());
 		
 		manager = new User();
 		manager.setPassword("password");
@@ -289,7 +309,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		manager.setUserName("manager");
 		manager.setEnabled(true);
 		manager.setRoles(Arrays.asList(managerRole));
-		userService.saveUser(manager);
+		userService.saveUser(manager, superAdmin.getUserName());
 
 		receptionist = new User();
 		receptionist.setFirstName("receptionist");
@@ -298,7 +318,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		receptionist.setPassword("password");
 		receptionist.setRoles(Arrays.asList(receptionistRole));
 		receptionist.setEnabled(true);
-		userService.saveUser(receptionist);
+		userService.saveUser(receptionist, superAdmin.getUserName());
 	}
 
 	private void addRoomamenitites() {

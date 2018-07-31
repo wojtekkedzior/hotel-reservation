@@ -48,7 +48,7 @@ import hotelreservation.service.UserService;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @SpringBootTest(classes = Application.class)
-public class BookingServiceTest {
+public class BookingServiceTest extends BaseServiceTest {
 
 	@Autowired
 	private RoomService roomService;
@@ -95,12 +95,14 @@ public class BookingServiceTest {
 
 	@Before
 	public void setup() {
+		createAdminUser();
+		
 		managerUserType = new Role("manager", "manager desc", true);
 		userService.saveRole(managerUserType);
 
 		user = new User();
 		user.setPassword("password");
-		userService.saveUser(user);
+		userService.saveUser(user, superAdmin.getUserName());
 
 		amenityTypeRoomBasic = new AmenityType("Basic", "Basic Room amenity Type");
 		roomService.saveAmenityType(amenityTypeRoomBasic);

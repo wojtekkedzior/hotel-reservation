@@ -43,18 +43,6 @@ public class UserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	public User saveUser(User user) {
-		user.setCreatedOn(new Date());
-		String password = user.getPassword();
-		
-		if(password == null || password.isEmpty()) {
-			throw new MissingOrInvalidArgumentException("password can't be empty");
-		}
-			
-		user.setPassword(passwordEncoder.encode(password));
-		return userRepo.save(user);
-	}
-	
 	public void saveUser(User user, String name) {
 		if(user.getCreatedBy() == null) {
 			User userByUserName = userRepo.findByUserName(name);
@@ -64,8 +52,21 @@ public class UserService {
 			
 			user.setCreatedBy(userByUserName);
 		}
-	
-		saveUser(user);
+		
+		String password = user.getPassword();
+		
+		if(password == null || password.isEmpty()) {
+			throw new MissingOrInvalidArgumentException("password can't be empty");
+		}
+		
+		user.setPassword(passwordEncoder.encode(password));
+		
+		if(user.getUserName() == null || user.getUserName().isEmpty()) {
+			throw new MissingOrInvalidArgumentException("Username can't be empty");
+		}
+		
+		user.setCreatedOn(new Date());
+		userRepo.save(user);
 	}
 	
 	public Role saveRole(Role userType) {
