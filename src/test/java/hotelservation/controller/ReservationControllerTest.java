@@ -119,6 +119,7 @@ public class ReservationControllerTest extends BaseControllerSetup {
 
 		User user = new User();
 		user.setPassword("password");
+		user.setUserName("username");
 		userService.saveUser(user, superAdmin.getUserName());
 
 		reservationOne.setMainGuest(mainGuest);

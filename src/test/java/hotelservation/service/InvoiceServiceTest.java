@@ -143,6 +143,7 @@ public class InvoiceServiceTest extends BaseServiceTest {
 
 		user = new User();
 		user.setPassword("password");
+		user.setUserName("username");
 		userService.saveUser(user, superAdmin.getUserName());
 
 		amenityTypeRoomBasic = new AmenityType("Basic", "Basic Room amenity Type");

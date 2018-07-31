@@ -91,6 +91,7 @@ public class RoomControllerTest extends BaseControllerSetup {
 	public void setup() {
 		User user = new User();
 		user.setPassword("password");
+		user.setUserName("username");
 		userService.saveUser(user, superAdmin.getUserName());
 
 		RoomType roomTypeStandard = new RoomType("Standard", "Standard room");

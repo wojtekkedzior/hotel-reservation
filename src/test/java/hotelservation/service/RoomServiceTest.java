@@ -64,6 +64,7 @@ public class RoomServiceTest extends BaseServiceTest {
 
 		createdBy = new User();
 		createdBy.setPassword("password");
+		createdBy.setUserName("username");
 		userService.saveUser(createdBy, superAdmin.getUserName());
 		
 		status = new Status("Status name", "Status Description");
