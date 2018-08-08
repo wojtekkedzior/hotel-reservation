@@ -6,17 +6,19 @@
 <head>
 <script th:inline="javascript">
 	/*<![CDATA[*/
-	function calcSubtotal(value) {
+	function calcSubtotal(size) {
 		var select = document.getElementById("reservationCharges01");
 
 		var subTotal = 0;
 
-		for (i = 0; i < value; i++) {
-			var select = document
-					.getElementById("reservationCharges" + i + "1");
+		for (i = 0; i < size; i++) {
+			var select = document.getElementById("reservationCharges" + i + "1");
 
 			if (select.checked) {
-				subTotal = subTotal + +select.value;
+				var chargeValue = document.getElementById("chargeValue_" + (i +1) );
+				var chargeQuantity = document.getElementById("chargeQuantity_" + (i+1));
+				
+				subTotal = subTotal + +(chargeValue.innerHTML * chargeQuantity.innerHTML);
 			}
 		}
 
@@ -56,14 +58,14 @@
 
 						<tr th:each="reservationCharge, stat : ${outstandingCharges}">
 							<td><input type="checkbox"
-								th:value="${reservationCharge.id}"
+								th:value="${reservationCharge.charge.value}"
 								th:field="*{reservationCharges[__${stat.index}__]}"
-								th:onclick="'javascript:calcSubtotal(\'' + ${outstandingCharges.size()} + '\');'" />
+								th:onclick="'javascript:calcSubtotal(\'' + ${outstandingCharges.size()} +'\');'" />
 								<label th:text="${reservationCharge.charge.name}"></label></td>
 
-							<td><label th:text="${reservationCharge.charge.value}"></label>
+							<td><label  th:id="chargeValue_+${reservationCharge.id}"  th:text="${reservationCharge.charge.value}"></label>
 							</td>
-							<td><label th:text="${reservationCharge.quantity}"></label>
+							<td><label th:id="chargeQuantity_+${reservationCharge.id}"th:text="${reservationCharge.quantity}"></label>
 							</td>
 						</tr>
 					</table>
