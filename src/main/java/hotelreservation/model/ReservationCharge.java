@@ -23,9 +23,15 @@ public class ReservationCharge {
 	private Charge charge;
 	
 	private int quantity;
-		
+
+	public ReservationCharge() {}
+	
+	public ReservationCharge(Charge charge, int quantity) {
+		this.charge = charge;
+		this.quantity = quantity;
+	}
+	
 	//date
 	//accepted By
 	//charged By
-
 }

@@ -1,5 +1,6 @@
 package hotelreservation.controller;
 
+import java.util.Date;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -72,6 +73,7 @@ public class InvoiceController {
 		//obviously it's in the naming convention
 		payment.setId(0);
 		payment.setReservation(reservation);
+		payment.setPaymentDate(new Date());
 		invoiceService.savePayment(payment);
 		
 		//TODO use credit card in reservation?
