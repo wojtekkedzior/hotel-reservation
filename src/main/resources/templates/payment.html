@@ -7,7 +7,7 @@
 <script th:inline="javascript">
 	/*<![CDATA[*/
 	function calcSubtotal(size) {
-		var select = document.getElementById("reservationCharges01");
+/* 		var select = document.getElementById("reservationCharges01");
 
 		var subTotal = 0;
 
@@ -22,7 +22,41 @@
 			}
 		}
 
-		document.getElementById("subTotal").value = subTotal;
+		document.getElementById("subTotal").value = subTotal; */
+		
+	    var tab = document.getElementById ( "resChargeTable" ); // table with id tbl1
+	    var elems = tab.getElementsByTagName ( "input" );
+	    var len = elems.length;
+	    
+	   // alert(len);
+	    
+	    var subTotal = 0;
+
+	    for ( var i = 0; i < len; i++ )
+	    {
+			var select = elems[i];
+
+			if (select.checked) {
+				var chargeId = select.value;
+				var chargeValue = document.getElementById("chargeValue_"+chargeId);
+				var chargeQuantity = document.getElementById("chargeQuantity_"+chargeId);
+				
+				//alert(chargeId);
+				//alert(chargeValue.innerHTML);
+				//alert(chargeQuantity.innerHTML);
+				
+				
+				subTotal = subTotal + +(chargeValue.innerHTML * chargeQuantity.innerHTML);
+			}
+	    	
+	    	//alert(elems[i].value)
+	       /*  if ( elems[i].type == "checkbox" )
+	        {
+	            elems[i].checked = true;
+	        } */
+	    }
+	    
+	    document.getElementById("subTotal").value = subTotal;
 	}
 	/*]]>*/
 </script>
@@ -48,8 +82,11 @@
 					</select>
 				</p>
 
+<!-- th:field="*{reservationCharges[__${stat.index}__]}" -->
+				<!-- th:field="${payment.reservationCharges}" -->
+
 				<div>
-					<table>
+					<table id="resChargeTable">
 						<tr>
 							<td><label>Select</label></td>
 							<td><label>Price</label></td>
@@ -58,8 +95,9 @@
 
 						<tr th:each="reservationCharge, stat : ${outstandingCharges}">
 							<td><input type="checkbox"
-								th:value="${reservationCharge.charge.value}"
-								th:field="*{reservationCharges[__${stat.index}__]}"
+								th:value="${reservationCharge.id}"
+								th:id="${reservationCharge.id}"
+								th:field="*{reservationCharges}"
 								th:onclick="'javascript:calcSubtotal(\'' + ${outstandingCharges.size()} +'\');'" />
 								<label th:text="${reservationCharge.charge.name}"></label></td>
 
