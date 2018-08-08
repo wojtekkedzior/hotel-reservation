@@ -35,20 +35,6 @@
 				</p>
 			</div>
 
-
-			<!-- 			<form action="#" th:action="@{/createPayment/}+${reservation.id}" th:object="${payment}" method="post">
-				<p>
-					Payment Types: <select class="form-control" th:field="${payment.paymentType}" id="dropOperator">
-						<option th:each="paymentType : ${formsOfPayment}" th:value="${paymentType.toString()}" th:text="${paymentType.toString()}"></option>
-					</select>
-				</p>
-
-				<p>
-					<input type="submit" value="Create Payment" />
-				</p>
-
-			</form> -->
-
 			<a th:id="createPayment" th:href="@{/payment/}+${reservation.id}" th:text="CreatePayment"> </a>
 
 		</div>
@@ -61,7 +47,11 @@
 						<option th:each="charge : ${charges}" th:value="${charge.id}" th:text="${charge.name} + ' - ' + ${charge.value} + ' ' + ${charge.currency}"></option>
 					</select>
 				</p>
-
+				
+				<p>
+					Quantity: <input type="number" name="quantity" th:value="${reservationCharge.quantity == 0} ? '1' : ${reservationCharge.quantity}" >
+				</p>
+				
 				<p>
 					<!-- hidden field to make sure the ID gets passed back to the controller when submit is called. -->
 					<input type="number" th:field="${reservation.id}" hidden="true" />
