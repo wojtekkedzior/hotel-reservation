@@ -1,62 +1,30 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="layouts/layout">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layouts/layout">
 
 <head>
 <script th:inline="javascript">
 	/*<![CDATA[*/
 	function calcSubtotal(size) {
-/* 		var select = document.getElementById("reservationCharges01");
-
+		var tab = document.getElementById("resChargeTable");
+		var elems = tab.getElementsByTagName("input");
 		var subTotal = 0;
 
-		for (i = 0; i < size; i++) {
-			var select = document.getElementById("reservationCharges" + i + "1");
-
-			if (select.checked) {
-				var chargeValue = document.getElementById("chargeValue_" + (i +1) );
-				var chargeQuantity = document.getElementById("chargeQuantity_" + (i+1));
-				
-				subTotal = subTotal + +(chargeValue.innerHTML * chargeQuantity.innerHTML);
-			}
-		}
-
-		document.getElementById("subTotal").value = subTotal; */
-		
-	    var tab = document.getElementById ( "resChargeTable" ); // table with id tbl1
-	    var elems = tab.getElementsByTagName ( "input" );
-	    var len = elems.length;
-	    
-	   // alert(len);
-	    
-	    var subTotal = 0;
-
-	    for ( var i = 0; i < len; i++ )
-	    {
+		for (var i = 0; i < elems.length; i++) {
 			var select = elems[i];
 
 			if (select.checked) {
 				var chargeId = select.value;
-				var chargeValue = document.getElementById("chargeValue_"+chargeId);
-				var chargeQuantity = document.getElementById("chargeQuantity_"+chargeId);
-				
-				//alert(chargeId);
-				//alert(chargeValue.innerHTML);
-				//alert(chargeQuantity.innerHTML);
-				
-				
-				subTotal = subTotal + +(chargeValue.innerHTML * chargeQuantity.innerHTML);
+				var chargeValue = document.getElementById("chargeValue_"
+						+ chargeId);
+				var chargeQuantity = document.getElementById("chargeQuantity_"
+						+ chargeId);
+
+				subTotal = subTotal
+						+ +(chargeValue.innerHTML * chargeQuantity.innerHTML);
 			}
-	    	
-	    	//alert(elems[i].value)
-	       /*  if ( elems[i].type == "checkbox" )
-	        {
-	            elems[i].checked = true;
-	        } */
-	    }
-	    
-	    document.getElementById("subTotal").value = subTotal;
+		}
+
+		document.getElementById("subTotal").value = subTotal;
 	}
 	/*]]>*/
 </script>
@@ -65,25 +33,16 @@
 <body>
 	<div layout:fragment="content">
 		<p>
-			Total: <input th:value="${total}" type="number" readonly="readonly" />
-			Currency : <input th:value="${currency}" type="text"
-				readonly="readonly" />
+			Total: <input th:value="${total}" type="number" readonly="readonly" /> Currency : <input th:value="${currency}" type="text" readonly="readonly" />
 		</p>
 
 		<div class="column">
-			<form action="#" th:action="@{/createPayment/}+${reservation.id}"
-				th:object="${payment}" method="post">
+			<form action="#" th:action="@{/createPayment/}+${reservation.id}" th:object="${payment}" method="post">
 				<p>
-					Payment Types: <select class="form-control"
-						th:field="${payment.paymentType}" id="dropOperator">
-						<option th:each="paymentType : ${formsOfPayment}"
-							th:value="${paymentType.toString()}"
-							th:text="${paymentType.toString()}"></option>
+					Payment Types: <select class="form-control" th:field="${payment.paymentType}" id="dropOperator">
+						<option th:each="paymentType : ${formsOfPayment}" th:value="${paymentType.toString()}" th:text="${paymentType.toString()}"></option>
 					</select>
 				</p>
-
-<!-- th:field="*{reservationCharges[__${stat.index}__]}" -->
-				<!-- th:field="${payment.reservationCharges}" -->
 
 				<div>
 					<table id="resChargeTable">
@@ -94,17 +53,11 @@
 						</tr>
 
 						<tr th:each="reservationCharge, stat : ${outstandingCharges}">
-							<td><input type="checkbox"
-								th:value="${reservationCharge.id}"
-								th:id="${reservationCharge.id}"
-								th:field="*{reservationCharges}"
-								th:onclick="'javascript:calcSubtotal(\'' + ${outstandingCharges.size()} +'\');'" />
-								<label th:text="${reservationCharge.charge.name}"></label></td>
+							<td><input type="checkbox" th:value="${reservationCharge.id}" th:id="${reservationCharge.id}" th:field="*{reservationCharges}"
+								th:onclick="'javascript:calcSubtotal(\'' + ${outstandingCharges.size()} +'\');'" /> <label th:text="${reservationCharge.charge.name}"></label></td>
 
-							<td><label  th:id="chargeValue_+${reservationCharge.id}"  th:text="${reservationCharge.charge.value}"></label>
-							</td>
-							<td><label th:id="chargeQuantity_+${reservationCharge.id}"th:text="${reservationCharge.quantity}"></label>
-							</td>
+							<td><label th:id="chargeValue_+${reservationCharge.id}" th:text="${reservationCharge.charge.value}"></label></td>
+							<td><label th:id="chargeQuantity_+${reservationCharge.id}" th:text="${reservationCharge.quantity}"></label></td>
 						</tr>
 					</table>
 				</div>
