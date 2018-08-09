@@ -1,4 +1,4 @@
-package hotelservation.service;
+package hotelreservation.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

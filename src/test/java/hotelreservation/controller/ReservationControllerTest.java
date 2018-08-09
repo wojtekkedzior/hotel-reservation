@@ -1,4 +1,4 @@
-package hotelservation.controller;
+package hotelreservation.controller;
 
 import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;

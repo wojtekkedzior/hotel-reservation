@@ -1,4 +1,4 @@
-package hotelservation.service;
+package hotelreservation.service;
 
 import java.util.Date;
 

@@ -1,4 +1,4 @@
-package hotelservation.model.finance;
+package hotelreservation.model.finance;
 
 import static org.junit.Assert.assertEquals;
 
