@@ -32,6 +32,7 @@ import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;
 import hotelreservation.model.Reservation;
 import hotelreservation.model.ReservationCancellation;
+import hotelreservation.model.ReservationCheckout;
 import hotelreservation.model.Role;
 import hotelreservation.model.Room;
 import hotelreservation.model.RoomRate;
@@ -41,6 +42,7 @@ import hotelreservation.model.User;
 import hotelreservation.model.enums.Currency;
 import hotelreservation.model.enums.IdType;
 import hotelreservation.model.enums.ReservationStatus;
+import hotelreservation.model.finance.Payment;
 import hotelreservation.service.BookingService;
 import hotelreservation.service.RoomService;
 import hotelreservation.service.UserService;
@@ -557,7 +559,105 @@ public class BookingServiceTest extends BaseServiceTest {
 	
 	@Test
 	public void testRealiseReservation() {
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
+
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
 		
+		List<RoomRate> roomRates = new ArrayList<RoomRate>();
+		roomRates.add(roomRateTwo);
+		roomRates.add(roomRateThree);
+		
+		reservationOne.setRoomRates(roomRates);
+		bookingService.saveReservation(reservationOne);
+		
+		ReservationCheckout reservationCheckout = new ReservationCheckout();
+		reservationCheckout.setReservation(reservationOne);
+		reservationCheckout.setCheckedout(new Date());
+		reservationCheckout.setPayment(new Payment());
+		
+		bookingService.checkoutReservation(reservationOne, reservationCheckout);
+		
+		assertEquals(ReservationStatus.Fulfilled, reservationOne.getReservationStatus());
+	}
+	
+	@Test
+	public void testRealiseReservationWhenReservationAlreadyFulfiled() {
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
+
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		
+		List<RoomRate> roomRates = new ArrayList<RoomRate>();
+		roomRates.add(roomRateTwo);
+		roomRates.add(roomRateThree);
+		reservationOne.setRoomRates(roomRates);
+		bookingService.saveReservation(reservationOne);
+		
+		ReservationCheckout reservationCheckout = new ReservationCheckout();
+		reservationCheckout.setReservation(reservationOne);
+		reservationCheckout.setCheckedout(new Date());
+		reservationCheckout.setPayment(new Payment());
+		
+		bookingService.checkoutReservation(reservationOne, reservationCheckout);
+		assertEquals(ReservationStatus.Fulfilled, reservationOne.getReservationStatus());
+		
+		try {
+			bookingService.checkoutReservation(reservationOne, reservationCheckout);
+			fail();
+		} catch (MissingOrInvalidArgumentException e) {
+		}
+	}
+	
+	@Test
+	public void testRealiseReservationMissingCheckoutDate() {
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
+
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+
+		List<RoomRate> roomRates = new ArrayList<RoomRate>();
+		roomRates.add(roomRateTwo);
+		roomRates.add(roomRateThree);
+		reservationOne.setRoomRates(roomRates);
+		bookingService.saveReservation(reservationOne);
+		
+		ReservationCheckout reservationCheckout = new ReservationCheckout();
+		reservationCheckout.setReservation(reservationOne);
+		
+		try {
+			bookingService.checkoutReservation(reservationOne, reservationCheckout);
+			fail();
+		} catch (MissingOrInvalidArgumentException e) {
+		}
+	}
+	
+	@Test
+	public void testRealiseReservationMissingPayment() {
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
+
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+
+		List<RoomRate> roomRates = new ArrayList<RoomRate>();
+		roomRates.add(roomRateTwo);
+		roomRates.add(roomRateThree);
+		reservationOne.setRoomRates(roomRates);
+		bookingService.saveReservation(reservationOne);
+		
+		ReservationCheckout reservationCheckout = new ReservationCheckout();
+		reservationCheckout.setCheckedout(new Date());
+		reservationCheckout.setReservation(reservationOne);
+		
+		try {
+			bookingService.checkoutReservation(reservationOne, reservationCheckout);
+			fail();
+		} catch (MissingOrInvalidArgumentException e) {
+		}
 	}
 	
 	@Test

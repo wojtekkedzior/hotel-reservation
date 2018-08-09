@@ -228,9 +228,9 @@ public class InvoiceServiceTest extends BaseServiceTest {
 	
 	@Test
 	public void testGetOutstandingCharges() {
-		invoiceService.createCharge(chargeOne);
-		invoiceService.createCharge(chargeTwo);
-		invoiceService.createCharge(chargeThree);
+		invoiceService.saveCharge(chargeOne);
+		invoiceService.saveCharge(chargeTwo);
+		invoiceService.saveCharge(chargeThree);
 		
 		invoiceService.saveReservationCharge(reservationChargeOne);
 		invoiceService.saveReservationCharge(reservationChargeTwo);
@@ -249,9 +249,9 @@ public class InvoiceServiceTest extends BaseServiceTest {
 	
 	@Test
 	public void testGetAllReservationChargesForReservation() {
-		invoiceService.createCharge(chargeOne);
-		invoiceService.createCharge(chargeTwo);
-		invoiceService.createCharge(chargeThree);
+		invoiceService.saveCharge(chargeOne);
+		invoiceService.saveCharge(chargeTwo);
+		invoiceService.saveCharge(chargeThree);
 		
 		invoiceService.saveReservationCharge(reservationChargeOne);
 		invoiceService.saveReservationCharge(reservationChargeTwo);
@@ -261,9 +261,9 @@ public class InvoiceServiceTest extends BaseServiceTest {
 	
 	@Test
 	public void testGetAllPaymentsForReservation() {
-		invoiceService.createCharge(chargeOne);
-		invoiceService.createCharge(chargeTwo);
-		invoiceService.createCharge(chargeThree);
+		invoiceService.saveCharge(chargeOne);
+		invoiceService.saveCharge(chargeTwo);
+		invoiceService.saveCharge(chargeThree);
 		
 		invoiceService.saveReservationCharge(reservationChargeOne);
 		invoiceService.saveReservationCharge(reservationChargeTwo);
@@ -279,12 +279,14 @@ public class InvoiceServiceTest extends BaseServiceTest {
 	@Test
 	public void testCRUDCharge() {
 		Charge chargeOne = new Charge(Currency.CZK, 100, "chargeOne", "chargeOneDesc");
-		invoiceService.createCharge(chargeOne);
+		invoiceService.saveCharge(chargeOne);
 		
 		assertEquals(1, invoiceService.getAllCharges().size());
 		
 		chargeOne.setCurrency(Currency.USD);
 		assertEquals(Currency.USD, invoiceService.getAllCharges().get(0).getCurrency());
+		
+		assertEquals(chargeOne, invoiceService.getChargeById(chargeOne.getId()));
 		
 		invoiceService.deleteCharge(chargeOne);
 		assertEquals(0, invoiceService.getAllCharges().size());
@@ -300,6 +302,8 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		chargeOne.setQuantity(100);
 		assertEquals(100, invoiceService.getAllReservationCharges().get(0).getQuantity());
 		
+		assertEquals(chargeOne, invoiceService.getReservationChargeById(chargeOne.getId()));
+		
 		invoiceService.deleteReservationCharge(chargeOne);
 		assertEquals(0, invoiceService.getAllReservationCharges().size());
 	}
@@ -313,6 +317,8 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		
 		payment.setPaymentType(PaymentType.Cash);
 		assertEquals(PaymentType.Cash, invoiceService.getAllPayments().get(0).getPaymentType());
+		
+		assertEquals(payment, invoiceService.getPaymentById(payment.getId()));
 		
 		invoiceService.deletePayment(payment);
 		assertEquals(0, invoiceService.getAllPayments().size());

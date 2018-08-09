@@ -38,7 +38,7 @@ public class InvoiceService {
 	@Autowired
 	private Utils utils;
 	
-	public void createCharge(Charge charge) {
+	public void saveCharge(Charge charge) {
 		chargeRepo.save(charge);
 	}
 

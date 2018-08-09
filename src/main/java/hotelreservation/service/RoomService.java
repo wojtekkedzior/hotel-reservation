@@ -253,13 +253,6 @@ public class RoomService {
 		roomTypeRepo.deleteById(id);
 	}
 	
-	public void deleteRoomType(RoomType roomType) {
-		if(!roomTypeRepo.existsById(roomType.getId())) {
-			throw new NotDeletedException(roomType.getId());
-		}
-		roomTypeRepo.delete(roomType);
-	}
-	
 	//---- Room Rate
 	public void saveRoomRate(RoomRate roomRate) {
 		roomRateRepo.save(roomRate);

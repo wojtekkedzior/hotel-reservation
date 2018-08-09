@@ -6,7 +6,10 @@ import static org.junit.Assert.fail;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -51,6 +54,14 @@ public class RoomServiceTest extends BaseServiceTest {
 	private User createdBy;
 	private Room room;
 	private Status status;
+	
+	private AmenityType amenityTypeRoomBasic;
+	private Amenity pillow;
+	private Status operational;
+	private RoomType roomTypeStandard;
+	
+	private Room standardRoomOne;
+	private Room standardRoomTwo;
 	
 	@Before
 	public void setup() {
@@ -109,7 +120,7 @@ public class RoomServiceTest extends BaseServiceTest {
 		//TODO something odd here with the contraint as if you delete the roomtype it's ok untill you try to retrive all room types
 		
 		roomService.deleteRoomById(room.getId());
-		roomService.deleteRoomType(roomType);
+		roomService.deleteRoomType(roomType.getId());
 		
 		assertTrue(roomService.getAllRoomTypes().isEmpty());
 	}
@@ -290,5 +301,81 @@ public class RoomServiceTest extends BaseServiceTest {
 	@Test(expected = NotDeletedException.class)
 	public void testDeleteNonExistentStatus() {
 		roomService.deleteStatus(99);
+	}
+	
+	@Test(expected = NotDeletedException.class)
+	public void testDeleteNonExistentRoomTypeById() {
+		roomService.deleteRoomType(99l);
+	}
+	@Test
+	public void testGetRoomRatesAsMap() {
+		setupRoomRates();
+
+		Map<Room, List<RoomRate>> roomRatesAsMap = roomService.getRoomRatesAsMap(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1)), dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 6)));
+		
+		assertTrue(roomRatesAsMap.containsKey(standardRoomOne));
+		assertTrue(roomRatesAsMap.containsKey(standardRoomTwo));
+		
+		assertEquals(3, roomRatesAsMap.get(standardRoomOne).size());
+		assertEquals(3, roomRatesAsMap.get(standardRoomTwo).size());
+	}
+	
+	@Test
+	public void testGetRoomRates() {
+		setupRoomRates();
+		
+		List<RoomRate> roomRates = roomService.getRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1)), dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 6)));
+		assertEquals(6, roomRates.size());
+		
+		roomRates = roomService.getRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 5)), dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 6)));
+		assertEquals(0, roomRates.size());
+	}
+	
+	@Test
+	public void testGetRoomRatesForSpecificRoom() {
+		setupRoomRates();
+		
+		List<RoomRate> roomRates = roomService.getRoomRates(standardRoomOne, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1)), dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 6)));
+		assertEquals(3, roomRates.size());
+		
+		roomRates = roomService.getRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 5)), dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 6)));
+		assertEquals(0, roomRates.size());
+	}
+
+	private void setupRoomRates() {
+		managerUserType = new Role("manager", "manager desc", true);
+		userService.saveRole(managerUserType);
+
+		amenityTypeRoomBasic = new AmenityType("Basic", "Basic Room amenity Type");
+		roomService.saveAmenityType(amenityTypeRoomBasic);
+
+		pillow = new Amenity("pillow", "pillow", amenityTypeRoomBasic);
+		roomService.saveAmenity(pillow);
+
+		roomTypeStandard = new RoomType("Standard", "Standard room");
+		roomService.saveRoomType(roomTypeStandard);
+
+		operational = new Status("Operational", "Room is in operation");
+		roomService.saveStatus(operational);
+		
+		standardRoomOne = new Room(1, operational, roomTypeStandard, createdBy);
+		standardRoomOne.setName("Room 1");
+		standardRoomOne.setDescription("The Best Room Description");
+		standardRoomOne.setRoomAmenities(Arrays.asList(pillow));
+		roomService.saveRoom(standardRoomOne);
+		
+		standardRoomTwo = new Room(2, operational, roomTypeStandard, createdBy);
+		standardRoomTwo.setName("Room 2");
+		standardRoomTwo.setDescription("The Best Room Description");
+		standardRoomTwo.setRoomAmenities(Arrays.asList(pillow));
+		roomService.saveRoom(standardRoomTwo);
+	
+		roomService.saveRoomRate(new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2))));
+		roomService.saveRoomRate(new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3))));
+		roomService.saveRoomRate(new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4))));
+		
+		roomService.saveRoomRate(new RoomRate(standardRoomTwo, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2))));
+		roomService.saveRoomRate(new RoomRate(standardRoomTwo, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3))));
+		roomService.saveRoomRate(new RoomRate(standardRoomTwo, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4))));
 	}
 }
