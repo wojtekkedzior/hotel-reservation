@@ -209,6 +209,18 @@ public class BookingService {
 	}
 
 	public void checkoutReservation(Reservation resFromDB, ReservationCheckout reservationCheckout) {
+		if(resFromDB.getReservationStatus().equals(ReservationStatus.Fulfilled)) {
+			throw new MissingOrInvalidArgumentException("Reservation already fulfiled. ID: " + resFromDB.getId());
+		}
+		
+		if(reservationCheckout.getCheckedout() == null) {
+			throw new MissingOrInvalidArgumentException("Missing reservation checkout date. ID: " + resFromDB.getId());
+		}
+		
+		if(reservationCheckout.getPayment() == null) {
+			throw new MissingOrInvalidArgumentException("Missing payments. ID: " + resFromDB.getId());
+		}
+		
 		resFromDB.setReservationStatus(ReservationStatus.Fulfilled);
 		reservationRepo.save(resFromDB);
 		reservationCheckoutRepo.save(reservationCheckout);
