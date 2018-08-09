@@ -120,7 +120,7 @@ public class RoomServiceTest extends BaseServiceTest {
 		//TODO something odd here with the contraint as if you delete the roomtype it's ok untill you try to retrive all room types
 		
 		roomService.deleteRoomById(room.getId());
-		roomService.deleteRoomType(roomType);
+		roomService.deleteRoomType(roomType.getId());
 		
 		assertTrue(roomService.getAllRoomTypes().isEmpty());
 	}
@@ -303,6 +303,10 @@ public class RoomServiceTest extends BaseServiceTest {
 		roomService.deleteStatus(99);
 	}
 	
+	@Test(expected = NotDeletedException.class)
+	public void testDeleteNonExistentRoomTypeById() {
+		roomService.deleteRoomType(99l);
+	}
 	@Test
 	public void testGetRoomRatesAsMap() {
 		setupRoomRates();
