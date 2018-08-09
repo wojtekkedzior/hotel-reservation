@@ -224,4 +224,26 @@ public class UserServiceTest extends BaseServiceTest {
 	public void testDeleteNonExistentRole() {
 		userService.deleteRole(new Role());
 	}
+	
+	@Test
+	public void testCreateUserWithDuplicateUserName() {
+		User user = new User("username", "name");
+		user.setPassword("password");
+		userService.saveUser(user, superAdmin.getUserName());
+		
+		assertEquals(2, userService.getAllUsers().size());
+		
+		User userTwo = new User("username", "name");
+		userTwo.setPassword("password");
+		
+		try {
+			userService.saveUser(userTwo, superAdmin.getUserName());
+			fail();
+		} catch (Exception MissingOrInvalidArgumentException) {
+		}
+		
+		assertEquals(2, userService.getAllUsers().size());
+	}
+	
+	
 }
