@@ -185,9 +185,9 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		roomServiceDelivery = new Charge(Currency.CZK, 1000, "room service delivery", "room service delivery desc");
 		brokenTable = new Charge(Currency.CZK, 5000, "broken table", "a very broke table");
 		
-		invoiceService.createCharge(coke);
-		invoiceService.createCharge(roomServiceDelivery);
-		invoiceService.createCharge(brokenTable);
+		invoiceService.saveCharge(coke);
+		invoiceService.saveCharge(roomServiceDelivery);
+		invoiceService.saveCharge(brokenTable);
 	}
 
 	private void addamenities() {

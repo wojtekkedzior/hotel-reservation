@@ -3,6 +3,7 @@ package hotelservation.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.List;
 
@@ -100,7 +101,7 @@ public class UserServiceTest extends BaseServiceTest {
 	}
 	
 	@Test(expected=MissingOrInvalidArgumentException.class)
-	public void testCreateUserWithNonExistentUser() {
+	public void testSaveUserWithNonExistentUser() {
 		User user = new User("username", "name");
 		user.setPassword("password");
 		userService.saveUser(user, "nonExistentUser");
@@ -109,9 +110,16 @@ public class UserServiceTest extends BaseServiceTest {
 	}
 	
 	@Test
-	public void testCreateUserByExisitngUser() {
+	public void testSaveUserByExisitngUser() {
 		User user = new User("username", "name");
 		user.setPassword("password");
+		
+		try {
+			userService.saveUser(user, null);
+			fail();
+		} catch (MissingOrInvalidArgumentException e) {
+		}
+		
 		userService.saveUser(user, superAdmin.getUserName());
 		
 		assertEquals(2, userService.getAllUsers().size());
@@ -124,16 +132,42 @@ public class UserServiceTest extends BaseServiceTest {
 		assertEquals(user, newUser.getCreatedBy());
 	}
 	
-	@Test(expected=MissingOrInvalidArgumentException.class)
-	public void testCreateUserWithoutPassword() {
-		userService.saveUser(new User(), superAdmin.getUserName());
+	@Test
+	public void testSaveUserWithoutPassword() {
+		User user = new User("user","user", superAdmin);
+		try {
+			userService.saveUser(user, superAdmin.getUserName());
+			fail();
+		} catch (MissingOrInvalidArgumentException e) {
+		}
+		
+		user.setPassword("");
+		
+		try {
+			userService.saveUser(user, superAdmin.getUserName());
+			fail();
+		} catch (MissingOrInvalidArgumentException e) {
+		}
 	}
 	
-	@Test(expected=MissingOrInvalidArgumentException.class)
-	public void testCreateUserWithoutUserName() {
+	@Test
+	public void testSaveUserWithoutUserName() {
 		User user = new User();
 		user.setPassword("password");
-		userService.saveUser(user, superAdmin.getUserName());
+		
+		try {
+			userService.saveUser(user, superAdmin.getUserName());
+			fail();
+		} catch (MissingOrInvalidArgumentException e) {
+		}
+		
+		user.setUserName("");
+		
+		try {
+			userService.saveUser(user, superAdmin.getUserName());
+			fail();
+		} catch (MissingOrInvalidArgumentException e) {
+		}
 	}
 	
 	@Test
@@ -147,6 +181,8 @@ public class UserServiceTest extends BaseServiceTest {
 		
 		assertEquals(1, userService.getAllRoles().size());
 		assertEquals("updatedName", userService.getAllRoles().get(0).getName());
+		
+		assertEquals(role, userService.getRoleById(new Long(role.getId()).intValue()));
 		
 		userService.deleteRole(role);
 		assertEquals(1, userService.getAllUsers().size());
