@@ -79,6 +79,7 @@ public class ReservationControllerTest extends BaseControllerSetup {
 		receptionistPrivileges.add(new Privilege("cancelReservation"));
 		receptionistPrivileges.add(new Privilege("realiseReservation"));
 		receptionistPrivileges.add(new Privilege("checkoutReservation"));
+		receptionistPrivileges.add(new Privilege("fulfillReservation"));
 		receptionistPrivileges.add(new Privilege("viewReservationDashBoard"));
 		return receptionistPrivileges;
 	}
@@ -91,6 +92,7 @@ public class ReservationControllerTest extends BaseControllerSetup {
 		managerPrivileges.add(new Privilege("cancelReservation"));
 		managerPrivileges.add(new Privilege("realiseReservation"));
 		managerPrivileges.add(new Privilege("checkoutReservation"));
+		managerPrivileges.add(new Privilege("fulfillReservation"));
 		managerPrivileges.add(new Privilege("viewReservationDashBoard"));
 		return managerPrivileges;
 	}
@@ -179,6 +181,7 @@ public class ReservationControllerTest extends BaseControllerSetup {
 		mvc.perform(get("/cancelReservation/1")).andExpect(status().isForbidden());
 		mvc.perform(get("/checkoutReservation/1")).andExpect(status().isForbidden());
 		mvc.perform(post("/cancelReservation/1").flashAttr("reservation", new ReservationCancellation())).andExpect(status().isForbidden());
+		mvc.perform(post("/fulfillReservation/1").flashAttr("reservationID", 1)).andExpect(status().isForbidden());
 	}
 
 	@Test
@@ -196,6 +199,7 @@ public class ReservationControllerTest extends BaseControllerSetup {
 		ReservationCancellation cancellation = new ReservationCancellation();
 		cancellation.setReservation(reservationOne);
 		mvc.perform(post("/cancelReservation/1").flashAttr("reservation", cancellation)).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/fulfillReservation/1").flashAttr("reservationID", 1)).andExpect(status().is4xxClientError());
 	}
 
 	@Test
@@ -219,6 +223,7 @@ public class ReservationControllerTest extends BaseControllerSetup {
 		ReservationCancellation cancellation = new ReservationCancellation();
 		cancellation.setReservation(reservationOne);
 		mvc.perform(post("/cancelReservation/1").flashAttr("reservation", cancellation)).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/fulfillReservation/1").flashAttr("reservationID", 1)).andExpect(status().is4xxClientError());
 	}
 
 	@Test

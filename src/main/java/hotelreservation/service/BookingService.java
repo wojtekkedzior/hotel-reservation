@@ -61,6 +61,9 @@ public class BookingService {
 	@Autowired
 	private ReservationCheckoutRepo reservationCheckoutRepo;
 	
+	@Autowired
+	private InvoiceService invoiceService;
+	
 	public void createContact(Contact contact) {
 		contactRepo.save(contact);
 	}
@@ -228,6 +231,31 @@ public class BookingService {
 
 	public void realiseReservation(Reservation reservation) {
 		reservation.setReservationStatus(ReservationStatus.InProgress);
+		reservationRepo.save(reservation);
+	}
+
+	public void fulfillReservation(Optional<Integer> reservationID) {
+		if(!reservationID.isPresent()) {
+			throw new MissingOrInvalidArgumentException("Reservation fulfillment ID is missing");
+		}
+		
+		Long id = new Long(reservationID.get());
+		
+		if(!reservationRepo.existsById(id)) {
+			throw new NotFoundException("Reservation fulfillment reservation is missing. ID " + id);
+		}
+		
+		Reservation reservation = reservationRepo.findById(id).get();
+		
+		if(!reservation.getReservationStatus().equals(ReservationStatus.InProgress)) {
+			throw new MissingOrInvalidArgumentException("Reservation in wrong state for fulfillment. Was: " + reservation.getReservationStatus());
+		}
+		
+		if(!invoiceService.areAllChargesPaidFor(reservation)) {
+			throw new MissingOrInvalidArgumentException("Not all reservation charges have been paid for." + reservation.getReservationStatus());
+		}
+		
+		reservation.setReservationStatus(ReservationStatus.Fulfilled);
 		reservationRepo.save(reservation);
 	}
 }

@@ -319,4 +319,11 @@ public class ReservationController {
 		return new ModelAndView("redirect:/dashboard");
 	}
 	
+	@PostMapping("/fulfillReservation/{reservationID}")
+	@PreAuthorize("hasAuthority('fulfillReservation')")
+	public ModelAndView fulfillReservation(@PathVariable Optional<Integer> reservationID) {
+		bookingService.fulfillReservation(reservationID);
+
+		return new ModelAndView("redirect:/dashboard");
+	}
 }

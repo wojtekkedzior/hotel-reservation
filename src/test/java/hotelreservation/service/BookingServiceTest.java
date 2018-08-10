@@ -27,11 +27,13 @@ import hotelreservation.exceptions.NotDeletedException;
 import hotelreservation.exceptions.NotFoundException;
 import hotelreservation.model.Amenity;
 import hotelreservation.model.AmenityType;
+import hotelreservation.model.Charge;
 import hotelreservation.model.Contact;
 import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;
 import hotelreservation.model.Reservation;
 import hotelreservation.model.ReservationCancellation;
+import hotelreservation.model.ReservationCharge;
 import hotelreservation.model.ReservationCheckout;
 import hotelreservation.model.Role;
 import hotelreservation.model.Room;
@@ -60,6 +62,9 @@ public class BookingServiceTest extends BaseServiceTest {
 
 	@Autowired
 	private BookingService bookingService;
+	
+	@Autowired
+	private InvoiceService invoiceService;
 	
 	@Autowired
 	private Utils dateConvertor;
@@ -895,5 +900,174 @@ public class BookingServiceTest extends BaseServiceTest {
 	@Test(expected = NotDeletedException.class)
 	public void testDeleteNonExistentReservation() {
 		bookingService.deleteReservation(new Reservation());
+	}
+	
+	
+	@Test(expected = MissingOrInvalidArgumentException.class)
+	public void testReservationFulfillmentWithoutID() {
+		bookingService.fulfillReservation(Optional.empty());
+	}
+	
+	@Test(expected = NotFoundException.class)
+	public void testReservationFulfillmentMissingReservation() {
+		bookingService.fulfillReservation(Optional.of(99));
+	}
+	
+	@Test(expected = MissingOrInvalidArgumentException.class)
+	public void testReservationFulfillmentWrongStatus() {
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
+
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+
+		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
+		bookingService.saveReservation(reservationOne);
+
+		bookingService.fulfillReservation(Optional.of(new Long(reservationOne.getId()).intValue()));
+	}
+	
+	@Test(expected = MissingOrInvalidArgumentException.class)
+	public void testReservationFulfillmentWithoutPaymentWithCharges() {
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
+
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+
+		List<RoomRate> roomRates = new ArrayList<RoomRate>();
+		roomRates.add(roomRateTwo);
+		roomRates.add(roomRateThree);
+		
+		reservationOne.setRoomRates(roomRates);
+		bookingService.saveReservation(reservationOne);
+		
+		bookingService.realiseReservation(reservationOne);
+		assertEquals(ReservationStatus.InProgress, reservationOne.getReservationStatus());
+		
+		Charge chargeOne = new Charge(Currency.CZK, 100, "chargeOne", "chargeOneDesc");
+		
+		ReservationCharge reservationChargeOne = new ReservationCharge();
+		reservationChargeOne.setCharge(chargeOne);
+		reservationChargeOne.setQuantity(1);
+		reservationChargeOne.setReservation(reservationOne);
+		
+		invoiceService.saveCharge(chargeOne);
+		invoiceService.saveReservationCharge(reservationChargeOne);
+		
+		bookingService.fulfillReservation(Optional.of(new Long(reservationOne.getId()).intValue()));
+	}
+	
+	@Test(expected = MissingOrInvalidArgumentException.class)
+	public void testReservationFulfillmentWithNotEnoughPayment() {
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
+
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+
+		List<RoomRate> roomRates = new ArrayList<RoomRate>();
+		roomRates.add(roomRateTwo);
+		roomRates.add(roomRateThree);
+		
+		reservationOne.setRoomRates(roomRates);
+		bookingService.saveReservation(reservationOne);
+		
+		bookingService.realiseReservation(reservationOne);
+		assertEquals(ReservationStatus.InProgress, reservationOne.getReservationStatus());
+		
+		Charge chargeOne = new Charge(Currency.CZK, 100, "chargeOne", "chargeOneDesc");
+		Charge chargeTwo = new Charge(Currency.CZK, 200, "chargeTwo", "chargeTwoDesc");
+		
+		ReservationCharge reservationChargeOne = new ReservationCharge();
+		reservationChargeOne.setCharge(chargeOne);
+		reservationChargeOne.setQuantity(1);
+		reservationChargeOne.setReservation(reservationOne);
+		
+		ReservationCharge reservationChargeTwo = new ReservationCharge();
+		reservationChargeTwo.setCharge(chargeTwo);
+		reservationChargeTwo.setQuantity(1);
+		reservationChargeTwo.setReservation(reservationOne);
+		
+		invoiceService.saveCharge(chargeOne);
+		invoiceService.saveCharge(chargeTwo);
+		
+		invoiceService.saveReservationCharge(reservationChargeOne);
+		invoiceService.saveReservationCharge(reservationChargeTwo);
+		
+		Payment payment = new Payment();
+		payment.setReservation(reservationOne);
+		payment.setReservationCharges(Arrays.asList(reservationChargeOne));
+		invoiceService.savePayment(payment);
+		
+		bookingService.fulfillReservation(Optional.of(new Long(reservationOne.getId()).intValue()));
+	}
+	
+	@Test
+	public void testReservationFulfillmentWithNoCharges() {
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
+
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+
+		List<RoomRate> roomRates = new ArrayList<RoomRate>();
+		roomRates.add(roomRateTwo);
+		roomRates.add(roomRateThree);
+		
+		reservationOne.setRoomRates(roomRates);
+		bookingService.saveReservation(reservationOne);
+		
+		bookingService.realiseReservation(reservationOne);
+		
+		assertEquals(ReservationStatus.InProgress, reservationOne.getReservationStatus());
+		bookingService.fulfillReservation(Optional.of(new Long(reservationOne.getId()).intValue()));
+		assertEquals(ReservationStatus.Fulfilled, reservationOne.getReservationStatus());
+	}
+	
+	@Test
+	public void testReservationFulfillmentWithPaymentsForAllCharges() {
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
+
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+
+		List<RoomRate> roomRates = new ArrayList<RoomRate>();
+		roomRates.add(roomRateTwo);
+		roomRates.add(roomRateThree);
+		
+		reservationOne.setRoomRates(roomRates);
+		bookingService.saveReservation(reservationOne);
+		
+		bookingService.realiseReservation(reservationOne);
+		assertEquals(ReservationStatus.InProgress, reservationOne.getReservationStatus());
+		
+		Charge chargeOne = new Charge(Currency.CZK, 100, "chargeOne", "chargeOneDesc");
+		Charge chargeTwo = new Charge(Currency.CZK, 200, "chargeTwo", "chargeTwoDesc");
+		
+		ReservationCharge reservationChargeOne = new ReservationCharge();
+		reservationChargeOne.setCharge(chargeOne);
+		reservationChargeOne.setQuantity(1);
+		reservationChargeOne.setReservation(reservationOne);
+		
+		ReservationCharge reservationChargeTwo = new ReservationCharge();
+		reservationChargeTwo.setCharge(chargeTwo);
+		reservationChargeTwo.setQuantity(1);
+		reservationChargeTwo.setReservation(reservationOne);
+		
+		invoiceService.saveCharge(chargeOne);
+		invoiceService.saveCharge(chargeTwo);
+		
+		invoiceService.saveReservationCharge(reservationChargeOne);
+		invoiceService.saveReservationCharge(reservationChargeTwo);
+		
+		Payment payment = new Payment();
+		payment.setReservation(reservationOne);
+		payment.setReservationCharges(Arrays.asList(reservationChargeOne, reservationChargeTwo));
+		invoiceService.savePayment(payment);
+		
+		bookingService.fulfillReservation(Optional.of(new Long(reservationOne.getId()).intValue()));
+		assertEquals(ReservationStatus.Fulfilled, reservationOne.getReservationStatus());
 	}
 }
