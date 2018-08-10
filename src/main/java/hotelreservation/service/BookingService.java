@@ -61,6 +61,9 @@ public class BookingService {
 	@Autowired
 	private ReservationCheckoutRepo reservationCheckoutRepo;
 	
+	@Autowired
+	private InvoiceService invoiceService;
+	
 	public void createContact(Contact contact) {
 		contactRepo.save(contact);
 	}
@@ -242,15 +245,17 @@ public class BookingService {
 			throw new NotFoundException("Reservation fulfillment reservation is missing. ID " + id);
 		}
 		
-		Optional<Reservation> findById = reservationRepo.findById(id);
+		Reservation reservation = reservationRepo.findById(id).get();
 		
-		if(!findById.get().getReservationStatus().equals(ReservationStatus.InProgress)) {
-			throw new MissingOrInvalidArgumentException("Reservation in wrong state for fulfillment. Was: " + findById.get().getReservationStatus());
+		if(!reservation.getReservationStatus().equals(ReservationStatus.InProgress)) {
+			throw new MissingOrInvalidArgumentException("Reservation in wrong state for fulfillment. Was: " + reservation.getReservationStatus());
 		}
 		
-		//TODO Check if all payments are done
+		if(!invoiceService.areAllChargesPaidFor(reservation)) {
+			throw new MissingOrInvalidArgumentException("Not all reservation charges have been paid for." + reservation.getReservationStatus());
+		}
 		
-		findById.get().setReservationStatus(ReservationStatus.Fulfilled);
-		reservationRepo.save(findById.get());
+		reservation.setReservationStatus(ReservationStatus.Fulfilled);
+		reservationRepo.save(reservation);
 	}
 }

@@ -133,4 +133,14 @@ public class InvoiceService {
 		}
 		paymentRepo.delete(payment);
 	}
+	
+	public boolean areAllChargesPaidFor(Reservation reservation) {
+		List<ReservationCharge> outstandingCharges = getOutstandingCharges(reservation);
+		
+		if(outstandingCharges == null || outstandingCharges.isEmpty()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
