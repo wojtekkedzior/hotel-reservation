@@ -319,4 +319,25 @@ public class ReservationController {
 		return new ModelAndView("redirect:/dashboard");
 	}
 	
+	@PostMapping("/fulfillReservation/{reservationID}")
+	@PreAuthorize("hasAuthority('fulfillReservation')")
+	public ModelAndView fulfillReservation(@PathVariable Optional<Integer> reservationID) {
+//		Reservation resFromDB = bookingService.getReservation(reservationID);
+
+		bookingService.fulfillReservation(reservationID);
+		
+//		reservationCheckout.setId(0); // TODO need to figure out why the ID is being set. in this case the reservation ID is also placed into the ReservationCancellation
+//		reservationCheckout.setReservation(resFromDB);
+//		reservationCheckout.setCheckedout(new Date());
+
+		//check if payment exists for this reservation
+		//check if invoice exists for this reservation
+		
+//		bookingService.checkoutReservation(resFromDB, reservationCheckout);
+
+		return new ModelAndView("redirect:/dashboard");
+	}
+	
+	
+	
 }

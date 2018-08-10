@@ -230,4 +230,27 @@ public class BookingService {
 		reservation.setReservationStatus(ReservationStatus.InProgress);
 		reservationRepo.save(reservation);
 	}
+
+	public void fulfillReservation(Optional<Integer> reservationID) {
+		if(!reservationID.isPresent()) {
+			throw new MissingOrInvalidArgumentException("Reservation fulfillment ID is missing");
+		}
+		
+		Long id = new Long(reservationID.get());
+		
+		if(!reservationRepo.existsById(id)) {
+			throw new NotFoundException("Reservation fulfillment reservation is missing. ID " + id);
+		}
+		
+		Optional<Reservation> findById = reservationRepo.findById(id);
+		
+		if(!findById.get().getReservationStatus().equals(ReservationStatus.InProgress)) {
+			throw new MissingOrInvalidArgumentException("Reservation in wrong state for fulfillment. Was: " + findById.get().getReservationStatus());
+		}
+		
+		//TODO Check if all payments are done
+		
+		findById.get().setReservationStatus(ReservationStatus.Fulfilled);
+		reservationRepo.save(findById.get());
+	}
 }

@@ -896,4 +896,51 @@ public class BookingServiceTest extends BaseServiceTest {
 	public void testDeleteNonExistentReservation() {
 		bookingService.deleteReservation(new Reservation());
 	}
+	
+	
+	@Test(expected = MissingOrInvalidArgumentException.class)
+	public void testReservationFulfillmentWithoutID() {
+		bookingService.fulfillReservation(Optional.empty());
+	}
+	
+	@Test(expected = NotFoundException.class)
+	public void testReservationFulfillmentMissingReservation() {
+		bookingService.fulfillReservation(Optional.of(99));
+	}
+	
+	@Test(expected = MissingOrInvalidArgumentException.class)
+	public void testReservationFulfillmentWrongStatus() {
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
+
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+
+		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
+		bookingService.saveReservation(reservationOne);
+		
+		bookingService.fulfillReservation(Optional.of(new Long(reservationOne.getId()).intValue()));
+	}
+	
+	@Test
+	public void testReservationFulfillment() {
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
+
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+
+		List<RoomRate> roomRates = new ArrayList<RoomRate>();
+		roomRates.add(roomRateTwo);
+		roomRates.add(roomRateThree);
+		
+		reservationOne.setRoomRates(roomRates);
+		bookingService.saveReservation(reservationOne);
+		
+		bookingService.realiseReservation(reservationOne);
+		
+		assertEquals(ReservationStatus.InProgress, reservationOne.getReservationStatus());
+		bookingService.fulfillReservation(Optional.of(new Long(reservationOne.getId()).intValue()));
+		assertEquals(ReservationStatus.Fulfilled, reservationOne.getReservationStatus());
+	}
 }

@@ -13,13 +13,20 @@ public class NotFoundException extends RuntimeException {
     // ...
 	
 	private long id;
+	private String message;
 	
 	public NotFoundException(long id) {
 		this.id = id;
 	}
 
+	public NotFoundException(String message) {
+		this.message = message;
+	}
+
 	@Override
 	public String toString() {
-		return "NotFoundException [id=" + id + "]";
+		return "NotFoundException [id=" + id + ", message=" + message + "]";
 	}
+	
+	
 }

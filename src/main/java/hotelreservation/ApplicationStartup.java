@@ -211,6 +211,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		Privilege cancelReservation = new Privilege("cancelReservation");
 		Privilege realiseReservation = new Privilege("realiseReservation");
 		Privilege checkoutReservation = new Privilege("checkoutReservation");
+		Privilege fulfillReservation = new Privilege("fulfillReservation");
 		Privilege deleteReservation = new Privilege("deleteReservation");
 		Privilege createUser = new Privilege("createUser");
 		Privilege deleteUser = new Privilege("deleteUser");
@@ -233,6 +234,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		userService.savePrivilege(cancelReservation);
 		userService.savePrivilege(realiseReservation);
 		userService.savePrivilege(checkoutReservation);
+		userService.savePrivilege(fulfillReservation);
 		userService.savePrivilege(deleteReservation);
 		userService.savePrivilege(viewAdmin);
 		userService.savePrivilege(createUser);
@@ -265,6 +267,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		managerPrivileges.add(realiseReservation);
 		managerPrivileges.add(cancelReservation);
 		managerPrivileges.add(checkoutReservation);
+		managerPrivileges.add(fulfillReservation);
 		managerPrivileges.add(viewAdmin);
 		managerPrivileges.add(createRoomRate);
 		managerPrivileges.add(createUser);
@@ -277,6 +280,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		receptionistPrivileges.add(realiseReservation);
 		receptionistPrivileges.add(cancelReservation);
 		receptionistPrivileges.add(checkoutReservation);
+		receptionistPrivileges.add(fulfillReservation);
 		receptionistPrivileges.add(viewReservationDashBoard);
 		receptionistPrivileges.add(createPayment);
 		
