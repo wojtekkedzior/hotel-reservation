@@ -166,11 +166,16 @@ public class BookingService {
 	}
 
 	public Reservation getReservation(Optional<Integer> reservationId) {
+		log.info("Getting resrvation: " + reservationId.get());
+		
 		Optional<Reservation> reservation = reservationRepo.findById(new Long(reservationId.get()));
 		
 		if (!reservation.isPresent()) {
+			log.warn("No reservation found for: " + reservationId.get());
 			throw new NotFoundException(reservationId.get());
 		}
+		
+		log.info("Got reservation: " + reservation.get().getId());
 		
 		return reservation.get(); 
 	}
@@ -181,9 +186,14 @@ public class BookingService {
 
 	public void deleteReservation(Reservation reservation) {
 		if(!reservationRepo.existsById(reservation.getId())) {
+			log.warn("Can't delete reservation that doesn't exist: " + reservation.getId());
 			throw new NotDeletedException(reservation.getId());
 		}
+
+		log.info("Delete reservation: " + reservation.getId());
 		reservationRepo.delete(reservation);
+		
+		log.info("Deleted reservation: " + reservation.getId());
 	}
 
 	public List<Reservation> getReservationsByStatus(ReservationStatus reservationStatus) {
@@ -192,6 +202,7 @@ public class BookingService {
 	
 	public void cancelReservation(ReservationCancellation reservationCancellation) {
 		log.info("Cancelling reservation: " + reservationCancellation.getReservation().getId());
+		
 		reservationCancellationRepo.save(reservationCancellation);
 		
 		switch (reservationCancellation.getReservation().getReservationStatus()) {
@@ -211,33 +222,45 @@ public class BookingService {
 		log.info("Cancelled reservation: " + reservationCancellation.getReservation().getId());
 	}
 
-	public void checkoutReservation(Reservation resFromDB, ReservationCheckout reservationCheckout) {
-		if(resFromDB.getReservationStatus().equals(ReservationStatus.Fulfilled)) {
-			throw new MissingOrInvalidArgumentException("Reservation already fulfiled. ID: " + resFromDB.getId());
+	public void checkoutReservation(Reservation reservation, ReservationCheckout reservationCheckout) {
+		log.info("Checking out reservation: " + reservation.getId());
+		
+		if(reservation.getReservationStatus().equals(ReservationStatus.Fulfilled)) {
+			throw new MissingOrInvalidArgumentException("Reservation already fulfiled. ID: " + reservation.getId());
 		}
 		
 		if(reservationCheckout.getCheckedout() == null) {
-			throw new MissingOrInvalidArgumentException("Missing reservation checkout date. ID: " + resFromDB.getId());
+			throw new MissingOrInvalidArgumentException("Missing reservation checkout date. ID: " + reservation.getId());
 		}
 		
 		if(reservationCheckout.getPayment() == null) {
-			throw new MissingOrInvalidArgumentException("Missing payments. ID: " + resFromDB.getId());
+			throw new MissingOrInvalidArgumentException("Missing payments. ID: " + reservation.getId());
 		}
 		
-		resFromDB.setReservationStatus(ReservationStatus.Fulfilled);
-		reservationRepo.save(resFromDB);
+		reservation.setReservationStatus(ReservationStatus.Fulfilled);
+		reservationRepo.save(reservation);
 		reservationCheckoutRepo.save(reservationCheckout);
+		
+		log.info("Checked out reservation: " + reservation.getId());
 	}
 
 	public void realiseReservation(Reservation reservation) {
+		log.info("Realising reservation: " + reservation.getId());
+		
 		reservation.setReservationStatus(ReservationStatus.InProgress);
 		reservationRepo.save(reservation);
+		
+		log.info("Realised reservation: " + reservation.getId());
 	}
 
 	public void fulfillReservation(Optional<Integer> reservationID) {
+		
 		if(!reservationID.isPresent()) {
+			log.error("Can't fulfilling reservation");
 			throw new MissingOrInvalidArgumentException("Reservation fulfillment ID is missing");
 		}
+		
+		log.info("Fulfilling reservation: " + reservationID.get());
 		
 		Long id = new Long(reservationID.get());
 		
@@ -257,5 +280,7 @@ public class BookingService {
 		
 		reservation.setReservationStatus(ReservationStatus.Fulfilled);
 		reservationRepo.save(reservation);
+		
+		log.info("Fulfilled reservation: " + reservation.getId());
 	}
 }
