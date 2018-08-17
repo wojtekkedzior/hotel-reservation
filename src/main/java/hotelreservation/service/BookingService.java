@@ -25,14 +25,12 @@ import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;
 import hotelreservation.model.Reservation;
 import hotelreservation.model.ReservationCancellation;
-import hotelreservation.model.ReservationCheckout;
 import hotelreservation.model.RoomRate;
 import hotelreservation.model.enums.ReservationStatus;
 import hotelreservation.repository.ContactRepo;
 import hotelreservation.repository.GuestRepo;
 import hotelreservation.repository.IdentificationRepo;
 import hotelreservation.repository.ReservationCancellationRepo;
-import hotelreservation.repository.ReservationCheckoutRepo;
 import hotelreservation.repository.ReservationRepo;
 
 @Service
@@ -58,9 +56,6 @@ public class BookingService {
 	@Autowired
 	private Utils utils;
 
-	@Autowired
-	private ReservationCheckoutRepo reservationCheckoutRepo;
-	
 	@Autowired
 	private InvoiceService invoiceService;
 	
@@ -166,6 +161,11 @@ public class BookingService {
 	}
 
 	public Reservation getReservation(Optional<Integer> reservationId) {
+		if(!reservationId.isPresent()) {
+			log.warn("Missing reservation id.");
+			throw new MissingOrInvalidArgumentException("Missing reservation id.");
+		}
+		
 		log.info("Getting resrvation: " + reservationId.get());
 		
 		Optional<Reservation> reservation = reservationRepo.findById(new Long(reservationId.get()));
@@ -220,28 +220,6 @@ public class BookingService {
 		reservationRepo.save(reservationCancellation.getReservation());
 		
 		log.info("Cancelled reservation: " + reservationCancellation.getReservation().getId());
-	}
-
-	public void checkoutReservation(Reservation reservation, ReservationCheckout reservationCheckout) {
-		log.info("Checking out reservation: " + reservation.getId());
-		
-		if(reservation.getReservationStatus().equals(ReservationStatus.Fulfilled)) {
-			throw new MissingOrInvalidArgumentException("Reservation already fulfiled. ID: " + reservation.getId());
-		}
-		
-		if(reservationCheckout.getCheckedout() == null) {
-			throw new MissingOrInvalidArgumentException("Missing reservation checkout date. ID: " + reservation.getId());
-		}
-		
-		if(reservationCheckout.getPayment() == null) {
-			throw new MissingOrInvalidArgumentException("Missing payments. ID: " + reservation.getId());
-		}
-		
-		reservation.setReservationStatus(ReservationStatus.Fulfilled);
-		reservationRepo.save(reservation);
-		reservationCheckoutRepo.save(reservationCheckout);
-		
-		log.info("Checked out reservation: " + reservation.getId());
 	}
 
 	public void realiseReservation(Reservation reservation) {

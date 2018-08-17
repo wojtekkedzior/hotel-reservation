@@ -58,20 +58,17 @@ public class InvoiceController {
 	
 	//To make @RequestParam(value = "charges" , required = false) int[] charges , just add name="charges to an input field of type checkbox"
 	
-	@PostMapping("/createPayment/{id}")
+	@PostMapping("/createPayment/{reservationId}")
 	@PreAuthorize("hasAuthority('createPayment')")
-	public ModelAndView createPayment(@ModelAttribute Payment payment,  @PathVariable Optional<Integer> id, BindingResult bindingResult) {
-		log.info("creating paymeny for reservation: " + id);
+	public ModelAndView createPayment(@ModelAttribute Payment payment,  @PathVariable Optional<Integer> reservationId, BindingResult bindingResult) {
+		log.info("creating paymeny for reservation: " + reservationId);
 		
 		if(payment.getReservationCharges() == null || payment.getReservationCharges().isEmpty()) {
-			throw new PaymentNotCreatedException(id.get());
+			throw new PaymentNotCreatedException(reservationId.get());
 		}
 		
-		Reservation reservation = bookingService.getReservation(id);
+		Reservation reservation = bookingService.getReservation(reservationId);
 
-		//TODO still need to understand why the id field of payment is getting set to the value of the id field which is meant for the reservation.
-		//obviously it's in the naming convention
-		payment.setId(0);
 		payment.setReservation(reservation);
 		payment.setPaymentDate(new Date());
 		invoiceService.savePayment(payment);
@@ -80,17 +77,16 @@ public class InvoiceController {
 		// gather all payment details and call createpayment.  if successful generate invoice and show 'show invoice' button to download/display the invoice
 		//payment needs to have any extra costs 
 		
-		return new ModelAndView("redirect:/checkoutReservation/" + id.get());
+		return new ModelAndView("redirect:/checkoutReservation/" + reservationId.get());
 	}
 	
-	@PostMapping("/addChargeToReservation/{reservationID}")
+	@PostMapping("/addChargeToReservation/{reservationId}")
 	@PreAuthorize("hasAuthority('checkoutReservation')")
-	public ModelAndView addChargeToReservation(@ModelAttribute ReservationCharge reservationCharge, @PathVariable Optional<Integer> reservationID) {
-		Reservation reservation = bookingService.getReservation(reservationID);
-		reservationCharge.setId(0); // TODO need to figure out why the ID is being set. in this case the reservation ID is also placed into the ReservationCancellation
+	public ModelAndView addChargeToReservation(@ModelAttribute ReservationCharge reservationCharge, @PathVariable Optional<Integer> reservationId) {
+		Reservation reservation = bookingService.getReservation(reservationId);
 		reservationCharge.setReservation(reservation);
 		
 		invoiceService.saveReservationCharge(reservationCharge);
-		return new ModelAndView("redirect:/checkoutReservation/" + reservationID.get());
+		return new ModelAndView("redirect:/checkoutReservation/" + reservationId.get());
 	}
 }
