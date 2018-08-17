@@ -17,12 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import hotelreservation.exceptions.MissingOrInvalidArgumentException;
 import hotelreservation.exceptions.PaymentNotCreatedException;
 import hotelreservation.model.Reservation;
 import hotelreservation.model.ReservationCharge;
 import hotelreservation.model.enums.PaymentType;
-import hotelreservation.model.enums.ReservationStatus;
 import hotelreservation.model.finance.Payment;
 import hotelreservation.service.BookingService;
 import hotelreservation.service.InvoiceService;
