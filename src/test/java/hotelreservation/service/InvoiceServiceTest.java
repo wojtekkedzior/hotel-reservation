@@ -1,6 +1,8 @@
 package hotelreservation.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -44,10 +46,6 @@ import hotelreservation.model.finance.Payment;
 import hotelreservation.repository.PrivilegeRepo;
 import hotelreservation.repository.RoleRepo;
 import hotelreservation.repository.UserRepo;
-import hotelreservation.service.BookingService;
-import hotelreservation.service.InvoiceService;
-import hotelreservation.service.RoomService;
-import hotelreservation.service.UserService;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -208,8 +206,13 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		roomService.saveRoomRate(roomRateOne);
 		roomService.saveRoomRate(roomRateTwo);
 		
-		reservationOne.setRoomRates(Arrays.asList(roomRateOne, roomRateTwo));
+		List<RoomRate> roomRates = new ArrayList<RoomRate>();
+		roomRates.add(roomRateOne);
+		roomRates.add(roomRateTwo);
+		
+		reservationOne.setRoomRates(roomRates);
 		bookingService.saveReservation(reservationOne);
+		bookingService.realiseReservation(reservationOne);
 		
 		chargeOne = new Charge(Currency.CZK, 100, "chargeOne", "chargeOneDesc");
 		chargeTwo = new Charge(Currency.CZK, 200, "chargeTwo", "chargeTwoDesc");
@@ -352,5 +355,70 @@ public class InvoiceServiceTest extends BaseServiceTest {
 	@Test(expected = NotDeletedException.class)
 	public void testDeleteNonExistentPayment() {
 		invoiceService.deletePayment(new Payment());
+	}
+	
+	@Test
+	public void testSaveReservationWithInvalidReservationStatus() {
+		reservationOne = new Reservation();
+		reservationOne.setMainGuest(mainGuest);
+		reservationOne.setCreatedBy(user);
+		reservationOne.setReservationStatus(ReservationStatus.UpComing);
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 5)));
+		reservationOne.setRoomRates(new ArrayList<RoomRate>());
+		
+		RoomRate roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
+		RoomRate roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 5)));
+
+		roomService.saveRoomRate(roomRateOne);
+		roomService.saveRoomRate(roomRateTwo);
+		
+		List<RoomRate> roomRates = new ArrayList<RoomRate>();
+		roomRates.add(roomRateOne);
+		roomRates.add(roomRateTwo);
+		
+		reservationOne.setRoomRates(roomRates);
+		bookingService.saveReservation(reservationOne);
+		
+		ReservationCharge chargeOne = new ReservationCharge();
+		chargeOne.setReservation(reservationOne);
+		
+		try {
+			invoiceService.saveReservationCharge(chargeOne);
+			fail();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+/*	@Test
+	public void testAreAllChargesPaidFor() {
+		assertTrue(invoiceService.areAllChargesPaidFor(reservationOne));
+	}*/
+	
+	@Test
+	public void testAreAllChargesPaidFor_NoCharges() {
+		reservationOne = new Reservation();
+		reservationOne.setMainGuest(mainGuest);
+		reservationOne.setCreatedBy(user);
+		reservationOne.setReservationStatus(ReservationStatus.UpComing);
+		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 5)));
+		reservationOne.setRoomRates(new ArrayList<RoomRate>());
+		
+		RoomRate roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
+		RoomRate roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 5)));
+
+		roomService.saveRoomRate(roomRateOne);
+		roomService.saveRoomRate(roomRateTwo);
+		
+		List<RoomRate> roomRates = new ArrayList<RoomRate>();
+		roomRates.add(roomRateOne);
+		roomRates.add(roomRateTwo);
+		
+		reservationOne.setRoomRates(roomRates);
+		bookingService.saveReservation(reservationOne);
+		
+		assertTrue(invoiceService.areAllChargesPaidFor(reservationOne));
 	}
 }

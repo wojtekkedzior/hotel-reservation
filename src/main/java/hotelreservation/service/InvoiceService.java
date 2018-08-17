@@ -11,11 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import hotelreservation.Utils;
+import hotelreservation.exceptions.MissingOrInvalidArgumentException;
 import hotelreservation.exceptions.NotDeletedException;
 import hotelreservation.exceptions.NotFoundException;
 import hotelreservation.model.Charge;
 import hotelreservation.model.Reservation;
 import hotelreservation.model.ReservationCharge;
+import hotelreservation.model.enums.ReservationStatus;
 import hotelreservation.model.finance.Payment;
 import hotelreservation.repository.ChargeRepo;
 import hotelreservation.repository.PaymentRepo;
@@ -43,6 +45,13 @@ public class InvoiceService {
 	}
 
 	public void saveReservationCharge(ReservationCharge charge) {
+		Reservation reservation = charge.getReservation();
+		
+		if(reservation != null && !reservation.getReservationStatus().equals(ReservationStatus.InProgress)) {
+			log.warn("Reservation: " + reservation.getId() + " was in wrong state to create charge: " + reservation.getReservationStatus());
+			throw new MissingOrInvalidArgumentException("Reservation in wrong status: " + reservation.getId() + " " + reservation.getReservationStatus());
+		}
+		
 		reservationChargeRepo.save(charge);
 	}
 	
@@ -137,7 +146,7 @@ public class InvoiceService {
 	public boolean areAllChargesPaidFor(Reservation reservation) {
 		List<ReservationCharge> outstandingCharges = getOutstandingCharges(reservation);
 		
-		if(outstandingCharges == null || outstandingCharges.isEmpty()) {
+		if(outstandingCharges.isEmpty()) {
 			return true;
 		} else {
 			return false;
