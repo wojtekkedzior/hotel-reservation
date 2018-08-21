@@ -64,20 +64,18 @@ public class RoomService {
 
 	public List<Amenity> getRoomAmenities() {
 		List<Amenity> roomAmenities = new ArrayList<>();
-
-		for (AmenityType amenityType : amenityTypeRepo.findAll()) {
-			if (!amenityType.getName().equals("Hotel")) {
-				roomAmenities.addAll(amenityRepo.findByAmenityType(amenityType));
-			}
-		}
+		
+		List<AmenityType> ammenityTypes = utils.toList(amenityTypeRepo.findAll());
+		
+		ammenityTypes.stream().filter(t -> {
+			return t.getName().equals("Hotel") ? false : true;
+		}).forEach(t -> roomAmenities.addAll(amenityRepo.findByAmenityType(t)));
 
 		return roomAmenities;
 	}
 
 	public List<Room> getByRoomsByStatus(Status status) {
-		List<Room> target = new ArrayList<Room>();
-		roomRepo.findByStatus(status).forEach(target::add);
-		return target;
+		return utils.toList(roomRepo.findByStatus(status));
 	}
 
 	public List<RoomRate> getRoomRates(Date start, Date end) {
