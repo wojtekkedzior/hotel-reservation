@@ -155,9 +155,7 @@ public class RoomService {
 	}
 	
 	public List<Amenity> getAllAmenities() {
-		List<Amenity> target = new ArrayList<Amenity>();
-		amenityRepo.findAll().forEach(target::add);
-		return target;
+		return utils.toList(amenityRepo.findAll());
 	}
 	
 	public void deleteAmenity(long id) {

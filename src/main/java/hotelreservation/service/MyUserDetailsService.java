@@ -42,9 +42,7 @@ public class MyUserDetailsService implements UserDetailsService {
 		}
 
 		List<GrantedAuthority> grantedAuthorities = getAuthorities(user.getRoles());
-		for (Role role : user.getRoles()) {
-			grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
-		}
+		user.getRoles().stream().forEach(t -> grantedAuthorities.add(new SimpleGrantedAuthority(t.getName())));
 		
 		log.info("User: " + userName + " found");
 
@@ -68,17 +66,14 @@ public class MyUserDetailsService implements UserDetailsService {
 			if(role.getPrivileges() != null)
 				collection.addAll(role.getPrivileges());
 		}
-		for (Privilege item : collection) {
-			privileges.add(item.getName());
-		}
+		
+		collection.stream().forEach(t -> privileges.add(t.getName()));
 		return privileges;
 	}
 
 	private List<GrantedAuthority> getGrantedAuthorities(List<String> privileges) {
 		List<GrantedAuthority> authorities = new ArrayList<>();
-		for (String privilege : privileges) {
-			authorities.add(new SimpleGrantedAuthority(privilege));
-		}
+		privileges.stream().forEach(t -> authorities.add(new SimpleGrantedAuthority(t)));
 		return authorities;
 	}
 }
