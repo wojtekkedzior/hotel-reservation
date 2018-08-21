@@ -59,14 +59,15 @@ public class MyUserDetailsService implements UserDetailsService {
 	}
 
 	private List<String> getPrivileges(Collection<Role> roles) {
-
-		List<String> privileges = new ArrayList<>();
 		List<Privilege> collection = new ArrayList<>();
-		for (Role role : roles) {
-			if(role.getPrivileges() != null)
-				collection.addAll(role.getPrivileges());
-		}
+		roles.stream().filter(t -> {
+			if(t.getPrivileges() != null) 
+				return true; 
+			else 
+				return false;
+		}).forEach(t -> collection.addAll(t.getPrivileges()));
 		
+		List<String> privileges = new ArrayList<>();
 		collection.stream().forEach(t -> privileges.add(t.getName()));
 		return privileges;
 	}
