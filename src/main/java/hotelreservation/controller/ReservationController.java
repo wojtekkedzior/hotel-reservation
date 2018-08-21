@@ -134,16 +134,9 @@ public class ReservationController {
 		Collections.sort(countries);
 		model.addAttribute("countries", countries);
 
-		int total = 0;
-
-		for (RoomRate roomRate : reservation.getRoomRates()) {
-			total = total + roomRate.getValue();
-		}
-
-		model.addAttribute("total", total);
-		model.addAttribute("currency", reservation.getRoomRates().get(0).getCurrency().toString());
-
-		// TODO add form of payment - or maybe not here and on check out only
+		List<RoomRate> roomRates = reservation.getRoomRates();
+		model.addAttribute("total", roomRates.stream().mapToInt(n -> n.getValue()).sum());
+		model.addAttribute("currency", roomRates.get(0).getCurrency().toString());
 
 		return "realiseReservation";
 	}
@@ -188,14 +181,9 @@ public class ReservationController {
 		model.addAttribute("reservationCharge",  new ReservationCharge());
 		model.addAttribute("reservationCharges",  invoiceService.getAllReservationChargesForAReservation(reservation));
 
-		int total = 0;
-
-		for (RoomRate roomRate : reservation.getRoomRates()) {
-			total = total + roomRate.getValue();
-		}
-
-		model.addAttribute("total", total);
-		model.addAttribute("currency", reservation.getRoomRates().get(0).getCurrency().toString());
+		List<RoomRate> roomRates = reservation.getRoomRates();
+		model.addAttribute("total", roomRates.stream().mapToInt(n -> n.getValue()).sum());
+		model.addAttribute("currency", roomRates.get(0).getCurrency().toString());
 
 		log.info("checkout Reservation ready");
 		return "checkoutReservation";
@@ -205,37 +193,32 @@ public class ReservationController {
 	 * ---------------------------------------------------------------------------------------------------------------------------------------------------------------
 	 */
 
-	@PostMapping("/addOccupant")
+	@PostMapping("/addOccupant/{reservationId}")
 	@PreAuthorize("hasAuthority('realiseReservation')")
-	public ModelAndView addOccupant(@ModelAttribute Reservation reservation, Guest guest, BindingResult bindingResult) {
-		// TODO the guest ID is also set because it matches the id field name on the reservation. Is there a way to exclude that?
-		guest.setId(0);
-
-		// TODO need to make use of the binding results (in all Post handlers)
-
+	public ModelAndView addOccupant(@PathVariable Optional<Integer> reservationId, Guest guest, BindingResult bindingResult) {
 		guestService.saveContact(guest.getContact());
 		guestService.saveIdentification(guest.getIdentification());
 		guestService.saveGuest(guest);
 
-		Reservation reservation2 = bookingService.getReservation(Optional.of(new Long(reservation.getId()).intValue()));
-		reservation2.getOccupants().add(guest);
-		bookingService.saveReservation(reservation2);
+		Reservation reservation = bookingService.getReservation(reservationId);
+		reservation.getOccupants().add(guest);
+		bookingService.saveReservation(reservation);
 
-		return new ModelAndView("redirect:/realiseReservation/" + reservation.getId());
+		return new ModelAndView("redirect:/realiseReservation/" + reservationId.get());
 	}
 
-	@PostMapping("/realiseReservation")
+	@PostMapping("/realiseReservation/{reservationId}")
 	@PreAuthorize("hasAuthority('realiseReservation')")
-	public ModelAndView realiseReservation(@ModelAttribute Reservation reservation, BindingResult bindingResult) {
-		Reservation reservation2 = bookingService.getReservation(Optional.of(new Long(reservation.getId()).intValue()));
+	public ModelAndView realiseReservation(@PathVariable Optional<Integer> reservationId) {
+		Reservation reservation = bookingService.getReservation(reservationId);
 
-		if (reservation2.getReservationStatus().equals(ReservationStatus.UpComing) || reservation2.getReservationStatus().equals(ReservationStatus.InProgress)) {
+		if (reservation.getReservationStatus().equals(ReservationStatus.UpComing) || reservation.getReservationStatus().equals(ReservationStatus.InProgress)) {
 			// TODO can't realise a cancelled or in progress reservation
 		} else {
 			// TODO return some erro message
 		}
 
-		bookingService.realiseReservation(reservation2);
+		bookingService.realiseReservation(reservation);
 
 		return new ModelAndView("redirect:/dashboard");
 	}

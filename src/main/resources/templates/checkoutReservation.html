@@ -3,6 +3,13 @@
 <body>
 	<div layout:fragment="content">
 		<div class="column">
+			
+			<div>
+				<p>
+					Reservation Cost: <input type="number" name="total" th:value="${total}" readonly="readonly">
+				</p>
+			</div>
+			
 			<div th:each="payment : ${reservationPayments}">
 				<p>Payment:</p>
 				<p>
