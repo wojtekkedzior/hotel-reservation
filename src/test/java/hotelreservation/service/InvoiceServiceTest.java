@@ -391,11 +391,6 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		}
 	}
 	
-/*	@Test
-	public void testAreAllChargesPaidFor() {
-		assertTrue(invoiceService.areAllChargesPaidFor(reservationOne));
-	}*/
-	
 	@Test
 	public void testAreAllChargesPaidFor_NoCharges() {
 		reservationOne = new Reservation();
