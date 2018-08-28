@@ -9,9 +9,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableWebMvc
 public class WebMvcConfig implements WebMvcConfigurer {
-	
-/*	@Autowired 
-	TemplateEngine templateEngine;*/
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -29,23 +26,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "classpath:/static/js/");
     }
     
-/*    @Bean
-    public TemplateEngine templateEngine() {
-    	if(templateEngine == null) { //ugly - for unit tests - templateEngine is not Autowired in tests for some reason
-    		return null;
-    	}
-		templateEngine.addDialect(new SpringSecurityDialect());
-		return templateEngine;
-    }*/
-    
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/login").setViewName("login");
     }
-    
-//    @Override
-//    public void addViewControllers(ViewControllerRegistry registry) {
-//        registry.addViewController("/404.html").setViewName("404");
-//    }
-    
 }
