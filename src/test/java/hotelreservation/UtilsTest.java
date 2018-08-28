@@ -1,12 +1,14 @@
 package hotelreservation;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -44,22 +46,28 @@ public class UtilsTest {
 
 	@Test
 	public void testAsLocalDate() {
-		fail("Not yet implemented");
+		LocalDate localDate = LocalDate.of(2018, Month.JANUARY, 1);
+		
+		Calendar instance = Calendar.getInstance();
+		instance.set(2018 , 0, 1);
+		
+		assertEquals(localDate ,utils.asLocalDate(instance.getTime()));
 	}
 
 	@Test
 	public void testAsLocalDateTime() {
-		fail("Not yet implemented");
+		LocalDateTime localDate = LocalDateTime.of(2018, Month.JANUARY, 1, 9, 30, 30);
+		
+		Calendar instance = Calendar.getInstance();
+		instance.set(2018 , 0, 1, 9, 30, 30);
+		instance.set(Calendar.MILLISECOND, 0);
+		
+		assertEquals(localDate ,utils.asLocalDateTime(instance.getTime()));
 	}
 
 	@Test
 	public void testToList() {
-		fail("Not yet implemented");
+		Integer foo[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
+		assertTrue(utils.toList( Arrays.asList(foo)) instanceof List);
 	}
-
-	@Test
-	public void testContains() {
-		fail("Not yet implemented");
-	}
-
 }
