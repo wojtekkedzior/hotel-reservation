@@ -11,7 +11,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import hotelreservation.model.Reservation;
+import hotelreservation.model.enums.ReservationStatus;
 import hotelreservation.service.BookingService;
+import hotelreservation.service.InvoiceService;
 import hotelreservation.service.RoomService;
 
 @Controller
@@ -25,16 +27,27 @@ public class AdminController {
 	@Autowired
 	private BookingService bookingService;
 
+	@Autowired
+	private InvoiceService invoiceService;
+
 	@RequestMapping("/admin")
 	@PreAuthorize("hasAuthority('viewAdmin')")
 	public String getAdmin(Model model) {
 		log.info("loading admin");
 
-		model.addAttribute("roomTypes", roomService.getAllRoomTypes());
-		model.addAttribute("reservations", bookingService.getAllReservations());
+		model.addAttribute("numberOfRooms", roomService.getRoomsCount());
+		model.addAttribute("numberOfReservations", bookingService.getReservationCount());
+		model.addAttribute("numberOfRoomRates", roomService.getRoomRateCount());
 
 		List<Reservation> findByStartDate = bookingService.getReservationsStartingToday();
 		model.addAttribute("reservationsStartingToday", findByStartDate);
+		
+		model.addAttribute("reservationsUpcoming", bookingService.getReservationsByStatus(ReservationStatus.UpComing).size());
+		List<Reservation> reservationsInProgress = bookingService.getReservationsByStatus(ReservationStatus.InProgress);
+		model.addAttribute("reservationsCheckingOutToday", reservationsInProgress);
+		
+		//TODO handle different currencies
+		model.addAttribute("dueCharges", invoiceService.getTotalOfOutstandingCharges(reservationsInProgress));
 		
 		log.info("admin ready");
 		return "adminOverview";

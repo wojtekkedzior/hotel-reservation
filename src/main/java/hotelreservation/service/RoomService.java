@@ -300,4 +300,12 @@ public class RoomService {
 		}
 		statusRepo.deleteById(id);
 	}
+
+	public long getRoomsCount() {
+		return roomRepo.count();
+	}
+
+	public long getRoomRateCount() {
+		return roomRateRepo.count();
+	}
 }

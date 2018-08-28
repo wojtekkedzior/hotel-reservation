@@ -261,4 +261,8 @@ public class BookingService {
 		
 		log.info("Fulfilled reservation: " + reservation.getId());
 	}
+
+	public long getReservationCount() {
+		return reservationRepo.count();
+	}
 }

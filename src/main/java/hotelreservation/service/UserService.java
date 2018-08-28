@@ -50,6 +50,7 @@ public class UserService {
 				throw new MissingOrInvalidArgumentException("missing name");
 			} 
 			
+			//TODO ensure that the 'create by' user is actually allowed to create a user of the selected Type
 			user.setCreatedBy(userByUserName);
 		}
 		
@@ -68,8 +69,6 @@ public class UserService {
 		if(userRepo.findByUserName(user.getUserName()) != null) {
 			throw new MissingOrInvalidArgumentException("Username already exists: " + user.getUserName());
 		}
-		
-		//TODO ensure that the 'create by' user is actually allowed to create a user of the selected Type
 		
 		user.setCreatedOn(new Date());
 		userRepo.save(user);

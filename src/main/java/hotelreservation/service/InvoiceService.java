@@ -36,68 +36,68 @@ public class InvoiceService {
 
 	@Autowired
 	private ChargeRepo chargeRepo;
-	
+
 	@Autowired
 	private Utils utils;
-	
+
 	public void saveCharge(Charge charge) {
 		chargeRepo.save(charge);
 	}
 
 	public void saveReservationCharge(ReservationCharge charge) {
 		Reservation reservation = charge.getReservation();
-		
-		if(reservation != null && !reservation.getReservationStatus().equals(ReservationStatus.InProgress)) {
+
+		if (reservation != null && !reservation.getReservationStatus().equals(ReservationStatus.InProgress)) {
 			log.warn("Reservation: " + reservation.getId() + " was in wrong state to create charge: " + reservation.getReservationStatus());
 			throw new MissingOrInvalidArgumentException("Reservation in wrong status: " + reservation.getId() + " " + reservation.getReservationStatus());
 		}
-		
+
 		reservationChargeRepo.save(charge);
 	}
-	
+
 	public void savePayment(Payment payment) {
 		log.info("Saving payment: " + payment.getId());
 		paymentRepo.save(payment);
 		log.info("Payment saved: " + payment.getId());
 	}
-	
+
 	public List<Charge> getAllCharges() {
 		return utils.toList(chargeRepo.findAll());
 	}
-	
+
 	public List<ReservationCharge> getAllReservationCharges() {
 		return utils.toList(reservationChargeRepo.findAll());
 	}
-	
+
 	public List<Payment> getAllPayments() {
 		return utils.toList(paymentRepo.findAll());
 	}
-	
+
 	public Charge getChargeById(long id) {
 		log.info("Looking for Charge with ID: " + id);
-		if(chargeRepo.findById(id).isPresent()) {
+		if (chargeRepo.findById(id).isPresent()) {
 			return chargeRepo.findById(id).get();
 		} else {
 			throw new NotFoundException(id);
 		}
 	}
-	
+
 	public ReservationCharge getReservationChargeById(long id) {
 		log.info("Looking for ReservationCharge with ID: " + id);
-		if(reservationChargeRepo.findById(id).isPresent()) {
+		if (reservationChargeRepo.findById(id).isPresent()) {
 			return reservationChargeRepo.findById(id).get();
 		} else {
 			throw new NotFoundException(id);
-		}		
+		}
 	}
-	
+
 	public Payment getPaymentById(long id) {
 		log.info("Looking for Payment with ID: " + id);
-		if(paymentRepo.findById(id).isPresent()) {
+		if (paymentRepo.findById(id).isPresent()) {
 			return paymentRepo.findById(id).get();
 		} else {
 			throw new NotFoundException(id);
-		}		
+		}
 	}
 
 	public List<ReservationCharge> getAllReservationChargesForAReservation(Reservation reservation) {
@@ -110,46 +110,60 @@ public class InvoiceService {
 
 	public List<ReservationCharge> getOutstandingCharges(Reservation reservation) {
 		List<ReservationCharge> charges = new ArrayList<ReservationCharge>();
-		
+
 		for (ReservationCharge reservationCharge : getAllReservationChargesForAReservation(reservation)) {
 			Payment payment = paymentRepo.findByReservationAndReservationCharges(reservation, reservationCharge);
-			
-			if(payment == null) {
+
+			if (payment == null) {
 				charges.add(reservationCharge);
-			} 
+			}
 		}
-		
+
 		return charges;
 	}
 
 	public void deleteCharge(Charge charge) {
-		if(!chargeRepo.existsById(charge.getId())) {
+		if (!chargeRepo.existsById(charge.getId())) {
 			throw new NotDeletedException(charge.getId());
 		}
 		chargeRepo.delete(charge);
 	}
-	
+
 	public void deleteReservationCharge(ReservationCharge reservationCharge) {
-		if(!reservationChargeRepo.existsById(reservationCharge.getId())) {
+		if (!reservationChargeRepo.existsById(reservationCharge.getId())) {
 			throw new NotDeletedException(reservationCharge.getId());
 		}
 		reservationChargeRepo.delete(reservationCharge);
 	}
-	
+
 	public void deletePayment(Payment payment) {
-		if(!paymentRepo.existsById(payment.getId())) {
+		if (!paymentRepo.existsById(payment.getId())) {
 			throw new NotDeletedException(payment.getId());
 		}
 		paymentRepo.delete(payment);
 	}
-	
+
 	public boolean areAllChargesPaidFor(Reservation reservation) {
 		List<ReservationCharge> outstandingCharges = getOutstandingCharges(reservation);
-		
-		if(outstandingCharges.isEmpty()) {
+
+		if (outstandingCharges.isEmpty()) {
 			return true;
 		} else {
 			return false;
 		}
+	}
+
+	public long getTotalOfOutstandingCharges(List<Reservation> reservationsInProgress) {
+		long outstandingGrandTotal = 0;
+
+		for (Reservation reservation : reservationsInProgress) {
+			List<ReservationCharge> outstandingCharges = getOutstandingCharges(reservation);
+
+			for (ReservationCharge reservationCharge : outstandingCharges) {
+				outstandingGrandTotal += (reservationCharge.getQuantity() * reservationCharge.getCharge().getValue());
+			}
+		}
+
+		return outstandingGrandTotal;
 	}
 }

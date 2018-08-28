@@ -2,14 +2,22 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="layouts/adminLayout">
 
-<body>
-
-	<!-- Delete this page or put something usefull on it - perhaps some stats? -->
-	<div layout:fragment="content">
-	<p>adasdasdasasdas</p>
-	</div>
-
-
-</body>
-
+	<body>
+		<div layout:fragment="content">
+	
+		<h2>Totals: </h2>
+			<p><label>Rooms:</label> <input readonly="readonly" th:value="${numberOfRooms}"></p>
+			<p><label>Reservations:</label> <input readonly="readonly" th:value="${numberOfReservations}"></p>
+			
+			<h2>Reservations: </h2>
+			<p><label>upcoming:</label> <input readonly="readonly" th:value="${reservationsUpcoming}"></p>
+			<p><label>starting today:</label> <input readonly="readonly" th:value="${reservationsStartingToday.size()}"></p>
+			<p><label>check-out today:</label> <input readonly="readonly" th:value="${reservationsCheckingOutToday.size()}"></p>
+	
+			<h2>RoomRates: </h2>
+			<p><label>all:</label> <input readonly="readonly" th:value="${numberOfRoomRates}">  missing active room rates </p>
+	
+			<p><label>Charges due today:</label> <input readonly="readonly" th:value="${dueCharges}"> </p>
+		</div>
+	</body>
 </html>
