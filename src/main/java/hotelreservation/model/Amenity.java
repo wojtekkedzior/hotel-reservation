@@ -5,6 +5,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
@@ -15,10 +17,14 @@ public class Amenity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
+	@NotNull
+	@NotBlank
 	private String name;
+	
 	private String description;
 	private boolean enabled;
 	
+	//TODO add @NotNull
 	@ManyToOne
 	private AmenityType amenityType;
 	

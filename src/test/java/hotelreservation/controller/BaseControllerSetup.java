@@ -61,6 +61,8 @@ public abstract class BaseControllerSetup {
 	public void createAdminUser() {
 		superAdmin = new User();
 		superAdmin.setUserName("superAdmin");
+		superAdmin.setFirstName("adminFirstName");
+		superAdmin.setLastName("adminLastName");
 		superAdmin.setCreatedOn(new Date());
 		superAdmin.setPassword(passwordEncoder.encode("superAdminPassword"));
 		userRepo.save(superAdmin);

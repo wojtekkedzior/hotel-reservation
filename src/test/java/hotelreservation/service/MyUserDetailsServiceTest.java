@@ -30,7 +30,7 @@ import hotelreservation.service.MyUserDetailsService;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @SpringBootTest(classes = Application.class)
-public class MyUserDetailsServiceTest {
+public class MyUserDetailsServiceTest extends BaseServiceTest {
 	
 	@Autowired
 	private MyUserDetailsService service;
@@ -56,7 +56,7 @@ public class MyUserDetailsServiceTest {
 		role = new Role("receptionistRole", "desc", true);
 		roleRepo.save(role);
 		
-		user = new User("receptionist", "bobalina");
+		user = new User("receptionist", "bobalina", "bobalina", superAdmin);
 		Collection<Role> roles = new ArrayList<Role>();
 		roles.add(role);
 		user.setRoles(roles);

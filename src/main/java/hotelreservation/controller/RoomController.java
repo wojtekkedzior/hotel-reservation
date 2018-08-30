@@ -7,21 +7,33 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Optional;
 
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.MethodParameter;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import hotelreservation.Utils;
+import hotelreservation.exceptions.NotFoundException;
 import hotelreservation.model.Amenity;
 import hotelreservation.model.AmenityType;
 import hotelreservation.model.Room;
@@ -148,7 +160,7 @@ public class RoomController {
 
 	@PostMapping("/addAmenity")
 	@PreAuthorize("hasAuthority('createAmenity')")
-	public ModelAndView addAmenity(@ModelAttribute Amenity amenity, BindingResult bindingResult) {
+	public ModelAndView addAmenity(@Valid @ModelAttribute Amenity amenity) {
 		Amenity createAmenity = roomService.saveAmenity(amenity);
 		return new ModelAndView("redirect:/amenity/" + createAmenity.getId());
 	}

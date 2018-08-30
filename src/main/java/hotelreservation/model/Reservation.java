@@ -13,6 +13,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -31,9 +32,12 @@ public class Reservation {
 	private long id;
 	
 	//TODO remove this. Instead store the first and last name as a reservation can be done on behalf of someone and all details about the guest may not be known at this point
+	@NotNull
 	@ManyToOne
 	private Guest mainGuest;
 	
+	//TODO need to figure out how to do the occupants and mainguests better
+//	@NotNull
 	@ManyToMany
 	private List<Guest> occupants;
 	

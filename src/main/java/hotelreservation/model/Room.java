@@ -11,6 +11,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
@@ -22,8 +24,10 @@ public class Room {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
+	@NotNull
 	private int roomNumber;
 	
+	@NotNull
 	@ManyToOne
 	private Status status; //as in 'in operation' 'in maintenace' etc
 	
@@ -33,12 +37,15 @@ public class Room {
 	@ManyToMany
 	private List<Amenity> roomAmenities;
 	
+	@NotNull
 	@ManyToOne
 	private RoomType roomType;
 	
+	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdOn; 
 	
+	@NotNull
 	@ManyToOne
 	private User createdBy;
 

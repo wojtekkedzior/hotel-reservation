@@ -71,6 +71,9 @@ public class GuestServiceTest {
 	
 	@Test
 	public void testCRUDGuest() {
+		guestService.saveContact(contact);
+		guestService.saveIdentification(identification);
+		
 		guest.setFirstName("guestFirstName");
 		guest.setLastName("guestLastName");
 		

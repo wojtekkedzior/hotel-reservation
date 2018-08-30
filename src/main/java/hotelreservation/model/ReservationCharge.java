@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
@@ -16,12 +17,15 @@ public class ReservationCharge {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
+	@NotNull
 	@OneToOne
 	private Reservation reservation;
 	
+	@NotNull
 	@OneToOne
 	private Charge charge;
 	
+	@NotNull
 	private int quantity;
 
 	public ReservationCharge() {}

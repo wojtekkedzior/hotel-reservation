@@ -13,6 +13,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
@@ -23,22 +25,32 @@ public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-
 	private long id;
 
+	@NotNull
+	@NotBlank
 	private String userName;
 
+	@NotNull
+	@NotBlank
 	private String firstName;
+	
+	@NotNull
+	@NotBlank
 	private String lastName;
 
+	@NotNull
+	@NotBlank
 	private String password;
 
-	private String name;
 	private boolean enabled;
 
+	//TODO this will be funky for a super admin
+//	@NotNull
 	@OneToOne
 	private User createdBy;
 
+	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdOn;
 
@@ -57,17 +69,10 @@ public class User {
 	public User() {
 	}
 
-	public User(String usernName, String name) {
+	public User(String usernName, String firstName, String lastName, User createdBy) {
 		this.userName = usernName;
-		this.name = name;
-
-		createdOn = new Date();
-		enabled = true;
-	}
-
-	public User(String usernName, String name, User createdBy) {
-		this.userName = usernName;
-		this.name = name;
+		this.firstName = firstName;
+		this.lastName = lastName;
 		this.createdBy = createdBy;
 
 		createdOn = new Date();

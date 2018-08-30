@@ -118,12 +118,11 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		role = new Role("receptionistRole", "desc", true);
 		roleRepo.save(role);
 		
-		user = new User("receptionist", "bobalina");
+		user = new User("receptionist", "bobalina", "bobalina", superAdmin);
 		Collection<Role> roles = new ArrayList<Role>();
 		roles.add(role);
 		user.setRoles(roles);
 		user.setPassword("password");
-		
 		userRepo.save(user);
 		
 		priv1 = new Privilege("priv1");
@@ -142,6 +141,8 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		user = new User();
 		user.setPassword("password");
 		user.setUserName("username");
+		user.setFirstName("firstName");
+		user.setLastName("lastName");
 		userService.saveUser(user, superAdmin.getUserName());
 
 		amenityTypeRoomBasic = new AmenityType("Basic", "Basic Room amenity Type");
@@ -180,8 +181,8 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		bookingService.createIdentification(idOne);
 		bookingService.createIdentification(idTwo);
 
-		contactOne = new Contact();
-		contactTwo = new Contact();
+		contactOne = new Contact("some address", "cz");
+		contactTwo = new Contact("some address", "cz");
 
 		bookingService.createContact(contactOne);
 		bookingService.createContact(contactTwo);
@@ -297,17 +298,17 @@ public class InvoiceServiceTest extends BaseServiceTest {
 	
 	@Test
 	public void testCRUDReservationCharge() {
-		ReservationCharge chargeOne = new ReservationCharge();
-		invoiceService.saveReservationCharge(chargeOne);
+		invoiceService.saveCharge(chargeOne);
+		invoiceService.saveReservationCharge(reservationChargeOne);
 		
 		assertEquals(1, invoiceService.getAllReservationCharges().size());
 		
-		chargeOne.setQuantity(100);
+		reservationChargeOne.setQuantity(100);
 		assertEquals(100, invoiceService.getAllReservationCharges().get(0).getQuantity());
 		
-		assertEquals(chargeOne, invoiceService.getReservationChargeById(chargeOne.getId()));
+		assertEquals(reservationChargeOne, invoiceService.getReservationChargeById(reservationChargeOne.getId()));
 		
-		invoiceService.deleteReservationCharge(chargeOne);
+		invoiceService.deleteReservationCharge(reservationChargeOne);
 		assertEquals(0, invoiceService.getAllReservationCharges().size());
 	}
 	

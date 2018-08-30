@@ -5,6 +5,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
@@ -15,14 +17,22 @@ public class Guest {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
+	@NotNull
+	@NotBlank
 	private String firstName;
+	
+	@NotNull
+	@NotBlank
 	private String lastName;
+	
 	private String description;
 	
 	@OneToOne
+	@NotNull
 	private Contact contact;
 	
 	@OneToOne
+	@NotNull
 	private Identification identification;
 	
 	public Guest() {}

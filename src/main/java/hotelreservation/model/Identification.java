@@ -6,6 +6,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import hotelreservation.model.enums.IdType;
 import lombok.Data;
@@ -23,6 +25,8 @@ public class Identification {
 	@Enumerated(EnumType.STRING)
 	private IdType idType;
 	
+	@NotNull
+	@NotBlank
 	private String idNumber;
 	
 	public Identification() {}

@@ -109,7 +109,7 @@ public class ReservationControllerTest extends BaseControllerSetup {
 	public void setup() {
 		reservationOne = new Reservation();
 
-		Contact contactTwo = new Contact();
+		Contact contactTwo = new Contact("some address", "cz");
 
 		bookingService.createContact(contactTwo);
 
@@ -122,6 +122,8 @@ public class ReservationControllerTest extends BaseControllerSetup {
 		User user = new User();
 		user.setPassword("password");
 		user.setUserName("username");
+		user.setFirstName("firstName");
+		user.setLastName("lastName");
 		userService.saveUser(user, superAdmin.getUserName());
 
 		reservationOne.setMainGuest(mainGuest);
@@ -197,8 +199,9 @@ public class ReservationControllerTest extends BaseControllerSetup {
 		mvc.perform(get("/")).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/dashboard"));
 
 		ReservationCancellation cancellation = new ReservationCancellation();
+		cancellation.setReason("some reason");
 		cancellation.setReservation(reservationOne);
-		mvc.perform(post("/cancelReservation/1").flashAttr("reservation", cancellation)).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/cancelReservation/1").flashAttr("reservationCancellation", cancellation)).andExpect(status().is3xxRedirection());
 		mvc.perform(post("/fulfillReservation/1").flashAttr("reservationID", 1)).andExpect(status().is4xxClientError());
 	}
 
@@ -224,8 +227,9 @@ public class ReservationControllerTest extends BaseControllerSetup {
 		mvc.perform(get("/")).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/dashboard"));
 
 		ReservationCancellation cancellation = new ReservationCancellation();
+		cancellation.setReason("some reason");
 		cancellation.setReservation(reservationOne);
-		mvc.perform(post("/cancelReservation/1").flashAttr("reservation", cancellation)).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/cancelReservation/1").flashAttr("reservationCancellation", cancellation)).andExpect(status().is3xxRedirection());
 		mvc.perform(post("/fulfillReservation/1").flashAttr("reservationID", 1)).andExpect(status().is4xxClientError());
 	}
 

@@ -21,8 +21,12 @@ public class BaseServiceTest {
 	protected void createAdminUser() {
 		superAdmin = new User();
 		superAdmin.setUserName("superAdmin");
-		superAdmin.setCreatedOn(new Date());
+		superAdmin.setFirstName("adminFirstName");
+		superAdmin.setLastName("adminLastName");
+
 		superAdmin.setPassword(passwordEncoder.encode("superAdminPassword"));
+		
+		superAdmin.setCreatedOn(new Date());
 		userRepo.save(superAdmin);
 	}
 }

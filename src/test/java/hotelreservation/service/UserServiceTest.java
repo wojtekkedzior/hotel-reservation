@@ -85,7 +85,7 @@ public class UserServiceTest extends BaseServiceTest {
 	
 	@Test
 	public void testCRUDUser() {
-		User user = new User("username", "name");
+		User user = new User("username", "firstName", "lastname", superAdmin);
 		user.setPassword("password");
 		userService.saveUser(user, superAdmin.getUserName());
 		
@@ -102,7 +102,7 @@ public class UserServiceTest extends BaseServiceTest {
 	
 	@Test(expected=MissingOrInvalidArgumentException.class)
 	public void testSaveUserWithNonExistentUser() {
-		User user = new User("username", "name");
+		User user = new User("username", "firstName", "lastname", superAdmin);
 		user.setPassword("password");
 		userService.saveUser(user, "nonExistentUser");
 		
@@ -111,7 +111,7 @@ public class UserServiceTest extends BaseServiceTest {
 	
 	@Test
 	public void testSaveUserByExisitngUser() {
-		User user = new User("username", "name");
+		User user = new User("username", "firstName", "lastname", superAdmin);
 		user.setPassword("password");
 		
 		try {
@@ -124,7 +124,7 @@ public class UserServiceTest extends BaseServiceTest {
 		
 		assertEquals(2, userService.getAllUsers().size());
 		
-		User newUser = new User("userUserName", "newName");
+		User newUser = new User("new username", "firstName", "lastname", superAdmin);
 		newUser.setPassword("password");
 		userService.saveUser(newUser, user.getUserName());
 		
@@ -134,7 +134,7 @@ public class UserServiceTest extends BaseServiceTest {
 	
 	@Test
 	public void testSaveUserWithoutPassword() {
-		User user = new User("user","user", superAdmin);
+		User user = new User("username", "firstName", "lastname", superAdmin);
 		try {
 			userService.saveUser(user, superAdmin.getUserName());
 			fail();
@@ -172,7 +172,7 @@ public class UserServiceTest extends BaseServiceTest {
 	
 	@Test
 	public void testCRUDRole() {
-		Role role = new Role();
+		Role role = new Role("role name", "role desc", true);
 		userService.saveRole(role);
 		
 		assertEquals(1, userService.getAllRoles().size());
@@ -191,7 +191,7 @@ public class UserServiceTest extends BaseServiceTest {
 	
 	@Test
 	public void testCRUDPrivileges() {
-		Privilege privilege = new Privilege();
+		Privilege privilege = new Privilege("name");
 		userService.savePrivilege(privilege);
 		
 		assertEquals(1, userService.getAllPrivileges().size());
@@ -227,13 +227,13 @@ public class UserServiceTest extends BaseServiceTest {
 	
 	@Test
 	public void testCreateUserWithDuplicateUserName() {
-		User user = new User("username", "name");
+		User user = new User("username", "firstName", "lastname", superAdmin);
 		user.setPassword("password");
 		userService.saveUser(user, superAdmin.getUserName());
 		
 		assertEquals(2, userService.getAllUsers().size());
 		
-		User userTwo = new User("username", "name");
+		User userTwo = new User("username", "firstName", "lastname", superAdmin);
 		userTwo.setPassword("password");
 		
 		try {
@@ -244,6 +244,4 @@ public class UserServiceTest extends BaseServiceTest {
 		
 		assertEquals(2, userService.getAllUsers().size());
 	}
-	
-	
 }
