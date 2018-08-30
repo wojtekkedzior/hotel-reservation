@@ -175,6 +175,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	public void createAdminUser() {
 		superAdmin = new User();
 		superAdmin.setUserName("superAdmin");
+		superAdmin.setFirstName("firstName");
+		superAdmin.setLastName("lastName");
 		superAdmin.setCreatedOn(new Date());
 		superAdmin.setPassword(passwordEncoder.encode("password"));
 		userRepo.save(superAdmin);
