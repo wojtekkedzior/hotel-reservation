@@ -172,7 +172,7 @@ public class UserServiceTest extends BaseServiceTest {
 	
 	@Test
 	public void testCRUDRole() {
-		Role role = new Role();
+		Role role = new Role("role name", "role desc", true);
 		userService.saveRole(role);
 		
 		assertEquals(1, userService.getAllRoles().size());

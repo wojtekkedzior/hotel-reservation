@@ -39,7 +39,7 @@ public class RoomRate {
 	@Enumerated(EnumType.STRING)
 	private Currency currency;
 
-	@NotBlank
+	@NotNull
 	private int value;
 	
 	@NotNull

@@ -106,6 +106,8 @@ public class BookingServiceTest extends BaseServiceTest {
 		user = new User();
 		user.setPassword("password");
 		user.setUserName("username");
+		user.setFirstName("firstName");
+		user.setLastName("lastName");
 		userService.saveUser(user, superAdmin.getUserName());
 
 		amenityTypeRoomBasic = new AmenityType("Basic", "Basic Room amenity Type");
@@ -144,8 +146,8 @@ public class BookingServiceTest extends BaseServiceTest {
 		bookingService.createIdentification(idOne);
 		bookingService.createIdentification(idTwo);
 
-		contactOne = new Contact();
-		contactTwo = new Contact();
+		contactOne = new Contact("some address", "cz");
+		contactTwo = new Contact("some address", "cz");
 
 		bookingService.createContact(contactOne);
 		bookingService.createContact(contactTwo);

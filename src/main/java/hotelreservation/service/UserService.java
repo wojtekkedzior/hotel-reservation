@@ -44,7 +44,7 @@ public class UserService {
 	private PasswordEncoder passwordEncoder;
 
 	public void saveUser(User user, String name) {
-		if(user.getCreatedBy() == null) {
+//		if(name == null) {
 			User userByUserName = userRepo.findByUserName(name);
 			if(userByUserName == null) {
 				throw new MissingOrInvalidArgumentException("missing name");
@@ -52,7 +52,7 @@ public class UserService {
 			
 			//TODO ensure that the 'create by' user is actually allowed to create a user of the selected Type
 			user.setCreatedBy(userByUserName);
-		}
+//		}
 		
 		String password = user.getPassword();
 		

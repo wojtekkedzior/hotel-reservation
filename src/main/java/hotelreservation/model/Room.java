@@ -24,7 +24,7 @@ public class Room {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	@NotBlank
+	@NotNull
 	private int roomNumber;
 	
 	@NotNull
@@ -34,7 +34,6 @@ public class Room {
 	private String name;
 	private String description;
 	
-	@NotNull
 	@ManyToMany
 	private List<Amenity> roomAmenities;
 	

@@ -36,7 +36,8 @@ public class Reservation {
 	@ManyToOne
 	private Guest mainGuest;
 	
-	@NotNull
+	//TODO need to figure out how to do the occupants and mainguests better
+//	@NotNull
 	@ManyToMany
 	private List<Guest> occupants;
 	

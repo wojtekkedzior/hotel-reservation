@@ -8,9 +8,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -58,6 +58,12 @@ public class RoomControllerTest extends BaseControllerSetup {
 
 	@Autowired
 	private Utils dateConvertor;
+	
+	private RoomType roomTypeStandard;
+	private Status operational;
+	private AmenityType amenityType;
+	private Room standardRoomOne;
+	private Amenity amenity;
 
 	@Override
 	Collection<Privilege> getPrivilegesForReceptionist() {
@@ -92,21 +98,28 @@ public class RoomControllerTest extends BaseControllerSetup {
 		User user = new User();
 		user.setPassword("password");
 		user.setUserName("username");
+		user.setFirstName("firstName");
+		user.setLastName("lastName");
 		userService.saveUser(user, superAdmin.getUserName());
 
-		RoomType roomTypeStandard = new RoomType("Standard", "Standard room");
+		roomTypeStandard = new RoomType("Standard", "Standard room");
 		roomService.saveRoomType(roomTypeStandard);
 		
-		Status operational = new Status("Operational", "Room is in operation");
+		operational = new Status("Operational", "Room is in operation");
 		roomService.saveStatus(operational);
 		
-		AmenityType amenityType = new AmenityType("room amenity", "comfort");
+		amenityType = new AmenityType("room amenity", "comfort");
 		roomService.saveAmenityType(amenityType);
 		
-		Room standardRoomOne = new Room(1, operational, roomTypeStandard, user);
+		standardRoomOne = new Room(1, operational, roomTypeStandard, user);
 		standardRoomOne.setName("Room 1");
 		standardRoomOne.setDescription("The Best Room Description");
-		standardRoomOne.setRoomAmenities(Arrays.asList(new Amenity("pillow", "pillow", amenityType)));
+		amenity = new Amenity("pillow", "pillow", amenityType);
+		amenity.setAmenityType(amenityType);
+		
+		List<Amenity> amenities = new ArrayList<Amenity>();
+		amenities.add(amenity);
+		standardRoomOne.setRoomAmenities(amenities);
 		roomService.saveRoom(standardRoomOne);
 		
 		RoomRate roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
@@ -118,22 +131,18 @@ public class RoomControllerTest extends BaseControllerSetup {
 	public void testAdminRolePermissions_allowed() throws Exception {
 		mvc.perform(get("/amenity/1")).andExpect(status().is4xxClientError());
 		mvc.perform(get("/amenityType/1")).andExpect(status().isOk());
-		
 		mvc.perform(get("/room/1")).andExpect(status().isOk());
 		mvc.perform(get("/roomType/1")).andExpect(status().isOk());
 		
-		mvc.perform(post("/addAmenityType").flashAttr("amenityType", new AmenityType())).andExpect(status().is3xxRedirection());
-		mvc.perform(post("/addAmenity").flashAttr("amenity", new Amenity())).andExpect(status().is3xxRedirection());
-
-		mvc.perform(post("/addRoomType").flashAttr("roomType", new RoomType())).andExpect(status().is3xxRedirection());
-		mvc.perform(post("/addRoom").flashAttr("room", new Room())).andExpect(status().is3xxRedirection());
-		
-		mvc.perform(delete("/amenityDelete/1")).andExpect(status().is3xxRedirection());
-		mvc.perform(delete("/amenityTypeDelete/1")).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/addAmenityType").flashAttr("amenityType", amenityType)).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/addAmenity").flashAttr("amenity", amenity)).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/addRoomType").flashAttr("roomType", roomTypeStandard)).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/addRoom").flashAttr("room", standardRoomOne)).andExpect(status().is3xxRedirection());
 		
 		mvc.perform(delete("/roomDelete/1")).andExpect(status().is3xxRedirection());
 		mvc.perform(delete("/roomTypeDelete/1")).andExpect(status().is3xxRedirection());
-		
+		mvc.perform(delete("/amenityDelete/1")).andExpect(status().is3xxRedirection());
+		mvc.perform(delete("/amenityTypeDelete/1")).andExpect(status().is3xxRedirection());
 		mvc.perform(delete("/roomRateDelete/1")).andExpect(status().is3xxRedirection());
 	}
 
@@ -148,7 +157,7 @@ public class RoomControllerTest extends BaseControllerSetup {
 	@WithUserDetails("manager")
 	public void testManagerRolePermissions_allowed() throws Exception {
 		mvc.perform(get("/roomRate/1")).andExpect(status().isOk());
-		mvc.perform(post("/addRoomRate").flashAttr("roomRate", new RoomRate(new Room(), Currency.CZK, 10, new Date()))).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/addRoomRate").flashAttr("roomRate", new RoomRate(standardRoomOne, Currency.CZK, 10, new Date()))).andExpect(status().is3xxRedirection());
 	}
 
 	@Test
@@ -156,22 +165,18 @@ public class RoomControllerTest extends BaseControllerSetup {
 	public void testManagerRolePermissions_forbidden() throws Exception {
 		mvc.perform(get("/amenity/1")).andExpect(status().isForbidden());
 		mvc.perform(get("/amenityType/1")).andExpect(status().isForbidden());
-		
 		mvc.perform(get("/room/1")).andExpect(status().isForbidden());
 		mvc.perform(get("/roomType/1")).andExpect(status().isForbidden());
 		
-		mvc.perform(post("/addAmenityType").flashAttr("amenityType", new AmenityType())).andExpect(status().isForbidden());
-		mvc.perform(post("/addAmenity").flashAttr("amenity", new Amenity())).andExpect(status().isForbidden());
-
-		mvc.perform(post("/addRoomType").flashAttr("roomType", new RoomType())).andExpect(status().isForbidden());
-		mvc.perform(post("/addRoom").flashAttr("room", new Room())).andExpect(status().isForbidden());
-		
-		mvc.perform(delete("/amenityDelete/1")).andExpect(status().isForbidden());
-		mvc.perform(delete("/amenityTypeDelete/1")).andExpect(status().isForbidden());
+		mvc.perform(post("/addAmenityType").flashAttr("amenityType", amenityType)).andExpect(status().isForbidden());
+		mvc.perform(post("/addAmenity").flashAttr("amenity", amenity)).andExpect(status().isForbidden());
+		mvc.perform(post("/addRoomType").flashAttr("roomType", roomTypeStandard)).andExpect(status().isForbidden());
+		mvc.perform(post("/addRoom").flashAttr("room", standardRoomOne)).andExpect(status().isForbidden());
 		
 		mvc.perform(delete("/roomDelete/1")).andExpect(status().isForbidden());
 		mvc.perform(delete("/roomTypeDelete/1")).andExpect(status().isForbidden());
-		
+		mvc.perform(delete("/amenityDelete/1")).andExpect(status().isForbidden());
+		mvc.perform(delete("/amenityTypeDelete/1")).andExpect(status().isForbidden());
 		mvc.perform(delete("/roomRateDelete/1")).andExpect(status().isForbidden());
 	}
 
@@ -186,24 +191,19 @@ public class RoomControllerTest extends BaseControllerSetup {
 	public void testReceptionistRolePermissions_forbidden() throws Exception {
 		mvc.perform(get("/amenity/1")).andExpect(status().isForbidden());
 		mvc.perform(get("/amenityType/1")).andExpect(status().isForbidden());
-		
 		mvc.perform(get("/room/1")).andExpect(status().isForbidden());
 		mvc.perform(get("/roomType/1")).andExpect(status().isForbidden());
 		
-		mvc.perform(post("/addAmenityType").flashAttr("amenityType", new AmenityType())).andExpect(status().isForbidden());
-		mvc.perform(post("/addAmenity").flashAttr("amenity", new Amenity())).andExpect(status().isForbidden());
-
-		mvc.perform(post("/addRoomType").flashAttr("roomType", new RoomType())).andExpect(status().isForbidden());
-		mvc.perform(post("/addRoom").flashAttr("room", new Room())).andExpect(status().isForbidden());
-		
-		mvc.perform(post("/addRoomRate").flashAttr("roomRate", new RoomRate(new Room(), Currency.CZK, 10, new Date()))).andExpect(status().isForbidden());
-		
-		mvc.perform(delete("/amenityDelete/1")).andExpect(status().isForbidden());
-		mvc.perform(delete("/amenityTypeDelete/1")).andExpect(status().isForbidden());
+		mvc.perform(post("/addAmenityType").flashAttr("amenityType", amenityType)).andExpect(status().isForbidden());
+		mvc.perform(post("/addAmenity").flashAttr("amenity", amenity)).andExpect(status().isForbidden());
+		mvc.perform(post("/addRoomType").flashAttr("roomType", roomTypeStandard)).andExpect(status().isForbidden());
+		mvc.perform(post("/addRoom").flashAttr("room", standardRoomOne)).andExpect(status().isForbidden());
+		mvc.perform(post("/addRoomRate").flashAttr("roomRate", new RoomRate(standardRoomOne, Currency.CZK, 10, new Date()))).andExpect(status().isForbidden());
 		
 		mvc.perform(delete("/roomDelete/1")).andExpect(status().isForbidden());
 		mvc.perform(delete("/roomTypeDelete/1")).andExpect(status().isForbidden());
-		
+		mvc.perform(delete("/amenityDelete/1")).andExpect(status().isForbidden());
+		mvc.perform(delete("/amenityTypeDelete/1")).andExpect(status().isForbidden());
 		mvc.perform(delete("/roomRateDelete/1")).andExpect(status().isForbidden());
 	}
 

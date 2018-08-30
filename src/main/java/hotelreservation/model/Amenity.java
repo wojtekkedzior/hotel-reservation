@@ -24,6 +24,7 @@ public class Amenity {
 	private String description;
 	private boolean enabled;
 	
+	//TODO add @NotNull
 	@ManyToOne
 	private AmenityType amenityType;
 	
