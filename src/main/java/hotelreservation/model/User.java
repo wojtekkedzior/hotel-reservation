@@ -45,12 +45,12 @@ public class User {
 
 	private boolean enabled;
 
-	@NotNull
+	//TODO this will be funky for a super admin
+//	@NotNull
 	@OneToOne
 	private User createdBy;
 
-	//TODO this will be funky for a super admin
-//	@NotNull
+	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdOn;
 
