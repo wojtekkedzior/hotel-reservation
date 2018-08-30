@@ -124,7 +124,7 @@ public class UserServiceTest extends BaseServiceTest {
 		
 		assertEquals(2, userService.getAllUsers().size());
 		
-		User newUser = new User("username", "firstName", "lastname", superAdmin);
+		User newUser = new User("new username", "firstName", "lastname", superAdmin);
 		newUser.setPassword("password");
 		userService.saveUser(newUser, user.getUserName());
 		

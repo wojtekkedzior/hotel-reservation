@@ -50,4 +50,8 @@ public class Utils {
 	            );
 	}
 	
+	public boolean isNullOrEmpty(String s) {
+		return (s==null || s.trim().equals(""));
+	}
+	
 }

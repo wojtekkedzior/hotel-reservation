@@ -69,13 +69,6 @@ public class User {
 	public User() {
 	}
 
-/*	public User(String usernName) {
-		this.userName = usernName;
-
-		createdOn = new Date();
-		enabled = true;
-	}*/
-
 	public User(String usernName, String firstName, String lastName, User createdBy) {
 		this.userName = usernName;
 		this.firstName = firstName;
