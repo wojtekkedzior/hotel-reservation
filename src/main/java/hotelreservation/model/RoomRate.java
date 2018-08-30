@@ -13,6 +13,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -29,14 +31,18 @@ public class RoomRate {
 
 	private String description;
 
+	@NotNull
 	@ManyToOne
 	private Room room;
 
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	private Currency currency;
 
+	@NotBlank
 	private int value;
 	
+	@NotNull
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date day;

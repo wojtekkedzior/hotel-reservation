@@ -118,7 +118,7 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		role = new Role("receptionistRole", "desc", true);
 		roleRepo.save(role);
 		
-		user = new User("receptionist", "bobalina");
+		user = new User("receptionist", "bobalina", "bobalina", superAdmin);
 		Collection<Role> roles = new ArrayList<Role>();
 		roles.add(role);
 		user.setRoles(roles);

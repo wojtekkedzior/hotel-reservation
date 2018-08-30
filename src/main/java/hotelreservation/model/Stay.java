@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
@@ -24,16 +26,20 @@ public class Stay {
 	private long id;
 	
 	//Reservation that make up a stay.  This shuld be used to mark a non-consecutive day stay. 
+	@NotNull
 	@ManyToMany
 	private List<Reservation> reservations; 
 	
+	@NotBlank
 	//number of days spent at the hotel
 	private int duration;
 	
 	//Start and End date of the entire stay duration, including days spen away from hotel.
+	@NotNull
 	@Temporal(TemporalType.DATE)
 	private Date startDate;
 	
+	@NotNull
 	@Temporal(TemporalType.DATE)
 	private Date endDate;
 }

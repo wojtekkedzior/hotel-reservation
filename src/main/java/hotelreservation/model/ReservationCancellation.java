@@ -10,6 +10,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
@@ -20,9 +22,12 @@ public class ReservationCancellation {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
+	@NotNull
 	@OneToOne
 	private Reservation reservation;
 	
+	@NotNull
+	@NotBlank
 	private String reason;
 	
 	@ManyToOne

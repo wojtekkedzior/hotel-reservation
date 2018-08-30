@@ -6,6 +6,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import hotelreservation.model.enums.Currency;
 import lombok.Data;
@@ -17,12 +19,16 @@ public class Charge {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
+	@NotNull
+	@NotBlank
 	private String name;
+	
 	private String description;
 	
 	@Enumerated(EnumType.STRING)
 	private Currency currency;
 	
+	@NotNull
 	private int value;
 	
 	public Charge() {}

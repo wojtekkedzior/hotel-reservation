@@ -199,6 +199,7 @@ public class ReservationController {
 		guestService.saveContact(guest.getContact());
 		guestService.saveIdentification(guest.getIdentification());
 		guestService.saveGuest(guest);
+		
 
 		Reservation reservation = bookingService.getReservation(reservationId);
 		reservation.getOccupants().add(guest);
