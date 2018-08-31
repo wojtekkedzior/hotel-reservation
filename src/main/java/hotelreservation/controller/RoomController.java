@@ -1,6 +1,5 @@
 package hotelreservation.controller;
 
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -82,7 +80,7 @@ public class RoomController {
 
 	@RequestMapping(value = { "/room", "room/{id}" })
 	@PreAuthorize("hasAuthority('createRoom')")
-	public String roomModel(Model model, @PathVariable Optional<Integer> id) {
+	public String roomModel(@PathVariable Optional<Integer> id, Model model) {
 		if (!id.isPresent()) {
 			model.addAttribute("room", new Room());
 		} else {
@@ -121,7 +119,7 @@ public class RoomController {
 
 	@RequestMapping(value = { "/roomRate", "/roomRate/{id}" })
 	@PreAuthorize("hasAuthority('createRoomRate')")
-	public String addRoomRateModel(Model model, @PathVariable Optional<Integer> id) throws ParseException {
+	public String addRoomRateModel(@PathVariable Optional<Integer> id, Model model) {
 		if (!id.isPresent()) {
 			model.addAttribute("roomRate", new RoomRate());
 		} else {
@@ -143,7 +141,7 @@ public class RoomController {
 
 	@PostMapping("/addAmenityType")
 	@PreAuthorize("hasAuthority('createAmenityType')")
-	public ModelAndView addAmenityType(@ModelAttribute AmenityType amenityType, BindingResult bindingResult) {
+	public ModelAndView addAmenityType(@Valid @ModelAttribute AmenityType amenityType) {
 		AmenityType createAmenityType = roomService.saveAmenityType(amenityType);
 		return new ModelAndView("redirect:/amenityType/" + createAmenityType.getId());
 	}
@@ -157,24 +155,21 @@ public class RoomController {
 
 	@PostMapping("/addRoomType")
 	@PreAuthorize("hasAuthority('createRoomType')")
-	public ModelAndView addRoomType(@ModelAttribute RoomType roomType, BindingResult bindingResult) {
+	public ModelAndView addRoomType(@Valid @ModelAttribute RoomType roomType) {
 		roomService.saveRoomType(roomType);
 		return new ModelAndView("redirect:/roomType/" + roomType.getId());
 	}
 
 	@PostMapping("/addRoom")
 	@PreAuthorize("hasAuthority('createRoom')")
-	public ModelAndView addRoom(@ModelAttribute Room room, BindingResult bindingResult) {
+	public ModelAndView addRoom(@Valid @ModelAttribute Room room) {
 		roomService.saveRoom(room);
 		return new ModelAndView("redirect:/room/" + room.getId());
 	}
 
 	@PostMapping("/addRoomRate")
 	@PreAuthorize("hasAuthority('createRoomRate')")
-	public ModelAndView addRoomRate(@ModelAttribute RoomRate roomRate, BindingResult bindingResult) {
-		if(bindingResult.hasErrors()) {
-			log.error(bindingResult.toString());
-		}
+	public ModelAndView addRoomRate(@Valid @ModelAttribute RoomRate roomRate) {
 		roomService.saveRoomRate(roomRate);
 		return new ModelAndView("redirect:/roomRate/" + roomRate.getId());
 	}

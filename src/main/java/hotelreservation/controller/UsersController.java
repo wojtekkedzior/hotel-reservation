@@ -2,6 +2,8 @@ package hotelreservation.controller;
 
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +11,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +31,7 @@ public class UsersController {
 
 	@RequestMapping(value = { "/user", "/user/{id}" })
 	@PreAuthorize("hasAuthority('createUser')")
-	public String getUsers(Model model, @PathVariable Optional<Integer> id) {
+	public String getUsers(@PathVariable Optional<Integer> id, Model model) {
 		if(!id.isPresent()) {
 			User user = new User();
 			model.addAttribute("user", user);
@@ -57,8 +58,7 @@ public class UsersController {
 	
 	@PostMapping("/adduser")
 	@PreAuthorize("hasAuthority('createUser')")
-	public ModelAndView addUser(@ModelAttribute User user,  Authentication authentication, BindingResult bindingResult) {
-		//TODO check that ID == null 
+	public ModelAndView addUser(@Valid @ModelAttribute User user,  Authentication authentication) {
 		log.info("creating user: " + user);
 		
 		userService.saveUser(user, authentication.getName());

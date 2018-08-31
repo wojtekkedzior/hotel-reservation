@@ -11,7 +11,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -22,7 +21,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -31,7 +29,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import hotelreservation.model.Contact;
 import hotelreservation.model.Guest;
@@ -144,7 +141,7 @@ public class ReservationController {
 
 	@RequestMapping(value = { "/cancelReservation/{id}" })
 	@PreAuthorize("hasAuthority('cancelReservation')")
-	public String cancelReservation(@PathVariable Optional<Integer> id, Model model, HttpServletRequest request) {
+	public String cancelReservation(@PathVariable Optional<Integer> id, Model model) {
 		Reservation reservation = bookingService.getReservation(id);
 		model.addAttribute("reservation", reservation);
 
@@ -196,7 +193,7 @@ public class ReservationController {
 
 	@PostMapping("/addOccupant/{reservationId}")
 	@PreAuthorize("hasAuthority('realiseReservation')")
-	public ModelAndView addOccupant(@PathVariable Optional<Integer> reservationId, @Valid @ModelAttribute Guest guest) {
+	public ModelAndView addOccupant(@Valid @ModelAttribute Guest guest, @PathVariable Optional<Integer> reservationId) {
 		guestService.saveIdentification(guest.getIdentification());
 		guestService.saveContact(guest.getContact());
 		guestService.saveGuest(guest);
@@ -226,10 +223,7 @@ public class ReservationController {
 
 	@PostMapping("/reservation")
 	@PreAuthorize("hasAuthority('createReservation')")
-	public ModelAndView saveReservation(@ModelAttribute Reservation reservation, BindingResult bindingResult, RedirectAttributes redir) {
-		// TODO need to make use of the binding results (in all Post handlers)
-		System.err.println(bindingResult); // need to handle binding results
-
+	public ModelAndView saveReservation(@Valid @ModelAttribute Reservation reservation) {
 		bookingService.saveReservation(reservation);
 
 		return new ModelAndView("redirect:/dashboard");
@@ -247,7 +241,7 @@ public class ReservationController {
 
 	@RequestMapping(value = "/deleteContact/{id}", method = RequestMethod.DELETE)
 	@PreAuthorize("hasAuthority('realiseReservation')")
-	public ModelAndView deleteGuest(@ModelAttribute Reservation reservation, @PathVariable Optional<Integer> id) {
+	public ModelAndView deleteGuest(@Valid @ModelAttribute Reservation reservation, @PathVariable Optional<Integer> id) {
 		if (id.isPresent()) {
 			// remove it from the reservation first.
 			// need to check if the guest actually existsi
@@ -275,7 +269,7 @@ public class ReservationController {
 	
 	@PostMapping("/cancelReservation/{reservationID}")
 	@PreAuthorize("hasAuthority('cancelReservation')")
-	public ModelAndView cancelReservation(@ModelAttribute ReservationCancellation reservationCancellation, @PathVariable Optional<Integer> reservationID) {
+	public ModelAndView cancelReservation(@Valid @ModelAttribute ReservationCancellation reservationCancellation, @PathVariable Optional<Integer> reservationID) {
 		Reservation resFromDB = bookingService.getReservation(reservationID);
 
 		reservationCancellation.setReservation(resFromDB);
