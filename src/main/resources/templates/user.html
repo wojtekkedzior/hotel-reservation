@@ -9,14 +9,9 @@
 
 			<form action="#" th:action="@{/adduser}" th:object="${user}" method="post">
 				<p>
-					Name: <input type="text" th:field="${user.name}" />
+					Name: <input type="text" th:field="${user.firstName}" />
 				</p>
-<!-- 				<p>
-					User Type: <select class="form-control" th:field="${user.userType}" id="dropOperator">
-						<option th:each="userType : ${userTypes}" th:value="${userType.id}" th:text="${userType.name}"></option>
-					</select>
-				</p> -->
-				
+
 				<p>
 					User Type: <select class="form-control" th:field="${user.roles}" id="dropOperator">
 						<option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
@@ -49,7 +44,7 @@
 
 					<tr th:each="data, iterstat: ${users}">
 						<td th:text="${data.id}" th:id="|td${iterstat.index}|"></td>
-						<td th:text="${data.name}" th:id="|td${iterstat.index}|"></td>
+						<td th:text="${data.firstName}" th:id="|td${iterstat.index}|"></td>
 						<td><a th:href="@{/user/}+${data.id}" th:text="${data.userName}"> </a></td>
 						<!-- <td th:text="${data.userType.name}" ></td> -->
 						<td th:text="${data.enabled}" th:id="|td${iterstat.index}|"></td>
