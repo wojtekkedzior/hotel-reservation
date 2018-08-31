@@ -3,6 +3,8 @@ package hotelreservation.controller;
 import java.util.Date;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +62,7 @@ public class InvoiceController {
 	
 	@PostMapping("/createPayment/{reservationId}")
 	@PreAuthorize("hasAuthority('createPayment')")
-	public ModelAndView createPayment(@ModelAttribute Payment payment,  @PathVariable Optional<Integer> reservationId, BindingResult bindingResult) {
+	public ModelAndView createPayment(@Valid @ModelAttribute Payment payment,  @PathVariable Optional<Integer> reservationId) {
 		log.info("creating paymeny for reservation: " + reservationId);
 		
 		if(payment.getReservationCharges() == null || payment.getReservationCharges().isEmpty()) {
@@ -80,9 +82,10 @@ public class InvoiceController {
 		return new ModelAndView("redirect:/checkoutReservation/" + reservationId.get());
 	}
 	
+	//TODO reservationCharge should be a slightly different object, as in without the  reservation
 	@PostMapping("/addChargeToReservation/{reservationId}")
 	@PreAuthorize("hasAuthority('checkoutReservation')")
-	public ModelAndView addChargeToReservation(@ModelAttribute ReservationCharge reservationCharge, @PathVariable Optional<Integer> reservationId) {
+	public ModelAndView addChargeToReservation(@Valid @ModelAttribute ReservationCharge reservationCharge, @PathVariable Optional<Integer> reservationId) {
 		Reservation reservation = bookingService.getReservation(reservationId);
 		reservationCharge.setReservation(reservation);
 		

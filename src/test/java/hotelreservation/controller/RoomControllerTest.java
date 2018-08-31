@@ -150,7 +150,12 @@ public class RoomControllerTest extends BaseControllerSetup {
 	@WithUserDetails("admin")
 	public void testAdminRolePermissions_forbidden() throws Exception {
 		mvc.perform(get("/roomRate/1")).andExpect(status().isForbidden());
-		mvc.perform(post("/addRoomRate").flashAttr("roomRate", new RoomRate())).andExpect(status().isForbidden());
+		RoomRate roomRate = new RoomRate();
+		roomRate.setRoom(new Room());
+		roomRate.setCurrency(Currency.CZK);
+		roomRate.setValue(1000);
+		roomRate.setDay(new Date());
+		mvc.perform(post("/addRoomRate").flashAttr("roomRate", roomRate)).andExpect(status().isForbidden());
 	}
 
 	@Test

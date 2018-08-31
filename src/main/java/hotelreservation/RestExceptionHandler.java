@@ -1,5 +1,8 @@
 package hotelreservation;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.http.HttpHeaders;
@@ -15,27 +18,38 @@ import hotelreservation.exceptions.NotFoundException;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
-	
+
 	@ExceptionHandler(EntityNotFoundException.class)
 	protected ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex) {
-//		return buildResponseEntity();
+		// return buildResponseEntity();
 		System.err.println(ex);
 		return null;
 	}
-	
+
 	@ExceptionHandler(NotFoundException.class)
 	protected ResponseEntity<Object> handleNoSuchElementException(NotFoundException ex) {
 		System.err.println(ex);
-		
+
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//		return null;
+		// return null;
 	}
-	
-	 @Override
-	   protected ResponseEntity<Object> handleBindException(BindException ex,
-	                 HttpHeaders headers, HttpStatus status, WebRequest request) {
-//	          String errorMessage = ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
-//	          List<String> validationList = ex.getBindingResult().getFieldErrors().stream().map(fieldError->fieldError.getDefaultMessage()).collect(Collectors.toList());
-		return new ResponseEntity<>("blah" + status, status);
-	   }
+
+	@Override
+	protected ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers, HttpStatus status,
+			WebRequest request) {
+		// String errorMessage =
+		// ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
+		List<String> validationList = ex.getBindingResult().getFieldErrors().stream()
+				.map(fieldError -> fieldError.getDefaultMessage()).collect(Collectors.toList());
+
+		StringBuffer output = new StringBuffer();
+
+		//TODO get the names of the fields and log them along with the validation errors
+		for (String string : validationList) {
+			output.append(string);
+			output.append("\n");
+		}
+
+		return new ResponseEntity<>(output, status);
+	}
 }

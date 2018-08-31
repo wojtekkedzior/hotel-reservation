@@ -81,7 +81,7 @@ public class InvoiceServiceTest extends BaseServiceTest {
 	private Privilege priv1;
 	private Privilege priv2;
 	
-	private Guest mainGuest;
+//	private Guest mainGuest;
 	private Guest guestOne;
 	
 	private Reservation reservationOne;
@@ -188,13 +188,12 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		bookingService.createContact(contactTwo);
 
 		guestOne = new Guest("GuestOne First Name", "GuestOne Last Name", contactOne, idOne);
-		mainGuest = new Guest("GuestTWo First Name", "GuestTwo Last Name", contactTwo, idTwo);
+//		mainGuest = new Guest("GuestTWo First Name", "GuestTwo Last Name", contactTwo, idTwo);
 
 		bookingService.createGuest(guestOne);
-		bookingService.createGuest(mainGuest);
+//		bookingService.createGuest(mainGuest);
 		
 		reservationOne = new Reservation();
-//		reservationOne.setMainGuest(mainGuest);
 		reservationOne.setFirstName("firstName");
 		reservationOne.setLastName("lastName");
 		reservationOne.setCreatedBy(user);
@@ -368,7 +367,6 @@ public class InvoiceServiceTest extends BaseServiceTest {
 	@Test
 	public void testSaveReservationWithInvalidReservationStatus() {
 		reservationOne = new Reservation();
-//		reservationOne.setMainGuest(mainGuest);
 		reservationOne.setFirstName("firstName");
 		reservationOne.setLastName("lastName");
 		reservationOne.setCreatedBy(user);
@@ -404,7 +402,6 @@ public class InvoiceServiceTest extends BaseServiceTest {
 	@Test
 	public void testAreAllChargesPaidFor_NoCharges() {
 		reservationOne = new Reservation();
-//		reservationOne.setMainGuest(mainGuest);
 		reservationOne.setFirstName("firstName");
 		reservationOne.setLastName("lastName");
 		reservationOne.setCreatedBy(user);

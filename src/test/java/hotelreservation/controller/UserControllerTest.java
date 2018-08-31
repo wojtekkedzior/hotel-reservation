@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -97,7 +98,13 @@ public class UserControllerTest extends BaseControllerSetup {
 	@WithUserDetails("receptionist")
 	public void testReceptionistRolePermissions_forbidden() throws Exception {
 		mvc.perform(get("/user/1")).andExpect(status().isForbidden());
-		mvc.perform(post("/adduser").flashAttr("user", new User())).andExpect(status().isForbidden());
+		User user = new User();
+		user.setPassword("password");
+		user.setUserName("userName");
+		user.setFirstName("firstName");
+		user.setLastName("lastName");
+		user.setCreatedOn(new Date());
+		mvc.perform(post("/adduser").flashAttr("user", user)).andExpect(status().isForbidden());
 		mvc.perform(delete("/userDelete/1")).andExpect(status().isForbidden());
 	}
 
