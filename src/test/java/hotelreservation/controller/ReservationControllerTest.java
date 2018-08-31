@@ -183,7 +183,11 @@ public class ReservationControllerTest extends BaseControllerSetup {
 		mvc.perform(post("/realiseReservation/1").flashAttr("reservation", reservationOne)).andExpect(status().isForbidden());
 		mvc.perform(get("/cancelReservation/1")).andExpect(status().isForbidden());
 		mvc.perform(get("/checkoutReservation/1")).andExpect(status().isForbidden());
-		mvc.perform(post("/cancelReservation/1").flashAttr("reservation", new ReservationCancellation())).andExpect(status().isForbidden());
+		
+		ReservationCancellation cancellation = new ReservationCancellation();
+		cancellation.setReason("some reason");
+		cancellation.setReservation(reservationOne);
+		mvc.perform(post("/cancelReservation/1").flashAttr("reservationCancellation", cancellation)).andExpect(status().isForbidden());
 		mvc.perform(post("/fulfillReservation/1").flashAttr("reservationID", 1)).andExpect(status().isForbidden());
 	}
 

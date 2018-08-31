@@ -33,7 +33,8 @@ public class Payment {
 	@OneToMany
 	private List<ReservationCharge> reservationCharges;
 	
-	@NotNull
+	//todo again, need another ui object to represent a payment becuase now it can't resolve a full reservation
+	//@NotNull
 	@ManyToOne
 	private Reservation reservation;
 	

@@ -16,8 +16,10 @@ public class ReservationCharge {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	
-	@NotNull
+
+	//TODO reservationCharge should be a slightly different object, as in without the  reservation. this needs to be fixed as the form can't return a complete reservation
+	//what is needed is a separate, UI specific, reservationcharge object. it will be somewhat confusing.
+//	@NotNull
 	@OneToOne
 	private Reservation reservation;
 	
