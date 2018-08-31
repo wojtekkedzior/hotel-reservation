@@ -78,10 +78,6 @@ public class BookingService {
 			throw new MissingOrInvalidArgumentException("Start and/or end dates cannot be empty");
 		}
 		
-		if (reservation.getMainGuest().getId() == 0) {
-			guestRepo.save(reservation.getMainGuest());
-		}
-		
 		if(reservation.getCreatedOn() == null) {
 			reservation.setCreatedOn(new Date());
 		}  else {

@@ -20,8 +20,8 @@
 
 					<tr th:each="reservation, iterstat: ${upComingReservations}">
 						<td><a th:href="@{/reservation/}+${reservation.id}" th:text="${reservation.id}"> </a></td>
-						<td th:text="${reservation.mainGuest.firstName}"></td>
-						<td th:text="${reservation.mainGuest.lastName}"></td>
+						<td th:text="${reservation.firstName}"></td>
+						<td th:text="${reservation.lastName}"></td>
 						<td th:text="${reservation.startDate}"></td>
 						<td th:text="${reservation.endDate}"></td>
 						<td th:text="${reservation.createdOn}"></td>
@@ -48,8 +48,8 @@
 
 					<tr th:each="reservation, iterstat: ${inProgressReservations}">
 						<td><a th:href="@{/reservation/}+${reservation.id}" th:text="${reservation.id}"> </a></td>
-						<td th:text="${reservation.mainGuest.firstName}"></td>
-						<td th:text="${reservation.mainGuest.lastName}"></td>
+						<td th:text="${reservation.firstName}"></td>
+						<td th:text="${reservation.lastName}"></td>
 						<td th:text="${reservation.startDate}"></td>
 						<td th:text="${reservation.endDate}"></td>
 						<td th:text="${reservation.createdOn}"></td>
@@ -75,8 +75,8 @@
 
 					<tr th:each="reservation, iterstat: ${inProgressReservations}">
 						<td><a th:href="@{/reservation/}+${reservation.id}" th:text="${reservation.id}"> </a></td>
-						<td th:text="${reservation.mainGuest.firstName}"></td>
-						<td th:text="${reservation.mainGuest.lastName}"></td>
+						<td th:text="${reservation.firstName}"></td>
+						<td th:text="${reservation.lastName}"></td>
 						<td th:text="${reservation.startDate}"></td>
 						<td th:text="${reservation.endDate}"></td>
 						<td th:text="${reservation.createdOn}"></td>

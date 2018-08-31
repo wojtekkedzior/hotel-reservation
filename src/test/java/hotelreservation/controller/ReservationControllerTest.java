@@ -126,7 +126,8 @@ public class ReservationControllerTest extends BaseControllerSetup {
 		user.setLastName("lastName");
 		userService.saveUser(user, superAdmin.getUserName());
 
-		reservationOne.setMainGuest(mainGuest);
+		reservationOne.setFirstName("firstName");
+		reservationOne.setLastName("lastName");
 		reservationOne.setCreatedBy(user);
 		reservationOne.setReservationStatus(ReservationStatus.UpComing);
 

@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -195,12 +196,11 @@ public class ReservationController {
 
 	@PostMapping("/addOccupant/{reservationId}")
 	@PreAuthorize("hasAuthority('realiseReservation')")
-	public ModelAndView addOccupant(@PathVariable Optional<Integer> reservationId, Guest guest, BindingResult bindingResult) {
-		guestService.saveContact(guest.getContact());
+	public ModelAndView addOccupant(@PathVariable Optional<Integer> reservationId, @Valid @ModelAttribute Guest guest) {
 		guestService.saveIdentification(guest.getIdentification());
+		guestService.saveContact(guest.getContact());
 		guestService.saveGuest(guest);
 		
-
 		Reservation reservation = bookingService.getReservation(reservationId);
 		reservation.getOccupants().add(guest);
 		bookingService.saveReservation(reservation);
@@ -215,7 +215,7 @@ public class ReservationController {
 
 		if (reservation.getReservationStatus().equals(ReservationStatus.UpComing) || reservation.getReservationStatus().equals(ReservationStatus.InProgress)) {
 			// TODO can't realise a cancelled or in progress reservation
-		} else {
+		} else { 
 			// TODO return some erro message
 		}
 

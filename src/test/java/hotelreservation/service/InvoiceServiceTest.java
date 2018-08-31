@@ -194,7 +194,9 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		bookingService.createGuest(mainGuest);
 		
 		reservationOne = new Reservation();
-		reservationOne.setMainGuest(mainGuest);
+//		reservationOne.setMainGuest(mainGuest);
+		reservationOne.setFirstName("firstName");
+		reservationOne.setLastName("lastName");
 		reservationOne.setCreatedBy(user);
 		reservationOne.setReservationStatus(ReservationStatus.UpComing);
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
@@ -366,7 +368,9 @@ public class InvoiceServiceTest extends BaseServiceTest {
 	@Test
 	public void testSaveReservationWithInvalidReservationStatus() {
 		reservationOne = new Reservation();
-		reservationOne.setMainGuest(mainGuest);
+//		reservationOne.setMainGuest(mainGuest);
+		reservationOne.setFirstName("firstName");
+		reservationOne.setLastName("lastName");
 		reservationOne.setCreatedBy(user);
 		reservationOne.setReservationStatus(ReservationStatus.UpComing);
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
@@ -400,7 +404,9 @@ public class InvoiceServiceTest extends BaseServiceTest {
 	@Test
 	public void testAreAllChargesPaidFor_NoCharges() {
 		reservationOne = new Reservation();
-		reservationOne.setMainGuest(mainGuest);
+//		reservationOne.setMainGuest(mainGuest);
+		reservationOne.setFirstName("firstName");
+		reservationOne.setLastName("lastName");
 		reservationOne.setCreatedBy(user);
 		reservationOne.setReservationStatus(ReservationStatus.UpComing);
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));

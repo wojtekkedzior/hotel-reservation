@@ -36,6 +36,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	                 HttpHeaders headers, HttpStatus status, WebRequest request) {
 //	          String errorMessage = ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
 //	          List<String> validationList = ex.getBindingResult().getFieldErrors().stream().map(fieldError->fieldError.getDefaultMessage()).collect(Collectors.toList());
-		return new ResponseEntity<>("blah", status);
+		return new ResponseEntity<>("blah" + status, status);
 	   }
 }

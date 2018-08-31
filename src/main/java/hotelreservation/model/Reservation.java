@@ -31,10 +31,11 @@ public class Reservation {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	//TODO remove this. Instead store the first and last name as a reservation can be done on behalf of someone and all details about the guest may not be known at this point
 	@NotNull
-	@ManyToOne
-	private Guest mainGuest;
+	private String firstName;
+	
+	@NotNull
+	private String lastName;
 	
 	//TODO need to figure out how to do the occupants and mainguests better
 //	@NotNull

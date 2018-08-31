@@ -526,7 +526,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		reservationOne = new Reservation();
 		reservationOne.setStartDate(dateConvertor.asDate(startDate));
 		reservationOne.setEndDate(dateConvertor.asDate(endDate));
-		reservationOne.setMainGuest(guestOne);
+		reservationOne.setFirstName("firstName");
+		reservationOne.setLastName("lastName");
 		reservationOne.setOccupants(Arrays.asList(guestTwo, guestThree));
 		reservationOne.setRoomRates(new ArrayList<RoomRate>());
 
@@ -552,8 +553,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 			Reservation reservation = new Reservation();
 			reservation.setStartDate(dateConvertor.asDate(startDate));
 			reservation.setEndDate(dateConvertor.asDate(endDate));
-			
-			reservation.setMainGuest(guestOne);
+			reservation.setFirstName("firstName");
+			reservation.setLastName("lastName"); 
 			reservation.setOccupants(Arrays.asList(guestTwo, guestThree));
 			reservation.setRoomRates(new ArrayList<RoomRate>());
 
@@ -583,7 +584,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		Reservation reservation = new Reservation();
 		reservation.setStartDate(dateConvertor.asDate(startDate));
 		reservation.setEndDate(dateConvertor.asDate(endDate));
-		reservation.setMainGuest(guestOne);
+		reservation.setFirstName("firstName");
+		reservation.setLastName("lastName");
 		reservation.setOccupants(Arrays.asList(guestTwo, guestThree));
 		reservation.setRoomRates(new ArrayList<RoomRate>());
 
