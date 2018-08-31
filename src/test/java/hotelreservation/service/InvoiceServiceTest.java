@@ -245,6 +245,7 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		Payment payment = new Payment();
 		payment.setReservation(reservationOne);
 		payment.setReservationCharges(Arrays.asList(reservationChargeOne));
+		payment.setPaymentType(PaymentType.Cash);
 		invoiceService.savePayment(payment);
 		
 		//1 unpaid charge and 1 paid charge for the given reservation.
@@ -275,6 +276,7 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		Payment payment = new Payment();
 		payment.setReservation(reservationOne);
 		payment.setReservationCharges(Arrays.asList(reservationChargeOne));
+		payment.setPaymentType(PaymentType.Cash);
 		invoiceService.savePayment(payment);
 		
 		assertEquals(1, invoiceService.getAllPaymentsForReservation(reservationOne).size());
@@ -315,6 +317,9 @@ public class InvoiceServiceTest extends BaseServiceTest {
 	@Test
 	public void testCRUDPayment() {
 		Payment payment = new Payment();
+		payment.setPaymentType(PaymentType.Cash);
+		payment.setReservation(reservationOne);
+		payment.setReservationCharges(Arrays.asList(reservationChargeOne));
 		invoiceService.savePayment(payment);
 		
 		assertEquals(1, invoiceService.getAllPayments().size());

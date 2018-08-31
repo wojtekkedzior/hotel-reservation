@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 import hotelreservation.model.Reservation;
 import hotelreservation.model.ReservationCharge;
@@ -25,11 +26,14 @@ public class Payment {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
+	@NotNull
 	private PaymentType paymentType;
 	
+	@NotNull
 	@OneToMany
 	private List<ReservationCharge> reservationCharges;
 	
+	@NotNull
 	@ManyToOne
 	private Reservation reservation;
 	

@@ -42,6 +42,7 @@ import hotelreservation.model.Status;
 import hotelreservation.model.User;
 import hotelreservation.model.enums.Currency;
 import hotelreservation.model.enums.IdType;
+import hotelreservation.model.enums.PaymentType;
 import hotelreservation.model.enums.ReservationStatus;
 import hotelreservation.model.finance.Payment;
 
@@ -892,6 +893,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		
 		Payment payment = new Payment();
 		payment.setReservation(reservationOne);
+		payment.setPaymentType(PaymentType.Cash);
 		payment.setReservationCharges(Arrays.asList(reservationChargeOne));
 		invoiceService.savePayment(payment);
 		
@@ -960,6 +962,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		Payment payment = new Payment();
 		payment.setReservation(reservationOne);
 		payment.setReservationCharges(Arrays.asList(reservationChargeOne, reservationChargeTwo));
+		payment.setPaymentType(PaymentType.Cash);
 		invoiceService.savePayment(payment);
 		
 		bookingService.fulfillReservation(Optional.of(new Long(reservationOne.getId()).intValue()));
