@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import hotelreservation.exceptions.PaymentNotCreatedException;
 import hotelreservation.model.Reservation;
 import hotelreservation.model.ReservationCharge;
 import hotelreservation.model.enums.PaymentType;
 import hotelreservation.model.finance.Payment;
+import hotelreservation.model.ui.PaymentDTO;
 import hotelreservation.service.BookingService;
 import hotelreservation.service.InvoiceService;
 
@@ -61,17 +61,19 @@ public class InvoiceController {
 	
 	@PostMapping("/createPayment/{reservationId}")
 	@PreAuthorize("hasAuthority('createPayment')")
-	public ModelAndView createPayment(@Valid @ModelAttribute Payment payment,  @PathVariable Optional<Integer> reservationId) {
-		log.info("creating paymeny for reservation: " + reservationId);
+	public ModelAndView createPayment(@Valid @ModelAttribute PaymentDTO paymentDto,  @PathVariable Optional<Integer> reservationId) {
+		log.info("creating payment for reservation: " + reservationId);
 		
-		if(payment.getReservationCharges() == null || payment.getReservationCharges().isEmpty()) {
-			throw new PaymentNotCreatedException(reservationId.get());
-		}
-		
-		Reservation reservation = bookingService.getReservation(reservationId);
-
-		payment.setReservation(reservation);
+		Payment payment = new Payment();
 		payment.setPaymentDate(new Date());
+		
+		//TODO is the reservationID param usefull here?
+		Reservation reservation = bookingService.getReservation(reservationId);
+		payment.setReservation(reservation);
+		
+		payment.setPaymentType(paymentDto.getPaymentType());
+		payment.setReservationCharges(paymentDto.getReservationCharges());
+
 		invoiceService.savePayment(payment);
 		
 		//TODO use credit card in reservation?
