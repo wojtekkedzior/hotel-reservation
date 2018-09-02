@@ -23,6 +23,7 @@ import hotelreservation.model.ReservationCharge;
 import hotelreservation.model.enums.PaymentType;
 import hotelreservation.model.finance.Payment;
 import hotelreservation.model.ui.PaymentDTO;
+import hotelreservation.model.ui.ReservationChargeDTO;
 import hotelreservation.service.BookingService;
 import hotelreservation.service.InvoiceService;
 
@@ -86,9 +87,14 @@ public class InvoiceController {
 	//TODO reservationCharge should be a slightly different object, as in without the  reservation
 	@PostMapping("/addChargeToReservation/{reservationId}")
 	@PreAuthorize("hasAuthority('checkoutReservation')")
-	public ModelAndView addChargeToReservation(@Valid @ModelAttribute ReservationCharge reservationCharge, @PathVariable Optional<Integer> reservationId) {
+	public ModelAndView addChargeToReservation(@Valid @ModelAttribute ReservationChargeDTO reservationChargeDto, @PathVariable Optional<Integer> reservationId) {
+		
+		ReservationCharge reservationCharge = new ReservationCharge();
 		Reservation reservation = bookingService.getReservation(reservationId);
 		reservationCharge.setReservation(reservation);
+
+		reservationCharge.setQuantity(reservationChargeDto.getQuantity());
+		reservationCharge.setCharge(reservationChargeDto.getCharge());
 		
 		invoiceService.saveReservationCharge(reservationCharge);
 		return new ModelAndView("redirect:/checkoutReservation/" + reservationId.get());

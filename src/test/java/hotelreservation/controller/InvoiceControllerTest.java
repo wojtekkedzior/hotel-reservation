@@ -27,6 +27,7 @@ import hotelreservation.model.ReservationCharge;
 import hotelreservation.model.enums.PaymentType;
 import hotelreservation.model.finance.Payment;
 import hotelreservation.model.ui.PaymentDTO;
+import hotelreservation.model.ui.ReservationChargeDTO;
 import hotelreservation.service.MyUserDetailsService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -40,7 +41,7 @@ public class InvoiceControllerTest  extends BaseControllerSetup {
 	private MockMvc mvc;
 
 	private PaymentDTO paymentDto;
-	private ReservationCharge reservationCharge;
+	private ReservationChargeDTO reservationChargeDto;
 	
 	@Override
 	Collection<Privilege> getPrivilegesForReceptionist() {
@@ -68,10 +69,13 @@ public class InvoiceControllerTest  extends BaseControllerSetup {
 		paymentDto.setPaymentType(PaymentType.Cash);
 		paymentDto.setReservationId(1);
 		
-		reservationCharge = new ReservationCharge();
+		reservationChargeDto = new ReservationChargeDTO();
+		reservationChargeDto.setQuantity(1);
+		reservationChargeDto.setCharge(new Charge());
+		
+		ReservationCharge reservationCharge = new ReservationCharge();
 		reservationCharge.setQuantity(1);
 		reservationCharge.setCharge(new Charge());
-		
 		paymentDto.setReservationCharges(Arrays.asList(reservationCharge));
 	}
 	
@@ -85,14 +89,14 @@ public class InvoiceControllerTest  extends BaseControllerSetup {
 	@WithUserDetails("admin")
 	public void testAdminRolePermissions_forbidden() throws Exception {
 		mvc.perform(post("/createPayment/1/").flashAttr("paymentDTO", paymentDto)).andExpect(status().isForbidden());
-		mvc.perform(post("/addChargeToReservation/1").flashAttr("reservationCharge", reservationCharge)).andExpect(status().isForbidden());
+		mvc.perform(post("/addChargeToReservation/1").flashAttr("reservationChargeDTO", reservationChargeDto)).andExpect(status().isForbidden());
 	}
 
 	@Test
 	@WithUserDetails("manager")
 	public void testManagerRolePermissions_allowed() throws Exception {
 		mvc.perform(post("/createPayment/1").flashAttr("paymentDTO", new Payment())).andExpect(status().is4xxClientError());
-		mvc.perform(post("/addChargeToReservation/1").flashAttr("reservationCharge", reservationCharge)).andExpect(status().is4xxClientError());
+		mvc.perform(post("/addChargeToReservation/1").flashAttr("reservationChargeDTO", reservationChargeDto)).andExpect(status().is4xxClientError());
 	}
 
 	@Test
@@ -105,7 +109,7 @@ public class InvoiceControllerTest  extends BaseControllerSetup {
 	@WithUserDetails("receptionist")
 	public void testReceptionistRolePermissions_allowed() throws Exception {
 		mvc.perform(post("/createPayment/1").flashAttr("paymentDTO", paymentDto)).andExpect(status().is4xxClientError());
-		mvc.perform(post("/addChargeToReservation/1").flashAttr("reservationCharge", reservationCharge)).andExpect(status().is4xxClientError());
+		mvc.perform(post("/addChargeToReservation/1").flashAttr("reservationChargeDTO", reservationChargeDto)).andExpect(status().is4xxClientError());
 	}
 
 	@Test
@@ -118,7 +122,7 @@ public class InvoiceControllerTest  extends BaseControllerSetup {
 	@WithMockUser(username = "manager", roles = "MISSING_ROLE")
 	public void testMissingRole() throws Exception {
 		mvc.perform(post("/createPayment/1").flashAttr("paymentDTO", paymentDto)).andExpect(status().isForbidden());
-		mvc.perform(post("/addChargeToReservation/1").flashAttr("reservationCharge", reservationCharge)).andExpect(status().isForbidden());
+		mvc.perform(post("/addChargeToReservation/1").flashAttr("reservationChargeDTO", reservationChargeDto)).andExpect(status().isForbidden());
 	}
 	
 	@Test
