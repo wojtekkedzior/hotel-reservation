@@ -84,7 +84,6 @@ public class InvoiceController {
 		return new ModelAndView("redirect:/checkoutReservation/" + reservationId.get());
 	}
 	
-	//TODO reservationCharge should be a slightly different object, as in without the  reservation
 	@PostMapping("/addChargeToReservation/{reservationId}")
 	@PreAuthorize("hasAuthority('checkoutReservation')")
 	public ModelAndView addChargeToReservation(@Valid @ModelAttribute ReservationChargeDTO reservationChargeDto, @PathVariable Optional<Integer> reservationId) {
