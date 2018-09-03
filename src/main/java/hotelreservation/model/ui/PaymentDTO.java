@@ -31,9 +31,6 @@ public class PaymentDTO {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date paymentDate;
 	
-	@NotNull
-	private long reservationId;
-	
 	public PaymentDTO () {}
 
 }

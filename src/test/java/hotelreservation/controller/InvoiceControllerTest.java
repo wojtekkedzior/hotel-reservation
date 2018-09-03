@@ -67,7 +67,6 @@ public class InvoiceControllerTest  extends BaseControllerSetup {
 
 		paymentDto = new PaymentDTO();
 		paymentDto.setPaymentType(PaymentType.Cash);
-		paymentDto.setReservationId(1);
 		
 		reservationChargeDto = new ReservationChargeDTO();
 		reservationChargeDto.setQuantity(1);

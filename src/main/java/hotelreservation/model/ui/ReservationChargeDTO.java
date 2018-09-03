@@ -10,9 +10,6 @@ import lombok.Data;
 public class ReservationChargeDTO {
 
 	@NotNull
-	private long reservationId;
-	
-	@NotNull
 	@OneToOne
 	private Charge charge;
 	

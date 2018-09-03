@@ -51,7 +51,7 @@ public class InvoiceController {
 		
 		model.addAttribute("reservation", reservation);
 		model.addAttribute("outstandingCharges", invoiceService.getOutstandingCharges(reservation));
-		model.addAttribute("payment", new Payment());
+		model.addAttribute("payment", new PaymentDTO());
 		model.addAttribute("formsOfPayment", PaymentType.values());
 		model.addAttribute("reservationCharge",  invoiceService.getAllReservationChargesForAReservation(reservation));
 		

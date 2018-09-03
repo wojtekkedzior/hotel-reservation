@@ -41,6 +41,7 @@ import hotelreservation.model.Room;
 import hotelreservation.model.RoomRate;
 import hotelreservation.model.enums.IdType;
 import hotelreservation.model.enums.ReservationStatus;
+import hotelreservation.model.ui.ReservationChargeDTO;
 import hotelreservation.service.BookingService;
 import hotelreservation.service.GuestService;
 import hotelreservation.service.InvoiceService;
@@ -176,7 +177,7 @@ public class ReservationController {
 		model.addAttribute("reservationCheckout", new ReservationCheckout());
 		model.addAttribute("reservationPayments", invoiceService.getAllPaymentsForReservation(reservation));
 		model.addAttribute("charges", invoiceService.getAllCharges());
-		model.addAttribute("reservationCharge",  new ReservationCharge());
+		model.addAttribute("reservationCharge",  new ReservationChargeDTO());
 		model.addAttribute("reservationCharges",  invoiceService.getAllReservationChargesForAReservation(reservation));
 
 		List<RoomRate> roomRates = reservation.getRoomRates();
