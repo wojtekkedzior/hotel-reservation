@@ -54,7 +54,6 @@ public class MyUserDetailsService implements UserDetailsService {
 	}
 
 	private List<GrantedAuthority> getAuthorities(Collection<Role> roles) {
-
 		return getGrantedAuthorities(getPrivileges(roles));
 	}
 
