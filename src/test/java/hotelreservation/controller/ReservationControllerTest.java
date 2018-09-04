@@ -105,6 +105,9 @@ public class ReservationControllerTest extends BaseControllerSetup {
 		
 		mvc.perform(post("/addOccupant/1").flashAttr("guest", guest)).andExpect(status().isForbidden());
 		mvc.perform(post("/fulfillReservation/1")).andExpect(status().isForbidden());
+		
+		//TODO ugly 
+		//mvc.perform(delete("/deleteContact/1")).andExpect(status().isForbidden());
 
 		ReservationCancellation cancellation = new ReservationCancellation();
 		cancellation.setReason("some reason");
@@ -131,6 +134,13 @@ public class ReservationControllerTest extends BaseControllerSetup {
 		cancellation.setReason("some reason");
 		cancellation.setReservation(reservation);
 		mvc.perform(post("/cancelReservation/1").flashAttr("reservationCancellation", cancellation)).andExpect(status().is3xxRedirection());
+	}
+	
+	@Test
+	@WithUserDetails("manager")
+	public void testFulfillReservation() throws Exception {
+		bookingService.realiseReservation(reservation);
+		mvc.perform(post("/fulfillReservation/1")).andExpect(status().is3xxRedirection());
 	}
 
 	@Test
@@ -179,5 +189,6 @@ public class ReservationControllerTest extends BaseControllerSetup {
 		mvc.perform(delete("/reservationDelete/1")).andExpect(status().isForbidden());
 		
 		mvc.perform(post("/addOccupant/1").flashAttr("guest", guest)).andExpect(status().isForbidden());
+		mvc.perform(post("/fulfillReservation/1")).andExpect(status().isForbidden());
 	}
 }
