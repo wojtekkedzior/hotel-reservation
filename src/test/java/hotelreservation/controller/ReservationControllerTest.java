@@ -189,6 +189,8 @@ public class ReservationControllerTest extends BaseControllerSetup {
 		cancellation.setReservation(reservationOne);
 		mvc.perform(post("/cancelReservation/1").flashAttr("reservationCancellation", cancellation)).andExpect(status().isForbidden());
 		mvc.perform(post("/fulfillReservation/1").flashAttr("reservationID", 1)).andExpect(status().isForbidden());
+
+//		mvc.perform(post("/addOccupant/1").flashAttr("guest", new Guest())).andExpect(status().isForbidden());
 	}
 
 	@Test
@@ -208,6 +210,8 @@ public class ReservationControllerTest extends BaseControllerSetup {
 		cancellation.setReservation(reservationOne);
 		mvc.perform(post("/cancelReservation/1").flashAttr("reservationCancellation", cancellation)).andExpect(status().is3xxRedirection());
 		mvc.perform(post("/fulfillReservation/1").flashAttr("reservationID", 1)).andExpect(status().is4xxClientError());
+
+//		mvc.perform(post("/addOccupant/1").flashAttr("guest", new Guest())).andExpect(status().is3xxRedirection());
 	}
 
 	@Test
@@ -236,6 +240,8 @@ public class ReservationControllerTest extends BaseControllerSetup {
 		cancellation.setReservation(reservationOne);
 		mvc.perform(post("/cancelReservation/1").flashAttr("reservationCancellation", cancellation)).andExpect(status().is3xxRedirection());
 		mvc.perform(post("/fulfillReservation/1").flashAttr("reservationID", 1)).andExpect(status().is4xxClientError());
+	
+//		mvc.perform(post("/addOccupant/1").flashAttr("guest", new Guest())).andExpect(status().is3xxRedirection());
 	}
 
 	@Test
@@ -252,5 +258,7 @@ public class ReservationControllerTest extends BaseControllerSetup {
 		mvc.perform(get("/cancelReservation/1")).andExpect(status().isForbidden());
 		mvc.perform(get("/checkoutReservation/1")).andExpect(status().isForbidden());
 		mvc.perform(delete("/reservationDelete/1")).andExpect(status().isForbidden());
+		
+//		mvc.perform(post("/addOccupant/1").flashAttr("guest", new Guest())).andExpect(status().isForbidden());
 	}
 }
