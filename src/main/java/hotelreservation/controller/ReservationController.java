@@ -35,7 +35,6 @@ import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;
 import hotelreservation.model.Reservation;
 import hotelreservation.model.ReservationCancellation;
-import hotelreservation.model.ReservationCharge;
 import hotelreservation.model.ReservationCheckout;
 import hotelreservation.model.Room;
 import hotelreservation.model.RoomRate;

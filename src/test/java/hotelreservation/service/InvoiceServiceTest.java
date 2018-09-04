@@ -425,4 +425,56 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		
 		assertTrue(invoiceService.areAllChargesPaidFor(reservationOne));
 	}
+	
+	@Test
+	public void testGetTotalOfOutstandingCharges() {
+		invoiceService.saveCharge(chargeOne);
+		invoiceService.saveCharge(chargeTwo);
+		invoiceService.saveCharge(chargeThree);
+		
+		invoiceService.saveReservationCharge(reservationChargeOne);
+		invoiceService.saveReservationCharge(reservationChargeTwo);
+		
+		Reservation reservationTwo = new Reservation();
+		reservationTwo.setFirstName("firstName");
+		reservationTwo.setLastName("lastName");
+		reservationTwo.setCreatedBy(user);
+		reservationTwo.setReservationStatus(ReservationStatus.UpComing);
+		reservationTwo.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 6)));
+		reservationTwo.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 7)));
+		reservationTwo.setRoomRates(new ArrayList<RoomRate>());
+		
+		RoomRate roomRateThree = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 6)));
+		RoomRate roomRateFour = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 7)));
+
+		roomService.saveRoomRate(roomRateThree);
+		roomService.saveRoomRate(roomRateFour);
+		
+		List<RoomRate> roomRatesTwo = new ArrayList<RoomRate>();
+		roomRatesTwo.add(roomRateThree);
+		roomRatesTwo.add(roomRateFour);
+		reservationTwo.setRoomRates(roomRatesTwo);
+		
+		bookingService.saveReservation(reservationTwo);
+		bookingService.realiseReservation(reservationTwo);
+		
+		ReservationCharge rc1 = new ReservationCharge();
+		rc1.setCharge(chargeOne);
+		rc1.setQuantity(1);
+		rc1.setReservation(reservationTwo);
+		
+		ReservationCharge rc2 = new ReservationCharge();
+		rc2.setCharge(chargeTwo);
+		rc2.setQuantity(1);
+		rc2.setReservation(reservationTwo);
+		
+		invoiceService.saveReservationCharge(rc1);
+		invoiceService.saveReservationCharge(rc2);
+		
+		List<Reservation> reservationsInProgress = new ArrayList<Reservation>();
+		reservationsInProgress.add(reservationOne);
+		reservationsInProgress.add(reservationTwo);
+		
+		assertEquals(600, invoiceService.getTotalOfOutstandingCharges(reservationsInProgress));
+	}
 }

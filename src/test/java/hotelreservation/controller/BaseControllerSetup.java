@@ -1,8 +1,12 @@
 package hotelreservation.controller;
 
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,23 +14,28 @@ import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import hotelreservation.Utils;
+import hotelreservation.model.Contact;
+import hotelreservation.model.Guest;
+import hotelreservation.model.Identification;
 import hotelreservation.model.Privilege;
+import hotelreservation.model.Reservation;
 import hotelreservation.model.Role;
+import hotelreservation.model.Room;
+import hotelreservation.model.RoomRate;
+import hotelreservation.model.RoomType;
+import hotelreservation.model.Status;
 import hotelreservation.model.User;
+import hotelreservation.model.enums.Currency;
+import hotelreservation.model.enums.IdType;
+import hotelreservation.model.enums.ReservationStatus;
 import hotelreservation.repository.UserRepo;
+import hotelreservation.service.BookingService;
+import hotelreservation.service.RoomService;
 import hotelreservation.service.UserService;
 
 public abstract class BaseControllerSetup {
 	
-	private Role adminRole;
-	private Role managerRole;
-	private Role receptionistRole;
-
-	private User admin;
-	private User manager;
-	private User receptionist;
-	protected User superAdmin;
-
 	@Autowired
 	private UserService userService;
 	
@@ -39,7 +48,27 @@ public abstract class BaseControllerSetup {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
-	// Nasty hack - using @WithUserDetails causes the UserDetails service to be called as part of the securtiy chain, which happens before the @Before.
+	@Autowired
+	private RoomService roomService;
+
+	@Autowired
+	private BookingService bookingService;
+	
+	@Autowired
+	private Utils dateConvertor;
+	
+	private Role adminRole;
+	private Role managerRole;
+	private Role receptionistRole;
+
+	private User admin;
+	private User manager;
+	private User receptionist;
+	
+	protected User superAdmin;
+	protected Reservation reservation;
+	
+	// Nasty hack - using @WithUserDetails causes the UserDetails service to be called as part of the security chain, which happens before the @Before.
 	// Hopefully this will be fixed in some never version
 	@BeforeTransaction
 	public void setupExtra() {
@@ -50,8 +79,54 @@ public abstract class BaseControllerSetup {
 			getPrivilegesForAdmin();
 			
 			addPrivileges();
+			addReservation();
 			return null;
 		});
+	}
+
+	private void addReservation() {
+		Contact contactTwo = new Contact("some address", "cz");
+		bookingService.createContact(contactTwo);
+
+		Identification idTwo = new Identification(IdType.DriversLicense, "twoIdNumber");
+		bookingService.createIdentification(idTwo);
+
+		Guest mainGuest = new Guest("GuestTWo First Name", "GuestTwo Last Name", contactTwo, idTwo);
+		bookingService.createGuest(mainGuest);
+
+		reservation = new Reservation();
+		reservation.setFirstName("firstName");
+		reservation.setLastName("lastName");
+		reservation.setCreatedBy(receptionist);
+		reservation.setReservationStatus(ReservationStatus.UpComing);
+
+		RoomType roomTypeStandard = new RoomType("Standard", "Standard room");
+		roomService.saveRoomType(roomTypeStandard);
+
+		Status operational = new Status("Operational", "Room is in operation");
+		roomService.saveStatus(operational);
+
+		Room standardRoomOne = new Room(1, operational, roomTypeStandard, manager);
+		standardRoomOne.setName("Room 1");
+		standardRoomOne.setDescription("The Best Room Description");
+		roomService.saveRoom(standardRoomOne);
+
+		RoomRate roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		RoomRate roomRateThree = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		RoomRate roomRateFour = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
+
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
+		roomService.saveRoomRate(roomRateFour);
+		
+		reservation.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservation.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
+
+		List<RoomRate> roomRates = new ArrayList<>();
+		roomRates.add(roomRateTwo);
+		roomRates.add(roomRateThree);
+		roomRates.add(roomRateFour);
+		reservation.setRoomRates(roomRates);
 	}
 
 	abstract Collection<Privilege> getPrivilegesForReceptionist();
