@@ -89,6 +89,7 @@ public class BookingService {
 				reservation.setCreatedOn(findById.get().getCreatedOn());
 			}
 		}
+		//TODO checjk if roomRates are present
 		
 		//Check if room rates have sequential days
 		List<RoomRate> roomRates = reservation.getRoomRates();

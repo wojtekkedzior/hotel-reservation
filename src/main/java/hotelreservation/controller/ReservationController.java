@@ -199,7 +199,14 @@ public class ReservationController {
 		guestService.saveGuest(guest);
 		
 		Reservation reservation = bookingService.getReservation(reservationId);
-		reservation.getOccupants().add(guest);
+		
+		if(reservation.getOccupants() == null) {
+			List<Guest> occupants = new ArrayList<>();
+			occupants.add(guest);
+			reservation.setOccupants(occupants);
+		} else {
+			reservation.getOccupants().add(guest);
+		}
 		bookingService.saveReservation(reservation);
 
 		return new ModelAndView("redirect:/realiseReservation/" + reservationId.get());

@@ -64,9 +64,13 @@ public abstract class BaseControllerSetup {
 	private User admin;
 	private User manager;
 	private User receptionist;
+
+	private Contact contact;
+	private Identification identification;
 	
 	protected User superAdmin;
 	protected Reservation reservation;
+	protected Guest guest;
 	
 	// Nasty hack - using @WithUserDetails causes the UserDetails service to be called as part of the security chain, which happens before the @Before.
 	// Hopefully this will be fixed in some never version
@@ -85,14 +89,14 @@ public abstract class BaseControllerSetup {
 	}
 
 	private void addReservation() {
-		Contact contactTwo = new Contact("some address", "cz");
-		bookingService.createContact(contactTwo);
+		contact = new Contact("some address", "cz");
+		bookingService.createContact(contact);
 
-		Identification idTwo = new Identification(IdType.DriversLicense, "twoIdNumber");
-		bookingService.createIdentification(idTwo);
+		identification = new Identification(IdType.DriversLicense, "twoIdNumber");
+		bookingService.createIdentification(identification);
 
-		Guest mainGuest = new Guest("GuestTWo First Name", "GuestTwo Last Name", contactTwo, idTwo);
-		bookingService.createGuest(mainGuest);
+		guest = new Guest("GuestTWo First Name", "GuestTwo Last Name", contact, identification);
+		bookingService.createGuest(guest);
 
 		reservation = new Reservation();
 		reservation.setFirstName("firstName");
