@@ -36,6 +36,8 @@ public class UserControllerTest extends BaseControllerSetup {
 
 	@Autowired
 	private MockMvc mvc;
+	
+	private User user;
 
 	@Override
 	Collection<Privilege> getPrivilegesForReceptionist() {
@@ -59,14 +61,20 @@ public class UserControllerTest extends BaseControllerSetup {
 
 	@Before
 	public void setup() {
-
+		user = new User();
+		user.setPassword("password");
+		user.setFirstName("user");
+		user.setLastName("user");
+		user.setUserName("user");
+		user.setCreatedOn(new Date());
+		user.setEnabled(true);
 	}
 
 	@Test
 	@WithUserDetails("admin")
 	public void testAdminRolePermissions_allowed() throws Exception {
 		mvc.perform(get("/user/1")).andExpect(status().isOk());
-		mvc.perform(post("/adduser").flashAttr("user", new User())).andExpect(status().is4xxClientError());
+		mvc.perform(post("/adduser").flashAttr("user", user)).andExpect(status().is3xxRedirection());
 		mvc.perform(delete("/userDelete/1")).andExpect(status().is3xxRedirection());
 	}
 
@@ -79,7 +87,7 @@ public class UserControllerTest extends BaseControllerSetup {
 	@WithUserDetails("manager")
 	public void testManagerRolePermissions_allowed() throws Exception {
 		mvc.perform(get("/user/1")).andExpect(status().isOk());
-		mvc.perform(post("/adduser").flashAttr("user", new User())).andExpect(status().is4xxClientError());
+		mvc.perform(post("/adduser").flashAttr("user", user)).andExpect(status().is3xxRedirection());
 	}
 
 	@Test
@@ -98,12 +106,6 @@ public class UserControllerTest extends BaseControllerSetup {
 	@WithUserDetails("receptionist")
 	public void testReceptionistRolePermissions_forbidden() throws Exception {
 		mvc.perform(get("/user/1")).andExpect(status().isForbidden());
-		User user = new User();
-		user.setPassword("password");
-		user.setUserName("userName");
-		user.setFirstName("firstName");
-		user.setLastName("lastName");
-		user.setCreatedOn(new Date());
 		mvc.perform(post("/adduser").flashAttr("user", user)).andExpect(status().isForbidden());
 		mvc.perform(delete("/userDelete/1")).andExpect(status().isForbidden());
 	}
@@ -111,10 +113,8 @@ public class UserControllerTest extends BaseControllerSetup {
 	@Test
 	@WithMockUser(username = "manager", roles = "MISSING_ROLE")
 	public void testMissingRole() throws Exception {
-//		mvc.perform(get("/reservation/1")).andExpect(status().isForbidden());
-//		mvc.perform(get("/realiseReservation/1")).andExpect(status().isForbidden());
-//		mvc.perform(get("/cancelReservation/1")).andExpect(status().isForbidden());
-//		mvc.perform(get("/checkoutReservation/1")).andExpect(status().isForbidden());
-//		mvc.perform(delete("/reservationDelete/1")).andExpect(status().isForbidden());
+		mvc.perform(get("/user/1")).andExpect(status().isForbidden());
+		mvc.perform(post("/adduser").flashAttr("user", user)).andExpect(status().isForbidden());
+		mvc.perform(delete("/userDelete/1")).andExpect(status().isForbidden());
 	}
 }

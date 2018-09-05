@@ -63,6 +63,8 @@ public class User {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastloggedOn;
 
+	//TODO a user must have a role
+//	@NotNull
 	@ManyToMany
 	private Collection<Role> roles;
 
