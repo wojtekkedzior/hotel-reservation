@@ -65,12 +65,12 @@ public abstract class BaseControllerSetup {
 	private User manager;
 	private User receptionist;
 
-	private Contact contact;
 	private Identification identification;
 	
 	protected User superAdmin;
 	protected Reservation reservation;
 	protected Guest guest;
+	protected Contact contact;
 	
 	// Nasty hack - using @WithUserDetails causes the UserDetails service to be called as part of the security chain, which happens before the @Before.
 	// Hopefully this will be fixed in some never version
