@@ -87,6 +87,10 @@ public abstract class BaseControllerSetup {
 			return null;
 		});
 	}
+	
+	abstract Collection<Privilege> getPrivilegesForReceptionist();
+	abstract Collection<Privilege> getPrivilegesForManager();
+	abstract Collection<Privilege> getPrivilegesForAdmin();
 
 	private void addReservation() {
 		contact = new Contact("some address", "cz");
@@ -133,11 +137,7 @@ public abstract class BaseControllerSetup {
 		reservation.setRoomRates(roomRates);
 	}
 
-	abstract Collection<Privilege> getPrivilegesForReceptionist();
-	abstract Collection<Privilege> getPrivilegesForManager();
-	abstract Collection<Privilege> getPrivilegesForAdmin();
-	
-	public void createAdminUser() {
+	private void createAdminUser() {
 		superAdmin = new User();
 		superAdmin.setUserName("superAdmin");
 		superAdmin.setFirstName("adminFirstName");
