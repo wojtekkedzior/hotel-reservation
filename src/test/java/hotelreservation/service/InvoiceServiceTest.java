@@ -188,10 +188,7 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		bookingService.createContact(contactTwo);
 
 		guestOne = new Guest("GuestOne First Name", "GuestOne Last Name", contactOne, idOne);
-//		mainGuest = new Guest("GuestTWo First Name", "GuestTwo Last Name", contactTwo, idTwo);
-
 		bookingService.createGuest(guestOne);
-//		bookingService.createGuest(mainGuest);
 		
 		reservationOne = new Reservation();
 		reservationOne.setFirstName("firstName");
