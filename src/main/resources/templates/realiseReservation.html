@@ -1,7 +1,29 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layouts/layout">
 
+<head>
+<script th:inline="javascript">
+	/*<![CDATA[*/
+		
+		function saveForm() {
+			alert("asd");
+		    $('#submit-new-period').click(saveForm);
+	}
+	
+	
+/* $(function() {
+	alert("asd");
+    $('#submit-new-period').click(saveForm);
+}); */
+	/*]]>*/
+</script>
+</head>
+
+
+
+
 <body>
+
 	<div layout:fragment="content">
 
 		<div class="column">
@@ -73,10 +95,21 @@
 						<td th:text="${guest.identification.idType}"></td>
 						<td th:text="${guest.identification.idNumber}"></td>
 						<td>
-							<form action="#" th:action="@{/deleteContact/}+${guest.id}" th:method="delete">
-								<input type="hidden" name="_method" value="delete" /> <input type="number" th:field="${reservation.id}" hidden="true" />
+						
+
+						
+						
+						<input id="submit-new-period" type="button"  value="save" th:onClick="'javascript:saveForm();'"> SUBMIT</input>
+						
+						<a type="button"  th:href="@{'/deleteContact/{id}'(id=${guest.id})}" th:object="${reservation}" >asasdas</a>
+						
+<!-- 							<form action="#" th:action="@{/deleteContact/}+${guest.id}" th:method="delete"> -->
+<!-- 							<form action="#" th:action="@{'/deleteContact/{id}'(id=${guest.id})}" th:method="delete">
+								 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>  
+								<input type="hidden" name="_method" value="delete" /> 
+						 	<input type="number" th:field="${reservation.id}" hidden="true" /> 
 								<button type="submit">delete</button>
-							</form>
+							</form> -->
 						</td>
 					</tr>
 				</table>

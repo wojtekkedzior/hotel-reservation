@@ -18,16 +18,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import hotelreservation.model.Contact;
@@ -246,8 +249,9 @@ public class ReservationController {
 		return new ModelAndView("redirect:/reservation");
 	}
 
-	@RequestMapping(value = "/deleteContact/{id}", method = RequestMethod.DELETE)
+	@GetMapping(value = "/deleteContact/{id}")
 	@PreAuthorize("hasAuthority('realiseReservation')")
+//	@ResponseStatus(value=HttpStatus.OK)
 	public ModelAndView deleteGuest(@Valid @ModelAttribute Reservation reservation, @PathVariable Optional<Integer> id) {
 		if (id.isPresent()) {
 			// remove it from the reservation first.
