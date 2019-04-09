@@ -22,6 +22,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private HotelReservationAccessDeniedHandler accessDeniedHandler;
 	
+	@Autowired
+	private MyUserDetailsService userDetailsService;
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests().anyRequest().authenticated()
@@ -43,9 +46,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(authProvider());
 	}
-
-	@Autowired
-	private MyUserDetailsService userDetailsService;
 
 	@Bean
 	public DaoAuthenticationProvider authProvider() {

@@ -248,11 +248,11 @@ public class ReservationController {
 		}
 		return new ModelAndView("redirect:/reservation");
 	}
-
-	@GetMapping(value = "/deleteContact/{id}")
+//	deleteContact/3/reservationId/7
+	@PostMapping(value = "/deleteContact/{id}/reservationId/{reservationId}")
 	@PreAuthorize("hasAuthority('realiseReservation')")
 //	@ResponseStatus(value=HttpStatus.OK)
-	public ModelAndView deleteGuest(@Valid @ModelAttribute Reservation reservation, @PathVariable Optional<Integer> id) {
+	public ModelAndView deleteGuest(@PathVariable Optional<Integer> id,  @PathVariable Optional<Integer> reservationId) {
 		if (id.isPresent()) {
 			// remove it from the reservation first.
 			// need to check if the guest actually existsi
@@ -260,7 +260,7 @@ public class ReservationController {
 
 			Guest guestToDelete = null;
 
-			Reservation resFromDB = bookingService.getReservation(Optional.of(new Long(reservation.getId()).intValue()));
+			Reservation resFromDB = bookingService.getReservation(reservationId);
 			// TODO ugly
 			for (Guest occupant : resFromDB.getOccupants()) {
 				if (occupant.getId() == id.get()) {
@@ -275,7 +275,7 @@ public class ReservationController {
 			guestService.deleteGuest(id);
 		}
 
-		return new ModelAndView("redirect:/realiseReservation/" + reservation.getId());
+		return new ModelAndView("redirect:/realiseReservation/" + reservationId.get());
 	}
 	
 	@PostMapping("/cancelReservation/{reservationID}")

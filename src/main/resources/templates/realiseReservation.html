@@ -1,33 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layouts/layout">
 
-<head>
-<script th:inline="javascript">
-	/*<![CDATA[*/
-		
-		function saveForm() {
-			alert("asd");
-		    $('#submit-new-period').click(saveForm);
-	}
-	
-	
-/* $(function() {
-	alert("asd");
-    $('#submit-new-period').click(saveForm);
-}); */
-	/*]]>*/
-</script>
-</head>
-
-
-
-
 <body>
-
 	<div layout:fragment="content">
-
 		<div class="column">
-
 			<p>
 				Total: <input th:value="${total}" type="number" readonly="readonly" /> Currency : <input th:value="${currency}" type="text" readonly="readonly" />
 			</p>
@@ -96,10 +72,16 @@
 						<td th:text="${guest.identification.idNumber}"></td>
 						<td>
 						
-
+				<!-- 		<input id="submit-new-period" type="button"  value="save" th:onClick=" 'javascript:saveForm(\'' + ${guest.id} + '\'); '  "/>  -->
+				
+				<input id="submit-new-period" type="button"  value="save" th:onClick=" ' javascript:saveForm( ' + ${guest.id}  + ' , ' + ${reservation.id} +  ' ) ;  '  "/> 
+				
+				
+						<!-- <input id="submit-new-period" type="button"  value="save" th:onClick=" ' javascript:saveForm(\' '  +${guest.id} +  'asdasd/' + ${guest.id} +   '\'   ) ;  '  "/>  -->
 						
+		<!-- 				<input id="submit-new-period" type="button"  value="save" th:onClick=" '  javascript:say Hello(\''' + ${guest.id} + '\'); '  "/>  -->
 						
-						<input id="submit-new-period" type="button"  value="save" th:onClick="'javascript:saveForm();'"> SUBMIT</input>
+					<!-- 			th:onClick=" '  javascript:sayHello(\'' + ${roomRate.value} + '\');'  "></option> -->
 						
 						<a type="button"  th:href="@{'/deleteContact/{id}'(id=${guest.id})}" th:object="${reservation}" >asasdas</a>
 						
