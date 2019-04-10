@@ -16,10 +16,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import hotelreservation.Application;
 import hotelreservation.Utils;
 import hotelreservation.exceptions.NotDeletedException;
 import hotelreservation.exceptions.NotFoundException;
@@ -49,7 +47,6 @@ import hotelreservation.repository.UserRepo;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-@SpringBootTest(classes = Application.class)
 public class InvoiceServiceTest extends BaseServiceTest {
 
 	@Autowired
