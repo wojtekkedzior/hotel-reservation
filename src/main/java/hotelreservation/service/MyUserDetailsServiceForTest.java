@@ -8,7 +8,6 @@ import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,40 +18,39 @@ import org.springframework.test.context.ActiveProfiles;
 
 import hotelreservation.model.Privilege;
 import hotelreservation.model.Role;
-import hotelreservation.model.User;
-import hotelreservation.repository.UserRepo;
 
-@Service("userDetailsService")
-@ActiveProfiles("dev")
+@Service("userDetailsServiceForTest")
+@ActiveProfiles("test")
 @Transactional
-public class MyUserDetailsService implements UserDetailsService {
+public class MyUserDetailsServiceForTest implements UserDetailsService {
 	
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	@Autowired
-	private UserRepo userRepo;
+//	@Autowired
+//	private UserRepo userRepo;
 
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-		User user = userRepo.findByUserName(userName);
+//		User user = userRepo.findByUserName(userName);
 		
 		log.info("Login attempt for user: " + userName);
-		
-		if (user == null) { 
-			log.error("User: " + userName + " doesn't exist");
-			throw new UsernameNotFoundException("Username: " + userName + " was not found");
-		}
+//		
+//		if (user == null) { 
+//			log.error("User: " + userName + " doesn't exist");
+//			throw new UsernameNotFoundException("Username: " + userName + " was not found");
+//		}
 
-		List<GrantedAuthority> grantedAuthorities = getAuthorities(user.getRoles());
-		user.getRoles().stream().forEach(t -> grantedAuthorities.add(new SimpleGrantedAuthority(t.getName())));
+//		List<GrantedAuthority> grantedAuthorities = getAuthorities(user.getRoles());
+//		user.getRoles().stream().forEach(t -> grantedAuthorities.add(new SimpleGrantedAuthority(t.getName())));
 		
 		log.info("User: " + userName + " found");
-
-		if(log.isDebugEnabled()) {
-			log.info("User: " + userName + " found and has the following authorities: " + grantedAuthorities);
-		}
+//
+//		if(log.isDebugEnabled()) {
+//			log.info("User: " + userName + " found and has the following authorities: " + grantedAuthorities);
+//		}
 		
-		return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), user.isEnabled(), true, true, true, grantedAuthorities);
+//		return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), user.isEnabled(), true, true, true, grantedAuthorities);
+		return new org.springframework.security.core.userdetails.User("asd", "asd", true, true, true, true, new ArrayList<>());
 	}
 
 	private List<GrantedAuthority> getAuthorities(Collection<Role> roles) {
