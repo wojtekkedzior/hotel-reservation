@@ -10,14 +10,23 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 import hotelreservation.Application;
+import hotelreservation.HotelReservationAccessDeniedHandler;
+import hotelreservation.WebSecurityConfig;
+import hotelreservation.repository.UserRepo;
+import hotelreservation.service.BookingService;
+import hotelreservation.service.InvoiceService;
+import hotelreservation.service.MyUserDetailsService;
+import hotelreservation.service.RoomService;
 
 @RunWith(SpringRunner.class)
 //@SpringBootTest(classes = { MyUserDetailsService.class })
@@ -26,9 +35,9 @@ import hotelreservation.Application;
 //@SpringBootTest
 @WebMvcTest(value=AdminController.class)
 //@WebMvcTest(excludeFilters = @ComponentScan.Filter(classes = WebSecurityConfig.class))
-//@WebMvcTest(value=AdminController.class, excludeAutoConfiguration = Application.class, includeFilters=@ComponentScan.Filter(classes = RoomService.class))
+//@WebMvcTest(value=AdminController.class, excludeAutoConfiguration = Application.class)
 
-//@ContextConfiguration(classes= {WebSecurityConfigForTest.class, HotelReservationAccessDeniedHandler.class, MyUserDetailsServiceForTest.class, AdminController.class})
+@ContextConfiguration(classes= {MyUserDetailsService.class, WebSecurityConfig.class, HotelReservationAccessDeniedHandler.class, AdminController.class})
 //@WebAppConfiguration
 
 
@@ -58,6 +67,20 @@ public class AdminControllerTest /*extends BaseControllerSetup*/ {
 
 	  @Autowired  
 	  private MockMvc mvc;
+	  
+
+		@MockBean
+		private RoomService roomService;
+
+		@MockBean
+		private BookingService bookingService;
+
+		@MockBean
+		private InvoiceService invoiceService;
+		
+		@MockBean
+		private UserRepo userRepo;
+		
 
 //	    @Before
 //	    public void setup() {

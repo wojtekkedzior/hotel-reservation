@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.test.context.ActiveProfiles;
 
 import hotelreservation.model.Privilege;
 import hotelreservation.model.Role;
@@ -23,7 +22,6 @@ import hotelreservation.model.User;
 import hotelreservation.repository.UserRepo;
 
 @Service("userDetailsService")
-@ActiveProfiles("dev")
 @Transactional
 public class MyUserDetailsService implements UserDetailsService {
 	
