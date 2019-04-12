@@ -69,7 +69,7 @@ public class AdminControllerTest /*extends BaseControllerSetup*/ {
 	  private MockMvc mvc;
 	  
 
-		@MockBean
+		@MockBean 
 		private RoomService roomService;
 
 		@MockBean
