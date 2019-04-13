@@ -3,9 +3,7 @@
 
 <body>
 	<div layout:fragment="content">
-
 		<div class="column">
-
 			<p>
 				Total: <input th:value="${total}" type="number" readonly="readonly" /> Currency : <input th:value="${currency}" type="text" readonly="readonly" />
 			</p>
@@ -72,11 +70,9 @@
 						<td th:text="${guest.contact.country}"></td>
 						<td th:text="${guest.identification.idType}"></td>
 						<td th:text="${guest.identification.idNumber}"></td>
+						
 						<td>
-							<form action="#" th:action="@{/deleteContact/}+${guest.id}" th:method="delete">
-								<input type="hidden" name="_method" value="delete" /> <input type="number" th:field="${reservation.id}" hidden="true" />
-								<button type="submit">delete</button>
-							</form>
+						<input id="submit-new-period" type="button"  value="delete" th:onClick=" ' javascript:saveForm( ' + ${guest.id}  + ' , ' + ${reservation.id} +  ' ) ;  '  "/> 
 						</td>
 					</tr>
 				</table>

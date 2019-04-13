@@ -13,19 +13,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import hotelreservation.Application;
 import hotelreservation.model.Privilege;
 import hotelreservation.model.Role;
 import hotelreservation.model.User;
 import hotelreservation.repository.PrivilegeRepo;
 import hotelreservation.repository.RoleRepo;
 import hotelreservation.repository.UserRepo;
-import hotelreservation.service.MyUserDetailsService;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest

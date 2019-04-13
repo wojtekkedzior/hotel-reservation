@@ -178,7 +178,7 @@ public class UserServiceTest extends BaseServiceTest {
 		assertEquals(1, userService.getAllRoles().size());
 		assertEquals("updatedName", userService.getAllRoles().get(0).getName());
 		
-		assertEquals(role, userService.getRoleById(new Long(role.getId()).intValue()));
+		assertEquals(role, userService.getRoleById(Long.valueOf(role.getId()).intValue()));
 		
 		userService.deleteRole(role);
 		assertEquals(1, userService.getAllUsers().size());

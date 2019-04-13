@@ -246,32 +246,26 @@ public class ReservationController {
 		return new ModelAndView("redirect:/reservation");
 	}
 
-	@RequestMapping(value = "/deleteContact/{id}", method = RequestMethod.DELETE)
+	@PostMapping(value = "/deleteContact/{guestId}/reservationId/{reservationId}")
 	@PreAuthorize("hasAuthority('realiseReservation')")
-	public ModelAndView deleteGuest(@Valid @ModelAttribute Reservation reservation, @PathVariable Optional<Integer> id) {
-		if (id.isPresent()) {
-			// remove it from the reservation first.
-			// need to check if the guest actually existsi
-			// can't have no guests.
-
-			Guest guestToDelete = null;
-
-			Reservation resFromDB = bookingService.getReservation(Optional.of(new Long(reservation.getId()).intValue()));
-			// TODO ugly
-			for (Guest occupant : resFromDB.getOccupants()) {
-				if (occupant.getId() == id.get()) {
-					guestToDelete = occupant;
-				}
-			}
-
-			if (guestToDelete != null) {
+	public ModelAndView deleteGuest(@PathVariable Optional<Integer> guestId,  @PathVariable Optional<Integer> reservationId) {
+		if (guestId.isPresent()) {
+			log.info("deleting guest: " + guestId.get() + " from reservation: " + reservationId);
+			Guest guestToDelete = guestService.getGuestById(guestId.get());
+			Reservation resFromDB = bookingService.getReservation(reservationId);
+			
+			if(!resFromDB.getOccupants().contains(guestToDelete)) {
+				throw new IllegalArgumentException("Guest: " + guestToDelete.getId() + " is not in the list of Guests for reservation: " + resFromDB.getId());
+			} else {
+				//TODO can't delete the last occupant or make it so that you can't realise a reservation without an occupant
 				resFromDB.getOccupants().remove(guestToDelete);
+				guestService.deleteGuest(guestId);
 			}
-
-			guestService.deleteGuest(id);
 		}
+		
+		log.info("can't delete nonexistant guest");
 
-		return new ModelAndView("redirect:/realiseReservation/" + reservation.getId());
+		return new ModelAndView("redirect:/realiseReservation/" + reservationId.get());
 	}
 	
 	@PostMapping("/cancelReservation/{reservationID}")
