@@ -48,7 +48,7 @@ public class GuestServiceTest {
 		guestService.saveContact(contact);
 		assertEquals(contact, guestService.getContactById(contact.getId()));
 		
-		guestService.deleteContact(new Long(contact.getId()).intValue());
+		guestService.deleteContact(Long.valueOf(contact.getId()).intValue());
 		assertTrue(guestService.getAllContacts().isEmpty());
 	}
 	
@@ -61,7 +61,7 @@ public class GuestServiceTest {
 		guestService.saveIdentification(identification);
 		assertEquals(identification, guestService.getIdentificationById(identification.getId()));
 		
-		guestService.deleteIdentification(Optional.of(new Long(identification.getId()).intValue()));
+		guestService.deleteIdentification(Optional.of(Long.valueOf(identification.getId()).intValue()));
 		assertTrue(guestService.getAllIdentifications().isEmpty());
 	}
 	
@@ -84,7 +84,7 @@ public class GuestServiceTest {
 		guestService.saveContact(contact);
 		guestService.saveIdentification(identification);
 		
-		guestService.deleteGuest(Optional.of(new Long(guest.getId()).intValue()));
+		guestService.deleteGuest(Optional.of(Long.valueOf(guest.getId()).intValue()));
 		assertTrue(guestService.getAllGuests().isEmpty());
 	}
 	
@@ -105,12 +105,12 @@ public class GuestServiceTest {
 	
 	@Test(expected = NotDeletedException.class)
 	public void testDeleteNonExistentGuest() {
-		guestService.deleteGuest(Optional.of(new Integer(99)));
+		guestService.deleteGuest(Optional.of(Integer.valueOf(99)));
 	}
 	
 	@Test(expected = NotDeletedException.class)
 	public void testDeleteNonExistentIdentification() {
-		guestService.deleteIdentification(Optional.of(new Integer(99)));
+		guestService.deleteIdentification(Optional.of(Integer.valueOf(99)));
 	}
 	
 	@Test(expected = NotDeletedException.class)

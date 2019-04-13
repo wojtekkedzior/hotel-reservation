@@ -1,7 +1,3 @@
-/*($(function() {
-    $('#submit-new-period').click(saveForm);
-});*/
-
 function saveForm(guestId, reservationId){
 
     $.ajax({
@@ -10,7 +6,6 @@ function saveForm(guestId, reservationId){
         data: $('#reservation').serialize(),
         success: function(status){
             if(status) {
-            	//alert("asd" + status);
                 //here you check the response from your controller and add your business logic
             	//$.redirect('/hotelreservation/realiseReservation/'+reservationId);
             	 window.location = '/hotelreservation/realiseReservation/'+reservationId;

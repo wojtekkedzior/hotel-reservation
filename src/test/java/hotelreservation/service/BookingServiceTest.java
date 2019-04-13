@@ -823,7 +823,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
 		bookingService.saveReservation(reservationOne);
 
-		bookingService.fulfillReservation(Optional.of(new Long(reservationOne.getId()).intValue()));
+		bookingService.fulfillReservation(Optional.of(Long.valueOf(reservationOne.getId()).intValue()));
 	}
 	
 	@Test(expected = MissingOrInvalidArgumentException.class)
@@ -854,7 +854,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		invoiceService.saveCharge(chargeOne);
 		invoiceService.saveReservationCharge(reservationChargeOne);
 		
-		bookingService.fulfillReservation(Optional.of(new Long(reservationOne.getId()).intValue()));
+		bookingService.fulfillReservation(Optional.of(Long.valueOf(reservationOne.getId()).intValue()));
 	}
 	
 	@Test(expected = MissingOrInvalidArgumentException.class)
@@ -900,7 +900,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		payment.setReservationCharges(Arrays.asList(reservationChargeOne));
 		invoiceService.savePayment(payment);
 		
-		bookingService.fulfillReservation(Optional.of(new Long(reservationOne.getId()).intValue()));
+		bookingService.fulfillReservation(Optional.of(Long.valueOf(reservationOne.getId()).intValue()));
 	}
 	
 	@Test
@@ -921,7 +921,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		bookingService.realiseReservation(reservationOne);
 		
 		assertEquals(ReservationStatus.InProgress, reservationOne.getReservationStatus());
-		bookingService.fulfillReservation(Optional.of(new Long(reservationOne.getId()).intValue()));
+		bookingService.fulfillReservation(Optional.of(Long.valueOf(reservationOne.getId()).intValue()));
 		assertEquals(ReservationStatus.Fulfilled, reservationOne.getReservationStatus());
 	}
 	
@@ -968,7 +968,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		payment.setPaymentType(PaymentType.Cash);
 		invoiceService.savePayment(payment);
 		
-		bookingService.fulfillReservation(Optional.of(new Long(reservationOne.getId()).intValue()));
+		bookingService.fulfillReservation(Optional.of(Long.valueOf(reservationOne.getId()).intValue()));
 		assertEquals(ReservationStatus.Fulfilled, reservationOne.getReservationStatus());
 	}
 	

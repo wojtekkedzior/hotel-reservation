@@ -18,19 +18,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import hotelreservation.model.Contact;
@@ -248,32 +245,25 @@ public class ReservationController {
 		}
 		return new ModelAndView("redirect:/reservation");
 	}
-//	deleteContact/3/reservationId/7
-	@PostMapping(value = "/deleteContact/{id}/reservationId/{reservationId}")
+
+	@PostMapping(value = "/deleteContact/{guestId}/reservationId/{reservationId}")
 	@PreAuthorize("hasAuthority('realiseReservation')")
-//	@ResponseStatus(value=HttpStatus.OK)
-	public ModelAndView deleteGuest(@PathVariable Optional<Integer> id,  @PathVariable Optional<Integer> reservationId) {
-		if (id.isPresent()) {
-			// remove it from the reservation first.
-			// need to check if the guest actually existsi
-			// can't have no guests.
-
-			Guest guestToDelete = null;
-
+	public ModelAndView deleteGuest(@PathVariable Optional<Integer> guestId,  @PathVariable Optional<Integer> reservationId) {
+		if (guestId.isPresent()) {
+			log.info("deleting guest: " + guestId.get() + " from reservation: " + reservationId);
+			Guest guestToDelete = guestService.getGuestById(guestId.get());
 			Reservation resFromDB = bookingService.getReservation(reservationId);
-			// TODO ugly
-			for (Guest occupant : resFromDB.getOccupants()) {
-				if (occupant.getId() == id.get()) {
-					guestToDelete = occupant;
-				}
-			}
-
-			if (guestToDelete != null) {
+			
+			if(!resFromDB.getOccupants().contains(guestToDelete)) {
+				throw new IllegalArgumentException("Guest: " + guestToDelete.getId() + " is not in the list of Guests for reservation: " + resFromDB.getId());
+			} else {
+				//TODO can't delete the last occupant or make it so that you can't realise a reservation without an occupant
 				resFromDB.getOccupants().remove(guestToDelete);
+				guestService.deleteGuest(guestId);
 			}
-
-			guestService.deleteGuest(id);
 		}
+		
+		log.info("can't delete nonexistant guest");
 
 		return new ModelAndView("redirect:/realiseReservation/" + reservationId.get());
 	}

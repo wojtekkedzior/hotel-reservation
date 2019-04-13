@@ -26,15 +26,13 @@ import hotelreservation.service.BookingService;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @ActiveProfiles("dev")
-//@DataJpaTest
-//@AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ReservationControllerTest {
 
+	private MockMvc mvc;
+
 	@Autowired
 	private BookingService bookingService;
-	
-	private MockMvc mvc;
 	
 	@Autowired
 	private ApplicationStartup applicationStartup;
@@ -67,9 +65,7 @@ public class ReservationControllerTest {
 		mvc.perform(post("/addOccupant/1").flashAttr("guest", applicationStartup.guestOne)).andExpect(status().isForbidden());
 		mvc.perform(post("/fulfillReservation/1")).andExpect(status().isForbidden());
 		
-		mvc.perform(delete("/deleteContact/" + applicationStartup.contactOne.getId()).flashAttr("reservation", applicationStartup.reservationOne)).andExpect(status().isForbidden());	
-		//TODO ugly 
-		//mvc.perform(delete("/deleteContact/1")).andExpect(status().isForbidden());
+		mvc.perform(post("/deleteContact/" + applicationStartup.contactOne.getId() + "/reservationId/" + applicationStartup.reservationOne.getId())).andExpect(status().isForbidden());	
 
 		ReservationCancellation cancellation = new ReservationCancellation();
 		cancellation.setReason("some reason");
@@ -90,9 +86,9 @@ public class ReservationControllerTest {
 
 		mvc.perform(post("/addOccupant/1").flashAttr("guest", applicationStartup.guestOne)).andExpect(status().is3xxRedirection());
 		mvc.perform(post("/fulfillReservation/1")).andExpect(status().is4xxClientError());
-
+		
 		//in error due to constraint violation
-		mvc.perform(delete("/deleteContact/" + applicationStartup.contactOne.getId()).flashAttr("reservation", applicationStartup.reservationOne)).andExpect(status().is4xxClientError());	
+		mvc.perform(post("/deleteContact/" + applicationStartup.contactOne.getId() + "/reservationId/" + applicationStartup.reservationOne.getId())).andExpect(status().is4xxClientError());	
 		
 		ReservationCancellation cancellation = new ReservationCancellation();
 		cancellation.setReason("some reason");
@@ -122,7 +118,7 @@ public class ReservationControllerTest {
 		mvc.perform(post("/fulfillReservation/1").flashAttr("reservationID", 1)).andExpect(status().is4xxClientError());
 
 		//in error due to constraint violation
-		mvc.perform(delete("/deleteContact/" + applicationStartup.contactOne.getId()).flashAttr("reservation", applicationStartup.reservationOne)).andExpect(status().is4xxClientError());	
+		mvc.perform(post("/deleteContact/" + applicationStartup.contactOne.getId() + "/reservationId/" + applicationStartup.reservationOne.getId())).andExpect(status().is4xxClientError());	
 		
 		ReservationCancellation cancellation = new ReservationCancellation();
 		cancellation.setReason("some reason");
@@ -145,7 +141,7 @@ public class ReservationControllerTest {
 		mvc.perform(get("/checkoutReservation/1")).andExpect(status().isForbidden());
 		mvc.perform(delete("/reservationDelete/1")).andExpect(status().isForbidden());
 		
-		mvc.perform(delete("/deleteContact/" + applicationStartup.contactOne.getId()).flashAttr("reservation", applicationStartup.reservationOne)).andExpect(status().isForbidden());	
+		mvc.perform(post("/deleteContact/" + applicationStartup.contactOne.getId() + "/reservationId/" + applicationStartup.reservationOne.getId())).andExpect(status().isForbidden());	
 		
 		mvc.perform(post("/addOccupant/1").flashAttr("guest", applicationStartup.guestOne)).andExpect(status().isForbidden());
 		mvc.perform(post("/fulfillReservation/1")).andExpect(status().isForbidden());

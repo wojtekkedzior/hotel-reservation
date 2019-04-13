@@ -165,7 +165,7 @@ public class BookingService {
 		
 		log.info("Getting resrvation: " + reservationId.get());
 		
-		Optional<Reservation> reservation = reservationRepo.findById(new Long(reservationId.get()));
+		Optional<Reservation> reservation = reservationRepo.findById(Long.valueOf(reservationId.get()));
 		
 		if (!reservation.isPresent()) {
 			log.warn("No reservation found for: " + reservationId.get());
@@ -237,7 +237,7 @@ public class BookingService {
 		
 		log.info("Fulfilling reservation: " + reservationID.get());
 		
-		Long id = new Long(reservationID.get());
+		Long id = Long.valueOf(reservationID.get());
 		
 		if(!reservationRepo.existsById(id)) {
 			throw new NotFoundException("Reservation fulfillment reservation is missing. ID " + id);
@@ -262,4 +262,14 @@ public class BookingService {
 	public long getReservationCount() {
 		return reservationRepo.count();
 	}
+
+//	public Guest getGuest(Optional<Integer> guestId) {
+//		log.info("Looking for a Guest: " + guestId.get());
+//		
+//		if(guestRepo.findById(Long.valueOf(guestId.get())).isPresent()) {
+//			return guestRepo.findById(Long.valueOf(guestId.get())).get();
+//		} else {
+//			throw new NotFoundException(guestId.get());
+//		}
+//	}
 }

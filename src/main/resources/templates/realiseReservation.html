@@ -70,28 +70,9 @@
 						<td th:text="${guest.contact.country}"></td>
 						<td th:text="${guest.identification.idType}"></td>
 						<td th:text="${guest.identification.idNumber}"></td>
+						
 						<td>
-						
-				<!-- 		<input id="submit-new-period" type="button"  value="save" th:onClick=" 'javascript:saveForm(\'' + ${guest.id} + '\'); '  "/>  -->
-				
-				<input id="submit-new-period" type="button"  value="save" th:onClick=" ' javascript:saveForm( ' + ${guest.id}  + ' , ' + ${reservation.id} +  ' ) ;  '  "/> 
-				
-				
-						<!-- <input id="submit-new-period" type="button"  value="save" th:onClick=" ' javascript:saveForm(\' '  +${guest.id} +  'asdasd/' + ${guest.id} +   '\'   ) ;  '  "/>  -->
-						
-		<!-- 				<input id="submit-new-period" type="button"  value="save" th:onClick=" '  javascript:say Hello(\''' + ${guest.id} + '\'); '  "/>  -->
-						
-					<!-- 			th:onClick=" '  javascript:sayHello(\'' + ${roomRate.value} + '\');'  "></option> -->
-						
-						<a type="button"  th:href="@{'/deleteContact/{id}'(id=${guest.id})}" th:object="${reservation}" >asasdas</a>
-						
-<!-- 							<form action="#" th:action="@{/deleteContact/}+${guest.id}" th:method="delete"> -->
-<!-- 							<form action="#" th:action="@{'/deleteContact/{id}'(id=${guest.id})}" th:method="delete">
-								 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>  
-								<input type="hidden" name="_method" value="delete" /> 
-						 	<input type="number" th:field="${reservation.id}" hidden="true" /> 
-								<button type="submit">delete</button>
-							</form> -->
+						<input id="submit-new-period" type="button"  value="delete" th:onClick=" ' javascript:saveForm( ' + ${guest.id}  + ' , ' + ${reservation.id} +  ' ) ;  '  "/> 
 						</td>
 					</tr>
 				</table>
