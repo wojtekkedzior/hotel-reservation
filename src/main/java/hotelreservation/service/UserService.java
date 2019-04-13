@@ -94,7 +94,7 @@ public class UserService {
 
 	public User getUserById(Integer id) {
 		log.info("Looking for User with ID: " + id);
-		Optional<User> findById = userRepo.findById(new Long(id));
+		Optional<User> findById = userRepo.findById(Long.valueOf(id));
 		if(findById.isPresent()) {
 			return findById.get();
 		} else {
@@ -104,7 +104,7 @@ public class UserService {
 	
 	public Role getRoleById(Integer id) {
 		log.info("Looking for Role with ID: " + id);
-		Optional<Role> findById = roleRepo.findById(new Long(id));
+		Optional<Role> findById = roleRepo.findById(Long.valueOf(id));
 		if(findById.isPresent()) {
 			return findById.get();
 		} else {

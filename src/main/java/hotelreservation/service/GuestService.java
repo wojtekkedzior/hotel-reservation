@@ -89,17 +89,17 @@ public class GuestService {
 	}
 	
 	public void deleteGuest(Optional<Integer> id) {
-		if(!guestRepo.existsById(new Long(id.get()))) {
+		if(!guestRepo.existsById(Long.valueOf(id.get()))) {
 			throw new NotDeletedException(id.get());
 		}
-		guestRepo.delete(guestRepo.findById(new Long(id.get())).get());
+		guestRepo.delete(guestRepo.findById(Long.valueOf(id.get())).get());
 	}
 	
 	public void deleteIdentification(Optional<Integer> id) {
-		if(!identificationRepo.existsById(new Long(id.get()))) {
+		if(!identificationRepo.existsById(Long.valueOf(id.get()))) {
 			throw new NotDeletedException(id.get());
 		}
-		identificationRepo.delete(identificationRepo.findById(new Long(id.get())).get());
+		identificationRepo.delete(identificationRepo.findById(Long.valueOf(id.get())).get());
 	}
 
 	public void deleteContact(long id) {
