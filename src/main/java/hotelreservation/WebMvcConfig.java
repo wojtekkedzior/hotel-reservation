@@ -1,14 +1,11 @@
 package hotelreservation;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableMBeanExport;
-import org.springframework.jmx.support.RegistrationPolicy;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-@EnableMBeanExport(registration=RegistrationPolicy.IGNORE_EXISTING)
 public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
