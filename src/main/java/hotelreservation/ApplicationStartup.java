@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -375,8 +374,6 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		roomService.saveAmenityType(amenityTypeRoomLuxury);
 		roomService.saveAmenityType(amenityTypeHotel);
 	}
-	
-	
 
 	private void addStatuses() {
 		operational = new Status("Operational", "Room is in operation");
@@ -458,7 +455,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	}
 
 	private void addRoomRates() {
-		Calendar cal = new GregorianCalendar();
+		Calendar cal = Calendar.getInstance();
 		cal.setTime(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1)));
 
 		for (int days = 1; days <= 365; days++) {
@@ -533,15 +530,16 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 
 		List<RoomRate> roomRatesForAllRooms = roomService.getRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.MARCH, 1)),
 				dateConvertor.asDate(LocalDate.of(2018, Month.MARCH, 31)));
-
+		
 		for (RoomRate roomRate : roomRatesForAllRooms) {
 			if (roomRate.getRoom().getId() == 1 
 					&& roomRate.getDay().after(dateConvertor.asDate(startDate.minusDays(1)))
 					&& roomRate.getDay().before(dateConvertor.asDate(endDate.plusDays(1)))) {
+				
 				reservationOne.getRoomRates().add(roomRate);
 			}
 		}
-
+		
 		bookingService.saveReservation(reservationOne);
 	}
 	
