@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,11 +52,11 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	private Role receptionistRole;
 
 	private User superAdmin;
-	private User admin;
+	public User admin;
 	private User manager;
 	private User receptionist;
 
-	private Status operational;
+	public Status operational;
 	private Status underMaintenance;
 	private Status underConstruction;
 	private Status notOperational;
@@ -87,11 +86,11 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	private Amenity sauna;
 	private Amenity conferenceRoom;
 
-	private RoomType roomTypeStandard;
+	public RoomType roomTypeStandard;
 	private RoomType roomTypeLuxury;
 
 	// Rooms
-	private Room standardRoomOne;
+	public Room standardRoomOne;
 	private Room standardRoomTwo;
 	private Room standardRoomThree;
 	private Room luxuryRoomOne;
@@ -99,7 +98,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	private Room luxuryRoomThree;
 
 	// Contacts
-	private Contact contactOne;
+	public Contact contactOne;
 	private Contact contactTwo;
 	private Contact contactThree;
 	private Contact contactFour;
@@ -111,18 +110,18 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	private Identification idFour;
 
 	// Guests
-	private Guest guestOne;
+	public Guest guestOne;
 	private Guest guestTwo;
 	private Guest guestThree;
 	private Guest guestFour;
 	
 	//Charges
-	private Charge coke;
-	private Charge roomServiceDelivery;
+	public Charge coke;
+	public Charge roomServiceDelivery;
 	private Charge brokenTable;
 
 	// Reservations
-	private Reservation reservationOne;
+	public Reservation reservationOne;
 
 	@Autowired
 	private UserService userService;
@@ -375,8 +374,6 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		roomService.saveAmenityType(amenityTypeRoomLuxury);
 		roomService.saveAmenityType(amenityTypeHotel);
 	}
-	
-	
 
 	private void addStatuses() {
 		operational = new Status("Operational", "Room is in operation");
@@ -458,7 +455,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	}
 
 	private void addRoomRates() {
-		Calendar cal = new GregorianCalendar();
+		Calendar cal = Calendar.getInstance();
 		cal.setTime(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1)));
 
 		for (int days = 1; days <= 365; days++) {
@@ -533,15 +530,16 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 
 		List<RoomRate> roomRatesForAllRooms = roomService.getRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.MARCH, 1)),
 				dateConvertor.asDate(LocalDate.of(2018, Month.MARCH, 31)));
-
+		
 		for (RoomRate roomRate : roomRatesForAllRooms) {
 			if (roomRate.getRoom().getId() == 1 
 					&& roomRate.getDay().after(dateConvertor.asDate(startDate.minusDays(1)))
 					&& roomRate.getDay().before(dateConvertor.asDate(endDate.plusDays(1)))) {
+				
 				reservationOne.getRoomRates().add(roomRate);
 			}
 		}
-
+		
 		bookingService.saveReservation(reservationOne);
 	}
 	

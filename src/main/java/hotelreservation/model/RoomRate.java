@@ -19,10 +19,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import hotelreservation.model.enums.Currency;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @Table(uniqueConstraints=@UniqueConstraint(columnNames = {"room_id" , "day"}, name = "uq_name"))
+@NoArgsConstructor 
 public class RoomRate {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,13 +44,10 @@ public class RoomRate {
 	private int value;
 	
 	@NotNull
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP )
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date day;
 	
-	public RoomRate() { 
-	}
-
 	public RoomRate(Room room, Currency currency, int value, Date day) {
 		super();
 		this.room = room;

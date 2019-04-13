@@ -14,9 +14,11 @@ import javax.validation.constraints.NotNull;
 
 import hotelreservation.model.finance.Payment;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor 
 public class ReservationCheckout {
 	
 	@Id

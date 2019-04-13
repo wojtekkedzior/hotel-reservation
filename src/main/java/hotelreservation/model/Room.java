@@ -14,9 +14,11 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor 
 public class Room {
 
 	@Id
@@ -48,8 +50,6 @@ public class Room {
 	@ManyToOne
 	private User createdBy;
 
-	public Room() {}
-	
 	public Room(int roomNumber, Status status, RoomType roomType, User createdBy) {
 		this.roomNumber = roomNumber;
 		this.status = status;

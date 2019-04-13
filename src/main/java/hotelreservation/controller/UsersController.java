@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -58,8 +59,10 @@ public class UsersController {
 	
 	@PostMapping("/adduser")
 	@PreAuthorize("hasAuthority('createUser')")
-	public ModelAndView addUser(@Valid @ModelAttribute User user,  Authentication authentication) {
+	public ModelAndView addUser(@Valid @ModelAttribute User user) {
 		log.info("creating user: " + user);
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		log.info("Authenticated user:  " + authentication + " is creating: " + user);
 		
 		userService.saveUser(user, authentication.getName());
 		return new ModelAndView("redirect:/user/" + user.getId());
