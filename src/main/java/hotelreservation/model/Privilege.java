@@ -8,9 +8,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor 
 public class Privilege {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,8 +21,6 @@ public class Privilege {
 	@NotNull
 	@NotBlank
 	private String name;
-
-	public Privilege() {}
 
 	public Privilege(String name) {
 		this.name = name;

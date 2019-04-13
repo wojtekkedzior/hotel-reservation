@@ -1,97 +1,58 @@
 package hotelreservation.controller;
 
-import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.ArrayList;
-import java.util.Collection;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import hotelreservation.Application;
-import hotelreservation.model.Privilege;
+import hotelreservation.ApplicationStartup;
+import hotelreservation.RestExceptionHandler;
 import hotelreservation.model.ReservationCancellation;
 import hotelreservation.service.BookingService;
-import hotelreservation.service.MyUserDetailsService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = { Application.class, MyUserDetailsService.class })
-@DataJpaTest
-@AutoConfigureMockMvc
+@SpringBootTest
+@ActiveProfiles("dev")
+//@DataJpaTest
+//@AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class ReservationControllerTest extends BaseControllerSetup {
-
-	@Autowired
-	private MockMvc mvc;
+public class ReservationControllerTest {
 
 	@Autowired
 	private BookingService bookingService;
-
-	@Override
-	Collection<Privilege> getPrivilegesForReceptionist() {
-		Collection<Privilege> receptionistPrivileges = new ArrayList<Privilege>();
-		receptionistPrivileges.add(new Privilege("getReservation"));
-		receptionistPrivileges.add(new Privilege("createReservation"));
-		receptionistPrivileges.add(new Privilege("cancelReservation"));
-		receptionistPrivileges.add(new Privilege("realiseReservation"));
-		receptionistPrivileges.add(new Privilege("checkoutReservation"));
-		receptionistPrivileges.add(new Privilege("fulfillReservation"));
-		receptionistPrivileges.add(new Privilege("viewReservationDashBoard"));
-		return receptionistPrivileges;
-	}
-
-	@Override
-	Collection<Privilege> getPrivilegesForManager() {
-		Collection<Privilege> managerPrivileges = new ArrayList<Privilege>();
-		managerPrivileges.add(new Privilege("getReservation"));
-		managerPrivileges.add(new Privilege("createReservation"));
-		managerPrivileges.add(new Privilege("cancelReservation"));
-		managerPrivileges.add(new Privilege("realiseReservation"));
-		managerPrivileges.add(new Privilege("checkoutReservation"));
-		managerPrivileges.add(new Privilege("fulfillReservation"));
-		managerPrivileges.add(new Privilege("viewReservationDashBoard"));
-		return managerPrivileges;
-	}
-
-	@Override
-	Collection<Privilege> getPrivilegesForAdmin() {
-		Collection<Privilege> adminPrivileges = new ArrayList<Privilege>();
-		adminPrivileges.add(new Privilege("deleteReservation"));
-		adminPrivileges.add(new Privilege("viewReservationDashBoard"));
-		return adminPrivileges;
-	}
-
+	
+	private MockMvc mvc;
+	
+	@Autowired
+	private ApplicationStartup applicationStartup;
+	
+	@Autowired
+	private ReservationController reservationController;
+	
 	@Before
 	public void setup() {
-		try {
-			bookingService.saveReservation(reservation);
-		} catch (Exception e) {
-			fail();
-		}
+		this.mvc = standaloneSetup(reservationController) .setControllerAdvice(new RestExceptionHandler()).build();// Standalone context
 	}
-	
+
 	@Test
 	@WithUserDetails("admin")
 	public void testAdminRolePermissions_allowed() throws Exception {
 		mvc.perform(delete("/reservationDelete/1")).andExpect(status().is3xxRedirection());
 		
 		mvc.perform(get("/dashboard")).andExpect(status().isOk());
-		mvc.perform(get("/")).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/dashboard"));
 	}
 
 	@Test
@@ -99,20 +60,20 @@ public class ReservationControllerTest extends BaseControllerSetup {
 	public void testAdminRolePermissions_forbidden() throws Exception {
 		mvc.perform(get("/reservation/1")).andExpect(status().isForbidden());
 		mvc.perform(get("/realiseReservation/1")).andExpect(status().isForbidden());
-		mvc.perform(post("/realiseReservation/1").flashAttr("reservation", reservation)).andExpect(status().isForbidden());
+		mvc.perform(post("/realiseReservation/1").flashAttr("reservation", applicationStartup.reservationOne)).andExpect(status().isForbidden());
 		mvc.perform(get("/cancelReservation/1")).andExpect(status().isForbidden());
 		mvc.perform(get("/checkoutReservation/1")).andExpect(status().isForbidden());
 		
-		mvc.perform(post("/addOccupant/1").flashAttr("guest", guest)).andExpect(status().isForbidden());
+		mvc.perform(post("/addOccupant/1").flashAttr("guest", applicationStartup.guestOne)).andExpect(status().isForbidden());
 		mvc.perform(post("/fulfillReservation/1")).andExpect(status().isForbidden());
 		
-		mvc.perform(delete("/deleteContact/" + contact.getId()).flashAttr("reservation", reservation)).andExpect(status().isForbidden());	
+		mvc.perform(delete("/deleteContact/" + applicationStartup.contactOne.getId()).flashAttr("reservation", applicationStartup.reservationOne)).andExpect(status().isForbidden());	
 		//TODO ugly 
 		//mvc.perform(delete("/deleteContact/1")).andExpect(status().isForbidden());
 
 		ReservationCancellation cancellation = new ReservationCancellation();
 		cancellation.setReason("some reason");
-		cancellation.setReservation(reservation);
+		cancellation.setReservation(applicationStartup.reservationOne);
 		mvc.perform(post("/cancelReservation/1").flashAttr("reservationCancellation", cancellation)).andExpect(status().isForbidden());
 	}
 
@@ -121,21 +82,21 @@ public class ReservationControllerTest extends BaseControllerSetup {
 	public void testManagerRolePermissions_allowed() throws Exception {
 		mvc.perform(get("/reservation/1")).andExpect(status().isOk());
 		mvc.perform(get("/realiseReservation/1")).andExpect(status().isOk());
-		mvc.perform(post("/realiseReservation/1").flashAttr("reservation", reservation)).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/realiseReservation/1").flashAttr("reservation", applicationStartup.reservationOne)).andExpect(status().is3xxRedirection());
 		mvc.perform(get("/cancelReservation/1")).andExpect(status().isOk());
 		mvc.perform(get("/checkoutReservation/1")).andExpect(status().isOk());
 		
 		mvc.perform(get("/dashboard")).andExpect(status().isOk());
-		mvc.perform(get("/")).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/dashboard"));
 
-		mvc.perform(post("/addOccupant/1").flashAttr("guest", guest)).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/addOccupant/1").flashAttr("guest", applicationStartup.guestOne)).andExpect(status().is3xxRedirection());
 		mvc.perform(post("/fulfillReservation/1")).andExpect(status().is4xxClientError());
 
-		mvc.perform(delete("/deleteContact/" + contact.getId()).flashAttr("reservation", reservation)).andExpect(status().is3xxRedirection());	
+		//in error due to constraint violation
+		mvc.perform(delete("/deleteContact/" + applicationStartup.contactOne.getId()).flashAttr("reservation", applicationStartup.reservationOne)).andExpect(status().is4xxClientError());	
 		
 		ReservationCancellation cancellation = new ReservationCancellation();
 		cancellation.setReason("some reason");
-		cancellation.setReservation(reservation);
+		cancellation.setReservation(applicationStartup.reservationOne);
 		mvc.perform(post("/cancelReservation/1").flashAttr("reservationCancellation", cancellation)).andExpect(status().is3xxRedirection());
 	}
 	
@@ -155,26 +116,24 @@ public class ReservationControllerTest extends BaseControllerSetup {
 		//		mvc.perform(post("/addOccupant/1")).andExpect(status().is3xxRedirection());
 		mvc.perform(get("/cancelReservation/1")).andExpect(status().isOk());
 		mvc.perform(get("/checkoutReservation/1")).andExpect(status().isOk());
-		
-		
 		mvc.perform(get("/dashboard")).andExpect(status().isOk());
-		mvc.perform(get("/")).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/dashboard"));
 
-		mvc.perform(post("/addOccupant/1").flashAttr("guest", guest)).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/addOccupant/1").flashAttr("guest", applicationStartup.guestOne)).andExpect(status().is3xxRedirection());
 		mvc.perform(post("/fulfillReservation/1").flashAttr("reservationID", 1)).andExpect(status().is4xxClientError());
 
-		mvc.perform(delete("/deleteContact/" + contact.getId()).flashAttr("reservation", reservation)).andExpect(status().is3xxRedirection());	
+		//in error due to constraint violation
+		mvc.perform(delete("/deleteContact/" + applicationStartup.contactOne.getId()).flashAttr("reservation", applicationStartup.reservationOne)).andExpect(status().is4xxClientError());	
 		
 		ReservationCancellation cancellation = new ReservationCancellation();
 		cancellation.setReason("some reason");
-		cancellation.setReservation(reservation);
+		cancellation.setReservation(applicationStartup.reservationOne);
 		mvc.perform(post("/cancelReservation/1").flashAttr("reservationCancellation", cancellation)).andExpect(status().is3xxRedirection());
 	}
 
 	@Test
 	@WithUserDetails("receptionist")
 	public void testReceptionistRolePermissions_forbidden() throws Exception {
-		mvc.perform(delete("/reservationDelete/{id}", new Integer(1))).andExpect(status().isForbidden());
+		mvc.perform(delete("/reservationDelete/{id}", Integer.valueOf(1))).andExpect(status().isForbidden());
 	}
 
 	@Test
@@ -186,23 +145,22 @@ public class ReservationControllerTest extends BaseControllerSetup {
 		mvc.perform(get("/checkoutReservation/1")).andExpect(status().isForbidden());
 		mvc.perform(delete("/reservationDelete/1")).andExpect(status().isForbidden());
 		
-		mvc.perform(delete("/deleteContact/" + contact.getId()).flashAttr("reservation", reservation)).andExpect(status().isForbidden());	
+		mvc.perform(delete("/deleteContact/" + applicationStartup.contactOne.getId()).flashAttr("reservation", applicationStartup.reservationOne)).andExpect(status().isForbidden());	
 		
-		mvc.perform(post("/addOccupant/1").flashAttr("guest", guest)).andExpect(status().isForbidden());
+		mvc.perform(post("/addOccupant/1").flashAttr("guest", applicationStartup.guestOne)).andExpect(status().isForbidden());
 		mvc.perform(post("/fulfillReservation/1")).andExpect(status().isForbidden());
 	}
 	
 	@Test
 	@WithUserDetails("manager")
 	public void testFulfillReservation() throws Exception {
-		bookingService.realiseReservation(reservation);
+		bookingService.realiseReservation(applicationStartup.reservationOne);
 		mvc.perform(post("/fulfillReservation/1")).andExpect(status().is3xxRedirection());
 	}
 	
 	@Test
 	@WithUserDetails("manager")
 	public void testSaveReservation() throws Exception {
-		mvc.perform(post("/reservation/").flashAttr("reservation", reservation)).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/reservation/").flashAttr("reservation", applicationStartup.reservationOne)).andExpect(status().is3xxRedirection());
 	}
-	
 }

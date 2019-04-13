@@ -9,9 +9,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor 
 public class Guest {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,8 +37,6 @@ public class Guest {
 	@NotNull
 	private Identification identification;
 	
-	public Guest() {}
-
 	public Guest(String firstName, String lastName, Contact contact, Identification identification) {
 		this.firstName = firstName;
 		this.lastName = lastName;

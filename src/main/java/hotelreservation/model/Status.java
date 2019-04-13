@@ -8,9 +8,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor 
 public class Status {
 
 	@Id
@@ -23,11 +25,8 @@ public class Status {
 	
 	private String description;
 	
-	public Status() {}
-
 	public Status(String name, String description) {
 		this.name = name;
 		this.description = description;
 	}
-
 }

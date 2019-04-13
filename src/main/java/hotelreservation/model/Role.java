@@ -11,9 +11,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor 
 public class Role {
 
 	@Id
@@ -29,9 +31,6 @@ public class Role {
 
 	@ManyToMany
 	private Collection<Privilege> privileges;
-
-	public Role() {
-	}
 
 	public Role(String name, String description, boolean enabled) {
 		this.name = name;

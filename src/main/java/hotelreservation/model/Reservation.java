@@ -22,10 +22,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 import hotelreservation.model.enums.ReservationStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor 
 public class Reservation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,6 +42,7 @@ public class Reservation {
 	//TODO need to figure out how to do the occupants and mainguests better
 //	@NotNull
 	@ManyToMany
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Guest> occupants;
 	
 	@ManyToMany
@@ -74,9 +77,6 @@ public class Reservation {
 	//logic to determin the reservation type (consecutive days vs non-consecutive) can also get tricky.
 
 	//TODO add cc here
-	
-	public Reservation() {}
-	
 	
 	//probably needs a history table
 

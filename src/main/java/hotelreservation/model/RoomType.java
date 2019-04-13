@@ -8,9 +8,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor 
 public class RoomType {
 	
 	@Id
@@ -22,8 +24,6 @@ public class RoomType {
 	private String name;
 	
 	private String description;
-	
-	public RoomType() {}
 	
 	public RoomType(String name, String description) {
 		this.name = name;

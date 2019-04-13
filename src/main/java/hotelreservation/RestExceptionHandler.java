@@ -5,9 +5,13 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,20 +22,22 @@ import hotelreservation.exceptions.NotFoundException;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
+	
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
+	//TODO add logging
+	
 	@ExceptionHandler(EntityNotFoundException.class)
 	protected ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex) {
 		// return buildResponseEntity();
-		System.err.println(ex);
+		log.info(ex.getMessage());
 		return null;
 	}
 
 	@ExceptionHandler(NotFoundException.class)
 	protected ResponseEntity<Object> handleNoSuchElementException(NotFoundException ex) {
-		System.err.println(ex);
-
+		log.info(ex.getMessage());
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		// return null;
 	}
 
 	@Override
@@ -49,7 +55,23 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 			output.append(string);
 			output.append("\n");
 		}
-
+		
+		log.info(ex.getMessage());
+		
+		//log the field and exception here otherwise it's hard to figure out what is missing
+		System.err.println(ex);
 		return new ResponseEntity<>(output, status);
+	}
+	
+	@ExceptionHandler(AccessDeniedException.class)
+	protected ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex) {
+		log.info(ex.getMessage());
+		return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+	}
+	
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	protected ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+		log.info(ex.getMessage());
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 }

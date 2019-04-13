@@ -9,9 +9,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor 
 public class Amenity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,8 +30,6 @@ public class Amenity {
 	@ManyToOne
 	private AmenityType amenityType;
 	
-	public Amenity() {}
-
 	public Amenity(String name, String description, AmenityType amenityType) {
 		this.name = name;
 		this.description = description;

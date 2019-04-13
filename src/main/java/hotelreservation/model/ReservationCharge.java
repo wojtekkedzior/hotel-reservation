@@ -8,9 +8,11 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor 
 public class ReservationCharge {
 	
 	@Id
@@ -30,8 +32,6 @@ public class ReservationCharge {
 	@NotNull
 	private int quantity;
 
-	public ReservationCharge() {}
-	
 	public ReservationCharge(Charge charge, int quantity) {
 		this.charge = charge;
 		this.quantity = quantity;

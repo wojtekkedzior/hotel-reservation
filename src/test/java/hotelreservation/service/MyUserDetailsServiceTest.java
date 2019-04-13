@@ -29,7 +29,6 @@ import hotelreservation.service.MyUserDetailsService;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-@SpringBootTest(classes = Application.class)
 public class MyUserDetailsServiceTest extends BaseServiceTest {
 	
 	@Autowired
