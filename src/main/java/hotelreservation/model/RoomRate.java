@@ -44,7 +44,7 @@ public class RoomRate {
 	private int value;
 	
 	@NotNull
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP )
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date day;
 	
