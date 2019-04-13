@@ -1,161 +1,79 @@
 package hotelreservation.controller;
 
-import 
-static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
 
-import hotelreservation.Application;
-import hotelreservation.HotelReservationAccessDeniedHandler;
-import hotelreservation.WebSecurityConfig;
-import hotelreservation.repository.UserRepo;
-import hotelreservation.service.BookingService;
-import hotelreservation.service.InvoiceService;
-import hotelreservation.service.MyUserDetailsService;
-import hotelreservation.service.RoomService;
+import hotelreservation.RestExceptionHandler;
 
 @RunWith(SpringRunner.class)
-//@SpringBootTest(classes = { MyUserDetailsService.class })
-//@DataJpaTest
-//@AutoConfigureMockMvc
-//@SpringBootTest
-@WebMvcTest(value=AdminController.class)
-//@WebMvcTest(excludeFilters = @ComponentScan.Filter(classes = WebSecurityConfig.class))
-//@WebMvcTest(value=AdminController.class, excludeAutoConfiguration = Application.class)
+@SpringBootTest
+@ActiveProfiles("dev")
 
-@ContextConfiguration(classes= {MyUserDetailsService.class, WebSecurityConfig.class, HotelReservationAccessDeniedHandler.class, AdminController.class})
-//@WebAppConfiguration
+// If I want a fully isolated test env I should use WebMvcTest as it does not configure and DB stuff, but then I have to use MockBean and WithMockuser (maybe I can provide a
+// differnt UserDatailsBean with an in memory setup), but being able to write tests against the same app setup i use for manual testing/playing around out weights the beneficts of
+// mocks
+// @WebMvcTest(value=AdminController.class)
+// ContextConfig lets you build the context with only the classes and mocks needed for this controller test. otherwise you need to satisfy all dependencies in other controllers
+// using mocks
+// @ContextConfiguration(classes= {MyUserDetailsService.class, WebSecurityConfig.class, HotelReservationAccessDeniedHandler.class, AdminController.class})
 
-
-
-//@Import(MyUserDetailsService.class)
-//@WebMvcTest(includeFilters = @Filter(classes = EnableWebSecurity.class))
-//@Import(RoomService.class)
-//@ContextConfiguration(classes = Application.class)
-//@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 //@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class AdminControllerTest /*extends BaseControllerSetup*/ {
-
-//	@Autowired
-//	private MockMvc mvc;
-
-//	@Before
-//	public void setup() {
-////		 mvc = MockMvcBuilders
-////	                .webAppContextSetup(context)
-////	                .apply(springSecurity()) // enable security for the mock set up
-////	                .build();
-//	}
+public class AdminControllerTest {
 	
+	private MockMvc mvc;
+
+	@Autowired
+	private AdminController adminController;
 	
-	  @Autowired
-	    private WebApplicationContext context;
+	@Before
+	public void setup() {
+		this.mvc = standaloneSetup(adminController).setControllerAdvice(new RestExceptionHandler()).build();// Standalone context
+	}
 
-	  @Autowired  
-	  private MockMvc mvc;
-	  
-
-		@MockBean 
-		private RoomService roomService;
-
-		@MockBean
-		private BookingService bookingService;
-
-		@MockBean
-		private InvoiceService invoiceService;
-		
-		@MockBean
-		private UserRepo userRepo;
-		
-
-//	    @Before
-//	    public void setup() {
-//	        mvc = MockMvcBuilders
-//	                .webAppContextSetup(context)
-//	                .apply(SecurityMockMvcConfigurers.springSecurity())
-//	                .build();
-//	    }
-
-	    
-	    
-	
-//    @Autowired
-//    private WebApplicationContext context;
-
-
-//	@Override
-//	Collection<Privilege> getPrivilegesForReceptionist() {
-//		Collection<Privilege> receptionistPrivileges = new ArrayList<Privilege>();
-//		receptionistPrivileges.add(new Privilege("getReservation"));
-//		receptionistPrivileges.add(new Privilege("createReservation"));
-//		receptionistPrivileges.add(new Privilege("cancelReservation"));
-//		receptionistPrivileges.add(new Privilege("realiseReservation"));
-//		receptionistPrivileges.add(new Privilege("checkoutReservation"));
-//		return receptionistPrivileges;
-//	}
-//
-//	@Override
-//	Collection<Privilege> getPrivilegesForManager() {
-//		Collection<Privilege> managerPrivileges = new ArrayList<Privilege>();
-//		managerPrivileges.add(new Privilege("getReservation"));
-//		managerPrivileges.add(new Privilege("createReservation"));
-//		managerPrivileges.add(new Privilege("cancelReservation"));
-//		managerPrivileges.add(new Privilege("realiseReservation"));
-//		managerPrivileges.add(new Privilege("checkoutReservation"));
-//		managerPrivileges.add(new Privilege("viewAdmin"));
-//		return managerPrivileges;
-//	}
-//
-//	@Override
-//	Collection<Privilege> getPrivilegesForAdmin() {
-//		Collection<Privilege> adminPrivileges = new ArrayList<Privilege>();
-//		adminPrivileges.add(new Privilege("deleteReservation"));
-//		adminPrivileges.add(new Privilege("viewAdmin"));
-//		return adminPrivileges;
-//	}
-	
 	@Test
-	@WithUserDetails("manager")
+	@WithUserDetails("admin")
 	public void testAdminCanAccessAdmin() throws Exception {
 		mvc.perform(get("/admin")).andExpect(status().isOk());
+		mvc.perform(get("/")).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/dashboard"));
 	}
-	
+
 	@Test
 	@WithUserDetails("manager")
-//	 @WithMockUser(value = "test", password = "pass")
 	public void testManagerCanAccessAdmin() throws Exception {
 		mvc.perform(get("/admin")).andExpect(status().isOk());
+		mvc.perform(get("/")).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/dashboard"));
 	}
-	
+
 	@Test
-	@WithUserDetails("manager")
+	@WithUserDetails("receptionist")
 	public void testReceptionistForbiddenToAccessAdmin() throws Exception {
-		mvc.perform(get("/admin")).andExpect(status().isOk());
+		mvc.perform(get("/admin")).andExpect(status().isForbidden());
 	}
-	
+
+	//Note to self - have to use WithMockUser here because if you specify a user that is not in the setup data you will never even get to this test.
 	@Test
-	@WithMockUser(username="nonExistentUser", roles = "receptionist")
+	@WithMockUser("nonExistentUser")
 	public void testInvalidUserIsForbidden() throws Exception {
 		mvc.perform(get("/admin")).andExpect(status().isForbidden());
 	}
-	
+
 	@Test
 	@WithUserDetails("manager")
 	public void testLogout() throws Exception {
-		mvc.perform(post("/logout")).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/login"));
+		mvc.perform(post("/logout")).andExpect(status().is4xxClientError()).andExpect(redirectedUrl(null));
 	}
 }

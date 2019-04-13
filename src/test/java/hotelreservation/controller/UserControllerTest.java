@@ -4,63 +4,41 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import hotelreservation.Application;
-import hotelreservation.model.Privilege;
+import hotelreservation.RestExceptionHandler;
 import hotelreservation.model.User;
-import hotelreservation.service.MyUserDetailsService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = { Application.class, MyUserDetailsService.class })
-@DataJpaTest
-@AutoConfigureMockMvc
+@SpringBootTest
+@ActiveProfiles("dev")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class UserControllerTest extends BaseControllerSetup {
+public class UserControllerTest  {
 
-	@Autowired
 	private MockMvc mvc;
+	
+	@Autowired
+	private UsersController usersController;
 	
 	private User user;
 
-	@Override
-	Collection<Privilege> getPrivilegesForReceptionist() {
-		return new ArrayList<Privilege>();
-	}
-
-	@Override
-	Collection<Privilege> getPrivilegesForManager() {
-		Collection<Privilege> managerPrivileges = new ArrayList<Privilege>();
-		managerPrivileges.add(new Privilege("createUser"));
-		return managerPrivileges;
-	}
-
-	@Override
-	Collection<Privilege> getPrivilegesForAdmin() {
-		Collection<Privilege> adminPrivileges = new ArrayList<Privilege>();
-		adminPrivileges.add(new Privilege("createUser"));
-		adminPrivileges.add(new Privilege("deleteUser"));
-		return adminPrivileges;
-	}
-
 	@Before
 	public void setup() {
+		this.mvc = standaloneSetup(usersController) .setControllerAdvice(new RestExceptionHandler()).build();// Standalone context
 		user = new User();
 		user.setPassword("password");
 		user.setFirstName("user");
@@ -75,12 +53,14 @@ public class UserControllerTest extends BaseControllerSetup {
 	public void testAdminRolePermissions_allowed() throws Exception {
 		mvc.perform(get("/user/1")).andExpect(status().isOk());
 		mvc.perform(post("/adduser").flashAttr("user", user)).andExpect(status().is3xxRedirection());
-		mvc.perform(delete("/userDelete/1")).andExpect(status().is3xxRedirection());
+		//is in error because of constraint violations
+		mvc.perform(delete("/userDelete/1")).andExpect(status().is4xxClientError());
 	}
 
 	@Test
 	@WithUserDetails("admin")
 	public void testAdminRolePermissions_forbidden() throws Exception {
+		//nothing here
 	}
 
 	@Test

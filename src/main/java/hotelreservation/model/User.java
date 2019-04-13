@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,10 +18,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "userName" }, name = "uq_userName"))
+@NoArgsConstructor 
 public class User {
 
 	@Id
@@ -65,11 +68,8 @@ public class User {
 
 	//TODO a user must have a role
 //	@NotNull
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	private Collection<Role> roles;
-
-	public User() {
-	}
 
 	public User(String usernName, String firstName, String lastName, User createdBy) {
 		this.userName = usernName;

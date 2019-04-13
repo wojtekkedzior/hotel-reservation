@@ -1,108 +1,77 @@
 package hotelreservation.controller;
 
-import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import hotelreservation.Application;
-import hotelreservation.model.Charge;
-import hotelreservation.model.Privilege;
+import hotelreservation.ApplicationStartup;
+import hotelreservation.RestExceptionHandler;
 import hotelreservation.model.ReservationCharge;
-import hotelreservation.model.enums.Currency;
 import hotelreservation.model.enums.PaymentType;
 import hotelreservation.model.ui.PaymentDTO;
 import hotelreservation.model.ui.ReservationChargeDTO;
 import hotelreservation.service.BookingService;
 import hotelreservation.service.InvoiceService;
-import hotelreservation.service.MyUserDetailsService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = { Application.class, MyUserDetailsService.class })
-@DataJpaTest
-@AutoConfigureMockMvc
+@SpringBootTest
+@ActiveProfiles("dev")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class InvoiceControllerTest  extends BaseControllerSetup {
-
-	@Autowired
-	private MockMvc mvc;
+public class InvoiceControllerTest  {
 
 	private PaymentDTO paymentDto;
 	private ReservationChargeDTO reservationChargeDto;
 	
+	private MockMvc mvc;
+	
 	@Autowired
-	private BookingService bookingService;
+	private ApplicationStartup applicationStartup;
+	
+	@Autowired
+	private InvoiceController invoiceController;
 	
 	@Autowired
 	private InvoiceService invoiceService;
 	
-	@Override
-	Collection<Privilege> getPrivilegesForReceptionist() {
-		Collection<Privilege> receptionistPrivileges = new ArrayList<Privilege>();
-		receptionistPrivileges.add(new Privilege("createPayment"));
-		receptionistPrivileges.add(new Privilege("checkoutReservation"));
-		return receptionistPrivileges;
-	}
-
-	@Override
-	Collection<Privilege> getPrivilegesForManager() {
-		Collection<Privilege> managerPrivileges = new ArrayList<Privilege>();
-		managerPrivileges.add(new Privilege("createPayment"));
-		managerPrivileges.add(new Privilege("checkoutReservation"));
-		return managerPrivileges;
-	}
-
-	@Override
-	Collection<Privilege> getPrivilegesForAdmin() {
-		return new ArrayList<Privilege>();
-	}
-
+	@Autowired
+	private BookingService bookingService;
+	
 	@Before
 	public void setup() {
-		Charge charge = new Charge();
-		charge.setCurrency(Currency.CZK);
-		charge.setName("charge");
-		charge.setValue(1);
-		invoiceService.saveCharge(charge);
+		this.mvc = standaloneSetup(invoiceController) .setControllerAdvice(new RestExceptionHandler()).build();// Standalone context
+		
+		bookingService.realiseReservation(applicationStartup.reservationOne);
 		
 		reservationChargeDto = new ReservationChargeDTO();
 		reservationChargeDto.setQuantity(1);
-		reservationChargeDto.setCharge(charge);
+		reservationChargeDto.setCharge(applicationStartup.coke);
 		
 		ReservationCharge reservationCharge = new ReservationCharge();
 		reservationCharge.setQuantity(1);
-		reservationCharge.setCharge(charge);
-		reservationCharge.setReservation(reservation);
+		reservationCharge.setCharge(applicationStartup.roomServiceDelivery);
+		reservationCharge.setReservation(applicationStartup.reservationOne);
+		invoiceService.saveReservationCharge(reservationCharge);
 		
 		paymentDto = new PaymentDTO();
 		paymentDto.setPaymentType(PaymentType.Cash);
 		paymentDto.setReservationCharges(Arrays.asList(reservationCharge));
-		
-		try {
-			bookingService.saveReservation(reservation);
-			bookingService.realiseReservation(reservation);
-		} catch (Exception e) {
-			fail();
-		}
 	}
-	
+		
 	@Test
 	@WithUserDetails("admin")
 	public void testAdminRolePermissions_allowed() throws Exception {

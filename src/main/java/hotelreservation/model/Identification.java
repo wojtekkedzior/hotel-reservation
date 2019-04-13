@@ -11,9 +11,11 @@ import javax.validation.constraints.NotNull;
 
 import hotelreservation.model.enums.IdType;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor 
 public class Identification {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,8 +31,6 @@ public class Identification {
 	@NotBlank
 	private String idNumber;
 	
-	public Identification() {}
-
 	public Identification(IdType idType, String idNumber) {
 		this.idType = idType;
 		this.idNumber = idNumber;

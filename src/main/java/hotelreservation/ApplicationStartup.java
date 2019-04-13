@@ -53,11 +53,11 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	private Role receptionistRole;
 
 	private User superAdmin;
-	private User admin;
+	public User admin;
 	private User manager;
 	private User receptionist;
 
-	private Status operational;
+	public Status operational;
 	private Status underMaintenance;
 	private Status underConstruction;
 	private Status notOperational;
@@ -87,11 +87,11 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	private Amenity sauna;
 	private Amenity conferenceRoom;
 
-	private RoomType roomTypeStandard;
+	public RoomType roomTypeStandard;
 	private RoomType roomTypeLuxury;
 
 	// Rooms
-	private Room standardRoomOne;
+	public Room standardRoomOne;
 	private Room standardRoomTwo;
 	private Room standardRoomThree;
 	private Room luxuryRoomOne;
@@ -99,7 +99,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	private Room luxuryRoomThree;
 
 	// Contacts
-	private Contact contactOne;
+	public Contact contactOne;
 	private Contact contactTwo;
 	private Contact contactThree;
 	private Contact contactFour;
@@ -111,18 +111,18 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	private Identification idFour;
 
 	// Guests
-	private Guest guestOne;
+	public Guest guestOne;
 	private Guest guestTwo;
 	private Guest guestThree;
 	private Guest guestFour;
 	
 	//Charges
-	private Charge coke;
-	private Charge roomServiceDelivery;
+	public Charge coke;
+	public Charge roomServiceDelivery;
 	private Charge brokenTable;
 
 	// Reservations
-	private Reservation reservationOne;
+	public Reservation reservationOne;
 
 	@Autowired
 	private UserService userService;

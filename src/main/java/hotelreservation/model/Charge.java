@@ -11,9 +11,11 @@ import javax.validation.constraints.NotNull;
 
 import hotelreservation.model.enums.Currency;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor 
 public class Charge {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,8 +33,6 @@ public class Charge {
 	@NotNull
 	private int value;
 	
-	public Charge() {}
-
 	public Charge(Currency currency, int value, String name, String description) {
 		this.currency = currency;
 		this.value = value;

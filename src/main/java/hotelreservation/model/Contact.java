@@ -8,9 +8,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor 
 public class Contact {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,8 +25,6 @@ public class Contact {
 	@NotNull
 	@NotBlank
 	private String address;
-	
-	public Contact() {}
 	
 	public Contact(String address, String country) {
 		this.address = address;
