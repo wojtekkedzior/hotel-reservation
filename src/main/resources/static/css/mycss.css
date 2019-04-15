@@ -15,6 +15,9 @@ a {
     width: 550px !important;
 }
 
+.selected { background: #0bf; }
+table {border: 1px solid #555;display: inline-block; vertical-align: top;}
+
 
 /* Create two equal columns that floats next to each other */
 .column {
