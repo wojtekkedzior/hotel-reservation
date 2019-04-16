@@ -8,10 +8,11 @@
 
    $(document).ready(function() {
 	   $("table").selekt({
-		   children: "tr",           // Elements to target (default: "tbody tr")
+		   children: "td",           // Elements to target (default: "tbody tr")
 		   className: "selected",    // Desired CSS class  (default: "selected")
 		   onSelect: function(sel) { // Useful callback
 		     $("span").text(sel.length + ' in ' + this.id);
+		   alert(sel.length + ' in ' + this.id);
 		   }
 		 });
 	 });
@@ -41,13 +42,17 @@
 			
 			<h2>adasdas: </h2>
 	
-			<table id="table_1">
-			  <tr><td>1 SELECT ME</td></tr>
-			  <tr><td>2 SELECT ME</td></tr>
-			  <tr><td>3 SELECT ME</td></tr>
-			  <tr><td>4 SELECT ME</td></tr>
-			  <tr><td>5 SELECT ME</td></tr>
-			  <tr><td>6 SELECT ME</td></tr>
+			<table id="table_1" >
+			  <tr>
+			  	<td>1 SELECT ME</td>
+			  	<td>1 SELECT ME</td>
+			  </tr>
+			  <tr><td>2 SELECT ME</td><td>1 SELECT ME</td></tr>
+			  <tr><td>3 SELECT ME</td><td>1 SELECT ME</td></tr>
+			  <tr><td>4 SELECT ME</td><td>1 SELECT ME</td></tr>
+			  <tr><td>5 SELECT ME</td><td>1 SELECT ME</td></tr>
+			  <tr><td>6 SELECT ME</td><td>1 SELECT ME</td></tr>
+			  
 			</table>
 			
 			<table id="table_2">
