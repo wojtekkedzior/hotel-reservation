@@ -1,6 +1,8 @@
 package hotelreservation.controller;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import hotelreservation.Utils;
 import hotelreservation.model.Contact;
 import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;
@@ -62,6 +65,9 @@ public class ReservationController {
 
 	@Autowired
 	private InvoiceService invoiceService;
+	
+	@Autowired
+	private Utils dateConvertor;
 
 	// TODO figure out what is this for since I thought that dates worked prior to having this copied and pasted in.
 	@InitBinder
@@ -106,7 +112,13 @@ public class ReservationController {
 		}
 
 		// TODO if there are no rooms available we neeed to display something usefull to the user.
+		//TODO replace with params
+		Date asDateStart = dateConvertor.asDate(LocalDate.of(2018, Month.APRIL, 13));
+		Date asDateEnd = dateConvertor.asDate(LocalDate.of(2018, Month.APRIL, 15));
 
+		Map<Date, List<RoomRate>> roomRatesAsMapByDates = roomService.getRoomRatesPerDate(asDateStart, asDateEnd);
+		model.addAttribute("roomRatesAsMapByDates", roomRatesAsMapByDates);
+		
 		return "reservation";
 	}
 

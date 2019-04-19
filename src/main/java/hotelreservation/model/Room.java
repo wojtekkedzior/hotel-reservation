@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @NoArgsConstructor 
-public class Room {
+public class Room implements Comparable<Room> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,5 +55,10 @@ public class Room {
 		this.status = status;
 		this.roomType = roomType;
 		this.createdBy = createdBy;
+	}
+
+	@Override
+	public int compareTo(Room arg0) {
+		return (int)(this.id - arg0.getId());
 	}
 }
