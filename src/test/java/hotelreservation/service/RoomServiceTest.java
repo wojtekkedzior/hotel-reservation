@@ -1,6 +1,8 @@
 package hotelreservation.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -335,8 +337,165 @@ public class RoomServiceTest extends BaseServiceTest {
 		roomRates = roomService.getRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 5)), dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 6)));
 		assertEquals(0, roomRates.size());
 	}
+	
+	@Test
+	public void testGetRoomRatesPerDateSymmetrical() {
+		setupRoomRates();
+		
+		Date start = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2));
+		Date end = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 5));
+		
+		Map<Date, List<RoomRate>> roomRatesPerDate = roomService.getRoomRatesPerDate(start, end);
+		
+		assertEquals(3, roomRatesPerDate.size());
+		assertEquals(2, roomRatesPerDate.get(start).size());
+		assertEquals(2, roomRatesPerDate.get(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3))).size());
+		assertEquals(2, roomRatesPerDate.get(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4))).size());
+		assertFalse(roomRatesPerDate.containsKey(end));
+	}
+	
+	/**
+	 *     roomOne   roomTwo
+	 * 2     						x			
+	 * 3     x				    x
+	 */
+	@Test
+	public void testGetRoomRatesPerDateFirstRoomRateEmpty() {
+		saveRooms();
+		
+//		roomService.saveRoomRate(new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2))));
+		RoomRate roomRate1 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		roomService.saveRoomRate(roomRate1);
+		
+		RoomRate roomRate2 = new RoomRate(standardRoomTwo, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		roomService.saveRoomRate(roomRate2);
+		RoomRate roomRate3 = new RoomRate(standardRoomTwo, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		roomService.saveRoomRate(roomRate3);
 
-	private void setupRoomRates() {
+		
+		Date start = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2));
+		Date end = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4));
+		
+		Map<Date, List<RoomRate>> roomRatesPerDate = roomService.getRoomRatesPerDate(start, end);
+		
+		assertEquals(2, roomRatesPerDate.size());
+		
+		List<RoomRate> roomRatesForJan2 = roomRatesPerDate.get(start);
+		
+		System.err.println(roomRatesForJan2);
+		assertEquals(2, roomRatesForJan2.size());
+		assertNull(roomRatesForJan2.get(0));
+		assertEquals(roomRate2, roomRatesForJan2.get(1));
+		
+		List<RoomRate> roomRatesForJan3 = roomRatesPerDate.get(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		assertEquals(2, roomRatesForJan3.size());
+		assertEquals(roomRate1, roomRatesForJan3.get(0));
+		assertEquals(roomRate3, roomRatesForJan3.get(1));
+		
+		assertFalse(roomRatesPerDate.containsKey(end));
+	}
+	
+	/**
+	 *     roomOne   roomTwo
+	 * 2     x								
+	 * 3     x				    x
+	 */
+	@Test
+	public void testGetRoomRatesPerDateLastRoomRateEmpty() {
+		saveRooms();
+		
+		RoomRate roomRate1 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		roomService.saveRoomRate(roomRate1);
+		RoomRate roomRate2 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		roomService.saveRoomRate(roomRate2);
+		
+//		roomService.saveRoomRate(new RoomRate(standardRoomTwo, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2))));
+		RoomRate roomRate3 = new RoomRate(standardRoomTwo, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		roomService.saveRoomRate(roomRate3);
+		
+		Date start = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2));
+		Date end = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4));
+		
+		Map<Date, List<RoomRate>> roomRatesPerDate = roomService.getRoomRatesPerDate(start, end);
+		
+		assertEquals(2, roomRatesPerDate.size());
+		
+		List<RoomRate> roomRatesForJan2 = roomRatesPerDate.get(start);
+		
+		System.err.println(roomRatesForJan2);
+		assertEquals(2, roomRatesForJan2.size());
+		assertEquals(roomRate1, roomRatesForJan2.get(0));
+		assertNull(roomRatesForJan2.get(1));
+		
+		List<RoomRate> roomRatesForJan3 = roomRatesPerDate.get(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		assertEquals(2, roomRatesForJan3.size());
+		assertEquals(roomRate2, roomRatesForJan3.get(0));
+		assertEquals(roomRate3, roomRatesForJan3.get(1));
+		
+		assertFalse(roomRatesPerDate.containsKey(end));
+	}
+	
+	/**
+	 *     roomOne   roomTwo  roomThree
+	 * 2     	 x								x
+	 * 3       x                x             x
+	 */
+	@Test
+	public void testGetRoomRatesPerDateMiddleRoomRateEmpty() {
+		saveRooms();
+		
+		// add another room here as the 'middle' should be middle of the rooms and not dates
+		Room standardRoomThree = new Room(3, operational, roomTypeStandard, createdBy);
+		standardRoomThree.setName("Room 1");
+		standardRoomThree.setDescription("The Best Room Description");
+		standardRoomThree.setRoomAmenities(Arrays.asList(pillow));
+		roomService.saveRoom(standardRoomThree);
+		
+		RoomRate roomRate1 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		roomService.saveRoomRate(roomRate1);
+//		roomService.saveRoomRate(new RoomRate(standardRoomTwo, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2))));
+		RoomRate roomRate2 = new RoomRate(standardRoomThree, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		roomService.saveRoomRate(roomRate2);
+		
+		
+		RoomRate roomRate3 = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		roomService.saveRoomRate(roomRate3);
+		RoomRate roomRate4 = new RoomRate(standardRoomTwo, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		roomService.saveRoomRate(roomRate4);
+		RoomRate roomRate5 = new RoomRate(standardRoomThree, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		roomService.saveRoomRate(roomRate5);
+		
+		
+		Date start = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2));
+		Date end = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4));
+		
+		Map<Date, List<RoomRate>> roomRatesPerDate = roomService.getRoomRatesPerDate(start, end);
+		
+		assertEquals(2, roomRatesPerDate.size());
+		
+		List<RoomRate> roomRatesForJan2 = roomRatesPerDate.get(start);
+		
+		System.err.println(roomRatesForJan2);
+		assertEquals(3, roomRatesForJan2.size());
+		assertEquals(roomRate1, roomRatesForJan2.get(0));
+		assertNull(roomRatesForJan2.get(1));
+		assertEquals(roomRate2, roomRatesForJan2.get(2));
+		
+		List<RoomRate> roomRatesForJan3 = roomRatesPerDate.get(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		assertEquals(3, roomRatesForJan3.size());
+		assertEquals(roomRate3, roomRatesForJan3.get(0));
+		assertEquals(roomRate4, roomRatesForJan3.get(1));
+		assertEquals(roomRate5, roomRatesForJan3.get(2));
+		
+		assertFalse(roomRatesPerDate.containsKey(end));
+	}
+	
+	@Test
+	public void testGetRoomRatesPerDateNoneAvailable() {
+		//all days have the same number of available rates
+	}
+	
+	private void saveRooms() {
 		managerUserType = new Role("manager", "manager desc", true);
 		userService.saveRole(managerUserType);
 
@@ -363,6 +522,10 @@ public class RoomServiceTest extends BaseServiceTest {
 		standardRoomTwo.setDescription("The Best Room Description");
 		standardRoomTwo.setRoomAmenities(Arrays.asList(pillow));
 		roomService.saveRoom(standardRoomTwo);
+	}
+	
+	private void setupRoomRates() {
+		saveRooms();
 	
 		roomService.saveRoomRate(new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2))));
 		roomService.saveRoomRate(new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3))));

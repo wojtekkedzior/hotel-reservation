@@ -37,7 +37,6 @@
 			   className: "selected",    // Desired CSS class  (default: "selected")
 			   onSelect: function(sel) { // Useful callback
 			     $("span").text(sel.length + ' in ' + this.id);
-			   //alert(sel.length + ' in ' + this.id);
 			   }
 			 });
 		 });
@@ -80,120 +79,23 @@
 					</p>
 				</div> -->
 				
-				
-					<table id="table_1" >
-					
-					
-			<!-- 					  <tr th:each="day : ${roomRatesAsMapByDates}">
+				<table id="table_1" >
+							<tr >
+							  	<th:block th:each="day : ${roomRatesAsMapByDates}">
 								  	<th:block th:each="roomRate : ${day.value}">
-								   		<td th:text="${roomRate.day}">A Smoke Test'</td>
 								   	</th:block> 
-								</tr> -->
-								
-<!-- 								  <tr th:each="day : ${roomRatesAsMapByDates}">
-								  
-								  	<th:block th:each="roomRate : ${day.value}">
-								   		<td th:text="${roomRate.room.roomNumber}">A Smoke Test'</td>
-								   	</th:block> 
-								</tr> -->
-								
-								
-<!-- 								  <tr th:each="day : ${roomRatesAsMapByDates}">
-								 	 <td th:text="${day.key}">A Smoke Test'</td>
-								  
-								  	<th:block th:each="roomRate : ${day.value}">
-								   		<td th:text="${roomRate.room.roomNumber} + ' - ' +  ${roomRate.value} ">A Smoke Test'</td>
-								   	</th:block> 
-								</tr> -->
-								
-								
-								
-									<tr >
-								 	 <td th:text="asdas">A Smoke Test'</td>
-								  
-								  	<th:block th:each="day : ${roomRatesAsMapByDates}">
-									  	<th:block th:each="roomRate : ${day.value}">
-									   		<td th:text="${roomRate.room.roomNumber} ">A Smoke Test'</td>
-									   	</th:block> 
-							   	  	</th:block> 
-								</tr>
+						   	  	</th:block> 
+							</tr>
 
-								  <tr th:each="day : ${roomRatesAsMapByDates}">
-								 	 <td th:text="${day.key}">A Smoke Test'</td>
-								  
-								  	<th:block th:each="roomRate : ${day.value}">
-								   		<td th:text="${roomRate.room.roomNumber} + ' - ' +  ${roomRate.value} ">A Smoke Test'</td>
-								   	</th:block> 
-								</tr>
-								
-								
-
-					
-<!-- 					<th:block th:each="day : ${roomRatesAsMapByDates}">
- 						<tr th:each="roomRate : ${day.value}">
-   							<td th:text="day">A Smoke Test'</td>
-   							<td th:text="${roomRate.day} + ' - ' +  ${roomRate.value} ">A Smoke Test'</td>
-						</tr>
-					</th:block> -->
-					
-						<!--  <tr th:each="roomRateCombo : ${roomRatesPerRoom}">
-   							<td th:text="${roomRateCombo.key.roomNumber} + ' - ' + ${roomRateCombo.key.description}">A Smoke Test'</td>
-   							<td th:text="${roomRateCombo.key.roomNumber} + ' - ' + ${roomRateCombo.key.description}">A Smoke Test'</td>
-   							<td th:text="${roomRateCombo.key.roomNumber} + ' - ' + ${roomRateCombo.key.description}">A Smoke Test'</td>
-						</tr> -->
-						
-						
-
-					
-			<!-- 	<div th:each="roomRateCombo : ${roomRatesPerRoom}">
-					<p>
-						Room Number: <label th:text="${roomRateCombo.key.roomNumber} + ' - ' + ${roomRateCombo.key.description}"></label>
-					</p>
-
-					<p>
-						
-						
-					
-					
-						<select name="wgtmsr" class="form-control" multiple="multiple" th:id="'roomRateSelect-' + ${roomRateCombo.key.roomNumber}" size="12"
-							th:field="${reservation.roomRates}" th:onChange="'javascript:subTotal(\'' + ${roomRateCombo.key.roomNumber} + '\');'">
-
-							<option th:each="roomRate : ${roomRateCombo.value}" th:value="${roomRate.id}" th:id="${roomRate.value}"
-								th:text="${roomRate.day} + ' - ' + ${roomRate.value} + ' - ' + ${roomRate.room.description}"
-								th:onClick="'javascript:sayHello(\'' + ${roomRate.value} + '\');'"></option>
-						</select>
-					</p>
-				</div> -->
-				
-				
+							  <tr th:each="day : ${roomRatesAsMapByDates}">
+							 	 <td th:text="${day.key}"/>
+							  
+							  	<th:block th:each="roomRate : ${day.value}">
+							   		<td th:text="${roomRate != null} ? (${roomRate.room.roomNumber} + ' - ' +  ${roomRate.value}) : 'no rate' "/> 
+							   	</th:block> 
+							</tr>
 				</table>
 				
-				
-				<!-- 				
-			<table id="table_1" >
-			  <tr>
-			  	<td>1 SELECT ME</td>
-			  	<td>1 SELECT ME</td>
-			  </tr>
-			  
-			  
-			  
-			  <tr><td>2 SELECT ME</td><td>1 SELECT ME</td></tr>
-			  <tr><td>3 SELECT ME</td><td>1 SELECT ME</td></tr>
-			  <tr><td>4 SELECT ME</td><td>1 SELECT ME</td></tr>
-			  <tr><td>5 SELECT ME</td><td>1 SELECT ME</td></tr>
-			  <tr><td>6 SELECT ME</td><td>1 SELECT ME</td></tr>
-			  
-			  <tr th:each="smokeTest : ${smokeTests}">
-   <td th:text="${smokeTest.name}">A Smoke Test'</td>
-</tr>
-
-			</table> -->
-			
-			
-			
-			
-
 				<p>
 					<!-- hidden field to make sure the ID gets passed back to the controller when submit is called.  -->
 					<input type="number" th:field="${reservation.id}" hidden="true" /> <input type="date" th:field="${startDate}" th:value="2008-03-09" hidden="true" />

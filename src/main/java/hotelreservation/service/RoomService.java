@@ -2,11 +2,14 @@ package hotelreservation.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 
 import javax.transaction.Transactional;
 
@@ -88,7 +91,7 @@ public class RoomService {
 		return findByStartDateBetween;
 	}
 	
-	public List<RoomRate> getAvailableRoomRates(Date start, Date end) { //TODO add a variant of this method but for a particular room 
+	public List<RoomRate> getAvailableRoomRates(Date start, Date end) { //TODO add a variant of this method but for a particular room //TODO finally figure out how to use a join and apply it here
 		List<RoomRate> availableRoomRates = new ArrayList<RoomRate>();
 		List<Reservation> inProgressAndUpComingReservations = reservationRepo.findInProgressAndUpComingReservations();
 		List<RoomRate> availableRoomRatesForAllRooms = getRoomRates(start, end);
@@ -307,5 +310,66 @@ public class RoomService {
 
 	public long getRoomRateCount() {
 		return roomRateRepo.count();
+	}
+	
+	/**
+	 * Returns a Map of available room rates as a list for each day in the range provided. Any missing days are replaced with null so that the .size() of each list is the same.
+	 * Available rates will also always be in the same index across all lists.
+	 * 
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	public Map<Date, List<RoomRate>> getRoomRatesPerDate(Date start, Date end) {
+		TreeMap<Room, List<RoomRate>> roomRatesPerRoom = new TreeMap<>();
+
+		for (RoomRate roomRate : getAvailableRoomRates(start, end)) {
+			roomRatesPerRoom.computeIfAbsent(roomRate.getRoom(), k -> new LinkedList<>()).add(roomRate);
+		}
+		
+		Calendar startCal = Calendar.getInstance();
+		startCal.setTime(start);
+
+		Calendar endCal = Calendar.getInstance();
+		endCal.setTime(end);
+
+		int daysBetween = endCal.get(Calendar.DAY_OF_MONTH) - startCal.get(Calendar.DAY_OF_MONTH);
+
+		Calendar rollingday = Calendar.getInstance();
+		rollingday.setTime(start);
+		
+		Map<Date, List<RoomRate>> roomRatesAsMapByDates = new HashMap<Date, List<RoomRate>>(); //this may want to be a TreeMap too
+		roomRatesAsMapByDates.put(start, new LinkedList<>());
+		
+		for (int i = 0; i < daysBetween; i++) {
+
+			for (Room room : roomRatesPerRoom.keySet()) {
+				List<RoomRate> roomRates = roomRatesPerRoom.get(room);
+				
+				boolean roomRateFound = false;
+				
+				for (RoomRate roomRate : roomRates) {
+					Calendar cal1 = Calendar.getInstance();
+					cal1.setTime(roomRate.getDay());
+					//TODO this usage of cal needs refactoring.  The date we get from MySQL has milliseconds which blows the equals away
+					System.err.println("RoomRate day: " + cal1.getTime() + "  Rolling day: " + rollingday.getTime()  + " is: "  + cal1.getTime().equals(rollingday.getTime()));
+					
+					if (cal1.getTime().equals(rollingday.getTime())) {
+						roomRatesAsMapByDates.computeIfAbsent(rollingday.getTime(), k -> new LinkedList<>()).add(roomRate);
+						
+						roomRateFound = true;
+						break;
+					}
+				}
+
+				if (!roomRateFound) {
+					roomRatesAsMapByDates.putIfAbsent(rollingday.getTime(), new LinkedList<>()).add(null);
+				}
+			}
+			
+			rollingday.roll(Calendar.DAY_OF_MONTH, 1);
+		}
+		
+		return roomRatesAsMapByDates;
 	}
 }

@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -113,23 +112,11 @@ public class ReservationController {
 		}
 
 		// TODO if there are no rooms available we neeed to display something usefull to the user.
-
-		Map<Date, List<RoomRate>> roomRatesAsMapByDates = new HashMap<Date, List<RoomRate>>();
-		
+		//TODO replace with params
 		Date asDateStart = dateConvertor.asDate(LocalDate.of(2018, Month.APRIL, 13));
 		Date asDateEnd = dateConvertor.asDate(LocalDate.of(2018, Month.APRIL, 15));
-		
-		for (RoomRate roomRate : roomService.getRoomRates(asDateStart, asDateEnd)) {
-			if(roomRatesAsMapByDates.containsKey(roomRate.getDay())) {
-				roomRatesAsMapByDates.get(roomRate.getDay()).add(roomRate);
-				
-			} else {
-				List<RoomRate> roomRates = new ArrayList<>();
-				roomRates.add(roomRate);
-				roomRatesAsMapByDates.put(roomRate.getDay(), roomRates);
-			}
-		}
 
+		Map<Date, List<RoomRate>> roomRatesAsMapByDates = roomService.getRoomRatesPerDate(asDateStart, asDateEnd);
 		model.addAttribute("roomRatesAsMapByDates", roomRatesAsMapByDates);
 		
 		return "reservation";
