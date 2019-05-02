@@ -282,6 +282,8 @@ public class RoomService {
 	 * Returns a Map of available room rates as a list for each day in the range provided. Any missing days are replaced with null so that the .size() of each list is the same.
 	 * Available rates will also always be in the same index across all lists.
 	 * 
+	 * The returned map is sorted by the room id (this will be changed later to room number) so that the UI can display the rooms ascending. 
+	 * 
 	 * @param start
 	 * @param end
 	 * @return
@@ -302,7 +304,7 @@ public class RoomService {
 		Calendar rollingday = Calendar.getInstance();
 		rollingday.setTime(start);
 		
-		Map<Date, List<RoomRate>> roomRatesAsMapByDates = new HashMap<Date, List<RoomRate>>(); //this may want to be a TreeMap too
+		Map<Date, List<RoomRate>> roomRatesAsMapByDates = new TreeMap<Date, List<RoomRate>>(); 
 		roomRatesAsMapByDates.put(start, new LinkedList<>());
 		
 		for (int i = 0; i < daysBetween; i++) {
