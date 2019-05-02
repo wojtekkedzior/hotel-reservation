@@ -289,26 +289,18 @@ public class RoomService {
 	 * @return
 	 */
 	public Map<Date, List<RoomRate>> getRoomRatesPerDate(Date start, Date end) {
+		Map<Date, List<RoomRate>> roomRatesAsMapByDates = new TreeMap<Date, List<RoomRate>>(); 
+		int daysBetween = calculateDaysBetween(start, end);
+
 		Map<Room, List<RoomRate>> roomRatesPerRoom = getAvailableRoomRates(start, end)
 			.stream()
 			.collect(Collectors.groupingBy(RoomRate::getRoom, TreeMap::new, Collectors.toList()));
 		
-		Calendar startCal = Calendar.getInstance();
-		startCal.setTime(start);
-
-		Calendar endCal = Calendar.getInstance();
-		endCal.setTime(end);
-
-		int daysBetween = endCal.get(Calendar.DAY_OF_MONTH) - startCal.get(Calendar.DAY_OF_MONTH);
-
 		Calendar rollingday = Calendar.getInstance();
 		rollingday.setTime(start);
 		
-		Map<Date, List<RoomRate>> roomRatesAsMapByDates = new TreeMap<Date, List<RoomRate>>(); 
-		roomRatesAsMapByDates.put(start, new LinkedList<>());
 		
 		for (int i = 0; i < daysBetween; i++) {
-
 			for (Room room : roomRatesPerRoom.keySet()) {
 				List<RoomRate> roomRates = roomRatesPerRoom.get(room);
 				
@@ -328,7 +320,7 @@ public class RoomService {
 				}
 
 				if (!roomRateFound) {
-					roomRatesAsMapByDates.putIfAbsent(rollingday.getTime(), new LinkedList<>()).add(null);
+					roomRatesAsMapByDates.computeIfAbsent(rollingday.getTime(), k -> new LinkedList<>()).add(null);
 				}
 			}
 			
@@ -336,5 +328,14 @@ public class RoomService {
 		}
 		
 		return roomRatesAsMapByDates;
+	}
+
+	private int calculateDaysBetween(Date start, Date end) {
+		Calendar startCal = Calendar.getInstance();
+		startCal.setTime(start);
+		
+		Calendar endCal = Calendar.getInstance();
+		endCal.setTime(end);
+		return endCal.get(Calendar.DAY_OF_MONTH) - startCal.get(Calendar.DAY_OF_MONTH);
 	}
 }
