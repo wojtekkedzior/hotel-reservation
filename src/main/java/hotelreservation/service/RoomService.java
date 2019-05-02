@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.TreeMap;
 
 import javax.transaction.Transactional;
@@ -82,11 +81,13 @@ public class RoomService {
 
 	public List<RoomRate> getRoomRates(Date start, Date end) {
 		List<RoomRate> findByStartDateBetween = roomRateRepo.findByDayBetween(start, end);
+		log.info("Looking for all RoomRates between: " + start + " and: " + end + " for Room: " + " . Found: " + findByStartDateBetween.size());
 		return findByStartDateBetween;
 	}
 	
 	public List<RoomRate> getRoomRates(Room room, Date start, Date end) {
 		List<RoomRate> findByStartDateBetween = roomRateRepo.findByRoomIdAndDayBetween(room.getId(), start, end);
+		log.info("Looking for all RoomRates between: " + start + " and: " + end + " for Room: " + room.getId() + " . Found: " + findByStartDateBetween.size());
 		return findByStartDateBetween;
 	}
 	
@@ -212,12 +213,7 @@ public class RoomService {
 	
 	public RoomType getRoomTypeById(long id) {
 		log.info("Looking for RoomType with ID: " + id);
-		Optional<RoomType> findById = roomTypeRepo.findById(id);
-		if(findById.isPresent()) {
-			return findById.get();
-		} else {
-			throw new NotFoundException(id);
-		}
+		return roomTypeRepo.findById(Long.valueOf(id)).orElseThrow(() -> new NotFoundException(id));
 	}
 	
 	public List<RoomType> getAllRoomTypes() {
@@ -238,12 +234,7 @@ public class RoomService {
 
 	public RoomRate getRoomRateById(long id) {
 		log.info("Looking for RoomRate with ID: " + id);
-		Optional<RoomRate> findById = roomRateRepo.findById(id);
-		if(findById.isPresent()) {
-			return findById.get();
-		} else {
-			throw new NotFoundException(id);
-		}
+		return roomRateRepo.findById(Long.valueOf(id)).orElseThrow(() -> new NotFoundException(id));
 	}
 
 	public List<RoomRate> getAllRoomRates() { 
@@ -264,12 +255,7 @@ public class RoomService {
 	
 	public Status getStatusById(long id) {
 		log.info("Looking for Status with ID: " + id);
-		Optional<Status> findById = statusRepo.findById(id);
-		if(findById.isPresent()) {
-			return findById.get();
-		} else {
-			throw new NotFoundException(id);
-		}
+		return statusRepo.findById(Long.valueOf(id)).orElseThrow(() -> new NotFoundException(id));
 	}
 
 	public List<Status> getAllStatuses() {
@@ -331,7 +317,6 @@ public class RoomService {
 					Calendar cal1 = Calendar.getInstance();
 					cal1.setTime(roomRate.getDay());
 					//TODO this usage of cal needs refactoring.  The date we get from MySQL has milliseconds which blows the equals away
-					System.err.println("RoomRate day: " + cal1.getTime() + "  Rolling day: " + rollingday.getTime()  + " is: "  + cal1.getTime().equals(rollingday.getTime()));
 					
 					if (cal1.getTime().equals(rollingday.getTime())) {
 						roomRatesAsMapByDates.computeIfAbsent(rollingday.getTime(), k -> new LinkedList<>()).add(roomRate);
