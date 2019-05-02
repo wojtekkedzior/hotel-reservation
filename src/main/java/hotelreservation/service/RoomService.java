@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -286,11 +287,9 @@ public class RoomService {
 	 * @return
 	 */
 	public Map<Date, List<RoomRate>> getRoomRatesPerDate(Date start, Date end) {
-		TreeMap<Room, List<RoomRate>> roomRatesPerRoom = new TreeMap<>();
-
-		for (RoomRate roomRate : getAvailableRoomRates(start, end)) {
-			roomRatesPerRoom.computeIfAbsent(roomRate.getRoom(), k -> new LinkedList<>()).add(roomRate);
-		}
+		Map<Room, List<RoomRate>> roomRatesPerRoom = getAvailableRoomRates(start, end)
+			.stream()
+			.collect(Collectors.groupingBy(RoomRate::getRoom, TreeMap::new, Collectors.toList()));
 		
 		Calendar startCal = Calendar.getInstance();
 		startCal.setTime(start);
