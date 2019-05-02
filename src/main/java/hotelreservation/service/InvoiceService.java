@@ -75,29 +75,17 @@ public class InvoiceService {
 
 	public Charge getChargeById(long id) {
 		log.info("Looking for Charge with ID: " + id);
-		if (chargeRepo.findById(id).isPresent()) {
-			return chargeRepo.findById(id).get();
-		} else {
-			throw new NotFoundException(id);
-		}
+		return chargeRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
 	}
 
 	public ReservationCharge getReservationChargeById(long id) {
 		log.info("Looking for ReservationCharge with ID: " + id);
-		if (reservationChargeRepo.findById(id).isPresent()) {
-			return reservationChargeRepo.findById(id).get();
-		} else {
-			throw new NotFoundException(id);
-		}
+		return reservationChargeRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
 	}
 
 	public Payment getPaymentById(long id) {
 		log.info("Looking for Payment with ID: " + id);
-		if (paymentRepo.findById(id).isPresent()) {
-			return paymentRepo.findById(id).get();
-		} else {
-			throw new NotFoundException(id);
-		}
+		return paymentRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
 	}
 
 	public List<ReservationCharge> getAllReservationChargesForAReservation(Reservation reservation) {
@@ -144,13 +132,7 @@ public class InvoiceService {
 	}
 
 	public boolean areAllChargesPaidFor(Reservation reservation) {
-		List<ReservationCharge> outstandingCharges = getOutstandingCharges(reservation);
-
-		if (outstandingCharges.isEmpty()) {
-			return true;
-		} else {
-			return false;
-		}
+		return getOutstandingCharges(reservation).isEmpty();
 	}
 
 	public long getTotalOfOutstandingCharges(List<Reservation> reservationsInProgress) {

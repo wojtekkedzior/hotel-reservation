@@ -51,29 +51,17 @@ public class GuestService {
 
 	public Guest getGuestById(long id) {
 		log.info("Looking for Guest with ID: " + id);
-		if(guestRepo.findById(id).isPresent()) {
-			return guestRepo.findById(id).get();
-		} else {
-			throw new NotFoundException(id);
-		}
+		return guestRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
 	}
 	
 	public Contact getContactById(long id) {
 		log.info("Looking for Contact with ID: " + id);
-		if(contactRepo.findById(id).isPresent()) {
-			return contactRepo.findById(id).get();
-		} else {
-			throw new NotFoundException(id);
-		}
+		return contactRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
 	}
 	
 	public Identification getIdentificationById(long id) {
 		log.info("Looking for Identification with ID: " + id);
-		if(identificationRepo.findById(id).isPresent()) {
-			return identificationRepo.findById(id).get();
-		} else {
-			throw new NotFoundException(id);
-		}
+		return identificationRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
 	}
 	
 	public List<Contact> getAllContacts() {

@@ -1,7 +1,6 @@
 package hotelreservation.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -129,14 +128,9 @@ public class RoomService {
 		Map<Room, List<RoomRate>> ratesForAllRooms = new HashMap<Room, List<RoomRate>>();
 		
 		for (RoomRate roomRate : getAvailableRoomRates(startDate, endDate)) {
-			
-			if(ratesForAllRooms.containsKey(roomRate.getRoom())) {
-				ratesForAllRooms.get(roomRate.getRoom()).add(roomRate);
-			} else {
-				ratesForAllRooms.put(roomRate.getRoom(), new ArrayList<RoomRate>(Arrays.asList(roomRate)));
-			}
+			ratesForAllRooms.computeIfAbsent(roomRate.getRoom(), k -> new ArrayList<>()).add(roomRate);
 		}
-
+		
 		return ratesForAllRooms;
 	}
 
@@ -147,12 +141,7 @@ public class RoomService {
 	
 	public Amenity getAmenityById(long id) {
 		log.info("Looking for Amenity with ID: " + id);
-		Optional<Amenity> findById = amenityRepo.findById(id);
-		if(findById.isPresent()) {
-			return findById.get();
-		} else {
-			throw new NotFoundException(id);
-		}
+		return amenityRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
 	}
 	
 	public List<Amenity> getAllAmenities() {
@@ -173,12 +162,7 @@ public class RoomService {
 	
 	public AmenityType getAmenityTypeById(long id) {
 		log.info("Looking for AmenityType with ID: " + id);
-		Optional<AmenityType> findById = amenityTypeRepo.findById(id);
-		if(findById.isPresent()) {
-			return findById.get();
-		} else {
-			throw new NotFoundException(id);
-		}
+		return amenityTypeRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
 	}
 	
 	public List<AmenityType> getAllAmenityTypes() {
@@ -200,12 +184,7 @@ public class RoomService {
 	
 	public Room getRoomById(long id) {
 		log.info("Looking for Room with ID: " + id);
-		Optional<Room> findById = roomRepo.findById(id);
-		if(findById.isPresent()) {
-			return findById.get();
-		} else {
-			throw new NotFoundException(id);
-		}
+		return roomRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
 	}
 	
 	public List<Room> getAllRooms() {

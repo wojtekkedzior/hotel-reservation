@@ -2,7 +2,6 @@ package hotelreservation.service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -94,22 +93,12 @@ public class UserService {
 
 	public User getUserById(Integer id) {
 		log.info("Looking for User with ID: " + id);
-		Optional<User> findById = userRepo.findById(Long.valueOf(id));
-		if(findById.isPresent()) {
-			return findById.get();
-		} else {
-			throw new NotFoundException(id);
-		}
+		return userRepo.findById(Long.valueOf(id)).orElseThrow(() -> new NotFoundException(id));
 	}
 	
 	public Role getRoleById(Integer id) {
 		log.info("Looking for Role with ID: " + id);
-		Optional<Role> findById = roleRepo.findById(Long.valueOf(id));
-		if(findById.isPresent()) {
-			return findById.get();
-		} else {
-			throw new NotFoundException(id);
-		}
+		return roleRepo.findById(Long.valueOf(id)).orElseThrow(() -> new NotFoundException(id));
 	}
 
 	public void deleteUser(User user) {

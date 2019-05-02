@@ -81,13 +81,8 @@ public class BookingService {
 		if(reservation.getCreatedOn() == null) {
 			reservation.setCreatedOn(new Date());
 		}  else {
-			Optional<Reservation> findById = reservationRepo.findById(reservation.getId());
-			
-			if(!findById.isPresent()) {
-				throw new MissingOrInvalidArgumentException(reservation.getId());
-			} else {
-				reservation.setCreatedOn(findById.get().getCreatedOn());
-			}
+			Reservation reservationInDb = reservationRepo.findById(reservation.getId()).orElseThrow(() -> new MissingOrInvalidArgumentException(reservation.getId()));
+			reservation.setCreatedOn(reservationInDb.getCreatedOn());
 		}
 		//TODO checjk if roomRates are present
 		
