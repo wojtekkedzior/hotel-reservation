@@ -43,15 +43,18 @@ public class RoomController {
 
 	@RequestMapping(value = { "/amenity", "/amenity/{id}" })
 	@PreAuthorize("hasAuthority('createAmenity')")
-	public String addAmenityModel(Model model, @PathVariable Optional<Integer> id) {
+	public String getAmenityModel(Model model, @PathVariable Optional<Integer> id) {
+		log.info("Getting Amenity with id: " + id);
+		
 		if (!id.isPresent()) {
 			model.addAttribute("amenity", new Amenity());
+			model.addAttribute("amenityType", new AmenityType());
 		} else {
 			Amenity amenityById = roomService.getAmenityById(Long.valueOf(id.get()));
-			model.addAttribute("amenity", amenityById == null ? new Amenity() : amenityById);
+			model.addAttribute("amenity", amenityById);
+			model.addAttribute("amenityType", amenityById.getAmenityType());
 		}
 
-		model.addAttribute("amenityType", new AmenityType());
 		addAmenityAttributes(model);
 
 		return "amenity";
@@ -59,7 +62,7 @@ public class RoomController {
 
 	@RequestMapping(value = { "/amenityType", "/amenityType/{id}" })
 	@PreAuthorize("hasAuthority('createAmenityType')")
-	public String addAmenityTypeModel(Model model, @PathVariable Optional<Integer> id) {
+	public String getAmenityTypeModel(Model model, @PathVariable Optional<Integer> id) {
 		if (!id.isPresent()) {
 			model.addAttribute("amenityType", new AmenityType());
 		} else {
@@ -146,6 +149,7 @@ public class RoomController {
 		return new ModelAndView("redirect:/amenityType/" + createAmenityType.getId());
 	}
 
+	//TODO lots of these post create duplicate records. need to handle update
 	@PostMapping("/addAmenity")
 	@PreAuthorize("hasAuthority('createAmenity')")
 	public ModelAndView addAmenity(@Valid @ModelAttribute Amenity amenity) {
