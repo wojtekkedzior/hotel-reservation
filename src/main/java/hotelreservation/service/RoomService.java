@@ -299,14 +299,11 @@ public class RoomService {
 		Calendar rollingday = Calendar.getInstance();
 		rollingday.setTime(start);
 		
-		
 		for (int i = 0; i < daysBetween; i++) {
 			for (Room room : roomRatesPerRoom.keySet()) {
-				List<RoomRate> roomRates = roomRatesPerRoom.get(room);
-				
 				boolean roomRateFound = false;
 				
-				for (RoomRate roomRate : roomRates) {
+				for (RoomRate roomRate : roomRatesPerRoom.get(room)) {
 					Calendar cal1 = Calendar.getInstance();
 					cal1.setTime(roomRate.getDay());
 					//TODO this usage of cal needs refactoring.  The date we get from MySQL has milliseconds which blows the equals away
