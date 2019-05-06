@@ -82,7 +82,7 @@ public class RoomService {
 
 	public List<RoomRate> getRoomRates(Date start, Date end) {
 		List<RoomRate> findByStartDateBetween = roomRateRepo.findByDayBetween(start, end);
-		log.info("Looking for all RoomRates between: " + start + " and: " + end + " for Room: " + " . Found: " + findByStartDateBetween.size());
+		log.info("Looking for all RoomRates between: " + start + " and: " + end + ". Found: " + findByStartDateBetween.size());
 		return findByStartDateBetween;
 	}
 	
