@@ -159,9 +159,9 @@ public class ReservationControllerTest {
 	@Test
 	@WithUserDetails("manager")
 	public void testSaveReservation() throws Exception {
-		MvcResult andReturn = mvc.perform(post("/reservation/").flashAttr("reservation", applicationStartup.reservationOne)).andDo(print()).andExpect(status().is3xxRedirection()).andReturn();
-		String content = andReturn.getResponse().getContentAsString();
-		System.err.println(content);
+		mvc.perform(post("/reservation/").flashAttr("reservation", applicationStartup.reservationOne).requestAttr("roomRateIds", "")).andDo(print()).andExpect(status().is3xxRedirection());
+//		String content = andReturn.getResponse().getContentAsString();
+//		System.err.println(content);
 		
 	}
 }

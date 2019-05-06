@@ -243,7 +243,7 @@ public class ReservationController {
 
 	@PostMapping("/reservation")
 	@PreAuthorize("hasAuthority('createReservation')")
-	public ModelAndView saveReservation(@Valid @ModelAttribute Reservation reservation, @RequestParam String roomRateIds) {
+	public ModelAndView saveReservation(@Valid @ModelAttribute Reservation reservation, @RequestParam(value = "roomRateIds"/* , required = false */) String roomRateIds) {
 		
 		bookingService.saveReservation(reservation);
 
