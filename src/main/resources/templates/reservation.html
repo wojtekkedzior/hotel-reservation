@@ -46,11 +46,24 @@
 	   
 	   function test(obj) {
 		   
+		   var items = [];
+		   
 		   const cells = document.querySelectorAll('td');
 		   cells.forEach(function(cell) {
 		     console.log(cell.innerHTML);
-		     alert(cell.id)
+		     
+		     if(cell.id && cell.classList.contains("selected")) {
+		    	 items.push(cell.id)
+		     	//alert(cell.id) 
+		   }
 		   })
+		   
+		  // alert(items);
+		   
+/* 		   var roomRates = document.getElementById("roomRateIds");
+		   roomRates.value = items; */
+		   
+		  $("#roomRateIds").val(items);
 		   
 /* 		   $('#ratesForDates tr').each(function(){
 			    $(this).find('td').each(function(){

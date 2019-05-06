@@ -245,7 +245,6 @@ public class ReservationController {
 	@PreAuthorize("hasAuthority('createReservation')")
 	public ModelAndView saveReservation(@Valid @ModelAttribute Reservation reservation, @RequestParam String roomRateIds) {
 		
-		
 		bookingService.saveReservation(reservation);
 
 		return new ModelAndView("redirect:/dashboard");
