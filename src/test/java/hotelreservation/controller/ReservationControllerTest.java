@@ -3,6 +3,7 @@ package hotelreservation.controller;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
@@ -17,6 +18,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import hotelreservation.ApplicationStartup;
 import hotelreservation.RestExceptionHandler;
@@ -157,6 +159,9 @@ public class ReservationControllerTest {
 	@Test
 	@WithUserDetails("manager")
 	public void testSaveReservation() throws Exception {
-		mvc.perform(post("/reservation/").flashAttr("reservation", applicationStartup.reservationOne)).andExpect(status().is3xxRedirection());
+		MvcResult andReturn = mvc.perform(post("/reservation/").flashAttr("reservation", applicationStartup.reservationOne)).andDo(print()).andExpect(status().is3xxRedirection()).andReturn();
+		String content = andReturn.getResponse().getContentAsString();
+		System.err.println(content);
+		
 	}
 }
