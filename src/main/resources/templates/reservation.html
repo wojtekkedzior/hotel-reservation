@@ -37,9 +37,49 @@
 			   className: "selected",    // Desired CSS class  (default: "selected")
 			   onSelect: function(sel) { // Useful callback
 			     $("span").text(sel.length + ' in ' + this.id);
+/* 			   alert($(sel).text()) */
+			   /* alert(sel[1].innerHTML) */
 			   }
 			 });
 		 });
+	   
+	   
+	   function test(obj) {
+		   
+		   const cells = document.querySelectorAll('td');
+		   cells.forEach(function(cell) {
+		     console.log(cell.innerHTML);
+		     alert(cell.id)
+		   })
+		   
+/* 		   $('#ratesForDates tr').each(function(){
+			    $(this).find('td').each(function(){
+			        alert
+			    })
+			}) */
+		   
+/* 		   var x = $("#ratesForDates > tbody > tr > td:first-child").map(function(){
+			   return this.textContent;
+			 }).get().join();
+		   alert(x)
+			 console.log(x); //Val1, Val2, Val3, Val4 */
+
+/* 		   var bodies = document.getElementById("ratesForDates").tBodies;
+		   var items = [];
+
+		   for (var i = 0; i < bodies.length; i++)
+		     items.push(bodies[i].getElementsByTagName("td")[0].innerText);
+
+		   alert(items); */
+		   
+/* 		   while(obj.tagName.toUpperCase() !== "TABLE") {
+		     obj = obj.parentNode;
+		   }
+
+		   alert(obj.id);
+		     console.log(obj.id); */
+
+		 }
 	/*]]>*/
 </script>
 </head>
@@ -80,40 +120,31 @@
 				</div> -->
 				
 				<table id="ratesForDates" >
-<!-- 					<tr >
-					  	<th:block th:each="day : ${roomRatesAsMapByDates}">
-						  	<th:block th:each="roomRate : ${day.value}">
-						   	</th:block> 
-				   	  	</th:block> 
-					</tr> -->
 					<tr>
 							<td>adad</td>
 							<td>adad</td>
-
 					</tr>
-					
 					  <tr th:each="day : ${roomRatesAsMapByDates}">
 					 	 <td th:text="${day.key}"/>
 					  
 					  	<th:block th:each="roomRate : ${day.value}">
-					   		<td th:field="${reservation.roomRates}" th:id="${roomRate.id}" th:text="${roomRate != null} ? (${roomRate.room.roomNumber} + ' - ' +  ${roomRate.value}) : 'no rate' "/> 
+				   			<td th:id="${roomRate.id}" th:text="${roomRate != null} ? (${roomRate.room.roomNumber} + ' - ' +  ${roomRate.value}) : 'no rate' " onclick="test(this)"/>  
 					   	</th:block> 
 					</tr>
 				</table>
-				
-				<p>
-					<!-- hidden field to make sure the ID gets passed back to the controller when submit is called.  -->
-					<input type="number" th:field="${reservation.id}" hidden="true" /> <input type="date" th:field="${startDate}" th:value="2008-03-09" hidden="true" />
-			<!-- 		<input type="number" th:field="${reservation.mainGuest.id}" hidden="true" />  -->
-					<input type="text" th:field="${reservation.reservationStatus}" hidden="true" /> 
-					<input type="date" th:field="${reservation.createdOn}" hidden="true" /> 
-					Guest First Name: <input type="text" th:field="${reservation.firstName}" required="required" /> Guest Last Name: <input type="text"
-						th:field="${reservation.lastName}" required="required" />
-				</p>
 
 				<p>
-					<input type="submit" value="Submit" />
+					Guest First Name: <input type="text" th:field="${reservation.firstName}" required="required" /> 
+					Guest Last Name: <input type="text" th:field="${reservation.lastName}" required="required" />
 				</p>
+
+				<!-- hidden field to make sure the ID gets passed back to the controller when submit is called.  -->
+				<input type="text" id="roomRateIds" th:name="roomRateIds" hidden="true"/>
+				<input type="number" th:field="${reservation.id}" hidden="true" />
+			    <input type="date" th:field="${startDate}" th:value="2008-03-09" hidden="true" /> 
+				<input type="text" th:field="${reservation.reservationStatus}" hidden="true" />
+				<input type="date" th:field="${reservation.createdOn}" hidden="true" />
+				<input type="submit" value="Submit" />
 
 			</form>
 

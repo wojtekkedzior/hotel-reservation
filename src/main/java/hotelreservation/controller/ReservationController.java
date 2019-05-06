@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import hotelreservation.Utils;
@@ -242,7 +243,7 @@ public class ReservationController {
 
 	@PostMapping("/reservation")
 	@PreAuthorize("hasAuthority('createReservation')")
-	public ModelAndView saveReservation(@Valid @ModelAttribute Reservation reservation) {
+	public ModelAndView saveReservation(@Valid @ModelAttribute Reservation reservation, @RequestParam String roomRateIds) {
 		
 		
 		bookingService.saveReservation(reservation);
