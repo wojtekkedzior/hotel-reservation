@@ -13,6 +13,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -36,6 +39,7 @@ public class Room implements Comparable<Room> {
 	private String description;
 	
 	@ManyToMany
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Amenity> roomAmenities;
 	
 	@NotNull

@@ -10,6 +10,9 @@ import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -30,6 +33,7 @@ public class Role {
 	private boolean enabled;
 
 	@ManyToMany
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private Collection<Privilege> privileges;
 
 	public Role(String name, String description, boolean enabled) {
