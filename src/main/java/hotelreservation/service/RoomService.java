@@ -10,12 +10,12 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import hotelreservation.Utils;
 import hotelreservation.exceptions.NotDeletedException;
@@ -81,8 +81,12 @@ public class RoomService {
 	}
 
 	public List<RoomRate> getRoomRates(Date start, Date end) {
-		List<RoomRate> findByStartDateBetween = roomRateRepo.findByDayBetween(start, end);
-		log.info("Looking for all RoomRates between: " + start + " and: " + end + ". Found: " + findByStartDateBetween.size());
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(end);
+		cal.roll(Calendar.DAY_OF_MONTH, -1);
+		
+		List<RoomRate> findByStartDateBetween = roomRateRepo.findByDayBetween(start, cal.getTime());
+		log.info("Looking for all RoomRates between: " + start + " and: " + cal.getTimeInMillis() + ". Found: " + findByStartDateBetween.size());
 		return findByStartDateBetween;
 	}
 	
@@ -291,8 +295,9 @@ public class RoomService {
 	public Map<Date, List<RoomRate>> getRoomRatesPerDate(Date start, Date end) {
 		Map<Date, List<RoomRate>> roomRatesAsMapByDates = new TreeMap<Date, List<RoomRate>>(); 
 		int daysBetween = calculateDaysBetween(start, end);
+		List<RoomRate> availableRoomRates = getAvailableRoomRates(start, end); //this method is wrong. for the 13th to the 15th it should only return rates for the 13th and 14th
 
-		Map<Room, List<RoomRate>> roomRatesPerRoom = getAvailableRoomRates(start, end)
+		Map<Room, List<RoomRate>> roomRatesPerRoom = availableRoomRates
 			.stream()
 			.collect(Collectors.groupingBy(RoomRate::getRoom, TreeMap::new, Collectors.toList()));
 		

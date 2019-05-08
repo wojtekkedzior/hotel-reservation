@@ -248,9 +248,10 @@ public class ReservationController {
 
 	@PostMapping("/reservation")
 	@PreAuthorize("hasAuthority('createReservation')")
-	public ModelAndView saveReservation(@Valid @ModelAttribute Reservation reservation, @RequestParam String roomRateIds) {
+	public ModelAndView saveReservation(@Valid @ModelAttribute Reservation reservation, @RequestParam List<Long> roomRateIds) {
 		
-		bookingService.saveReservation(reservation);
+		bookingService.saveReservationAndValidateRoomRates(reservation, roomRateIds);
+		//bookingService.saveReservation(reservation);
 
 		return new ModelAndView("redirect:/dashboard");
 	}

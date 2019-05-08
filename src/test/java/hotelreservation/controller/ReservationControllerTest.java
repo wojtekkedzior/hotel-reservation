@@ -163,11 +163,11 @@ public class ReservationControllerTest {
 				.andExpect(status().is3xxRedirection());
 	}
 	
-	@Test
-	@WithUserDetails("manager")
-	public void testSaveReservationWithInvalidRates() throws Exception {
-		//TODO provide invalid rates for this reservation
-		mvc.perform(post("/reservation/").flashAttr("reservation", applicationStartup.reservationOne).param("roomRateIds", "123,123")).andDo(print())
-				.andExpect(status().is3xxRedirection());
-	}
+//	@Test
+//	@WithUserDetails("manager")
+//	public void testSaveReservationWithInvalidRates() throws Exception {
+//		//TODO provide invalid rates for this reservation
+//		mvc.perform(post("/reservation/").flashAttr("reservation", applicationStartup.reservationOne).param("roomRateIds", "123,123")).andDo(print())
+//				.andExpect(status().is3xxRedirection());
+//	}
 }

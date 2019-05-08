@@ -534,12 +534,12 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		for (RoomRate roomRate : roomRatesForAllRooms) {
 			if (roomRate.getRoom().getId() == 1 
 					&& roomRate.getDay().after(dateConvertor.asDate(startDate.minusDays(1)))
-					&& roomRate.getDay().before(dateConvertor.asDate(endDate.plusDays(1)))) {
+					&& roomRate.getDay().before(dateConvertor.asDate(endDate))) {
 				
 				reservationOne.getRoomRates().add(roomRate);
 			}
 		}
-		
+		System.err.println(reservationOne.getRoomRates().size());
 		bookingService.saveReservation(reservationOne);
 	}
 	
@@ -562,7 +562,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 			for (RoomRate roomRate : roomRatesForAllRooms) {
 				if (roomRate.getRoom().getId() == i // this is the room ID 
 						&& roomRate.getDay().after(dateConvertor.asDate(startDate.minusDays(1)))
-						&& roomRate.getDay().before(dateConvertor.asDate(endDate.plusDays(1)))) {
+						&& roomRate.getDay().before(dateConvertor.asDate(endDate))) {
 					reservation.getRoomRates().add(roomRate);
 				}
 			}
@@ -588,7 +588,10 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		reservation.setRoomRates(new ArrayList<RoomRate>());
 
 		List<RoomRate> roomRatesForAllRooms = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.APRIL, 1)),
-				dateConvertor.asDate(LocalDate.of(2018, Month.APRIL, 3)));
+				dateConvertor.asDate(LocalDate.of(2018, Month.APRIL, 4)));
+		
+		//18
+		System.err.println(roomRatesForAllRooms.size());
 
 		for (RoomRate roomRate : roomRatesForAllRooms) {
 			if (roomRate.getRoom().getId() == 1 
@@ -608,6 +611,9 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 				reservation.getRoomRates().add(roomRate);
 			}
 		}
+		
+		//12
+		System.err.println(roomRatesForAllRooms.size());
 		
 		bookingService.saveReservation(reservation);	
 	}
