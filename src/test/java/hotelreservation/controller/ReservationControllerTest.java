@@ -3,15 +3,10 @@ package hotelreservation.controller;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+//import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.junit.Before;
@@ -25,13 +20,10 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import hotelreservation.ApplicationStartup;
 import hotelreservation.RestExceptionHandler;
-import hotelreservation.model.Reservation;
 import hotelreservation.model.ReservationCancellation;
-import hotelreservation.model.RoomRate;
 import hotelreservation.service.BookingService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -168,34 +160,18 @@ public class ReservationControllerTest {
 	@Test
 	@WithUserDetails("manager")
 	public void testSaveReservation() throws Exception {
-	
-		
-/*	    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");  
-	    String date = formatter.format(applicationStartup.reservationOne.getStartDate());  
-	    
-	    System.err.println(date);
-		applicationStartup.reservationOne.setStartDate(new Date(date));
-		
-		date = formatter.format(applicationStartup.reservationOne.getEndDate());
-		applicationStartup.reservationOne.setEndDate(new Date(date));*/
-		
-		Long idAsLong = new Long(applicationStartup.reservationOne.getId());
-		Reservation reservation = bookingService.getReservation(Optional.of(new Integer(idAsLong.intValue())));
-		
-		String collect = reservation.getRoomRates().stream()
+		String collect = applicationStartup.reservationOne.getRoomRates().stream()
 		        .map( n -> String.valueOf(n.getId()) )
 		        .collect( Collectors.joining( "," ) );
 		
-		//TODO remove reservation doesn't work. need to take a look at equals on Reservation
-		mvc.perform(post("/reservation/").flashAttr("reservation", reservation).param("roomRateIds", collect)).andDo(print())
+		mvc.perform(post("/reservation/").flashAttr("reservation", applicationStartup.reservationOne).param("roomRateIds", collect))
 				.andExpect(status().is3xxRedirection());
 	}
 	
-//	@Test
-//	@WithUserDetails("manager")
-//	public void testSaveReservationWithInvalidRates() throws Exception {
-//		//TODO provide invalid rates for this reservation
-//		mvc.perform(post("/reservation/").flashAttr("reservation", applicationStartup.reservationOne).param("roomRateIds", "123,123")).andDo(print())
-//				.andExpect(status().is3xxRedirection());
-//	}
+	@Test
+	@WithUserDetails("manager")
+	public void testSaveReservationWithInvalidRates() throws Exception {
+		mvc.perform(post("/reservation/").flashAttr("reservation", applicationStartup.reservationOne).param("roomRateIds", "123,123"))
+				.andExpect(status().is4xxClientError());
+	}
 }

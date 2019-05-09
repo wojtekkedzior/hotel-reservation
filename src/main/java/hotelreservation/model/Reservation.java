@@ -26,11 +26,15 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@EqualsAndHashCode(callSuper = false)
+//Arse. Having lombok on Eclipses's classpath causes the equals method to be made up of all the fields regardless of using EqualsAndHashCode. However, running maven clean install with tests 
+//causes the correct generation of equals respecting EqualsAndHashCode.  If you run junit tests from eclipse against the code compiled by maven, she works.  
+//log a bug with lombok
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @NoArgsConstructor 
 public class Reservation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@EqualsAndHashCode.Include
 	private long id;
 	
 	@NotNull
@@ -55,23 +59,27 @@ public class Reservation {
 	private User discountAuthorisedBy;
 	
 	@ManyToOne
+	@EqualsAndHashCode.Include
 	private User createdBy;
 	
 	@Temporal(TemporalType.TIMESTAMP)
+	@EqualsAndHashCode.Include
 	private Date createdOn;
-	
 	
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "yyyyMMdd") //The DateTimeFormat needs to be in this format for Spring to convert a string back to a date. duh!
+	@EqualsAndHashCode.Include
 	private Date startDate;
 	
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "yyyyMMdd")
+	@EqualsAndHashCode.Include
 	private Date endDate;
 	
 	@Enumerated(EnumType.STRING)
+	@EqualsAndHashCode.Include
 	private ReservationStatus reservationStatus;
-	
+
 	//should we have start and end date here as well?  It would be useful to do so, so that we don't have to iterate over all the roomrates
 	//but how would having a start and end date help when dealing with a reservation over non-consecutive days?  this will get complicated
 	//logic to determin the reservation type (consecutive days vs non-consecutive) can also get tricky.
@@ -79,5 +87,4 @@ public class Reservation {
 	//TODO add cc here
 	
 	//probably needs a history table
-
 }

@@ -145,23 +145,8 @@ public class BookingService {
 		
 		boolean contains = utils.contains(findInProgressAndUpComingReservations, reservation, comparator);
 		
-		for (Reservation reservation2 : findInProgressAndUpComingReservations) {
-			if(reservation.getId() == reservation2.getId()) {
-				System.err.println("reservation: " + reservation);
-				System.err.println("reservatio2: " + reservation2);
-				
-				if(reservation.equals(reservation2)) {
-					System.err.println("asdaa");
-				}
-			}
-		}
-		
 		if(contains) {
 			findInProgressAndUpComingReservations.remove(reservation);
-			
-			if(findInProgressAndUpComingReservations.contains(reservation)) {
-				System.err.println("adas");
-			}
 		}
 	}
 	
