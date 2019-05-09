@@ -3,8 +3,11 @@ package hotelreservation.controller;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+//import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
+
+import java.util.stream.Collectors;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -157,20 +160,18 @@ public class ReservationControllerTest {
 	@Test
 	@WithUserDetails("manager")
 	public void testSaveReservation() throws Exception {
-//		String collect = applicationStartup.reservationOne.getRoomRates().stream()
-//		        .map( n -> String.valueOf(n.getId()) )
-//		        .collect( Collectors.joining( "," ) );
+		String collect = applicationStartup.reservationOne.getRoomRates().stream()
+		        .map( n -> String.valueOf(n.getId()) )
+		        .collect( Collectors.joining( "," ) );
 		
-		//TODO remove reservation doesn't work. need to take a look at equals on Reservation
-//		mvc.perform(post("/reservation/").flashAttr("reservation", applicationStartup.reservationOne).param("roomRateIds", collect)).andDo(print())
-//				.andExpect(status().is3xxRedirection());
+		mvc.perform(post("/reservation/").flashAttr("reservation", applicationStartup.reservationOne).param("roomRateIds", collect))
+				.andExpect(status().is3xxRedirection());
 	}
 	
-//	@Test
-//	@WithUserDetails("manager")
-//	public void testSaveReservationWithInvalidRates() throws Exception {
-//		//TODO provide invalid rates for this reservation
-//		mvc.perform(post("/reservation/").flashAttr("reservation", applicationStartup.reservationOne).param("roomRateIds", "123,123")).andDo(print())
-//				.andExpect(status().is3xxRedirection());
-//	}
+	@Test
+	@WithUserDetails("manager")
+	public void testSaveReservationWithInvalidRates() throws Exception {
+		mvc.perform(post("/reservation/").flashAttr("reservation", applicationStartup.reservationOne).param("roomRateIds", "123,123"))
+				.andExpect(status().is4xxClientError());
+	}
 }

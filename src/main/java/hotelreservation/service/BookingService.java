@@ -263,6 +263,6 @@ public class BookingService {
 		reservation.setRoomRates(roomRates);
 		
 		saveReservation(reservation);
-		System.err.println(roomRates.size());
 	}
 }
+

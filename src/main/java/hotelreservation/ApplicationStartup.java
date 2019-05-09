@@ -539,7 +539,6 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 				reservationOne.getRoomRates().add(roomRate);
 			}
 		}
-		System.err.println(reservationOne.getRoomRates().size());
 		bookingService.saveReservation(reservationOne);
 	}
 	

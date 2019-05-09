@@ -173,8 +173,6 @@ public class RoomServiceTest extends BaseServiceTest {
 		AmenityType updatedAmenityType = roomService.getAmenityTypeById(amenityType.getId());
 		assertEquals(amenityType, updatedAmenityType);
 		
-		System.err.println(roomService.getAllAmenityTypes());
-
 		roomService.deleteAmenityType(amenityType.getId());
 		assertTrue(roomService.getAllAmenityTypes().isEmpty());
 	}

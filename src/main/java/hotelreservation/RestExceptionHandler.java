@@ -59,7 +59,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 		log.info(ex.getMessage());
 		
 		//log the field and exception here otherwise it's hard to figure out what is missing
-		System.err.println(ex);
 		return new ResponseEntity<>(output, status);
 	}
 	
