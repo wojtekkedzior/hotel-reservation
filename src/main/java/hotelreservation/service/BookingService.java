@@ -2,6 +2,7 @@ package hotelreservation.service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,12 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import hotelreservation.Utils;
 import hotelreservation.exceptions.MissingOrInvalidArgumentException;
@@ -34,7 +35,7 @@ import hotelreservation.repository.ReservationCancellationRepo;
 import hotelreservation.repository.ReservationRepo;
 
 @Service
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED)
 public class BookingService {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -58,6 +59,9 @@ public class BookingService {
 
 	@Autowired
 	private InvoiceService invoiceService;
+	
+	@Autowired
+	private RoomService roomService;
 	
 	public void createContact(Contact contact) {
 		contactRepo.save(contact);
@@ -88,6 +92,9 @@ public class BookingService {
 		
 		//Check if room rates have sequential days
 		List<RoomRate> roomRates = reservation.getRoomRates();
+		if(roomRates == null || roomRates.isEmpty()) {
+			throw new MissingOrInvalidArgumentException("Can't have no room rates when updating a reservation");
+		}
 		
 		Map<LocalDate, RoomRate> roomRatesAsMap = new HashMap<LocalDate, RoomRate>();
 		
@@ -98,22 +105,17 @@ public class BookingService {
 		LocalDate startDate = utils.asLocalDate(reservation.getStartDate());
 		
 		long between = ChronoUnit.DAYS.between(startDate,utils.asLocalDate(reservation.getEndDate()));
-		between += 1;
 		
 		if(roomRates.size() != between) {
 			throw new MissingOrInvalidArgumentException("Not enough rates for the given time frame");
 		}
 		
-		for (int i = 0; i < roomRates.size(); i++) {
+		for (int i = 1; i < roomRates.size(); i++) {
 			if(!roomRatesAsMap.containsKey(startDate)) {
 				throw new MissingOrInvalidArgumentException("Should not be able to save a reservation with non-sequential room rate dates");
 			} else {
 				startDate = startDate.plusDays(1);
 			}
-		}
-		
-		if(reservation.getRoomRates() == null || reservation.getRoomRates().isEmpty()) {
-			throw new MissingOrInvalidArgumentException("Can't have no room rates when updating a reservation");
 		}
 		
 		//Check if roomRates are available
@@ -224,15 +226,7 @@ public class BookingService {
 	}
 
 	public void fulfillReservation(Optional<Integer> reservationID) {
-		
-		if(!reservationID.isPresent()) {
-			log.error("Can't fulfilling reservation");
-			throw new MissingOrInvalidArgumentException("Reservation fulfillment ID is missing");
-		}
-		
-		log.info("Fulfilling reservation: " + reservationID.get());
-		
-		Long id = Long.valueOf(reservationID.get());
+		Long id = Long.valueOf(reservationID.orElseThrow(() -> new  MissingOrInvalidArgumentException("Reservation fulfillment ID is missing")));
 		
 		if(!reservationRepo.existsById(id)) {
 			throw new NotFoundException("Reservation fulfillment reservation is missing. ID " + id);
@@ -256,5 +250,19 @@ public class BookingService {
 
 	public long getReservationCount() {
 		return reservationRepo.count();
+	}
+
+	public void saveReservationAndValidateRoomRates(Reservation reservation, List<Long> roomRateIds) {
+		if(roomRateIds == null || roomRateIds.isEmpty()) {
+			throw new MissingOrInvalidArgumentException("No RoomRates were selected for reservation: " + reservation.getId());
+		}
+		
+		List<RoomRate> roomRates = new ArrayList<>();
+		
+		roomRateIds.stream().forEach(id -> roomRates.add(roomService.getRoomRateById(id)));
+		reservation.setRoomRates(roomRates);
+		
+		saveReservation(reservation);
+		System.err.println(roomRates.size());
 	}
 }

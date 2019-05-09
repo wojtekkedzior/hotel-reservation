@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import hotelreservation.Utils;
@@ -118,6 +120,10 @@ public class ReservationController {
 
 		Map<Date, List<RoomRate>> roomRatesAsMapByDates = roomService.getRoomRatesPerDate(asDateStart, asDateEnd);
 		model.addAttribute("roomRatesAsMapByDates", roomRatesAsMapByDates);
+		
+		List<RoomRate> roomRates = roomRatesAsMapByDates.get(asDateStart);
+		List<Integer> collect = roomRates.stream().map(r -> r.getRoom().getRoomNumber()).collect(Collectors.toList());
+		model.addAttribute("roomNumbers", collect);
 		
 		return "reservation";
 	}
@@ -242,9 +248,8 @@ public class ReservationController {
 
 	@PostMapping("/reservation")
 	@PreAuthorize("hasAuthority('createReservation')")
-	public ModelAndView saveReservation(@Valid @ModelAttribute Reservation reservation) {
-		bookingService.saveReservation(reservation);
-
+	public ModelAndView saveReservation(@Valid @ModelAttribute Reservation reservation, @RequestParam List<Long> roomRateIds) {
+		bookingService.saveReservationAndValidateRoomRates(reservation, roomRateIds);
 		return new ModelAndView("redirect:/dashboard");
 	}
 

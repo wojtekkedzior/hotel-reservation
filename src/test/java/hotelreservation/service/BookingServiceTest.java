@@ -168,14 +168,14 @@ public class BookingServiceTest extends BaseServiceTest {
 	@Test
 	public void testCreateReservation_MissingMiddleDay() {
 		roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		// no rate for the middle day
+		// no rate for the last day
 		RoomRate roomRateFour = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
 
 		roomService.saveRoomRate(roomRateTwo);
 		roomService.saveRoomRate(roomRateFour);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 5)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateFour));
 
@@ -193,7 +193,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
 		bookingService.saveReservation(reservationOne);
@@ -224,7 +224,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
 		bookingService.saveReservation(reservationOne);
@@ -255,7 +255,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
 		bookingService.saveReservation(reservationOne);
@@ -364,43 +364,43 @@ public class BookingServiceTest extends BaseServiceTest {
 		reservationFour = new Reservation();
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 15)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 16)));
 		reservationOne.setRoomRates(
 				Arrays.asList(roomRate4, roomRate5, roomRate6, roomRate7, roomRate8, roomRate9, roomRate10, roomRate11, roomRate12, roomRate13, roomRate14, roomRate15));
 
-		assertEquals(31, roomService.getAvailableRoomRates(startDate, endDate).size());
+		assertEquals(31, roomService.getAvailableRoomRates(startDate, dateConvertor.asDate(LocalDate.of(2018, Month.FEBRUARY, 1))).size());
 		bookingService.saveReservation(reservationOne);
-		assertEquals(19, roomService.getAvailableRoomRates(startDate, endDate).size());
+		assertEquals(19, roomService.getAvailableRoomRates(startDate, dateConvertor.asDate(LocalDate.of(2018, Month.FEBRUARY, 1))).size());
 
 		reservationTwo.setFirstName("firstName");
 		reservationTwo.setLastName("lastName");
 		reservationTwo.setCreatedBy(user);
 		reservationTwo.setReservationStatus(ReservationStatus.UpComing);
 		reservationTwo.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 16)));
-		reservationTwo.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 20)));
+		reservationTwo.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 21)));
 		reservationTwo.setRoomRates(Arrays.asList(roomRate16, roomRate17, roomRate18, roomRate19, roomRate20));
 
 		bookingService.saveReservation(reservationTwo);
-		assertEquals(14, roomService.getAvailableRoomRates(startDate, endDate).size());
+		assertEquals(14, roomService.getAvailableRoomRates(startDate, dateConvertor.asDate(LocalDate.of(2018, Month.FEBRUARY, 1))).size());
 
 		reservationThree.setFirstName("firstName");
 		reservationThree.setLastName("lastName");
 		reservationThree.setCreatedBy(user);
 		reservationThree.setReservationStatus(ReservationStatus.UpComing);
 		reservationThree.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 21)));
-		reservationThree.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 31)));
+		reservationThree.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.FEBRUARY, 1)));
 		reservationThree
 				.setRoomRates(Arrays.asList(roomRate21, roomRate22, roomRate23, roomRate24, roomRate25, roomRate26, roomRate27, roomRate28, roomRate29, roomRate30, roomRate31));
 
 		bookingService.saveReservation(reservationThree);
-		assertEquals(3, roomService.getAvailableRoomRates(startDate, endDate).size());
+		assertEquals(3, roomService.getAvailableRoomRates(startDate, dateConvertor.asDate(LocalDate.of(2018, Month.FEBRUARY, 1))).size());
 
 		reservationFour.setFirstName("firstName");
 		reservationFour.setLastName("lastName");
 		reservationFour.setCreatedBy(user);
 		reservationFour.setReservationStatus(ReservationStatus.UpComing);
 		reservationFour.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1)));
-		reservationFour.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		reservationFour.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
 		reservationFour.setRoomRates(Arrays.asList(roomRate1, roomRate2, roomRate3));
 
 		bookingService.saveReservation(reservationFour);
@@ -420,7 +420,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		reservationFour = new Reservation();
  
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 15)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 16)));
 		reservationOne.setRoomRates(new ArrayList<RoomRate>());
 		
 		reservationTwo.setFirstName("firstName");
@@ -428,7 +428,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		reservationTwo.setCreatedBy(user);
 		reservationTwo.setReservationStatus(ReservationStatus.UpComing);
 		reservationTwo.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		reservationTwo.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 6)));
+		reservationTwo.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 7)));
 		reservationTwo.setRoomRates(new ArrayList<RoomRate>());
 
 		reservationThree.setFirstName("firstName");
@@ -436,7 +436,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		reservationThree.setCreatedBy(user);
 		reservationThree.setReservationStatus(ReservationStatus.UpComing);
 		reservationThree.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 10)));
-		reservationThree.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 20)));
+		reservationThree.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 21)));
 		reservationThree.setRoomRates(new ArrayList<RoomRate>());
 		
 		reservationFour.setFirstName("firstName");
@@ -444,7 +444,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		reservationFour.setCreatedBy(user);
 		reservationFour.setReservationStatus(ReservationStatus.UpComing);
 		reservationFour.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		reservationFour.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 25)));
+		reservationFour.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 26)));
 		reservationFour.setRoomRates(new ArrayList<RoomRate>());
 
 		for(int i = 1; i <= 31; i++) {
@@ -478,6 +478,8 @@ public class BookingServiceTest extends BaseServiceTest {
 			} 
 		}
 		
+		endDate = dateConvertor.asDate(LocalDate.of(2018, Month.FEBRUARY, 1));
+		
 		assertEquals(93, roomService.getAvailableRoomRates(startDate, endDate).size());
 		bookingService.saveReservation(reservationOne);
 		
@@ -500,7 +502,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo));
 
 		Date startDate = dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1));
@@ -520,7 +522,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
 		bookingService.saveReservation(reservationOne);
@@ -537,7 +539,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
 		bookingService.saveReservation(reservationOne);
@@ -557,7 +559,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		bookingService.cancelReservation(cancellation);
 		
 		assertEquals(ReservationStatus.Cancelled, reservationOne.getReservationStatus());
-		availableRoomRates = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)), dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		availableRoomRates = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)), dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
 		
 		if(!availableRoomRates.contains(roomRateTwo) || !availableRoomRates.contains(roomRateThree)) {
 			fail();
@@ -575,7 +577,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
 		bookingService.saveReservation(reservationOne);
@@ -594,7 +596,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
 		bookingService.saveReservation(reservationOne);
@@ -608,7 +610,7 @@ public class BookingServiceTest extends BaseServiceTest {
 			bookingService.saveReservation(reservationOne);
 		} catch(MissingOrInvalidArgumentException e) {}
 		
-		List<RoomRate> availableRoomRates = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)), dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		List<RoomRate> availableRoomRates = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)), dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
 		assertEquals(1, availableRoomRates.size());
 	}
 	
@@ -618,14 +620,14 @@ public class BookingServiceTest extends BaseServiceTest {
 		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 5)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
 		bookingService.saveReservation(reservationOne);
 	}
 	
 	/**
-	 * going from -||--  to  ||--  This should ensure that the roomrate for the 2nd is free
+	 * going from -||-  to  ||--  This should ensure that the roomrate for the 3rd is free
 	 */
 	@Test 
 	public void testUpdateReservationWithChangingSameRoomRatesDifferentStartDate() {
@@ -633,7 +635,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
 		bookingService.saveReservation(reservationOne);
@@ -646,7 +648,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		roomRates.add(roomRateTwo);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
 		reservationOne.setRoomRates(roomRates);
 		
 		try {
@@ -655,7 +657,7 @@ public class BookingServiceTest extends BaseServiceTest {
 			fail(e.toString());
 		}
 		
-		List<RoomRate> availableRoomRates = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1)), dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		List<RoomRate> availableRoomRates = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1)), dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
 		
 		assertEquals(1, availableRoomRates.size());
 		assertTrue(availableRoomRates.contains(roomRateThree));
@@ -670,7 +672,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
 		bookingService.saveReservation(reservationOne);
@@ -683,7 +685,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		roomRates.add(roomRateFour);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 5)));
 		reservationOne.setRoomRates(roomRates);
 		
 		try {
@@ -704,7 +706,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
 		bookingService.saveReservation(reservationOne);
@@ -723,7 +725,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
 		bookingService.saveReservation(reservationOne);
@@ -742,7 +744,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
 		bookingService.saveReservation(reservationOne);
@@ -909,7 +911,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
 
 		List<RoomRate> roomRates = new ArrayList<RoomRate>();
 		roomRates.add(roomRateTwo);
@@ -931,7 +933,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		roomService.saveRoomRate(roomRateThree);
 
 		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
 
 		List<RoomRate> roomRates = new ArrayList<RoomRate>();
 		roomRates.add(roomRateTwo);

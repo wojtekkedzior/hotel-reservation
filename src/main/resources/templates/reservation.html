@@ -5,11 +5,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script th:inline="javascript">
 	/*<![CDATA[*/
-	function sayHello(value) {
-		var currentTotal = document.getElementById("total").value;
-		document.getElementById("total").value = +currentTotal + +value;
-	}
-
 	function subTotal(value) {
 		var select = document.getElementById("roomRateSelect-" + value);
 		var subTotal = 0;
@@ -30,130 +25,78 @@
 		document.getElementById("filterByDate").href = "/hotelreservation/reservation/start/"
 				+ startDate.value + "/end/" + endDate.value;
 	}
-	
-	   $(document).ready(function() {
-		   $("table").selekt({
-			   children: "td",           // Elements to target (default: "tbody tr")
-			   className: "selected",    // Desired CSS class  (default: "selected")
-			   onSelect: function(sel) { // Useful callback
-			     $("span").text(sel.length + ' in ' + this.id);
-			   }
-			 });
-		 });
+
+	$(document).ready(function() {
+		$("table").selekt({
+			children : "td", // Elements to target (default: "tbody tr")
+			className : "selected", // Desired CSS class  (default: "selected")
+			onSelect : function(sel) { // Useful callback
+				$("span").text(sel.length + ' in ' + this.id);
+			}
+		});
+	});
+
+	function test(obj) {
+		var items = [];
+
+		const cells = document.querySelectorAll('td');
+		cells.forEach(function(cell) {
+			if (cell.id && cell.classList.contains("selected")) {
+				items.push(cell.id)
+			}
+		})
+
+		$("#roomRateIds").val(items);
+	}
 	/*]]>*/
 </script>
 </head>
-
-<body>
-	<div layout:fragment="content">
-		<div class="column">
-
-			<form action="#" th:action="@{/reservation}" th:object="${reservation}" method="post">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-				<p>
-					Start Date: <input id="desiredReservationStartDate" type="date" name="startDate" th:value="2018-04-13" th:onClick="'javascript:changedDate();'" /> End
-					Date: <input id="desiredReservationEndDate" type="date" name="endDate" th:value="2018-04-15" th:onClick="'javascript:changedDate();'" /> <a
-						th:id="filterByDate" th:onClick=" ' javascript:changedDate();'   " th:text="Filter"> </a>
-					<!-- add OnLoad -->
-				</p>
-
-<!-- 				<div th:each="roomRateCombo : ${roomRatesPerRoom}">
+	<body>
+		<div layout:fragment="content">
+			<div class="column">
+	
+				<form action="#" th:action="@{/reservation}" th:object="${reservation}" method="post">
 					<p>
-						Room Number: <label th:text="${roomRateCombo.key.roomNumber} + ' - ' + ${roomRateCombo.key.description}"></label>
+						Start Date: <input id="desiredReservationStartDate" type="date" name="startDate" th:value="2018-04-13" th:onClick="'javascript:changedDate();'" /> End
+						Date: <input id="desiredReservationEndDate" type="date" name="endDate" th:value="2018-04-15" th:onClick="'javascript:changedDate();'" /> <a
+							th:id="filterByDate" th:onClick=" ' javascript:changedDate();'   " th:text="Filter"> </a>
+						<!-- add OnLoad -->
 					</p>
-
+					
+					<table id="ratesForDates" >
+						<tr>
+							<td>Date</td>
+							<td>Rooms</td>
+						</tr>
+						<tr>
+							<td></td>
+							<th:block th:each="roomNumber : ${roomNumbers}">
+				   				<td th:text="${roomNumber}"/>  
+						 	</th:block> 
+						</tr>
+						<tr th:each="day : ${roomRatesAsMapByDates}">
+						 	 <td th:text="${day.key}"/>
+						  
+						  	<th:block th:each="roomRate : ${day.value}">
+					   			<td th:id="${roomRate.id}" th:text="${roomRate != null} ? ${roomRate.value} : 'no rate' " onclick="test(this)"/>  
+						   	</th:block> 
+						</tr>
+					</table>
+	
 					<p>
-						<select name="wgtmsr" class="form-control" multiple="multiple" th:id="'roomRateSelect-' + ${roomRateCombo.key.roomNumber}" size="12"
-							th:field="${reservation.roomRates}" th:onChange="'javascript:subTotal(\'' + ${roomRateCombo.key.roomNumber} + '\');'">
-							onChange="showLimits()"
-
-							It's odd having the option value set to roomRate.id and the id to roomRate.value, but if the ID is not set than the roomRates are not added to the reservation 
-							<option th:each="roomRate : ${roomRateCombo.value}" th:value="${roomRate.id}" th:id="${roomRate.value}"
-								th:text="${roomRate.day} + ' - ' + ${roomRate.value} + ' - ' + ${roomRate.room.description}"
-								th:onClick="'javascript:sayHello(\'' + ${roomRate.value} + '\');'"></option>
-						</select>
+						Guest First Name: <input type="text" th:field="${reservation.firstName}" required="required" /> 
+						Guest Last Name: <input type="text" th:field="${reservation.lastName}" required="required" />
 					</p>
-
-					<p>
-						Sub Total: <input th:id="'roomRateSelectSubTotal-' + ${roomRateCombo.key.roomNumber}" type="number" />
-					</p>
-				</div> -->
-				
-				<table id="table_1" >
-							<tr >
-							  	<th:block th:each="day : ${roomRatesAsMapByDates}">
-								  	<th:block th:each="roomRate : ${day.value}">
-								   	</th:block> 
-						   	  	</th:block> 
-							</tr>
-
-							  <tr th:each="day : ${roomRatesAsMapByDates}">
-							 	 <td th:text="${day.key}"/>
-							  
-							  	<th:block th:each="roomRate : ${day.value}">
-							   		<td th:text="${roomRate != null} ? (${roomRate.room.roomNumber} + ' - ' +  ${roomRate.value}) : 'no rate' "/> 
-							   	</th:block> 
-							</tr>
-				</table>
-				
-				<p>
+	
 					<!-- hidden field to make sure the ID gets passed back to the controller when submit is called.  -->
-					<input type="number" th:field="${reservation.id}" hidden="true" /> <input type="date" th:field="${startDate}" th:value="2008-03-09" hidden="true" />
-			<!-- 		<input type="number" th:field="${reservation.mainGuest.id}" hidden="true" />  -->
-					<input type="text" th:field="${reservation.reservationStatus}" hidden="true" /> 
-					<input type="date" th:field="${reservation.createdOn}" hidden="true" /> 
-					Guest First Name: <input type="text" th:field="${reservation.firstName}" required="required" /> Guest Last Name: <input type="text"
-						th:field="${reservation.lastName}" required="required" />
-				</p>
-
-				<p>
+					<input type="text" id="roomRateIds" th:name="roomRateIds" hidden="true"/>
+					<input type="number" th:field="${reservation.id}" hidden="true" />
+				    <input type="date" th:field="${startDate}" th:value="2008-03-09" hidden="true" /> 
+					<input type="text" th:field="${reservation.reservationStatus}" hidden="true" />
+					<input type="date" th:field="${reservation.createdOn}" hidden="true" />
 					<input type="submit" value="Submit" />
-				</p>
-
-			</form>
-
-
-			<!-- to do add created by etc -->
-
-			<!-- 			<div>
-				<table>
-					<tr>
-						<td><label>Id</label></td>
-						<td><label>First Name</label></td>
-						<td><label>Last Name</label></td>
-						<td><label>Start Date</label></td>
-						<td><label>End Date</label></td>
-						<td><label>Created By</label></td>
-						<td><label>Created On</label></td>
-								<td><label>Realise</label></td>
-						<td><label>Cancel</label></td>
-					</tr>
-
-					<tr th:each="reservation, iterstat: ${reservations}">
-						<td><a th:href="@{/reservation/}+${reservation.id}" th:text="${reservation.id}"> </a></td>
-						<td th:text="${reservation.mainGuest.firstName}"></td>
-						<td th:text="${reservation.mainGuest.lastName}"></td>
-						<td th:text="${reservation.startDate}"></td>
-						<td th:text="${reservation.endDate}"></td>
-						<td th:text="${reservation.createdOn}"></td>
-						<td th:text="${reservation.createdBy}"></td>
-										<td>
-					<form action="#" th:action="@{/realiseReservation/}+${reservation.id}"
-						th:method="get">
-						<input type="hidden" name="_method" value="get" />
-						<button type="submit">Realise</button>
-					</form>
-				</td>
-						<td><a th:id="cancelReservation" th:href="@{/cancelReservation/}+${reservation.id}" th:text="Cancel"> </a></td>
-					</tr>
-				</table>
-			</div>-->
+				</form>
+			</div>
 		</div>
-	</div>
-
-
-</body>
-
-
-
+	</body>
 </html>

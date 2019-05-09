@@ -328,6 +328,14 @@ public class RoomServiceTest extends BaseServiceTest {
 	}
 	
 	@Test
+	public void testGetRoomRatesLastDayExcluded() {
+		setupRoomRates();
+		
+		List<RoomRate> roomRates = roomService.getRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)), dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
+		assertEquals(4, roomRates.size());
+	}
+	
+	@Test
 	public void testGetRoomRatesForSpecificRoom() {
 		setupRoomRates();
 		
