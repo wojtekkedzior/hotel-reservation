@@ -9,9 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,7 +105,6 @@ public class BookingService {
 		LocalDate startDate = utils.asLocalDate(reservation.getStartDate());
 		
 		long between = ChronoUnit.DAYS.between(startDate,utils.asLocalDate(reservation.getEndDate()));
-//		between += 1;
 		
 		if(roomRates.size() != between) {
 			throw new MissingOrInvalidArgumentException("Not enough rates for the given time frame");
