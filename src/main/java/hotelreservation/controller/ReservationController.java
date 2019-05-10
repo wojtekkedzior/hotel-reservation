@@ -116,7 +116,9 @@ public class ReservationController {
 
 		// TODO if there are no rooms available we neeed to display something usefull to the user.
 		//TODO replace with params
-		Date asDateStart = dateConvertor.asDate(LocalDate.of(2019, Month.APRIL, 13));
+		
+		
+		Date asDateStart = startDate.isPresent() ? startDate.get() : dateConvertor.asDate(LocalDate.now());
 		Date asDateEnd = dateConvertor.asDate(LocalDate.of(2019, Month.APRIL, 14));
  
 //		Date asDateStart = startDate.isPresent() ? startDate.get() : new Date();
