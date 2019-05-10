@@ -86,7 +86,7 @@ public class RoomService {
 		cal.roll(Calendar.DAY_OF_MONTH, -1);
 		
 		List<RoomRate> findByStartDateBetween = roomRateRepo.findByDayBetween(start, cal.getTime());
-		log.info("Looking for all RoomRates between: " + start + " and: " + cal.getTimeInMillis() + ". Found: " + findByStartDateBetween.size());
+		log.info("Looking for all RoomRates between: " + start + " and: " + cal.getTime() + ". Found: " + findByStartDateBetween.size());
 		return findByStartDateBetween;
 	}
 	
