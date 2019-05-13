@@ -1,12 +1,12 @@
 package hotelreservation;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -178,7 +178,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		superAdmin.setUserName("superAdmin");
 		superAdmin.setFirstName("firstName");
 		superAdmin.setLastName("lastName");
-		superAdmin.setCreatedOn(new Date());
+		superAdmin.setCreatedOn(LocalDateTime.now());
 		superAdmin.setPassword(passwordEncoder.encode("password"));
 		userRepo.save(superAdmin);
 	}
@@ -523,8 +523,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		LocalDate endDate = LocalDate.of(YEAR, Month.MARCH, 20);
 
 		reservationOne = new Reservation();
-		reservationOne.setStartDate(dateConvertor.asDate(startDate));
-		reservationOne.setEndDate(dateConvertor.asDate(endDate));
+		reservationOne.setStartDate(startDate);
+		reservationOne.setEndDate(endDate);
 		reservationOne.setFirstName("firstName");
 		reservationOne.setLastName("lastName");
 		reservationOne.setOccupants(Arrays.asList(guestTwo, guestThree));
@@ -550,8 +550,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 			LocalDate endDate = LocalDate.of(YEAR, Month.MARCH, 20);
 
 			Reservation reservation = new Reservation();
-			reservation.setStartDate(dateConvertor.asDate(startDate));
-			reservation.setEndDate(dateConvertor.asDate(endDate));
+			reservation.setStartDate(startDate);
+			reservation.setEndDate(endDate);
 			reservation.setFirstName("firstName");
 			reservation.setLastName("lastName"); 
 			reservation.setOccupants(Arrays.asList(guestTwo, guestThree));
@@ -581,8 +581,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		LocalDate endDate = LocalDate.of(YEAR, Month.APRIL, 5);
 		
 		Reservation reservation = new Reservation();
-		reservation.setStartDate(dateConvertor.asDate(startDate));
-		reservation.setEndDate(dateConvertor.asDate(endDate));
+		reservation.setStartDate(startDate);
+		reservation.setEndDate(endDate);
 		reservation.setFirstName("firstName");
 		reservation.setLastName("lastName");
 		reservation.setOccupants(Arrays.asList(guestTwo, guestThree));

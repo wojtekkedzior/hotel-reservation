@@ -1,5 +1,6 @@
 package hotelreservation.service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class BaseServiceTest {
 
 		superAdmin.setPassword(passwordEncoder.encode("superAdminPassword"));
 		
-		superAdmin.setCreatedOn(new Date());
+		superAdmin.setCreatedOn(LocalDateTime.now());
 		userRepo.save(superAdmin);
 	}
 }

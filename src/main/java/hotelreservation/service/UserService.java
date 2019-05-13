@@ -1,5 +1,8 @@
 package hotelreservation.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -71,7 +74,7 @@ public class UserService {
 			throw new MissingOrInvalidArgumentException("Username already exists: " + user.getUserName());
 		}
 		
-		user.setCreatedOn(new Date());
+		user.setCreatedOn(LocalDateTime.now());
 		userRepo.save(user);
 	}
 	

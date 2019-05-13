@@ -192,8 +192,8 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		reservationOne.setLastName("lastName");
 		reservationOne.setCreatedBy(user);
 		reservationOne.setReservationStatus(ReservationStatus.UpComing);
-		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
+		reservationOne.setStartDate(LocalDate.of(2018, Month.JANUARY, 2));
+		reservationOne.setEndDate(LocalDate.of(2018, Month.JANUARY, 4));
 		reservationOne.setRoomRates(new ArrayList<RoomRate>());
 		
 		RoomRate roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2)));
@@ -365,8 +365,8 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		reservationOne.setLastName("lastName");
 		reservationOne.setCreatedBy(user);
 		reservationOne.setReservationStatus(ReservationStatus.UpComing);
-		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 6)));
+		reservationOne.setStartDate(LocalDate.of(2018, Month.JANUARY, 4));
+		reservationOne.setEndDate(LocalDate.of(2018, Month.JANUARY, 6));
 		reservationOne.setRoomRates(new ArrayList<RoomRate>());
 		
 		RoomRate roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
@@ -400,8 +400,8 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		reservationOne.setLastName("lastName");
 		reservationOne.setCreatedBy(user);
 		reservationOne.setReservationStatus(ReservationStatus.UpComing);
-		reservationOne.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
-		reservationOne.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 6)));
+		reservationOne.setStartDate(LocalDate.of(2018, Month.JANUARY, 4));
+		reservationOne.setEndDate(LocalDate.of(2018, Month.JANUARY, 6));
 		reservationOne.setRoomRates(new ArrayList<RoomRate>());
 		
 		RoomRate roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4)));
@@ -434,8 +434,8 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		reservationTwo.setLastName("lastName");
 		reservationTwo.setCreatedBy(user);
 		reservationTwo.setReservationStatus(ReservationStatus.UpComing);
-		reservationTwo.setStartDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 6)));
-		reservationTwo.setEndDate(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 8)));
+		reservationTwo.setStartDate(LocalDate.of(2018, Month.JANUARY, 6));
+		reservationTwo.setEndDate(LocalDate.of(2018, Month.JANUARY, 8));
 		reservationTwo.setRoomRates(new ArrayList<RoomRate>());
 		
 		RoomRate roomRateThree = new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 6)));
