@@ -44,6 +44,8 @@ import hotelreservation.service.UserService;
 @Component
 @Profile("dev")
 public class ApplicationStartup implements ApplicationListener<ApplicationReadyEvent> {
+	private static final int YEAR = 2019;
+
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private Role adminRole;
@@ -456,7 +458,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 
 	private void addRoomRates() {
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 1)));
+		cal.setTime(dateConvertor.asDate(LocalDate.of(2019, Month.JANUARY, 1)));
 
 		for (int days = 1; days <= 365; days++) {
 			cal.roll(Calendar.DAY_OF_YEAR, true);
@@ -517,8 +519,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	}
 
 	private void addReservation() {
-		LocalDate startDate = LocalDate.of(2018, Month.MARCH, 3);
-		LocalDate endDate = LocalDate.of(2018, Month.MARCH, 20);
+		LocalDate startDate = LocalDate.of(YEAR, Month.MARCH, 3);
+		LocalDate endDate = LocalDate.of(YEAR, Month.MARCH, 20);
 
 		reservationOne = new Reservation();
 		reservationOne.setStartDate(dateConvertor.asDate(startDate));
@@ -528,8 +530,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		reservationOne.setOccupants(Arrays.asList(guestTwo, guestThree));
 		reservationOne.setRoomRates(new ArrayList<RoomRate>());
 
-		List<RoomRate> roomRatesForAllRooms = roomService.getRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.MARCH, 1)),
-				dateConvertor.asDate(LocalDate.of(2018, Month.MARCH, 31)));
+		List<RoomRate> roomRatesForAllRooms = roomService.getRoomRates(dateConvertor.asDate(LocalDate.of(YEAR, Month.MARCH, 1)),
+				dateConvertor.asDate(LocalDate.of(YEAR, Month.MARCH, 31)));
 		
 		for (RoomRate roomRate : roomRatesForAllRooms) {
 			if (roomRate.getRoom().getId() == 1 
@@ -544,8 +546,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	
 	private void addReservations(int reservations) {
 		for (int i = 2; i <= reservations; i++) {
-			LocalDate startDate = LocalDate.of(2018, Month.MARCH, 3);
-			LocalDate endDate = LocalDate.of(2018, Month.MARCH, 20);
+			LocalDate startDate = LocalDate.of(YEAR, Month.MARCH, 3);
+			LocalDate endDate = LocalDate.of(YEAR, Month.MARCH, 20);
 
 			Reservation reservation = new Reservation();
 			reservation.setStartDate(dateConvertor.asDate(startDate));
@@ -555,8 +557,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 			reservation.setOccupants(Arrays.asList(guestTwo, guestThree));
 			reservation.setRoomRates(new ArrayList<RoomRate>());
 
-			List<RoomRate> roomRatesForAllRooms = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.MARCH, 1)),
-					dateConvertor.asDate(LocalDate.of(2018, Month.MARCH, 31)));
+			List<RoomRate> roomRatesForAllRooms = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(YEAR, Month.MARCH, 1)),
+					dateConvertor.asDate(LocalDate.of(YEAR, Month.MARCH, 31)));
 
 			for (RoomRate roomRate : roomRatesForAllRooms) {
 				if (roomRate.getRoom().getId() == i // this is the room ID 
@@ -575,8 +577,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	}
 	
 	private void createMultiRoomReservation () {
-		LocalDate startDate = LocalDate.of(2018, Month.APRIL, 1);
-		LocalDate endDate = LocalDate.of(2018, Month.APRIL, 5);
+		LocalDate startDate = LocalDate.of(YEAR, Month.APRIL, 1);
+		LocalDate endDate = LocalDate.of(YEAR, Month.APRIL, 5);
 		
 		Reservation reservation = new Reservation();
 		reservation.setStartDate(dateConvertor.asDate(startDate));
@@ -586,8 +588,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		reservation.setOccupants(Arrays.asList(guestTwo, guestThree));
 		reservation.setRoomRates(new ArrayList<RoomRate>());
 
-		List<RoomRate> roomRatesForAllRooms = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.APRIL, 1)),
-				dateConvertor.asDate(LocalDate.of(2018, Month.APRIL, 4)));
+		List<RoomRate> roomRatesForAllRooms = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(YEAR, Month.APRIL, 1)),
+				dateConvertor.asDate(LocalDate.of(YEAR, Month.APRIL, 4)));
 		
 		for (RoomRate roomRate : roomRatesForAllRooms) {
 			if (roomRate.getRoom().getId() == 1 
@@ -597,8 +599,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 			}
 		}
 		
-		roomRatesForAllRooms = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(2018, Month.APRIL, 4)),
-				dateConvertor.asDate(LocalDate.of(2018, Month.APRIL, 5)));
+		roomRatesForAllRooms = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(YEAR, Month.APRIL, 4)),
+				dateConvertor.asDate(LocalDate.of(YEAR, Month.APRIL, 5)));
 
 		for (RoomRate roomRate : roomRatesForAllRooms) {
 			if (roomRate.getRoom().getId() == 2 

@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -105,8 +106,8 @@ public class ReservationController {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
 		// TODO hard-coded for now
-		model.addAttribute("startDate", startDate.isPresent() ? formatter.format(startDate.get()) : "2018-04-09");
-		model.addAttribute("endDate", endDate.isPresent() ? formatter.format(endDate.get()) : "2018-04-20");
+		model.addAttribute("startDate", startDate.isPresent() ? formatter.format(startDate.get()) : formatter.format(new Date()));
+		model.addAttribute("endDate", endDate.isPresent() ? formatter.format(endDate.get()) : formatter.format(new Date()));
 
 		if (startDate.isPresent() && endDate.isPresent()) {
 			Map<Room, List<RoomRate>> roomRatesAsMap = roomService.getRoomRatesAsMap(startDate.get(), endDate.get());
@@ -115,8 +116,16 @@ public class ReservationController {
 
 		// TODO if there are no rooms available we neeed to display something usefull to the user.
 		//TODO replace with params
-		Date asDateStart = dateConvertor.asDate(LocalDate.of(2018, Month.APRIL, 13));
-		Date asDateEnd = dateConvertor.asDate(LocalDate.of(2018, Month.APRIL, 15));
+		
+		
+		Date asDateStart = startDate.isPresent() ? startDate.get() : dateConvertor.asDate(LocalDate.now());
+		Date asDateEnd = dateConvertor.asDate(LocalDate.of(2019, Month.APRIL, 14));
+ 
+//		Date asDateStart = startDate.isPresent() ? startDate.get() : new Date();
+//		Calendar cal = Calendar.getInstance();
+//		cal.setTime(new Date());
+//		cal.roll(Calendar.DAY_OF_MONTH, 10);
+//		Date asDateEnd = endDate.isPresent() ? endDate.get() : cal.getTime();
 
 		Map<Date, List<RoomRate>> roomRatesAsMapByDates = roomService.getRoomRatesPerDate(asDateStart, asDateEnd);
 		model.addAttribute("roomRatesAsMapByDates", roomRatesAsMapByDates);
