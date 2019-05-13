@@ -1,5 +1,6 @@
 package hotelreservation.model;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -10,12 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
-
-import org.springframework.format.annotation.DateTimeFormat;
 
 import hotelreservation.model.enums.Currency;
 import lombok.Data;
@@ -44,11 +41,11 @@ public class RoomRate {
 	private int value;
 	
 	@NotNull
-	@Temporal(TemporalType.DATE)
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date day;
+//	@Temporal(TemporalType.DATE)
+//	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate day;
 	
-	public RoomRate(Room room, Currency currency, int value, Date day) {
+	public RoomRate(Room room, Currency currency, int value, LocalDate day) {
 		super();
 		this.room = room;
 		this.currency = currency;

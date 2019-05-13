@@ -459,18 +459,28 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	private void addRoomRates() {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(dateConvertor.asDate(LocalDate.of(2019, Month.JANUARY, 1)));
-
-		for (int days = 1; days <= 365; days++) {
-			cal.roll(Calendar.DAY_OF_YEAR, true);
-
-			int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
-			int value = 1000;
-
-			if (dayOfWeek == Calendar.FRIDAY || dayOfWeek == Calendar.SATURDAY) {
-				value = 1999;
-			} else if (dayOfWeek == Calendar.SUNDAY) {
-				value = 1500;
-			}
+		
+		LocalDate start = LocalDate.of(2019, Month.JANUARY, 1);
+//
+//		for (int days = 1; days <= 365; days++) {
+//			cal.roll(Calendar.DAY_OF_YEAR, true);
+//
+//			int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+//			int value = 1000;
+//
+//			if (dayOfWeek == Calendar.FRIDAY || dayOfWeek == Calendar.SATURDAY) {
+//				value = 1999;
+//			} else if (dayOfWeek == Calendar.SUNDAY) {
+//				value = 1500;
+//			}
+			
+			
+			for (int days = 1; days <= 365; days++) {
+				int value = 1000;
+				
+				if(start.get(ChronoUnit.))
+				
+				
 
 			roomService.saveRoomRate(new RoomRate(standardRoomOne, Currency.CZK, value, cal.getTime()));
 			roomService.saveRoomRate(new RoomRate(standardRoomTwo, Currency.CZK, value, cal.getTime()));
@@ -530,8 +540,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		reservationOne.setOccupants(Arrays.asList(guestTwo, guestThree));
 		reservationOne.setRoomRates(new ArrayList<RoomRate>());
 
-		List<RoomRate> roomRatesForAllRooms = roomService.getRoomRates(dateConvertor.asDate(LocalDate.of(YEAR, Month.MARCH, 1)),
-				dateConvertor.asDate(LocalDate.of(YEAR, Month.MARCH, 31)));
+		List<RoomRate> roomRatesForAllRooms = roomService.getRoomRates(LocalDate.of(YEAR, Month.MARCH, 1), LocalDate.of(YEAR, Month.MARCH, 31));
 		
 		for (RoomRate roomRate : roomRatesForAllRooms) {
 			if (roomRate.getRoom().getId() == 1 
@@ -557,8 +566,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 			reservation.setOccupants(Arrays.asList(guestTwo, guestThree));
 			reservation.setRoomRates(new ArrayList<RoomRate>());
 
-			List<RoomRate> roomRatesForAllRooms = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(YEAR, Month.MARCH, 1)),
-					dateConvertor.asDate(LocalDate.of(YEAR, Month.MARCH, 31)));
+			List<RoomRate> roomRatesForAllRooms = roomService.getAvailableRoomRates(LocalDate.of(YEAR, Month.MARCH, 1), LocalDate.of(YEAR, Month.MARCH, 31));
 
 			for (RoomRate roomRate : roomRatesForAllRooms) {
 				if (roomRate.getRoom().getId() == i // this is the room ID 
@@ -588,8 +596,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		reservation.setOccupants(Arrays.asList(guestTwo, guestThree));
 		reservation.setRoomRates(new ArrayList<RoomRate>());
 
-		List<RoomRate> roomRatesForAllRooms = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(YEAR, Month.APRIL, 1)),
-				dateConvertor.asDate(LocalDate.of(YEAR, Month.APRIL, 4)));
+		List<RoomRate> roomRatesForAllRooms = roomService.getAvailableRoomRates(LocalDate.of(YEAR, Month.APRIL, 1), LocalDate.of(YEAR, Month.APRIL, 4));
 		
 		for (RoomRate roomRate : roomRatesForAllRooms) {
 			if (roomRate.getRoom().getId() == 1 
@@ -599,8 +606,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 			}
 		}
 		
-		roomRatesForAllRooms = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(YEAR, Month.APRIL, 4)),
-				dateConvertor.asDate(LocalDate.of(YEAR, Month.APRIL, 5)));
+		roomRatesForAllRooms = roomService.getAvailableRoomRates(LocalDate.of(YEAR, Month.APRIL, 4), LocalDate.of(YEAR, Month.APRIL, 5));
 
 		for (RoomRate roomRate : roomRatesForAllRooms) {
 			if (roomRate.getRoom().getId() == 2 

@@ -1,5 +1,9 @@
 package hotelreservation.service;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -9,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,13 +83,13 @@ public class RoomService {
 		return utils.toList(roomRepo.findByStatus(status));
 	}
 
-	public List<RoomRate> getRoomRates(Date start, Date end) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(end);
-		cal.roll(Calendar.DAY_OF_MONTH, -1);
+	public List<RoomRate> getRoomRates(LocalDate start, LocalDate end) {
+//		Calendar cal = Calendar.getInstance();
+//		cal.setTime(end);
+//		cal.roll(Calendar.DAY_OF_MONTH, -1);
 		
-		List<RoomRate> findByStartDateBetween = roomRateRepo.findByDayBetween(start, cal.getTime());
-		log.info("Looking for all RoomRates between: " + start + " and: " + cal.getTime() + ". Found: " + findByStartDateBetween.size());
+		List<RoomRate> findByStartDateBetween = roomRateRepo.findByDayBetween(start, end.minus(1l,  ChronoUnit.DAYS));
+//		log.info("Looking for all RoomRates between: " + start + " and: " + cal.getTime() + ". Found: " + findByStartDateBetween.size());
 		return findByStartDateBetween;
 	}
 	
@@ -96,7 +99,7 @@ public class RoomService {
 		return findByStartDateBetween;
 	}
 	
-	public List<RoomRate> getAvailableRoomRates(Date start, Date end) { //TODO add a variant of this method but for a particular room //TODO finally figure out how to use a join and apply it here
+	public List<RoomRate> getAvailableRoomRates(LocalDate start, LocalDate end) { //TODO add a variant of this method but for a particular room //TODO finally figure out how to use a join and apply it here
 		List<RoomRate> availableRoomRates = new ArrayList<RoomRate>();
 		List<Reservation> inProgressAndUpComingReservations = reservationRepo.findInProgressAndUpComingReservations();
 		List<RoomRate> availableRoomRatesForAllRooms = getRoomRates(start, end);
@@ -130,7 +133,7 @@ public class RoomService {
 		return availableRoomRates;
 	}
 
-	public Map<Room, List<RoomRate>> getRoomRatesAsMap(Date startDate, Date endDate) {
+	public Map<Room, List<RoomRate>> getRoomRatesAsMap(LocalDate startDate, LocalDate endDate) {
 		Map<Room, List<RoomRate>> ratesForAllRooms = new HashMap<Room, List<RoomRate>>();
 		
 		for (RoomRate roomRate : getAvailableRoomRates(startDate, endDate)) {
@@ -292,9 +295,10 @@ public class RoomService {
 	 * @param end
 	 * @return
 	 */
-	public Map<Date, List<RoomRate>> getRoomRatesPerDate(Date start, Date end) {
+	public Map<Date, List<RoomRate>> getRoomRatesPerDate(LocalDate start, LocalDate end) {
 		Map<Date, List<RoomRate>> roomRatesAsMapByDates = new TreeMap<Date, List<RoomRate>>(); 
-		int daysBetween = calculateDaysBetween(start, end);
+//		int daysBetween = calculateDaysBetween(start, end);
+		long daysBetween = ChronoUnit.DAYS.between(start, end);
 		List<RoomRate> availableRoomRates = getAvailableRoomRates(start, end); //this method is wrong. for the 13th to the 15th it should only return rates for the 13th and 14th
 
 		Map<Room, List<RoomRate>> roomRatesPerRoom = availableRoomRates
@@ -302,7 +306,7 @@ public class RoomService {
 			.collect(Collectors.groupingBy(RoomRate::getRoom, TreeMap::new, Collectors.toList()));
 		
 		Calendar rollingday = Calendar.getInstance();
-		rollingday.setTime(start);
+		rollingday.setTime(utils.asDate(start));
 		
 		for (int i = 0; i < daysBetween; i++) {
 			for (Room room : roomRatesPerRoom.keySet()) {

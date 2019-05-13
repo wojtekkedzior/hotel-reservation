@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import org.junit.Before;
@@ -85,7 +86,7 @@ public class RoomControllerTest {
 		roomRate.setRoom(new Room());
 		roomRate.setCurrency(Currency.CZK);
 		roomRate.setValue(1000);
-		roomRate.setDay(new Date());
+		roomRate.setDay(LocalDate.now());
 		mvc.perform(post("/addRoomRate").flashAttr("roomRate", roomRate)).andExpect(status().isForbidden());
 	}
 
@@ -94,7 +95,7 @@ public class RoomControllerTest {
 	public void testManagerRolePermissions_allowed() throws Exception {
 		mvc.perform(get("/roomRate/1")).andExpect(status().isOk());
 		
-		RoomRate roomRate = new RoomRate(applicationStartup.standardRoomOne, Currency.CZK, 10, new Date());
+		RoomRate roomRate = new RoomRate(applicationStartup.standardRoomOne, Currency.CZK, 10, LocalDate.now());
 		mvc.perform(post("/addRoomRate").flashAttr("roomRate", roomRate)).andExpect(status().is3xxRedirection());
 	}
 
@@ -130,7 +131,7 @@ public class RoomControllerTest {
 		mvc.perform(post("/addAmenity").flashAttr("amenity", amenity)).andExpect(status().isForbidden());
 		mvc.perform(post("/addRoomType").flashAttr("roomType", roomTypeStandard)).andExpect(status().isForbidden());
 		mvc.perform(post("/addRoom").flashAttr("room", applicationStartup.standardRoomOne)).andExpect(status().isForbidden());
-		mvc.perform(post("/addRoomRate").flashAttr("roomRate", new RoomRate(applicationStartup.standardRoomOne, Currency.CZK, 10, new Date()))).andExpect(status().isForbidden());
+		mvc.perform(post("/addRoomRate").flashAttr("roomRate", new RoomRate(applicationStartup.standardRoomOne, Currency.CZK, 10, LocalDate.now()))).andExpect(status().isForbidden());
 		
 		mvc.perform(delete("/roomDelete/1")).andExpect(status().isForbidden());
 		mvc.perform(delete("/roomTypeDelete/1")).andExpect(status().isForbidden());

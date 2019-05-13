@@ -133,8 +133,8 @@ public class RoomController {
 		Calendar cal = new GregorianCalendar();
 		cal.add(Calendar.DAY_OF_YEAR, 30);
 
-		Date start = dateConvertor.asDate(LocalDate.now());
-		Date end = dateConvertor.asDate(LocalDate.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH)));
+		LocalDate start = LocalDate.now();
+		LocalDate end = LocalDate.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
 
 		model.addAttribute("roomRates", roomService.getRoomRates(start, end));
 		model.addAttribute("rooms", roomService.getAllRooms());

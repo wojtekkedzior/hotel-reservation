@@ -80,8 +80,8 @@ public class ReservationController {
 
 	@PreAuthorize("hasAuthority('createReservation')")
 	@RequestMapping(value = { "/reservation", "/reservation/{id}", "/reservation/start/{startDate}/end/{endDate}" })
-	public String addReservationModel(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<Date> startDate,
-			@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<Date> endDate, @PathVariable Optional<Integer> id, Model model) {
+	public String addReservationModel(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<LocalDate> startDate,
+			@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<LocalDate> endDate, @PathVariable Optional<Integer> id, Model model) {
 		if (!id.isPresent()) {
 			model.addAttribute("reservation", new Reservation());
 			model.addAttribute("room", new Room());
@@ -118,8 +118,8 @@ public class ReservationController {
 		//TODO replace with params
 		
 		
-		Date asDateStart = startDate.isPresent() ? startDate.get() : dateConvertor.asDate(LocalDate.now());
-		Date asDateEnd = dateConvertor.asDate(LocalDate.of(2019, Month.APRIL, 14));
+		LocalDate asDateStart = startDate.isPresent() ? startDate.get() : LocalDate.now();
+		LocalDate asDateEnd = LocalDate.of(2019, Month.APRIL, 14);
  
 //		Date asDateStart = startDate.isPresent() ? startDate.get() : new Date();
 //		Calendar cal = Calendar.getInstance();
