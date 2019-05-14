@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import hotelreservation.Utils;
 import hotelreservation.exceptions.NotDeletedException;
 import hotelreservation.exceptions.NotFoundException;
 import hotelreservation.model.Amenity;
@@ -69,9 +68,6 @@ public class InvoiceServiceTest extends BaseServiceTest {
 
 	@Autowired
 	private BookingService bookingService;
-	
-	@Autowired
-	private Utils dateConvertor;
 	
 	private Role role;
 	private User user;

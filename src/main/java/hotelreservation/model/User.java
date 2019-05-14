@@ -1,9 +1,6 @@
 package hotelreservation.model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Collection;
 
 import javax.persistence.Entity;
@@ -55,16 +52,13 @@ public class User {
 	private User createdBy;
 
 	@NotNull
-//	@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime createdOn;
 
 	@OneToOne
 	private User disabledBy;
 
-//	@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime disabledOn;
 
-//	@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime lastloggedOn;
 
 	//TODO a user must have a role

@@ -2,7 +2,6 @@ package hotelreservation.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -61,17 +60,12 @@ public class Reservation {
 	@EqualsAndHashCode.Include
 	private User createdBy;
 	
-//	@Temporal(TemporalType.TIMESTAMP)
 	@EqualsAndHashCode.Include
 	private LocalDateTime createdOn;
 	
-//	@Temporal(TemporalType.DATE)
-//	@DateTimeFormat(pattern = "yyyyMMdd") //The DateTimeFormat needs to be in this format for Spring to convert a string back to a date. duh!
 	@EqualsAndHashCode.Include
 	private LocalDate startDate;
 	
-//	@Temporal(TemporalType.DATE)
-//	@DateTimeFormat(pattern = "yyyyMMdd")
 	@EqualsAndHashCode.Include
 	private LocalDate endDate;
 	

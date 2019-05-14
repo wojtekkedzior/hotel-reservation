@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import hotelreservation.Utils;
 import hotelreservation.exceptions.MissingOrInvalidArgumentException;
 import hotelreservation.exceptions.NotDeletedException;
 import hotelreservation.exceptions.NotFoundException;
@@ -59,9 +57,6 @@ public class BookingServiceTest extends BaseServiceTest {
 	
 	@Autowired
 	private InvoiceService invoiceService;
-	
-	@Autowired
-	private Utils dateConvertor;
 	
 	private Room standardRoomOne;
 	private Room standardRoomTwo;

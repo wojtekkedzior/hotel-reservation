@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;

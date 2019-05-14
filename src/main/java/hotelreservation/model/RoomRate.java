@@ -1,7 +1,6 @@
 package hotelreservation.model;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -41,8 +40,6 @@ public class RoomRate {
 	private int value;
 	
 	@NotNull
-//	@Temporal(TemporalType.DATE)
-//	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate day;
 	
 	public RoomRate(Room room, Currency currency, int value, LocalDate day) {
