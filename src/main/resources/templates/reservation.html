@@ -91,7 +91,7 @@
 					<!-- hidden field to make sure the ID gets passed back to the controller when submit is called.  -->
 					<input type="text" id="roomRateIds" th:name="roomRateIds" hidden="true"/>
 					<input type="number" th:field="${reservation.id}" hidden="true" />
-				    <input type="date" th:field="${startDate}" th:value="2008-03-09" hidden="true" /> 
+				   <!--  <input type="date" th:field="${startDate}" th:value="2008-03-09" hidden="true" />  -->
 					<input type="text" th:field="${reservation.reservationStatus}" hidden="true" />
 					<input type="date" th:field="${reservation.createdOn}" hidden="true" />
 					<input type="submit" value="Submit" />
