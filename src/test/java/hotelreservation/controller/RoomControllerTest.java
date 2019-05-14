@@ -6,7 +6,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -65,7 +67,7 @@ public class RoomControllerTest {
 		mvc.perform(post("/addRoomType").flashAttr("roomType", roomTypeStandard)).andExpect(status().is3xxRedirection());
 		
 		Room room = new Room(1, applicationStartup.operational, applicationStartup.roomTypeStandard, applicationStartup.admin);
-		room.setCreatedOn(new Date());
+		room.setCreatedOn(LocalDateTime.now());
 		mvc.perform(post("/addRoom").flashAttr("room", room)).andExpect(status().is3xxRedirection());
 		
 		//Some of these deletes will fail because of constraint violations, which is fine.
@@ -85,7 +87,7 @@ public class RoomControllerTest {
 		roomRate.setRoom(new Room());
 		roomRate.setCurrency(Currency.CZK);
 		roomRate.setValue(1000);
-		roomRate.setDay(new Date());
+		roomRate.setDay(LocalDate.now());
 		mvc.perform(post("/addRoomRate").flashAttr("roomRate", roomRate)).andExpect(status().isForbidden());
 	}
 
@@ -94,7 +96,7 @@ public class RoomControllerTest {
 	public void testManagerRolePermissions_allowed() throws Exception {
 		mvc.perform(get("/roomRate/1")).andExpect(status().isOk());
 		
-		RoomRate roomRate = new RoomRate(applicationStartup.standardRoomOne, Currency.CZK, 10, new Date());
+		RoomRate roomRate = new RoomRate(applicationStartup.standardRoomOne, Currency.CZK, 10, LocalDate.now().plus(1, ChronoUnit.YEARS));
 		mvc.perform(post("/addRoomRate").flashAttr("roomRate", roomRate)).andExpect(status().is3xxRedirection());
 	}
 
@@ -130,7 +132,7 @@ public class RoomControllerTest {
 		mvc.perform(post("/addAmenity").flashAttr("amenity", amenity)).andExpect(status().isForbidden());
 		mvc.perform(post("/addRoomType").flashAttr("roomType", roomTypeStandard)).andExpect(status().isForbidden());
 		mvc.perform(post("/addRoom").flashAttr("room", applicationStartup.standardRoomOne)).andExpect(status().isForbidden());
-		mvc.perform(post("/addRoomRate").flashAttr("roomRate", new RoomRate(applicationStartup.standardRoomOne, Currency.CZK, 10, new Date()))).andExpect(status().isForbidden());
+		mvc.perform(post("/addRoomRate").flashAttr("roomRate", new RoomRate(applicationStartup.standardRoomOne, Currency.CZK, 10, LocalDate.now()))).andExpect(status().isForbidden());
 		
 		mvc.perform(delete("/roomDelete/1")).andExpect(status().isForbidden());
 		mvc.perform(delete("/roomTypeDelete/1")).andExpect(status().isForbidden());

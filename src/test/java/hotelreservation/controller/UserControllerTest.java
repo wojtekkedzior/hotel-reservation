@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -44,7 +44,7 @@ public class UserControllerTest  {
 		user.setFirstName("user");
 		user.setLastName("user");
 		user.setUserName("user");
-		user.setCreatedOn(new Date());
+		user.setCreatedOn(LocalDateTime.now());
 		user.setEnabled(true);
 	}
 

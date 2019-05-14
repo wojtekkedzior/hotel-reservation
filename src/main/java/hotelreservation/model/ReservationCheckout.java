@@ -1,6 +1,6 @@
 package hotelreservation.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,8 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import hotelreservation.model.finance.Payment;
@@ -32,8 +30,7 @@ public class ReservationCheckout {
 	private String notes;
 	
 	@NotNull
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date checkedout;
+	private LocalDateTime checkedout;
 	
 	@NotNull
 	@ManyToOne

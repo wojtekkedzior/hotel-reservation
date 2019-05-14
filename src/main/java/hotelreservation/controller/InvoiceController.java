@@ -1,6 +1,6 @@
 package hotelreservation.controller;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -66,7 +66,7 @@ public class InvoiceController {
 		log.info("creating payment for reservation: " + reservationId);
 		
 		Payment payment = new Payment();
-		payment.setPaymentDate(new Date());
+		payment.setPaymentDate(LocalDateTime.now());
 		
 		//TODO is the reservationID param usefull here?
 		Reservation reservation = bookingService.getReservation(reservationId);

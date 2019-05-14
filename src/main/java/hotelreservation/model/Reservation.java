@@ -1,6 +1,7 @@
 package hotelreservation.model;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -11,13 +12,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import hotelreservation.model.enums.ReservationStatus;
 import lombok.Data;
@@ -62,19 +60,14 @@ public class Reservation {
 	@EqualsAndHashCode.Include
 	private User createdBy;
 	
-	@Temporal(TemporalType.TIMESTAMP)
 	@EqualsAndHashCode.Include
-	private Date createdOn;
+	private LocalDateTime createdOn;
 	
-	@Temporal(TemporalType.DATE)
-	@DateTimeFormat(pattern = "yyyyMMdd") //The DateTimeFormat needs to be in this format for Spring to convert a string back to a date. duh!
 	@EqualsAndHashCode.Include
-	private Date startDate;
+	private LocalDate startDate;
 	
-	@Temporal(TemporalType.DATE)
-	@DateTimeFormat(pattern = "yyyyMMdd")
 	@EqualsAndHashCode.Include
-	private Date endDate;
+	private LocalDate endDate;
 	
 	@Enumerated(EnumType.STRING)
 	@EqualsAndHashCode.Include

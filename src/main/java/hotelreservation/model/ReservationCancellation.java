@@ -1,6 +1,6 @@
 package hotelreservation.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,8 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -35,6 +33,5 @@ public class ReservationCancellation {
 	@ManyToOne
 	private User cancelledBy;
 	
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date cancelledOn;
+	private LocalDateTime cancelledOn;
 }

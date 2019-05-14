@@ -1,6 +1,6 @@
 package hotelreservation.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -8,8 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -38,10 +36,8 @@ public class Stay {
 	
 	//Start and End date of the entire stay duration, including days spen away from hotel.
 	@NotNull
-	@Temporal(TemporalType.DATE)
-	private Date startDate;
+	private LocalDate startDate;
 	
 	@NotNull
-	@Temporal(TemporalType.DATE)
-	private Date endDate;
+	private LocalDate endDate;
 }

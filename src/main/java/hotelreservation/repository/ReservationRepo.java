@@ -1,5 +1,6 @@
 package hotelreservation.repository;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import hotelreservation.model.enums.ReservationStatus;
 @Repository
 public interface ReservationRepo extends CrudRepository<Reservation, Long> {
 	
-	List<Reservation> findByStartDate(Date startDate);
+	List<Reservation> findByStartDate(LocalDate startDate);
 	
 	List<Reservation> findByStartDateBetween(Date start, Date end);
 	

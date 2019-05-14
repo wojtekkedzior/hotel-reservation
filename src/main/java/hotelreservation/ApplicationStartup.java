@@ -1,12 +1,13 @@
 package hotelreservation;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -135,9 +136,6 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	private BookingService bookingService;
 
 	@Autowired
-	private Utils dateConvertor;
-	
-	@Autowired
 	private InvoiceService invoiceService;
 	
 	@Autowired
@@ -178,7 +176,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		superAdmin.setUserName("superAdmin");
 		superAdmin.setFirstName("firstName");
 		superAdmin.setLastName("lastName");
-		superAdmin.setCreatedOn(new Date());
+		superAdmin.setCreatedOn(LocalDateTime.now());
 		superAdmin.setPassword(passwordEncoder.encode("password"));
 		userRepo.save(superAdmin);
 	}
@@ -457,28 +455,26 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	}
 
 	private void addRoomRates() {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(dateConvertor.asDate(LocalDate.of(2019, Month.JANUARY, 1)));
+		LocalDate date = LocalDate.of(2019, Month.JANUARY, 1);
+		int value = 1000;
 
 		for (int days = 1; days <= 365; days++) {
-			cal.roll(Calendar.DAY_OF_YEAR, true);
-
-			int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
-			int value = 1000;
-
-			if (dayOfWeek == Calendar.FRIDAY || dayOfWeek == Calendar.SATURDAY) {
+			if (date.getDayOfWeek().equals(DayOfWeek.FRIDAY) || date.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
 				value = 1999;
-			} else if (dayOfWeek == Calendar.SUNDAY) {
+			} else if (date.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
 				value = 1500;
 			}
 
-			roomService.saveRoomRate(new RoomRate(standardRoomOne, Currency.CZK, value, cal.getTime()));
-			roomService.saveRoomRate(new RoomRate(standardRoomTwo, Currency.CZK, value, cal.getTime()));
-			roomService.saveRoomRate(new RoomRate(standardRoomThree, Currency.CZK, value, cal.getTime()));
+			roomService.saveRoomRate(new RoomRate(standardRoomOne, Currency.CZK, value, date));
+			roomService.saveRoomRate(new RoomRate(standardRoomTwo, Currency.CZK, value, date));
+			roomService.saveRoomRate(new RoomRate(standardRoomThree, Currency.CZK, value, date));
 
-			roomService.saveRoomRate(new RoomRate(luxuryRoomOne, Currency.CZK, value * 2, cal.getTime()));
-			roomService.saveRoomRate(new RoomRate(luxuryRoomTwo, Currency.CZK, value * 2, cal.getTime()));
-			roomService.saveRoomRate(new RoomRate(luxuryRoomThree, Currency.CZK, value * 2, cal.getTime()));
+			roomService.saveRoomRate(new RoomRate(luxuryRoomOne, Currency.CZK, value * 2, date));
+			roomService.saveRoomRate(new RoomRate(luxuryRoomTwo, Currency.CZK, value * 2, date));
+			roomService.saveRoomRate(new RoomRate(luxuryRoomThree, Currency.CZK, value * 2, date));
+			
+			date = date.plus(1,  ChronoUnit.DAYS);
+			value = 1000;
 		}
 	}
 
@@ -523,20 +519,19 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		LocalDate endDate = LocalDate.of(YEAR, Month.MARCH, 20);
 
 		reservationOne = new Reservation();
-		reservationOne.setStartDate(dateConvertor.asDate(startDate));
-		reservationOne.setEndDate(dateConvertor.asDate(endDate));
+		reservationOne.setStartDate(startDate);
+		reservationOne.setEndDate(endDate);
 		reservationOne.setFirstName("firstName");
 		reservationOne.setLastName("lastName");
 		reservationOne.setOccupants(Arrays.asList(guestTwo, guestThree));
 		reservationOne.setRoomRates(new ArrayList<RoomRate>());
 
-		List<RoomRate> roomRatesForAllRooms = roomService.getRoomRates(dateConvertor.asDate(LocalDate.of(YEAR, Month.MARCH, 1)),
-				dateConvertor.asDate(LocalDate.of(YEAR, Month.MARCH, 31)));
+		List<RoomRate> roomRatesForAllRooms = roomService.getRoomRates(LocalDate.of(YEAR, Month.MARCH, 1), LocalDate.of(YEAR, Month.MARCH, 31));
 		
 		for (RoomRate roomRate : roomRatesForAllRooms) {
 			if (roomRate.getRoom().getId() == 1 
-					&& roomRate.getDay().after(dateConvertor.asDate(startDate.minusDays(1)))
-					&& roomRate.getDay().before(dateConvertor.asDate(endDate))) {
+					&& roomRate.getDay().isAfter(startDate.minusDays(1))
+					&& roomRate.getDay().isBefore(endDate)) {
 				
 				reservationOne.getRoomRates().add(roomRate);
 			}
@@ -550,20 +545,19 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 			LocalDate endDate = LocalDate.of(YEAR, Month.MARCH, 20);
 
 			Reservation reservation = new Reservation();
-			reservation.setStartDate(dateConvertor.asDate(startDate));
-			reservation.setEndDate(dateConvertor.asDate(endDate));
+			reservation.setStartDate(startDate);
+			reservation.setEndDate(endDate);
 			reservation.setFirstName("firstName");
 			reservation.setLastName("lastName"); 
 			reservation.setOccupants(Arrays.asList(guestTwo, guestThree));
 			reservation.setRoomRates(new ArrayList<RoomRate>());
 
-			List<RoomRate> roomRatesForAllRooms = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(YEAR, Month.MARCH, 1)),
-					dateConvertor.asDate(LocalDate.of(YEAR, Month.MARCH, 31)));
+			List<RoomRate> roomRatesForAllRooms = roomService.getAvailableRoomRates(LocalDate.of(YEAR, Month.MARCH, 1), LocalDate.of(YEAR, Month.MARCH, 31));
 
 			for (RoomRate roomRate : roomRatesForAllRooms) {
 				if (roomRate.getRoom().getId() == i // this is the room ID 
-						&& roomRate.getDay().after(dateConvertor.asDate(startDate.minusDays(1)))
-						&& roomRate.getDay().before(dateConvertor.asDate(endDate))) {
+						&& roomRate.getDay().isAfter(startDate.minusDays(1))
+						&& roomRate.getDay().isBefore(endDate)) {
 					reservation.getRoomRates().add(roomRate);
 				}
 			}
@@ -581,31 +575,29 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		LocalDate endDate = LocalDate.of(YEAR, Month.APRIL, 5);
 		
 		Reservation reservation = new Reservation();
-		reservation.setStartDate(dateConvertor.asDate(startDate));
-		reservation.setEndDate(dateConvertor.asDate(endDate));
+		reservation.setStartDate(startDate);
+		reservation.setEndDate(endDate);
 		reservation.setFirstName("firstName");
 		reservation.setLastName("lastName");
 		reservation.setOccupants(Arrays.asList(guestTwo, guestThree));
 		reservation.setRoomRates(new ArrayList<RoomRate>());
 
-		List<RoomRate> roomRatesForAllRooms = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(YEAR, Month.APRIL, 1)),
-				dateConvertor.asDate(LocalDate.of(YEAR, Month.APRIL, 4)));
+		List<RoomRate> roomRatesForAllRooms = roomService.getRoomRates(LocalDate.of(YEAR, Month.APRIL, 1), LocalDate.of(YEAR, Month.APRIL, 4));
 		
 		for (RoomRate roomRate : roomRatesForAllRooms) {
 			if (roomRate.getRoom().getId() == 1 
-					&& roomRate.getDay().after(dateConvertor.asDate(startDate.minusDays(1)))
-					&& roomRate.getDay().before(dateConvertor.asDate(endDate.plusDays(1)))) {
+					&& roomRate.getDay().isAfter(startDate.minusDays(1))
+					&& roomRate.getDay().isBefore(endDate.plusDays(1))) {
 				reservation.getRoomRates().add(roomRate);
 			}
 		}
 		
-		roomRatesForAllRooms = roomService.getAvailableRoomRates(dateConvertor.asDate(LocalDate.of(YEAR, Month.APRIL, 4)),
-				dateConvertor.asDate(LocalDate.of(YEAR, Month.APRIL, 5)));
+		roomRatesForAllRooms = roomService.getAvailableRoomRates(LocalDate.of(YEAR, Month.APRIL, 4), LocalDate.of(YEAR, Month.APRIL, 5));
 
 		for (RoomRate roomRate : roomRatesForAllRooms) {
 			if (roomRate.getRoom().getId() == 2 
-					&& roomRate.getDay().after(dateConvertor.asDate(startDate.minusDays(1)))
-					&& roomRate.getDay().before(dateConvertor.asDate(endDate.plusDays(1)))) {
+					&& roomRate.getDay().isAfter(startDate.minusDays(1))
+					&& roomRate.getDay().isBefore(endDate.plusDays(1))) {
 				reservation.getRoomRates().add(roomRate);
 			}
 		}

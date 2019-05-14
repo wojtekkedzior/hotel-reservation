@@ -1,10 +1,10 @@
 package hotelreservation.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,12 +78,12 @@ public class BookingService {
 	public void saveReservation(Reservation reservation) {
 		if(reservation.getStartDate() == null || reservation.getEndDate() == null) {
 			throw new MissingOrInvalidArgumentException("Start and/or end dates cannot be empty");
-		} else if(reservation.getStartDate().after(reservation.getEndDate())) {
+		} else if(reservation.getStartDate().isAfter(reservation.getEndDate())) {
 			throw new MissingOrInvalidArgumentException("Start and/or end dates cannot be empty");
 		}
 		
 		if(reservation.getCreatedOn() == null) {
-			reservation.setCreatedOn(new Date());
+			reservation.setCreatedOn(LocalDateTime.now());
 		}  else {
 			Reservation reservationInDb = reservationRepo.findById(reservation.getId()).orElseThrow(() -> new MissingOrInvalidArgumentException(reservation.getId()));
 			reservation.setCreatedOn(reservationInDb.getCreatedOn());
@@ -99,12 +99,13 @@ public class BookingService {
 		Map<LocalDate, RoomRate> roomRatesAsMap = new HashMap<LocalDate, RoomRate>();
 		
 		for (RoomRate roomRate : roomRates) {
-			roomRatesAsMap.put(utils.asLocalDate(roomRate.getDay()), roomRate);
+			roomRatesAsMap.put(roomRate.getDay(), roomRate);
 		}
 		
-		LocalDate startDate = utils.asLocalDate(reservation.getStartDate());
+		LocalDate startDate = reservation.getStartDate();
 		
-		long between = ChronoUnit.DAYS.between(startDate,utils.asLocalDate(reservation.getEndDate()));
+		long between = ChronoUnit.DAYS.between(startDate, reservation.getEndDate());
+		System.err.println(between);
 		
 		if(roomRates.size() != between) {
 			throw new MissingOrInvalidArgumentException("Not enough rates for the given time frame");
@@ -175,7 +176,7 @@ public class BookingService {
 	}
  
 	public List<Reservation> getReservationsStartingToday() {
-		return reservationRepo.findByStartDate(new Date());
+		return reservationRepo.findByStartDate(LocalDate.now());
 	}
 
 	public void deleteReservation(Reservation reservation) {
