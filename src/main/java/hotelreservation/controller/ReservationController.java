@@ -2,10 +2,9 @@ package hotelreservation.controller;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.Month;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -35,7 +34,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import hotelreservation.Utils;
 import hotelreservation.model.Contact;
 import hotelreservation.model.Guest;
 import hotelreservation.model.Identification;
@@ -69,9 +67,6 @@ public class ReservationController {
 	@Autowired
 	private InvoiceService invoiceService;
 	
-	@Autowired
-	private Utils dateConvertor;
-
 	// TODO figure out what is this for since I thought that dates worked prior to having this copied and pasted in.
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
@@ -102,32 +97,18 @@ public class ReservationController {
 			model.addAttribute("roomRatesPerRoom", roomRatesAsMap);
 		}
 
-		// TODO move to properties file
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
-		// TODO hard-coded for now
-		model.addAttribute("startDate", startDate.isPresent() ? formatter.format(startDate.get()) : formatter.format(new Date()));
-		model.addAttribute("endDate", endDate.isPresent() ? formatter.format(endDate.get()) : formatter.format(new Date()));
+		model.addAttribute("startDate", startDate.isPresent() ? startDate.get() : LocalDate.now());
+		model.addAttribute("endDate", endDate.isPresent() ? endDate.get() :  LocalDate.now());
 
 		if (startDate.isPresent() && endDate.isPresent()) {
 			Map<Room, List<RoomRate>> roomRatesAsMap = roomService.getRoomRatesAsMap(startDate.get(), endDate.get());
 			model.addAttribute("roomRatesPerRoom", roomRatesAsMap);
 		}
-
-		// TODO if there are no rooms available we neeed to display something usefull to the user.
-		//TODO replace with params
-		
 		
 		LocalDate asDateStart = startDate.isPresent() ? startDate.get() : LocalDate.now();
-		LocalDate asDateEnd = LocalDate.of(2019, Month.APRIL, 14);
+		LocalDate asDateEnd = endDate.isPresent() ? endDate.get() : asDateStart.plus(1, ChronoUnit.DAYS);
  
-//		Date asDateStart = startDate.isPresent() ? startDate.get() : new Date();
-//		Calendar cal = Calendar.getInstance();
-//		cal.setTime(new Date());
-//		cal.roll(Calendar.DAY_OF_MONTH, 10);
-//		Date asDateEnd = endDate.isPresent() ? endDate.get() : cal.getTime();
-
-		Map<Date, List<RoomRate>> roomRatesAsMapByDates = roomService.getRoomRatesPerDate(asDateStart, asDateEnd);
+		Map<LocalDate, List<RoomRate>> roomRatesAsMapByDates = roomService.getRoomRatesPerDate(asDateStart, asDateEnd);
 		model.addAttribute("roomRatesAsMapByDates", roomRatesAsMapByDates);
 		
 		List<RoomRate> roomRates = roomRatesAsMapByDates.get(asDateStart);

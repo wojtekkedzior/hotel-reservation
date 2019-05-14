@@ -1,11 +1,12 @@
 package hotelreservation;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -134,9 +135,6 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	@Autowired
 	private BookingService bookingService;
 
-	@Autowired
-	private Utils dateConvertor;
-	
 	@Autowired
 	private InvoiceService invoiceService;
 	
@@ -457,38 +455,26 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	}
 
 	private void addRoomRates() {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(dateConvertor.asDate(LocalDate.of(2019, Month.JANUARY, 1)));
-		
-		LocalDate start = LocalDate.of(2019, Month.JANUARY, 1);
-//
-//		for (int days = 1; days <= 365; days++) {
-//			cal.roll(Calendar.DAY_OF_YEAR, true);
-//
-//			int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
-//			int value = 1000;
-//
-//			if (dayOfWeek == Calendar.FRIDAY || dayOfWeek == Calendar.SATURDAY) {
-//				value = 1999;
-//			} else if (dayOfWeek == Calendar.SUNDAY) {
-//				value = 1500;
-//			}
-			
-			
-			for (int days = 1; days <= 365; days++) {
-				int value = 1000;
-				
-				if(start.get(ChronoUnit.))
-				
-				
+		LocalDate date = LocalDate.of(2019, Month.JANUARY, 1);
+		int value = 1000;
 
-			roomService.saveRoomRate(new RoomRate(standardRoomOne, Currency.CZK, value, cal.getTime()));
-			roomService.saveRoomRate(new RoomRate(standardRoomTwo, Currency.CZK, value, cal.getTime()));
-			roomService.saveRoomRate(new RoomRate(standardRoomThree, Currency.CZK, value, cal.getTime()));
+		for (int days = 1; days <= 365; days++) {
+			if (date.getDayOfWeek().equals(DayOfWeek.FRIDAY) || date.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
+				value = 1999;
+			} else if (date.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+				value = 1500;
+			}
 
-			roomService.saveRoomRate(new RoomRate(luxuryRoomOne, Currency.CZK, value * 2, cal.getTime()));
-			roomService.saveRoomRate(new RoomRate(luxuryRoomTwo, Currency.CZK, value * 2, cal.getTime()));
-			roomService.saveRoomRate(new RoomRate(luxuryRoomThree, Currency.CZK, value * 2, cal.getTime()));
+			roomService.saveRoomRate(new RoomRate(standardRoomOne, Currency.CZK, value, date));
+			roomService.saveRoomRate(new RoomRate(standardRoomTwo, Currency.CZK, value, date));
+			roomService.saveRoomRate(new RoomRate(standardRoomThree, Currency.CZK, value, date));
+
+			roomService.saveRoomRate(new RoomRate(luxuryRoomOne, Currency.CZK, value * 2, date));
+			roomService.saveRoomRate(new RoomRate(luxuryRoomTwo, Currency.CZK, value * 2, date));
+			roomService.saveRoomRate(new RoomRate(luxuryRoomThree, Currency.CZK, value * 2, date));
+			
+			date = date.plus(1,  ChronoUnit.DAYS);
+			value = 1000;
 		}
 	}
 
@@ -544,8 +530,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		
 		for (RoomRate roomRate : roomRatesForAllRooms) {
 			if (roomRate.getRoom().getId() == 1 
-					&& roomRate.getDay().after(dateConvertor.asDate(startDate.minusDays(1)))
-					&& roomRate.getDay().before(dateConvertor.asDate(endDate))) {
+					&& roomRate.getDay().isAfter(startDate.minusDays(1))
+					&& roomRate.getDay().isBefore(endDate)) {
 				
 				reservationOne.getRoomRates().add(roomRate);
 			}
@@ -570,8 +556,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 
 			for (RoomRate roomRate : roomRatesForAllRooms) {
 				if (roomRate.getRoom().getId() == i // this is the room ID 
-						&& roomRate.getDay().after(dateConvertor.asDate(startDate.minusDays(1)))
-						&& roomRate.getDay().before(dateConvertor.asDate(endDate))) {
+						&& roomRate.getDay().isAfter(startDate.minusDays(1))
+						&& roomRate.getDay().isBefore(endDate)) {
 					reservation.getRoomRates().add(roomRate);
 				}
 			}
@@ -600,8 +586,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		
 		for (RoomRate roomRate : roomRatesForAllRooms) {
 			if (roomRate.getRoom().getId() == 1 
-					&& roomRate.getDay().after(dateConvertor.asDate(startDate.minusDays(1)))
-					&& roomRate.getDay().before(dateConvertor.asDate(endDate.plusDays(1)))) {
+					&& roomRate.getDay().isAfter(startDate.minusDays(1))
+					&& roomRate.getDay().isBefore(endDate.plusDays(1))) {
 				reservation.getRoomRates().add(roomRate);
 			}
 		}
@@ -610,8 +596,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 
 		for (RoomRate roomRate : roomRatesForAllRooms) {
 			if (roomRate.getRoom().getId() == 2 
-					&& roomRate.getDay().after(dateConvertor.asDate(startDate.minusDays(1)))
-					&& roomRate.getDay().before(dateConvertor.asDate(endDate.plusDays(1)))) {
+					&& roomRate.getDay().isAfter(startDate.minusDays(1))
+					&& roomRate.getDay().isBefore(endDate.plusDays(1))) {
 				reservation.getRoomRates().add(roomRate);
 			}
 		}

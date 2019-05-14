@@ -99,7 +99,7 @@ public class BookingService {
 		Map<LocalDate, RoomRate> roomRatesAsMap = new HashMap<LocalDate, RoomRate>();
 		
 		for (RoomRate roomRate : roomRates) {
-			roomRatesAsMap.put(utils.asLocalDate(roomRate.getDay()), roomRate);
+			roomRatesAsMap.put(roomRate.getDay(), roomRate);
 		}
 		
 		LocalDate startDate = reservation.getStartDate();

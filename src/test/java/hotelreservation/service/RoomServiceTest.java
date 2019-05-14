@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import hotelreservation.Utils;
 import hotelreservation.exceptions.NotDeletedException;
 import hotelreservation.exceptions.NotFoundException;
 import hotelreservation.model.Amenity;
@@ -42,9 +41,6 @@ public class RoomServiceTest extends BaseServiceTest {
 
 	@Autowired
 	private UserService userService;
-
-	@Autowired
-	private Utils dateConvertor;
 	
 	private RoomType roomType;
 	private Role managerUserType;
@@ -336,7 +332,7 @@ public class RoomServiceTest extends BaseServiceTest {
 	public void testGetRoomRatesForSpecificRoom() {
 		setupRoomRates();
 		
-		List<RoomRate> roomRates = roomService.getRoomRates(LocalDate.of(2018, Month.JANUARY, 1), LocalDate.of(2018, Month.JANUARY, 6));
+		List<RoomRate> roomRates = roomService.getRoomRates(standardRoomOne, LocalDate.of(2018, Month.JANUARY, 1), LocalDate.of(2018, Month.JANUARY, 6));
 		assertEquals(3, roomRates.size());
 		
 		roomRates = roomService.getRoomRates(LocalDate.of(2018, Month.JANUARY, 5), LocalDate.of(2018, Month.JANUARY, 6));
@@ -350,12 +346,12 @@ public class RoomServiceTest extends BaseServiceTest {
 		LocalDate start = LocalDate.of(2018, Month.JANUARY, 2);
 		LocalDate end = LocalDate.of(2018, Month.JANUARY, 5);
 		
-		Map<Date, List<RoomRate>> roomRatesPerDate = roomService.getRoomRatesPerDate(start, end);
+		Map<LocalDate, List<RoomRate>> roomRatesPerDate = roomService.getRoomRatesPerDate(start, end);
 		
 		assertEquals(3, roomRatesPerDate.size());
 		assertEquals(2, roomRatesPerDate.get(start).size());
-		assertEquals(2, roomRatesPerDate.get(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3))).size());
-		assertEquals(2, roomRatesPerDate.get(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 4))).size());
+		assertEquals(2, roomRatesPerDate.get(LocalDate.of(2018, Month.JANUARY, 3)).size());
+		assertEquals(2, roomRatesPerDate.get(LocalDate.of(2018, Month.JANUARY, 4)).size());
 		assertFalse(roomRatesPerDate.containsKey(end));
 	}
 	
@@ -380,7 +376,7 @@ public class RoomServiceTest extends BaseServiceTest {
 		LocalDate start = LocalDate.of(2018, Month.JANUARY, 2);
 		LocalDate end = LocalDate.of(2018, Month.JANUARY, 4);
 		
-		Map<Date, List<RoomRate>> roomRatesPerDate = roomService.getRoomRatesPerDate(start, end);
+		Map<LocalDate, List<RoomRate>> roomRatesPerDate = roomService.getRoomRatesPerDate(start, end);
 		
 		assertEquals(2, roomRatesPerDate.size());
 		
@@ -389,7 +385,7 @@ public class RoomServiceTest extends BaseServiceTest {
 		assertNull(roomRatesForJan2.get(0));
 		assertEquals(roomRate2, roomRatesForJan2.get(1));
 		
-		List<RoomRate> roomRatesForJan3 = roomRatesPerDate.get(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		List<RoomRate> roomRatesForJan3 = roomRatesPerDate.get(LocalDate.of(2018, Month.JANUARY, 3));
 		assertEquals(2, roomRatesForJan3.size());
 		assertEquals(roomRate1, roomRatesForJan3.get(0));
 		assertEquals(roomRate3, roomRatesForJan3.get(1));
@@ -418,7 +414,7 @@ public class RoomServiceTest extends BaseServiceTest {
 		LocalDate start = LocalDate.of(2018, Month.JANUARY, 2);
 		LocalDate end = LocalDate.of(2018, Month.JANUARY, 4);
 		
-		Map<Date, List<RoomRate>> roomRatesPerDate = roomService.getRoomRatesPerDate(start, end);
+		Map<LocalDate, List<RoomRate>> roomRatesPerDate = roomService.getRoomRatesPerDate(start, end);
 		
 		assertEquals(2, roomRatesPerDate.size());
 		
@@ -427,7 +423,7 @@ public class RoomServiceTest extends BaseServiceTest {
 		assertEquals(roomRate1, roomRatesForJan2.get(0));
 		assertNull(roomRatesForJan2.get(1));
 		
-		List<RoomRate> roomRatesForJan3 = roomRatesPerDate.get(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		List<RoomRate> roomRatesForJan3 = roomRatesPerDate.get(LocalDate.of(2018, Month.JANUARY, 3));
 		assertEquals(2, roomRatesForJan3.size());
 		assertEquals(roomRate2, roomRatesForJan3.get(0));
 		assertEquals(roomRate3, roomRatesForJan3.get(1));
@@ -468,7 +464,7 @@ public class RoomServiceTest extends BaseServiceTest {
 		LocalDate start = LocalDate.of(2018, Month.JANUARY, 2);
 		LocalDate end = LocalDate.of(2018, Month.JANUARY, 4);
 		
-		Map<Date, List<RoomRate>> roomRatesPerDate = roomService.getRoomRatesPerDate(start, end);
+		Map<LocalDate, List<RoomRate>> roomRatesPerDate = roomService.getRoomRatesPerDate(start, end);
 		
 		assertEquals(2, roomRatesPerDate.size());
 		
@@ -478,7 +474,7 @@ public class RoomServiceTest extends BaseServiceTest {
 		assertNull(roomRatesForJan2.get(1));
 		assertEquals(roomRate2, roomRatesForJan2.get(2));
 		
-		List<RoomRate> roomRatesForJan3 = roomRatesPerDate.get(dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 3)));
+		List<RoomRate> roomRatesForJan3 = roomRatesPerDate.get(LocalDate.of(2018, Month.JANUARY, 3));
 		assertEquals(3, roomRatesForJan3.size());
 		assertEquals(roomRate3, roomRatesForJan3.get(0));
 		assertEquals(roomRate4, roomRatesForJan3.get(1));
@@ -494,7 +490,7 @@ public class RoomServiceTest extends BaseServiceTest {
 		LocalDate start = LocalDate.of(2018, Month.JANUARY, 2);
 		LocalDate end = LocalDate.of(2018, Month.JANUARY, 4);
 		
-		Map<Date, List<RoomRate>> roomRatesPerDate = roomService.getRoomRatesPerDate(start, end);
+		Map<LocalDate, List<RoomRate>> roomRatesPerDate = roomService.getRoomRatesPerDate(start, end);
 		assertEquals(0, roomRatesPerDate.size());
 	}
 	

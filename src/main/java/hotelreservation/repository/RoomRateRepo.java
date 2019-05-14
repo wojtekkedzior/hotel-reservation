@@ -10,20 +10,7 @@ import hotelreservation.model.RoomRate;
 
 public interface RoomRateRepo extends CrudRepository<RoomRate, Long> {
 	
-//    default void delByFecha(LocalDate fecha) {
-//        deleteByFechaBetween(fecha.atStartOfDay(), fecha.plusDays(1).atStartOfDay());
-//    }
-	
-//	default void findByDayBetween(LocalDate start, LocalDate end) {
-//		findByDayBetween(start.atStartOfDay(), end.atStartOfDay());
-//	}
-	
 	List<RoomRate> findByDayBetween(LocalDate start, LocalDate end);
-	
-//	@Query("SELECT COUNT(entity) FROM Person entity WHERE trunc(entity.date) BETWEEN :startTime AND :endTime")
-//	int getPersonBetweenDates(@Param("startTime") Date var1, @Param("endTime") Date var2);
-	
-//	List<RoomRate> findByDayAfterAndEndDateBefore(LocalDate start, LocalDate end);
 	
 	List<RoomRate> findByDayAfter (Date start);
 	
@@ -31,5 +18,5 @@ public interface RoomRateRepo extends CrudRepository<RoomRate, Long> {
 	
 	List<RoomRate> findByRoomId(long roomId);
 
-	List<RoomRate> findByRoomIdAndDayBetween(long id, Date startDate, Date endDate);
+	List<RoomRate> findByRoomIdAndDayBetween(long id, LocalDate startDate, LocalDate endDate);
 } 
