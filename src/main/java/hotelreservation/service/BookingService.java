@@ -105,6 +105,7 @@ public class BookingService {
 		LocalDate startDate = reservation.getStartDate();
 		
 		long between = ChronoUnit.DAYS.between(startDate, reservation.getEndDate());
+		System.err.println(between);
 		
 		if(roomRates.size() != between) {
 			throw new MissingOrInvalidArgumentException("Not enough rates for the given time frame");

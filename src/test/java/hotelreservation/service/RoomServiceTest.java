@@ -7,9 +7,9 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -80,7 +80,7 @@ public class RoomServiceTest extends BaseServiceTest {
 		room.setStatus(status);
 		room.setRoomType(roomType);
 		room.setCreatedBy(createdBy);
-		room.setCreatedOn(new Date());
+		room.setCreatedOn(LocalDateTime.now());
 		roomService.saveRoom(room);
 	}
 

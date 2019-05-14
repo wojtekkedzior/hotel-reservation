@@ -7,8 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -67,7 +67,7 @@ public class RoomControllerTest {
 		mvc.perform(post("/addRoomType").flashAttr("roomType", roomTypeStandard)).andExpect(status().is3xxRedirection());
 		
 		Room room = new Room(1, applicationStartup.operational, applicationStartup.roomTypeStandard, applicationStartup.admin);
-		room.setCreatedOn(new Date());
+		room.setCreatedOn(LocalDateTime.now());
 		mvc.perform(post("/addRoom").flashAttr("room", room)).andExpect(status().is3xxRedirection());
 		
 		//Some of these deletes will fail because of constraint violations, which is fine.

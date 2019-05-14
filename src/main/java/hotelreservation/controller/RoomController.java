@@ -2,7 +2,6 @@ package hotelreservation.controller;
 
 import java.time.LocalDate;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Optional;
 
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import hotelreservation.Utils;
 import hotelreservation.model.Amenity;
 import hotelreservation.model.AmenityType;
 import hotelreservation.model.Room;
@@ -37,9 +35,6 @@ public class RoomController {
 
 	@Autowired
 	private RoomService roomService;
-
-	@Autowired
-	private Utils dateConvertor;
 
 	@RequestMapping(value = { "/amenity", "/amenity/{id}" })
 	@PreAuthorize("hasAuthority('createAmenity')")

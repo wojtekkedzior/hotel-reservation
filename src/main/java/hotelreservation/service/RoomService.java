@@ -1,9 +1,9 @@
 package hotelreservation.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -143,7 +143,7 @@ public class RoomService {
 		
 		return ratesForAllRooms;
 	}
-
+	
 	//---- Amenity
 	public Amenity saveAmenity(Amenity amenity) {
 		return amenityRepo.save(amenity);
@@ -188,7 +188,7 @@ public class RoomService {
 	
 	//---- Room
 	public Room saveRoom(Room room) {
-		room.setCreatedOn(new Date());
+		room.setCreatedOn(LocalDateTime.now());
 		return roomRepo.save(room);
 	}
 	
