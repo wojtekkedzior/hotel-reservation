@@ -16,6 +16,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import hotelreservation.model.enums.ReservationStatus;
 import lombok.Data;
@@ -64,9 +65,11 @@ public class Reservation {
 	private LocalDateTime createdOn;
 	
 	@EqualsAndHashCode.Include
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate startDate;
 	
 	@EqualsAndHashCode.Include
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate endDate;
 	
 	@Enumerated(EnumType.STRING)
