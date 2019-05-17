@@ -92,8 +92,11 @@ public class BookingService {
 		
 		//Check if room rates have sequential days
 		List<RoomRate> roomRates = reservation.getRoomRates();
+		
 		if(roomRates == null || roomRates.isEmpty()) {
 			throw new MissingOrInvalidArgumentException("Can't have no room rates when updating a reservation");
+		} else if(roomRates.size() != ChronoUnit.DAYS.between(reservation.getStartDate(), reservation.getEndDate())) {
+			throw new MissingOrInvalidArgumentException("Not enough rates for the given time frame");
 		}
 		
 		Map<LocalDate, RoomRate> roomRatesAsMap = new HashMap<LocalDate, RoomRate>();
@@ -102,20 +105,9 @@ public class BookingService {
 			roomRatesAsMap.put(roomRate.getDay(), roomRate);
 		}
 		
-		LocalDate startDate = reservation.getStartDate();
-		
-		long between = ChronoUnit.DAYS.between(startDate, reservation.getEndDate());
-		System.err.println(between);
-		
-		if(roomRates.size() != between) {
-			throw new MissingOrInvalidArgumentException("Not enough rates for the given time frame");
-		}
-		
 		for (int i = 1; i < roomRates.size(); i++) {
-			if(!roomRatesAsMap.containsKey(startDate)) {
+			if(!roomRatesAsMap.containsKey(reservation.getStartDate().plusDays(1))) {
 				throw new MissingOrInvalidArgumentException("Should not be able to save a reservation with non-sequential room rate dates");
-			} else {
-				startDate = startDate.plusDays(1);
 			}
 		}
 		
@@ -162,17 +154,10 @@ public class BookingService {
 		}
 		
 		log.info("Getting resrvation: " + reservationId.get());
+		Reservation reservation = reservationRepo.findById(Long.valueOf(reservationId.get())).orElseThrow(() -> new NotFoundException(reservationId.get()));
+		log.info("Got reservation: " + reservation.getId());
 		
-		Optional<Reservation> reservation = reservationRepo.findById(Long.valueOf(reservationId.get()));
-		
-		if (!reservation.isPresent()) {
-			log.warn("No reservation found for: " + reservationId.get());
-			throw new NotFoundException(reservationId.get());
-		}
-		
-		log.info("Got reservation: " + reservation.get().getId());
-		
-		return reservation.get(); 
+		return reservation;
 	}
  
 	public List<Reservation> getReservationsStartingToday() {
@@ -187,7 +172,6 @@ public class BookingService {
 
 		log.info("Delete reservation: " + reservation.getId());
 		reservationRepo.delete(reservation);
-		
 		log.info("Deleted reservation: " + reservation.getId());
 	}
 
