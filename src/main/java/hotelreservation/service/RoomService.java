@@ -102,32 +102,12 @@ public class RoomService {
 	
 	public List<RoomRate> getAvailableRoomRates(LocalDate start, LocalDate end) { //TODO add a variant of this method but for a particular room //TODO finally figure out how to use a join and apply it here
 		List<RoomRate> availableRoomRates = new ArrayList<RoomRate>();
-		List<Reservation> inProgressAndUpComingReservations = reservationRepo.findInProgressAndUpComingReservations();
+		List<Reservation> activeReservation = reservationRepo.findInProgressAndUpComingReservations();
 		List<RoomRate> availableRoomRatesForAllRooms = getRoomRates(start, end);
-
+		
 		for (RoomRate roomRate : availableRoomRatesForAllRooms) {
-			//No reservations so rate is available
-			if(inProgressAndUpComingReservations.isEmpty()) {
+			if(activeReservation.stream().noneMatch(r -> r.getRoomRates().contains(roomRate))) {
 				availableRoomRates.add(roomRate);
-				continue;
-			}
-			
-			boolean isRoomRatesAvailable = false;
-			
-			for (Reservation reservation : inProgressAndUpComingReservations) {
-				if(!reservation.getRoomRates().contains(roomRate)) {
-					//Rate is available for this reservation, but need to check all the others,
-					isRoomRatesAvailable = true;
-				} else {
-					//One reservation has this rate already, therefore it's no longer available
-					isRoomRatesAvailable = false;
-					break;
-				}
-			}
-			
-			if(isRoomRatesAvailable) {
-				availableRoomRates.add(roomRate);
-				isRoomRatesAvailable=false;
 			}
 		}
 		
