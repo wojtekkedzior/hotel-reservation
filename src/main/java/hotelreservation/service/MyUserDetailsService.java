@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,33 +18,26 @@ import org.springframework.transaction.annotation.Transactional;
 import hotelreservation.model.Privilege;
 import hotelreservation.model.Role;
 import hotelreservation.model.User;
-import hotelreservation.repository.UserRepo;
 
 @Service("userDetailsService")
 @Transactional
 public class MyUserDetailsService implements UserDetailsService {
 	
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
-
+	
 	@Autowired
-	private UserRepo userRepo;
+	private UserService userService;
+
 
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-		User user = userRepo.findByUserName(userName);
-		
 		log.info("Login attempt for user: " + userName);
+		User user = userService.getUserByName(userName);
+		log.info("User: " + userName + " found");
 		
-		if (user == null) { 
-			log.error("User: " + userName + " doesn't exist");
-			throw new UsernameNotFoundException("Username: " + userName + " was not found");
-		}
-
 		List<GrantedAuthority> grantedAuthorities = getAuthorities(user.getRoles());
 		user.getRoles().stream().forEach(t -> grantedAuthorities.add(new SimpleGrantedAuthority(t.getName())));
 		
-		log.info("User: " + userName + " found");
-
 		if(log.isDebugEnabled()) {
 			log.info("User: " + userName + " found and has the following authorities: " + grantedAuthorities);
 		}

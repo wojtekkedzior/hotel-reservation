@@ -96,7 +96,7 @@ public class UserServiceTest extends BaseServiceTest {
 		assertEquals(superAdmin, userService.getAllUsers().get(0));
 	}
 	
-	@Test(expected=MissingOrInvalidArgumentException.class)
+	@Test(expected=NotFoundException.class)
 	public void testSaveUserWithNonExistentUser() {
 		User user = new User("username", "firstName", "lastname", superAdmin);
 		user.setPassword("password");

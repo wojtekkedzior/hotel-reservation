@@ -45,12 +45,12 @@ public class UserService {
 		if (utils.isNullOrEmpty(name)) {
 			throw new MissingOrInvalidArgumentException("missing name");
 		}
-
-		User userByUserName = userRepo.findByUserName(name);
-		if (userByUserName == null) {
-			throw new MissingOrInvalidArgumentException("missing name");
+		
+		if(userRepo.findByUserName(user.getUserName()).isPresent()) {
+			throw new MissingOrInvalidArgumentException("Username already exists: " + user.getUserName());
 		}
 
+		User userByUserName = getUserByName(name);
 		// TODO ensure that the 'create by' user is actually allowed to create a user of the selected Type
 		user.setCreatedBy(userByUserName);
 
@@ -64,10 +64,6 @@ public class UserService {
 		
 		if(utils.isNullOrEmpty(user.getUserName())) {
 			throw new MissingOrInvalidArgumentException("Username can't be empty");
-		}
-		
-		if(userRepo.findByUserName(user.getUserName()) != null) {
-			throw new MissingOrInvalidArgumentException("Username already exists: " + user.getUserName());
 		}
 		
 		user.setCreatedOn(LocalDateTime.now());
@@ -98,6 +94,10 @@ public class UserService {
 	public Role getRoleById(Integer id) {
 		log.info("Looking for Role with ID: " + id);
 		return roleRepo.findById(Long.valueOf(id)).orElseThrow(() -> new NotFoundException(id));
+	}
+	
+	public User getUserByName(String userName) {
+		return userRepo.findByUserName(userName).orElseThrow(() -> new NotFoundException(userName));
 	}
 
 	public void deleteUser(User user) {

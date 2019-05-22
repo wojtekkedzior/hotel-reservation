@@ -14,9 +14,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import hotelreservation.exceptions.NotFoundException;
 import hotelreservation.model.Privilege;
 import hotelreservation.model.Role;
 import hotelreservation.model.User;
@@ -71,7 +71,7 @@ public class MyUserDetailsServiceTest extends BaseServiceTest {
 		privileges.add(priv2);
 	}
 	
-	@Test (expected = UsernameNotFoundException.class)
+	@Test (expected = NotFoundException.class)
 	public void testEmptyUserName() {
 		service.loadUserByUsername("nonExistentUser");
 	}
