@@ -96,7 +96,7 @@ public class UserService {
 		return roleRepo.findById(Long.valueOf(id)).orElseThrow(() -> new NotFoundException(id));
 	}
 	
-	public User getUserByName(String userName) {
+	public User getUserByName(String userName) { //TODO write a test
 		return userRepo.findByUserName(userName).orElseThrow(() -> new NotFoundException(userName));
 	}
 

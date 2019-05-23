@@ -28,7 +28,6 @@ public class MyUserDetailsService implements UserDetailsService {
 	@Autowired
 	private UserService userService;
 
-
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 		log.info("Login attempt for user: " + userName);
