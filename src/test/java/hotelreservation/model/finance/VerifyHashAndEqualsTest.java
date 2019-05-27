@@ -1,29 +1,26 @@
-package hotelreservation.model.ui;
+package hotelreservation.model.finance;
 
 import org.junit.Test;
 
-import nl.jqno.equalsverifier.EqualsVerifier;
-
-public class VerifyHashAndEquals {
+public class VerifyHashAndEqualsTest {
 	
 	@Test
-	public void testPaymentDTO() {
+	public void testInvoice() {
 //		EqualsVerifier.forClass(RoomRate.class).withIgnoredFields("room")
 //	    .withPrefabValues(Room.class, applicationStartup.standardRoomOne, new Room())
 //	    .verify();
 		
-//		EqualsVerifier.forClass(PaymentDTO.class) .verify();
+//		EqualsVerifier.forClass(Invoice.class) .verify();
 	}
 	
 	@Test
-	public void testReservationChargeDTO() {
+	public void testPayment() {
 //		EqualsVerifier.forClass(RoomRate.class).withIgnoredFields("room")
 //	    .withPrefabValues(Room.class, applicationStartup.standardRoomOne, new Room())
 //	    .verify();
 		
-		EqualsVerifier.forClass(ReservationChargeDTO.class) .verify();
+//		EqualsVerifier.forClass(Payment.class) .verify();
 	}
-	
 	
 	
 	

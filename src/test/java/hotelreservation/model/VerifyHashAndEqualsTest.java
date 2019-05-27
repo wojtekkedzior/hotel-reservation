@@ -2,19 +2,9 @@ package hotelreservation.model;
 
 import org.junit.Test;
 
-import hotelreservation.model.Amenity;
-import hotelreservation.model.AmenityType;
-import hotelreservation.model.Charge;
-import hotelreservation.model.Contact;
-import hotelreservation.model.Guest;
-import hotelreservation.model.Identification;
-import hotelreservation.model.Privilege;
-import hotelreservation.model.Role;
-import hotelreservation.model.RoomType;
-import hotelreservation.model.Status;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
-public class VerifyHashAndEquals {
+public class VerifyHashAndEqualsTest {
 	
 	@Test
 	public void testContact() {
