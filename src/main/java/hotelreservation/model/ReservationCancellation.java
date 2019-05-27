@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode.Exclude;
 
 @Entity
 @Data
@@ -20,6 +21,7 @@ import lombok.NoArgsConstructor;
 public class ReservationCancellation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Exclude
 	private long id;
 	
 	@NotNull

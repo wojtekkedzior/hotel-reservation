@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode.Exclude;
 
 @Entity
 @Data
@@ -17,6 +18,7 @@ public class ReservationCharge {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Exclude
 	private long id;
 
 	//TODO reservationCharge should be a slightly different object, as in without the  reservation. this needs to be fixed as the form can't return a complete reservation

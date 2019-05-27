@@ -19,7 +19,7 @@ import lombok.Data;
  * @author wojtek
  *
  */
-public class PaymentDTO {
+public final class PaymentDTO {
 	
 	@NotNull
 	@Enumerated(EnumType.STRING)

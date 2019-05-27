@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 
 import hotelreservation.model.finance.Payment;
 import lombok.Data;
+import lombok.EqualsAndHashCode.Exclude;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -21,6 +22,7 @@ public class ReservationCheckout {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Exclude
 	private long id;
 	
 	@NotNull

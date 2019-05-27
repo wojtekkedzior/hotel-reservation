@@ -15,6 +15,7 @@ import javax.validation.constraints.NotNull;
 
 import hotelreservation.model.enums.Currency;
 import lombok.Data;
+import lombok.EqualsAndHashCode.Exclude;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -24,6 +25,7 @@ import lombok.NoArgsConstructor;
 public class RoomRate {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Exclude
 	private long id;
 
 	private String description;
