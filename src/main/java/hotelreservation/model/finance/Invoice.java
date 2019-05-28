@@ -13,6 +13,7 @@ import hotelreservation.model.Guest;
 import hotelreservation.model.User;
 import hotelreservation.model.enums.InvoiceStatus;
 import lombok.Data;
+import lombok.EqualsAndHashCode.Exclude;
 
 @Data
 @Entity
@@ -20,6 +21,7 @@ public class Invoice {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Exclude
 	private long id;
 	
 	@Enumerated(EnumType.STRING)

@@ -51,6 +51,7 @@ public class Room implements Comparable<Room> {
 	
 	@NotNull
 	@ManyToOne
+//	@Exclude
 	private User createdBy;
 
 	public Room(int roomNumber, Status status, RoomType roomType, User createdBy) {

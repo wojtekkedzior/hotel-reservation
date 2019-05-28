@@ -57,9 +57,7 @@ public class InvoiceControllerTest  {
 		
 		bookingService.realiseReservation(applicationStartup.reservationOne);
 		
-		reservationChargeDto = new ReservationChargeDTO();
-		reservationChargeDto.setQuantity(1);
-		reservationChargeDto.setCharge(applicationStartup.coke);
+		reservationChargeDto = new ReservationChargeDTO(applicationStartup.coke, 1);
 		
 		ReservationCharge reservationCharge = new ReservationCharge();
 		reservationCharge.setQuantity(1);

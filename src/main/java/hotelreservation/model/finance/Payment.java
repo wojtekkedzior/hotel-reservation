@@ -17,6 +17,7 @@ import hotelreservation.model.Reservation;
 import hotelreservation.model.ReservationCharge;
 import hotelreservation.model.enums.PaymentType;
 import lombok.Data;
+import lombok.EqualsAndHashCode.Exclude;
 
 @Entity
 @Data
@@ -24,6 +25,7 @@ public class Payment {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Exclude
 	private long id;
 	
 	@NotNull

@@ -2,6 +2,8 @@ package hotelreservation.model.ui;
 
 import org.junit.Test;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
+
 public class VerifyHashAndEqualsTest {
 	
 	@Test
@@ -19,7 +21,7 @@ public class VerifyHashAndEqualsTest {
 //	    .withPrefabValues(Room.class, applicationStartup.standardRoomOne, new Room())
 //	    .verify();
 		
-//		EqualsVerifier.forClass(ReservationChargeDTO.class) .verify();
+		EqualsVerifier.forClass(ReservationChargeDTO.class) .verify();
 	}
 	
 	
