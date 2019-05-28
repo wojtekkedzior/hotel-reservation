@@ -18,25 +18,25 @@ public class Utils {
 
 	public Date asDate(LocalDate localDate) {
 		Date date = Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-		log.debug("converted localDate: " + localDate + " to: " + date);
+		log.info("converted localDate: " + localDate + " to: " + date);
 		return date;
 	}
 
 	public Date asDate(LocalDateTime localDateTime) {
 		Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-		log.debug("converted localDate: " + localDateTime + " to: " + date);
+		log.info("converted localDate: " + localDateTime + " to: " + date);
 		return date;
 	}
 
 	public LocalDate asLocalDate(Date date) {
 		LocalDate d = Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
-		log.debug("converted localDate: " + d + " to: " + date);
+		log.info("converted localDate: " + d + " to: " + date);
 		return d;
 	}
 
 	public LocalDateTime asLocalDateTime(Date date) {
 		LocalDateTime d = Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
-		log.debug("converted localDate: " + d + " to: " + date);
+		log.info("converted localDate: " + d + " to: " + date);
 		return d;
 	}
 

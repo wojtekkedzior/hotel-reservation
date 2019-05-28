@@ -385,7 +385,6 @@ public class InvoiceServiceTest extends BaseServiceTest {
 			invoiceService.saveReservationCharge(chargeOne);
 			fail();
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 	

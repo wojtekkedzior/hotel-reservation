@@ -159,6 +159,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<threadCount>12</threadCount>
+					<parallel>suites</parallel>
 				</configuration>
 			</plugin>
 		</plugins>
