@@ -9,6 +9,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.data.annotation.Immutable;
+
 import hotelreservation.model.ReservationCharge;
 import hotelreservation.model.enums.PaymentType;
 import lombok.Data;
@@ -19,6 +21,7 @@ import lombok.Data;
  * @author wojtek
  *
  */
+@Immutable
 public final class PaymentDTO {
 	
 	@NotNull
