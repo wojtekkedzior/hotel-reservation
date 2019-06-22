@@ -2,6 +2,7 @@ package hotelreservation.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -87,7 +88,7 @@ public class RoomService {
 		if(start.isEqual(end)) {
 			findByDayBetween = roomRateRepo.findByDayBetween(start, end);
 		} else {
-			findByDayBetween = roomRateRepo.findByDayBetween(start, end.minus(1,  ChronoUnit.DAYS));
+			findByDayBetween = roomRateRepo.findByDayBetween(start, end.minus(Period.ofDays(1)));
 		}
 		
 		log.info("Looking for all RoomRates between: " + start + " and: " + end + ". Found: " + findByDayBetween.size());
@@ -101,7 +102,7 @@ public class RoomService {
 	}
 	
 	public List<RoomRate> getAvailableRoomRates(LocalDate start, LocalDate end) { //TODO add a variant of this method but for a particular room //TODO finally figure out how to use a join and apply it here
-		List<RoomRate> availableRoomRates = new ArrayList<RoomRate>();
+		List<RoomRate> availableRoomRates = new ArrayList<>();
 		List<Reservation> activeReservation = reservationRepo.findInProgressAndUpComingReservations();
 		List<RoomRate> availableRoomRatesForAllRooms = getRoomRates(start, end);
 		
@@ -115,7 +116,7 @@ public class RoomService {
 	}
 
 	public Map<Room, List<RoomRate>> getRoomRatesAsMap(LocalDate startDate, LocalDate endDate) {
-		Map<Room, List<RoomRate>> ratesForAllRooms = new HashMap<Room, List<RoomRate>>();
+		Map<Room, List<RoomRate>> ratesForAllRooms = new HashMap<>();
 		
 		for (RoomRate roomRate : getAvailableRoomRates(startDate, endDate)) {
 			ratesForAllRooms.computeIfAbsent(roomRate.getRoom(), k -> new ArrayList<>()).add(roomRate);
@@ -277,7 +278,7 @@ public class RoomService {
 	 * @return
 	 */
 	public Map<LocalDate, List<RoomRate>> getRoomRatesPerDate(LocalDate start, LocalDate end) {
-		Map<LocalDate, List<RoomRate>> roomRatesAsMapByDates = new TreeMap<LocalDate, List<RoomRate>>(); 
+		Map<LocalDate, List<RoomRate>> roomRatesAsMapByDates = new TreeMap<>(); 
 		List<RoomRate> availableRoomRates = getAvailableRoomRates(start, end); //this method is wrong. for the 13th to the 15th it should only return rates for the 13th and 14th
 
 		long daysBetween = ChronoUnit.DAYS.between(start, end);
