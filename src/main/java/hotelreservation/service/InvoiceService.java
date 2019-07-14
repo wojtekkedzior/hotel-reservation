@@ -2,7 +2,7 @@ package hotelreservation.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
+import java.util.stream.Collectors;
 
 
 import org.slf4j.Logger;
@@ -98,7 +98,7 @@ public class InvoiceService {
 	}
 
 	public List<ReservationCharge> getOutstandingCharges(Reservation reservation) {
-		List<ReservationCharge> charges = new ArrayList<ReservationCharge>();
+		List<ReservationCharge> charges = new ArrayList<>();
 
 		for (ReservationCharge reservationCharge : getAllReservationChargesForAReservation(reservation)) {
 			Payment payment = paymentRepo.findByReservationAndReservationCharges(reservation, reservationCharge);
@@ -107,6 +107,7 @@ public class InvoiceService {
 				charges.add(reservationCharge);
 			}
 		}
+
 
 		return charges;
 	}
@@ -137,14 +138,10 @@ public class InvoiceService {
 	}
 
 	public long getTotalOfOutstandingCharges(List<Reservation> reservationsInProgress) {
-		long outstandingGrandTotal = 0;
-
-		for (Reservation reservation : reservationsInProgress) {
-			outstandingGrandTotal += getOutstandingCharges(reservation).stream()
-					.mapToLong(x -> x.getQuantity() * x.getCharge().getValue())
-					.sum();
-		}
-
-		return outstandingGrandTotal;
+        return reservationsInProgress.stream()
+                .mapToLong(r -> getOutstandingCharges(r).stream()
+                    .mapToLong(x -> x.getQuantity() * x.getCharge().getValue())
+                    .sum())
+                .sum();
 	}
 }

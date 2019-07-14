@@ -292,9 +292,10 @@ public class RoomServiceTest extends BaseServiceTest {
 		roomService.deleteStatus(99);
 	}
 	
+	@SuppressWarnings("LongLiteralEndingWithLowercaseL")
 	@Test(expected = NotDeletedException.class)
 	public void testDeleteNonExistentRoomTypeById() {
-		roomService.deleteRoomType(99l);
+		roomService.deleteRoomType(99L);
 	}
 	@Test
 	public void testGetRoomRatesAsMap() {

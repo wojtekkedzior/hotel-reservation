@@ -7,6 +7,7 @@ import javax.persistence.EntityNotFoundException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -46,7 +47,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 		// String errorMessage =
 		// ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
 		List<String> validationList = ex.getBindingResult().getFieldErrors().stream()
-				.map(fieldError -> fieldError.getDefaultMessage()).collect(Collectors.toList());
+				.map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList());
 
 		StringBuffer output = new StringBuffer();
 
@@ -63,7 +64,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 	
 	@ExceptionHandler(AccessDeniedException.class)
-	protected ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex) {
+	private ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex) {
 		log.info(ex.getMessage());
 		return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 	}

@@ -129,7 +129,7 @@ public class BookingService {
 	}
 
 	private void removeReservationIfPresent(Reservation reservation, List<Reservation> findInProgressAndUpComingReservations) {
-		Comparator<Reservation> comparator = (r1, r2) -> Long.compare(r1.getId(), r2.getId());
+		Comparator<Reservation> comparator = Comparator.comparingLong(Reservation::getId);
 		boolean contains = utils.contains(findInProgressAndUpComingReservations, reservation, comparator);
 		
 		if(contains) {
