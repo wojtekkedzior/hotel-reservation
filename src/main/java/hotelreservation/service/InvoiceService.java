@@ -2,6 +2,7 @@ package hotelreservation.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 
@@ -137,14 +138,10 @@ public class InvoiceService {
 	}
 
 	public long getTotalOfOutstandingCharges(List<Reservation> reservationsInProgress) {
-		long outstandingGrandTotal = 0;
-
-		for (Reservation reservation : reservationsInProgress) {
-			outstandingGrandTotal += getOutstandingCharges(reservation).stream()
-					.mapToLong(x -> x.getQuantity() * x.getCharge().getValue())
-					.sum();
-		}
-
-		return outstandingGrandTotal;
+        return reservationsInProgress.stream()
+                .mapToLong(r -> getOutstandingCharges(r).stream()
+                    .mapToLong(x -> x.getQuantity() * x.getCharge().getValue())
+                    .sum())
+                .sum();
 	}
 }
