@@ -2,6 +2,7 @@ package hotelreservation.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 import org.slf4j.Logger;
@@ -106,6 +107,7 @@ public class InvoiceService {
 				charges.add(reservationCharge);
 			}
 		}
+
 
 		return charges;
 	}

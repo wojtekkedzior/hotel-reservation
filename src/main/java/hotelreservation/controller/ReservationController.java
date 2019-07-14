@@ -141,7 +141,7 @@ public class ReservationController {
 		model.addAttribute("countries", countries);
 
 		List<RoomRate> roomRates = reservation.getRoomRates();
-		model.addAttribute("total", roomRates.stream().mapToInt(n -> n.getValue()).sum());
+		model.addAttribute("total", roomRates.stream().mapToInt(RoomRate::getValue).sum());
 		model.addAttribute("currency", roomRates.get(0).getCurrency().toString());
 
 		return "realiseReservation";
@@ -188,7 +188,7 @@ public class ReservationController {
 		model.addAttribute("reservationCharges",  invoiceService.getAllReservationChargesForAReservation(reservation));
 
 		List<RoomRate> roomRates = reservation.getRoomRates();
-		model.addAttribute("total", roomRates.stream().mapToInt(n -> n.getValue()).sum());
+		model.addAttribute("total", roomRates.stream().mapToInt(RoomRate::getValue).sum());
 		model.addAttribute("currency", roomRates.get(0).getCurrency().toString());
 
 		log.info("checkout Reservation ready");

@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,9 +70,9 @@ public class RoomService {
 		
 		List<AmenityType> amenityTypes = utils.toList(amenityTypeRepo.findAll());
 		
-		amenityTypes.stream().filter(t -> {
-			return t.getName().equals("Hotel") ? false : true;
-		}).forEach(t -> roomAmenities.addAll(amenityRepo.findByAmenityType(t)));
+		amenityTypes.stream()
+				.filter(t -> t.getName().equals("Hotel"))
+				.forEach(t -> roomAmenities.addAll(amenityRepo.findByAmenityType(t)));
 
 		return roomAmenities;
 	}
