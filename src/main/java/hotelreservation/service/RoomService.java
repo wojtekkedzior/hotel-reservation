@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,9 +69,9 @@ public class RoomService {
 	public List<Amenity> getRoomAmenities() {
 		List<Amenity> roomAmenities = new ArrayList<>();
 		
-		List<AmenityType> ammenityTypes = utils.toList(amenityTypeRepo.findAll());
+		List<AmenityType> amenityTypes = utils.toList(amenityTypeRepo.findAll());
 		
-		ammenityTypes.stream().filter(t -> {
+		amenityTypes.stream().filter(t -> {
 			return t.getName().equals("Hotel") ? false : true;
 		}).forEach(t -> roomAmenities.addAll(amenityRepo.findByAmenityType(t)));
 
@@ -83,7 +84,7 @@ public class RoomService {
 
 	//TODO how do we handle the case where start=end?  with this implementation it will blow up - should also add a test for that.
 	public List<RoomRate> getRoomRates(LocalDate start, LocalDate end) {
-		List<RoomRate> findByDayBetween = null;
+		List<RoomRate> findByDayBetween;
 		
 		if(start.isEqual(end)) {
 			findByDayBetween = roomRateRepo.findByDayBetween(start, end);
@@ -111,7 +112,8 @@ public class RoomService {
 				availableRoomRates.add(roomRate);
 			}
 		}
-		
+
+
 		return availableRoomRates;
 	}
 
