@@ -2,8 +2,6 @@ package hotelreservation.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 
 import org.slf4j.Logger;
@@ -99,7 +97,7 @@ public class InvoiceService {
 	}
 
 	public List<ReservationCharge> getOutstandingCharges(Reservation reservation) {
-		List<ReservationCharge> charges = new ArrayList<ReservationCharge>();
+		List<ReservationCharge> charges = new ArrayList<>();
 
 		for (ReservationCharge reservationCharge : getAllReservationChargesForAReservation(reservation)) {
 			Payment payment = paymentRepo.findByReservationAndReservationCharges(reservation, reservationCharge);
