@@ -2,6 +2,8 @@ package hotelreservation.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.IntStream;
 
 
 import org.slf4j.Logger;
@@ -97,7 +99,7 @@ public class InvoiceService {
 	}
 
 	public List<ReservationCharge> getOutstandingCharges(Reservation reservation) {
-		List<ReservationCharge> charges = new ArrayList<>();
+		List<ReservationCharge> charges = new ArrayList<ReservationCharge>();
 
 		for (ReservationCharge reservationCharge : getAllReservationChargesForAReservation(reservation)) {
 			Payment payment = paymentRepo.findByReservationAndReservationCharges(reservation, reservationCharge);
@@ -106,7 +108,6 @@ public class InvoiceService {
 				charges.add(reservationCharge);
 			}
 		}
-
 
 		return charges;
 	}
@@ -137,10 +138,14 @@ public class InvoiceService {
 	}
 
 	public long getTotalOfOutstandingCharges(List<Reservation> reservationsInProgress) {
-        return reservationsInProgress.stream()
-                .mapToLong(r -> getOutstandingCharges(r).stream()
-                    .mapToLong(x -> x.getQuantity() * x.getCharge().getValue())
-                    .sum())
-                .sum();
+		final AtomicReference<Long> reference = new AtomicReference<>(0l);
+
+		reservationsInProgress.stream().forEach(reservation -> {
+			reference.set(reference.get() + getOutstandingCharges(reservation).stream()
+					.mapToLong(x -> x.getQuantity() * x.getCharge().getValue())
+					.sum());
+		});
+
+		return reference.get();
 	}
 }
