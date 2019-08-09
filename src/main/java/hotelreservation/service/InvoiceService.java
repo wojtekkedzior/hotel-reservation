@@ -141,9 +141,9 @@ public class InvoiceService {
 		final AtomicReference<Long> reference = new AtomicReference<>(0l);
 
 		reservationsInProgress.stream().forEach(reservation -> {
-			reference.set(reference.get() + getOutstandingCharges(reservation).stream()
+			reference.accumulateAndGet(getOutstandingCharges(reservation).stream()
 					.mapToLong(x -> x.getQuantity() * x.getCharge().getValue())
-					.sum());
+					.sum(), (l1, l2) -> Math.addExact(l1, l2));
 		});
 
 		return reference.get();
