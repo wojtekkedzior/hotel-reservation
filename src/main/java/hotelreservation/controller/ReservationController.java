@@ -25,13 +25,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import hotelreservation.model.Contact;
@@ -74,7 +68,7 @@ public class ReservationController {
 	}
 
 	@PreAuthorize("hasAuthority('createReservation')")
-	@RequestMapping(value = { "/reservation", "/reservation/{id}", "/reservation/start/{startDate}/end/{endDate}" })
+	@GetMapping(value = { "/reservation", "/reservation/{id}", "/reservation/start/{startDate}/end/{endDate}" })
 	public String addReservationModel(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<LocalDate> startDate,
 			@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<LocalDate> endDate, @PathVariable Optional<Integer> id, Model model) {
 		if (!id.isPresent()) {
@@ -118,7 +112,7 @@ public class ReservationController {
 		return "reservation";
 	}
 
-	@RequestMapping(value = { "/realiseReservation/{id}" }, method = RequestMethod.GET)
+	@GetMapping(value = { "/realiseReservation/{id}" })
 	@PreAuthorize("hasAuthority('realiseReservation')")
 	public String getRealiseReservation(@PathVariable Optional<Integer> id, Model model) {
 		Reservation reservation = bookingService.getReservation(id);
@@ -147,7 +141,7 @@ public class ReservationController {
 		return "realiseReservation";
 	}
 
-	@RequestMapping(value = { "/cancelReservation/{id}" })
+	@GetMapping(value = { "/cancelReservation/{id}" })
 	@PreAuthorize("hasAuthority('cancelReservation')")
 	public String cancelReservation(@PathVariable Optional<Integer> id, Model model) {
 		Reservation reservation = bookingService.getReservation(id);
@@ -162,7 +156,7 @@ public class ReservationController {
 		return "cancelReservation";
 	}
 
-	@RequestMapping(value = {"/dashboard"})
+	@GetMapping(value = {"/dashboard"})
 	@PreAuthorize("hasAuthority('viewReservationDashBoard')")
 	public String getReservationDashBoard(Model model) {
 		log.info("loading dashboard");
@@ -174,7 +168,7 @@ public class ReservationController {
 		return "reservationDashBoard";
 	}
 
-	@RequestMapping(value = { "/checkoutReservation/{id}" })
+	@GetMapping(value = { "/checkoutReservation/{id}" })
 	@PreAuthorize("hasAuthority('checkoutReservation')")
 	public String checkoutReservation(@PathVariable Optional<Integer> id, Model model) {
 		log.info("loading checkout Reservation");
@@ -244,7 +238,7 @@ public class ReservationController {
 	}
 
 	// TODO only super-admin type user should be able to fully delete a reservation. Move to super admin controller? 
-	@RequestMapping(value = "/reservationDelete/{id}", method = RequestMethod.DELETE)
+	@DeleteMapping(value = "/reservationDelete/{id}")
 	@PreAuthorize("hasAuthority('deleteReservation')")
 	public ModelAndView deleteReservation(@PathVariable Optional<Integer> id) {
 		if (id.isPresent()) {

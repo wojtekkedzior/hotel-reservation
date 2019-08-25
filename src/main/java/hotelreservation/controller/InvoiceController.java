@@ -11,11 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import hotelreservation.model.Reservation;
@@ -38,13 +34,13 @@ public class InvoiceController {
 	@Autowired
 	private BookingService bookingService;
 	
-	@RequestMapping(value = { "/invoice/{id}" }, method = RequestMethod.GET)
+	@GetMapping(value = { "/invoice/{id}" })
 	@PreAuthorize("hasAuthority('retrieveInvoice')")
 	public String getInvoice(@PathVariable Optional<Integer> id, Model model) {
 		return "invoice";
 	}
 	
-	@RequestMapping(value = { "/payment/{id}" }, method = RequestMethod.GET)
+	@GetMapping(value = { "/payment/{id}" })
 	@PreAuthorize("hasAuthority('createPayment')")
 	public String getPayment(@PathVariable Optional<Integer> id, Model model) {
 		Reservation reservation = bookingService.getReservation(id);
