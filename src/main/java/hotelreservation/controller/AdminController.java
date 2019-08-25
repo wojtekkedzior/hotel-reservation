@@ -1,20 +1,20 @@
 package hotelreservation.controller;
 
-import java.util.List;
-
+import hotelreservation.model.Reservation;
+import hotelreservation.model.enums.ReservationStatus;
+import hotelreservation.service.BookingService;
+import hotelreservation.service.InvoiceService;
+import hotelreservation.service.RoomService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import hotelreservation.model.Reservation;
-import hotelreservation.model.enums.ReservationStatus;
-import hotelreservation.service.BookingService;
-import hotelreservation.service.InvoiceService;
-import hotelreservation.service.RoomService;
+import java.util.List;
 
 @Controller
 public class AdminController {
@@ -30,7 +30,7 @@ public class AdminController {
 	@Autowired
 	private InvoiceService invoiceService;
 
-	@RequestMapping("/admin")
+	@GetMapping("/admin")
 	@PreAuthorize("hasAuthority('viewAdmin')")
 	public String getAdmin(Model model) {
 		log.info("loading admin");
@@ -53,7 +53,7 @@ public class AdminController {
 		return "adminOverview";
 	}
 	
-	@RequestMapping("/")
+	@GetMapping("/")
 	public String handleRoot(Model model) {
 		return "redirect:/dashboard";
 	}

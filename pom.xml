@@ -12,6 +12,14 @@
         <version>2.1.7.RELEASE</version>
     </parent>
 
+    <properties>
+        <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+        <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
+        <sonar.host.url>http://192.168.1.99:9000</sonar.host.url>
+        <sonar.exclusions>**/*ApplicationStartup.java, **/repository/**</sonar.exclusions>
+<!--        <sonar.coverage.exclusions>f/*ApplicationSetup.java</sonar.coverage.exclusions>-->
+    </properties>
+
     <dependencies>
         <!--	Dev		-->
         <dependency>
@@ -136,6 +144,33 @@
                     <threadCount>12</threadCount>
                     <parallel>suites</parallel>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.4</version>
+                <configuration>
+                    <append>true</append>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>post-unit-test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.6.0.1398</version>
             </plugin>
         </plugins>
     </build>

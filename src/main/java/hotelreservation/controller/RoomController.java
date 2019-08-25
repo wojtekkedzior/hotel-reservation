@@ -13,11 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import hotelreservation.model.Amenity;
@@ -36,7 +32,7 @@ public class RoomController {
 	@Autowired
 	private RoomService roomService;
 
-	@RequestMapping(value = { "/amenity", "/amenity/{id}" })
+	@GetMapping(value = { "/amenity", "/amenity/{id}" })
 	@PreAuthorize("hasAuthority('createAmenity')")
 	public String getAmenityModel(Model model, @PathVariable Optional<Integer> id) {
 		log.info("Getting Amenity with id: " + id);
@@ -55,7 +51,7 @@ public class RoomController {
 		return "amenity";
 	}
 
-	@RequestMapping(value = { "/amenityType", "/amenityType/{id}" })
+	@GetMapping(value = { "/amenityType", "/amenityType/{id}" })
 	@PreAuthorize("hasAuthority('createAmenityType')")
 	public String getAmenityTypeModel(Model model, @PathVariable Optional<Integer> id) {
 		if (!id.isPresent()) {
@@ -76,7 +72,7 @@ public class RoomController {
 		model.addAttribute("amenityTypes", roomService.getAllAmenityTypes());
 	}
 
-	@RequestMapping(value = { "/room", "room/{id}" })
+	@GetMapping(value = { "/room", "room/{id}" })
 	@PreAuthorize("hasAuthority('createRoom')")
 	public String roomModel(@PathVariable Optional<Integer> id, Model model) {
 		if (!id.isPresent()) {
@@ -92,7 +88,7 @@ public class RoomController {
 		return "room";
 	}
 
-	@RequestMapping(value = { "/roomType", "/roomType/{id}" })
+	@GetMapping(value = { "/roomType", "/roomType/{id}" })
 	@PreAuthorize("hasAuthority('createRoomType')")
 	public String roomTypeModel(Model model, @PathVariable Optional<Integer> id) {
 		if (!id.isPresent()) {
@@ -115,7 +111,7 @@ public class RoomController {
 		model.addAttribute("statuses", roomService.getAllStatuses());
 	}
 
-	@RequestMapping(value = { "/roomRate", "/roomRate/{id}" })
+	@GetMapping(value = { "/roomRate", "/roomRate/{id}" })
 	@PreAuthorize("hasAuthority('createRoomRate')")
 	public String addRoomRateModel(@PathVariable Optional<Integer> id, Model model) {
 		if (!id.isPresent()) {
@@ -173,7 +169,7 @@ public class RoomController {
 		return new ModelAndView("redirect:/roomRate/" + roomRate.getId());
 	}
 
-	@RequestMapping(value = "/amenityDelete/{id}", method = RequestMethod.DELETE)
+	@DeleteMapping(value = "/amenityDelete/{id}")
 	@PreAuthorize("hasAuthority('deleteAmenity')")
 	public ModelAndView deleteAminity(@PathVariable Optional<Integer> id) {
 		if (id.isPresent()) {
@@ -182,7 +178,7 @@ public class RoomController {
 		return new ModelAndView("redirect:/amenity");
 	}
 
-	@RequestMapping(value = "/amenityTypeDelete/{id}", method = RequestMethod.DELETE)
+	@DeleteMapping(value = "/amenityTypeDelete/{id}")
 	@PreAuthorize("hasAuthority('deleteAmenityType')")
 	public ModelAndView deleteAminityType(@PathVariable Optional<Integer> id) {
 		if (id.isPresent()) {
@@ -191,7 +187,7 @@ public class RoomController {
 		return new ModelAndView("redirect:/amenity");
 	}
 
-	@RequestMapping(value = "/roomDelete/{id}", method = RequestMethod.DELETE)
+	@DeleteMapping(value = "/roomDelete/{id}")
 	@PreAuthorize("hasAuthority('deleteRoom')")
 	public ModelAndView deleteRoom(@PathVariable Optional<Integer> id) {
 		if (id.isPresent()) {
@@ -200,7 +196,7 @@ public class RoomController {
 		return new ModelAndView("redirect:/room");
 	}
 
-	@RequestMapping(value = "/roomTypeDelete/{id}", method = RequestMethod.DELETE)
+	@DeleteMapping(value = "/roomTypeDelete/{id}")
 	@PreAuthorize("hasAuthority('deleteRoomType')")
 	public ModelAndView deleteRoomType(@PathVariable Optional<Integer> id) {
 		if (id.isPresent()) {
@@ -209,7 +205,7 @@ public class RoomController {
 		return new ModelAndView("redirect:/room");
 	}
 
-	@RequestMapping(value = "/roomRateDelete/{id}", method = RequestMethod.DELETE)
+	@DeleteMapping(value = "/roomRateDelete/{id}")
 	@PreAuthorize("hasAuthority('deleteRoomRate')")
 	public ModelAndView deleteRoomRate(@PathVariable Optional<Integer> id) {
 		if (id.isPresent()) {

@@ -12,11 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import hotelreservation.model.Role;
@@ -30,7 +26,7 @@ public class UsersController {
 	@Autowired
 	private UserService userService;
 
-	@RequestMapping(value = { "/user", "/user/{id}" })
+	@GetMapping(value = { "/user", "/user/{id}" })
 	@PreAuthorize("hasAuthority('createUser')")
 	public String getUsers(@PathVariable Optional<Integer> id, Model model) {
 		if(!id.isPresent()) {
@@ -72,7 +68,7 @@ public class UsersController {
 	 * ---------------------------------------------------------------------------------------------------------------------------
 	 */
 	
-	@RequestMapping(value="/userDelete/{id}", method=RequestMethod.DELETE)
+	@DeleteMapping(value="/userDelete/{id}")
 	@PreAuthorize("hasAuthority('deleteUser')")
 	public ModelAndView deleteUser(@PathVariable Optional<Integer> id) {
 		log.info("deleting user: " + id);
