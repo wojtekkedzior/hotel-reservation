@@ -59,6 +59,7 @@ public class Room implements Comparable<Room> {
 		this.status = status;
 		this.roomType = roomType;
 		this.createdBy = createdBy;
+		createdOn = LocalDateTime.now();
 	}
 
 	@Override

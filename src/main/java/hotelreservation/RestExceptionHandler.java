@@ -26,11 +26,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	//TODO add logging
-	
 	@ExceptionHandler(EntityNotFoundException.class)
 	protected ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex) {
-		// return buildResponseEntity();
 		log.info(ex.getMessage());
 		return null;
 	}
@@ -44,12 +41,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	@Override
 	protected ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers, HttpStatus status,
 			WebRequest request) {
-		// String errorMessage =
-		// ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
 		List<String> validationList = ex.getBindingResult().getFieldErrors().stream()
 				.map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList());
 
-		StringBuffer output = new StringBuffer();
+		StringBuilder output = new StringBuilder();
 
 		//TODO get the names of the fields and log them along with the validation errors
 		for (String string : validationList) {

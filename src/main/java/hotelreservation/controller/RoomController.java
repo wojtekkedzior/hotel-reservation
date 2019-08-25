@@ -41,7 +41,7 @@ public class RoomController {
 			model.addAttribute("amenity", new Amenity());
 			model.addAttribute("amenityType", new AmenityType());
 		} else {
-			Amenity amenityById = roomService.getAmenityById(Long.valueOf(id.get()));
+			Amenity amenityById = roomService.getAmenityById(id.get());
 			model.addAttribute("amenity", amenityById);
 			model.addAttribute("amenityType", amenityById.getAmenityType());
 		}
@@ -57,7 +57,7 @@ public class RoomController {
 		if (!id.isPresent()) {
 			model.addAttribute("amenityType", new AmenityType());
 		} else {
-			AmenityType amenityTypeById = roomService.getAmenityTypeById(Long.valueOf(id.get()));
+			AmenityType amenityTypeById = roomService.getAmenityTypeById(id.get());
 			model.addAttribute("amenityType", amenityTypeById == null ? new AmenityType() : amenityTypeById);
 		}
 
@@ -78,7 +78,7 @@ public class RoomController {
 		if (!id.isPresent()) {
 			model.addAttribute("room", new Room());
 		} else {
-			Room room = roomService.getRoomById(Long.valueOf(id.get()));
+			Room room = roomService.getRoomById(id.get());
 			model.addAttribute("room", room == null ? new Room() : room);
 		}
 
@@ -94,7 +94,7 @@ public class RoomController {
 		if (!id.isPresent()) {
 			model.addAttribute("roomType", new RoomType());
 		} else {
-			RoomType roomType = roomService.getRoomTypeById(Long.valueOf(id.get()));
+			RoomType roomType = roomService.getRoomTypeById(id.get());
 			model.addAttribute("roomType", roomType == null ? new RoomType() : roomType);
 		}
 
@@ -117,7 +117,7 @@ public class RoomController {
 		if (!id.isPresent()) {
 			model.addAttribute("roomRate", new RoomRate());
 		} else {
-			RoomRate roomRate = roomService.getRoomRateById(Long.valueOf(id.get()));
+			RoomRate roomRate = roomService.getRoomRateById(id.get());
 			model.addAttribute("roomRate", roomRate == null ? new RoomRate() : roomRate);
 		}
 
@@ -173,7 +173,7 @@ public class RoomController {
 	@PreAuthorize("hasAuthority('deleteAmenity')")
 	public ModelAndView deleteAminity(@PathVariable Optional<Integer> id) {
 		if (id.isPresent()) {
-			roomService.deleteAmenity(Long.valueOf(id.get()));
+			roomService.deleteAmenity(id.get());
 		}
 		return new ModelAndView("redirect:/amenity");
 	}
@@ -182,7 +182,7 @@ public class RoomController {
 	@PreAuthorize("hasAuthority('deleteAmenityType')")
 	public ModelAndView deleteAminityType(@PathVariable Optional<Integer> id) {
 		if (id.isPresent()) {
-			roomService.deleteAmenityType(Long.valueOf(id.get()));
+			roomService.deleteAmenityType(id.get());
 		}
 		return new ModelAndView("redirect:/amenity");
 	}
@@ -191,7 +191,7 @@ public class RoomController {
 	@PreAuthorize("hasAuthority('deleteRoom')")
 	public ModelAndView deleteRoom(@PathVariable Optional<Integer> id) {
 		if (id.isPresent()) {
-			roomService.deleteRoomById(Long.valueOf(id.get()));
+			roomService.deleteRoomById(id.get());
 		}
 		return new ModelAndView("redirect:/room");
 	}
@@ -209,7 +209,7 @@ public class RoomController {
 	@PreAuthorize("hasAuthority('deleteRoomRate')")
 	public ModelAndView deleteRoomRate(@PathVariable Optional<Integer> id) {
 		if (id.isPresent()) {
-			roomService.deleteRoomRate(Long.valueOf(id.get()));
+			roomService.deleteRoomRate(id.get());
 		}
 		// TODO wha thappens with all the histortical bookings that refer to this room rate?
 		return new ModelAndView("redirect:/roomRate");

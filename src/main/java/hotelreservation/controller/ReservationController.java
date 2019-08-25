@@ -78,7 +78,7 @@ public class ReservationController {
 			Reservation reservation = bookingService.getReservation(id);
 			model.addAttribute("reservation", reservation == null ? new Reservation() : reservation);
 
-			Map<Room, List<RoomRate>> roomRatesAsMap = new HashMap<Room, List<RoomRate>>();
+			Map<Room, List<RoomRate>> roomRatesAsMap = new HashMap<>();
 
 			for (RoomRate roomRate : reservation.getRoomRates()) {
 				if (roomRatesAsMap.containsKey(roomRate.getRoom())) {
@@ -125,7 +125,7 @@ public class ReservationController {
 		model.addAttribute("guest", guest);
 		model.addAttribute("idTypes", IdType.values());
 
-		List<String> countries = new ArrayList<String>();
+		List<String> countries = new ArrayList<>();
 
 		for (String countryCode : Locale.getISOCountries()) {
 			countries.add(new Locale("", countryCode).getDisplayCountry());
@@ -148,7 +148,7 @@ public class ReservationController {
 		model.addAttribute("reservation", reservation);
 
 		if (reservation.getReservationStatus().equals(ReservationStatus.Cancelled)) {
-
+			//To be implemented
 		} else {
 			model.addAttribute("reservationCancellation", new ReservationCancellation());
 		}
