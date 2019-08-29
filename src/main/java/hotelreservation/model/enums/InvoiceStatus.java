@@ -1,7 +1,7 @@
 package hotelreservation.model.enums;
 
 public enum InvoiceStatus {
-	
-	Created, NotPaid, Paid, Due, Expired;
+
+	CREATED, NOT_PAID, PAID, DUE, EXPIRED;
 
 }

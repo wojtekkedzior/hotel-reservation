@@ -9,6 +9,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.Immutable;
 
 import hotelreservation.model.ReservationCharge;
@@ -22,6 +24,7 @@ import lombok.Data;
  *
  */
 @Immutable
+@RequiredArgsConstructor
 public final class PaymentDTO {
 	
 	@NotNull
@@ -33,7 +36,5 @@ public final class PaymentDTO {
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date paymentDate;
-	
-	public PaymentDTO () {}
 
 }

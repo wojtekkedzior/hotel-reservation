@@ -75,9 +75,16 @@ public class InvoiceController {
 		
 		//TODO use credit card in reservation?
 		// gather all payment details and call createpayment.  if successful generate invoice and show 'show invoice' button to download/display the invoice
-		//payment needs to have any extra costs 
-		
-		return new ModelAndView("redirect:/checkoutReservation/" + reservationId.get());
+		//payment needs to have any extra costs
+
+
+		StringBuilder viewName = new StringBuilder("redirect:/checkoutReservation/" );
+
+		if(reservationId.isPresent()) {
+			viewName.append(reservationId.get());
+		}
+
+		return new ModelAndView(viewName.toString());
 	}
 	
 	@PostMapping("/addChargeToReservation/{reservationId}")
@@ -92,6 +99,13 @@ public class InvoiceController {
 		reservationCharge.setCharge(reservationChargeDto.getCharge());
 		
 		invoiceService.saveReservationCharge(reservationCharge);
-		return new ModelAndView("redirect:/checkoutReservation/" + reservationId.get());
+
+		StringBuilder viewName = new StringBuilder("redirect:/checkoutReservation/" );
+
+		if(reservationId.isPresent()) {
+			viewName.append(reservationId.get());
+		}
+
+		return new ModelAndView(viewName.toString());
 	}
 }

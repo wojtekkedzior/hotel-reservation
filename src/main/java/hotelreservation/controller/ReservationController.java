@@ -147,7 +147,7 @@ public class ReservationController {
 		Reservation reservation = bookingService.getReservation(id);
 		model.addAttribute("reservation", reservation);
 
-		if (reservation.getReservationStatus().equals(ReservationStatus.Cancelled)) {
+		if (reservation.getReservationStatus().equals(ReservationStatus.CANCELLED)) {
 			//To be implemented
 		} else {
 			model.addAttribute("reservationCancellation", new ReservationCancellation());
@@ -161,8 +161,8 @@ public class ReservationController {
 	public String getReservationDashBoard(Model model) {
 		log.info("loading dashboard");
 
-		model.addAttribute("upComingReservations", bookingService.getReservationsByStatus(ReservationStatus.UpComing));
-		model.addAttribute("inProgressReservations", bookingService.getReservationsByStatus(ReservationStatus.InProgress));
+		model.addAttribute("upComingReservations", bookingService.getReservationsByStatus(ReservationStatus.UP_COMING));
+		model.addAttribute("inProgressReservations", bookingService.getReservationsByStatus(ReservationStatus.IN_PROGRESS));
 
 		log.info("dashboard ready");
 		return "reservationDashBoard";
@@ -219,7 +219,7 @@ public class ReservationController {
 	public ModelAndView realiseReservation(@PathVariable Optional<Integer> reservationId) {
 		Reservation reservation = bookingService.getReservation(reservationId);
 
-		if (reservation.getReservationStatus().equals(ReservationStatus.UpComing) || reservation.getReservationStatus().equals(ReservationStatus.InProgress)) {
+		if (reservation.getReservationStatus().equals(ReservationStatus.UP_COMING) || reservation.getReservationStatus().equals(ReservationStatus.IN_PROGRESS)) {
 			// TODO can't realise a cancelled or in progress reservation
 		} else { 
 			// TODO return some erro message

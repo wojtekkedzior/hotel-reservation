@@ -491,10 +491,10 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	}
 
 	private void addIdentifications() {
-		idOne = new Identification(IdType.IDCard, "oneIdNumber");
-		idTwo = new Identification(IdType.DriversLicense, "twoIdNumber");
-		idThree = new Identification(IdType.Passport, "threeIdNumber");
-		idFour = new Identification(IdType.IDCard, "fourIdNumber");
+		idOne = new Identification(IdType.ID_CARD, "oneIdNumber");
+		idTwo = new Identification(IdType.DRIVERS_LICENSE, "twoIdNumber");
+		idThree = new Identification(IdType.PASSPORT, "threeIdNumber");
+		idFour = new Identification(IdType.ID_CARD, "fourIdNumber");
 
 		bookingService.createIdentification(idOne);
 		bookingService.createIdentification(idTwo);

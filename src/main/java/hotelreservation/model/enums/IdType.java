@@ -1,7 +1,7 @@
 package hotelreservation.model.enums;
 
 public enum IdType {
-	
-	Passport, IDCard, DriversLicense;
+
+	PASSPORT, ID_CARD, DRIVERS_LICENSE;
 
 }

@@ -15,8 +15,8 @@ public class AuthenticationSuccessEventListener implements ApplicationListener<A
 	@Override
 	public void onApplicationEvent(AuthenticationSuccessEvent event) {
 		WebAuthenticationDetails auth = (WebAuthenticationDetails) event.getAuthentication().getDetails();
-		
-		log.info("Successful login for user: " + event.getAuthentication().getName() + " with authoritites: " + event.getAuthentication().getAuthorities());
+
+		log.info("Successful login for user: {} with authoritites: {}",  event.getAuthentication().getName(), event.getAuthentication().getAuthorities());
 	
 		if(log.isDebugEnabled()) {
 			log.debug(event.toString());

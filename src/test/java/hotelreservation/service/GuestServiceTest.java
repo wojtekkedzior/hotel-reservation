@@ -33,7 +33,7 @@ public class GuestServiceTest {
 	@Before
 	public void setup() {
 		contact = new Contact("address1", "country1");
-		identification = new Identification(IdType.IDCard, "12345abcde");
+		identification = new Identification(IdType.ID_CARD, "12345abcde");
 		guest = new Guest();
 		guest.setContact(contact);
 		guest.setIdentification(identification);
@@ -57,7 +57,7 @@ public class GuestServiceTest {
 		guestService.saveIdentification(identification);
 		assertEquals(identification, guestService.getIdentificationById(identification.getId()));
 		
-		identification.setIdType(IdType.Passport);
+		identification.setIdType(IdType.PASSPORT);
 		guestService.saveIdentification(identification);
 		assertEquals(identification, guestService.getIdentificationById(identification.getId()));
 		

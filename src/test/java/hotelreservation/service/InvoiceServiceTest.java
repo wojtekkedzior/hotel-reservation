@@ -168,8 +168,8 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		standardRoomThree.setRoomAmenities(Arrays.asList(pillow));
 		roomService.saveRoom(standardRoomThree);
 
-		idOne = new Identification(IdType.IDCard, "oneIdNumber");
-		idTwo = new Identification(IdType.DriversLicense, "twoIdNumber");
+		idOne = new Identification(IdType.ID_CARD, "oneIdNumber");
+		idTwo = new Identification(IdType.DRIVERS_LICENSE, "twoIdNumber");
 
 		bookingService.createIdentification(idOne);
 		bookingService.createIdentification(idTwo);
@@ -187,7 +187,7 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		reservationOne.setFirstName("firstName");
 		reservationOne.setLastName("lastName");
 		reservationOne.setCreatedBy(user);
-		reservationOne.setReservationStatus(ReservationStatus.UpComing);
+		reservationOne.setReservationStatus(ReservationStatus.UP_COMING);
 		reservationOne.setStartDate(LocalDate.of(2018, Month.JANUARY, 2));
 		reservationOne.setEndDate(LocalDate.of(2018, Month.JANUARY, 4));
 		reservationOne.setRoomRates(new ArrayList<RoomRate>());
@@ -236,7 +236,7 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		Payment payment = new Payment();
 		payment.setReservation(reservationOne);
 		payment.setReservationCharges(Arrays.asList(reservationChargeOne));
-		payment.setPaymentType(PaymentType.Cash);
+		payment.setPaymentType(PaymentType.CASH);
 		invoiceService.savePayment(payment);
 		
 		//1 unpaid charge and 1 paid charge for the given reservation.
@@ -267,7 +267,7 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		Payment payment = new Payment();
 		payment.setReservation(reservationOne);
 		payment.setReservationCharges(Arrays.asList(reservationChargeOne));
-		payment.setPaymentType(PaymentType.Cash);
+		payment.setPaymentType(PaymentType.CASH);
 		invoiceService.savePayment(payment);
 		
 		assertEquals(1, invoiceService.getAllPaymentsForReservation(reservationOne).size());
@@ -308,15 +308,15 @@ public class InvoiceServiceTest extends BaseServiceTest {
 	@Test
 	public void testCRUDPayment() {
 		Payment payment = new Payment();
-		payment.setPaymentType(PaymentType.Cash);
+		payment.setPaymentType(PaymentType.CASH);
 		payment.setReservation(reservationOne);
 		payment.setReservationCharges(Arrays.asList(reservationChargeOne));
 		invoiceService.savePayment(payment);
 		
 		assertEquals(1, invoiceService.getAllPayments().size());
 		
-		payment.setPaymentType(PaymentType.Cash);
-		assertEquals(PaymentType.Cash, invoiceService.getAllPayments().get(0).getPaymentType());
+		payment.setPaymentType(PaymentType.CASH);
+		assertEquals(PaymentType.CASH, invoiceService.getAllPayments().get(0).getPaymentType());
 		
 		assertEquals(payment, invoiceService.getPaymentById(payment.getId()));
 		
@@ -360,7 +360,7 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		reservationOne.setFirstName("firstName");
 		reservationOne.setLastName("lastName");
 		reservationOne.setCreatedBy(user);
-		reservationOne.setReservationStatus(ReservationStatus.UpComing);
+		reservationOne.setReservationStatus(ReservationStatus.UP_COMING);
 		reservationOne.setStartDate(LocalDate.of(2018, Month.JANUARY, 4));
 		reservationOne.setEndDate(LocalDate.of(2018, Month.JANUARY, 6));
 		reservationOne.setRoomRates(new ArrayList<RoomRate>());
@@ -394,7 +394,7 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		reservationOne.setFirstName("firstName");
 		reservationOne.setLastName("lastName");
 		reservationOne.setCreatedBy(user);
-		reservationOne.setReservationStatus(ReservationStatus.UpComing);
+		reservationOne.setReservationStatus(ReservationStatus.UP_COMING);
 		reservationOne.setStartDate(LocalDate.of(2018, Month.JANUARY, 4));
 		reservationOne.setEndDate(LocalDate.of(2018, Month.JANUARY, 6));
 		reservationOne.setRoomRates(new ArrayList<RoomRate>());
@@ -428,7 +428,7 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		reservationTwo.setFirstName("firstName");
 		reservationTwo.setLastName("lastName");
 		reservationTwo.setCreatedBy(user);
-		reservationTwo.setReservationStatus(ReservationStatus.UpComing);
+		reservationTwo.setReservationStatus(ReservationStatus.UP_COMING);
 		reservationTwo.setStartDate(LocalDate.of(2018, Month.JANUARY, 6));
 		reservationTwo.setEndDate(LocalDate.of(2018, Month.JANUARY, 8));
 		reservationTwo.setRoomRates(new ArrayList<RoomRate>());

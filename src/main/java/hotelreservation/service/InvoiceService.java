@@ -3,7 +3,6 @@ package hotelreservation.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.IntStream;
 
 
 import org.slf4j.Logger;
@@ -49,7 +48,7 @@ public class InvoiceService {
 	public void saveReservationCharge(ReservationCharge charge) {
 		Reservation reservation = charge.getReservation();
 
-		if (reservation != null && !reservation.getReservationStatus().equals(ReservationStatus.InProgress)) {
+		if (reservation != null && !reservation.getReservationStatus().equals(ReservationStatus.IN_PROGRESS)) {
 			log.warn("Reservation: " + reservation.getId() + " was in wrong state to create charge: " + reservation.getReservationStatus());
 			throw new MissingOrInvalidArgumentException("Reservation in wrong status: " + reservation.getId() + " " + reservation.getReservationStatus());
 		}

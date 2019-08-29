@@ -66,7 +66,7 @@ public class InvoiceControllerTest  {
 		invoiceService.saveReservationCharge(reservationCharge);
 		
 		paymentDto = new PaymentDTO();
-		paymentDto.setPaymentType(PaymentType.Cash);
+		paymentDto.setPaymentType(PaymentType.CASH);
 		paymentDto.setReservationCharges(Arrays.asList(reservationCharge));
 	}
 		

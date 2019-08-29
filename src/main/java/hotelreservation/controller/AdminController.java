@@ -41,8 +41,8 @@ public class AdminController {
 		List<Reservation> findByStartDate = bookingService.getReservationsStartingToday();
 		model.addAttribute("reservationsStartingToday", findByStartDate);
 		
-		model.addAttribute("reservationsUpcoming", bookingService.getReservationsByStatus(ReservationStatus.UpComing).size());
-		List<Reservation> reservationsInProgress = bookingService.getReservationsByStatus(ReservationStatus.InProgress);
+		model.addAttribute("reservationsUpcoming", bookingService.getReservationsByStatus(ReservationStatus.UP_COMING).size());
+		List<Reservation> reservationsInProgress = bookingService.getReservationsByStatus(ReservationStatus.IN_PROGRESS);
 		model.addAttribute("reservationsCheckingOutToday", reservationsInProgress);
 		
 		//TODO handle different currencies

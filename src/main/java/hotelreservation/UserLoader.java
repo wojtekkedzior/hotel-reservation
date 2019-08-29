@@ -11,12 +11,10 @@ import org.springframework.stereotype.Component;
 @Profile("dev")
 public class UserLoader implements ApplicationListener<ContextRefreshedEvent> {
 
-	// Rename this class to UserLoader and make it so that it just loads the users as once the app is running we don't want to override all the users
-
 	@Override
 	@Transactional
 	public void onApplicationEvent(ContextRefreshedEvent event) {
-		
+		// Rename this class to UserLoader and make it so that it just loads the users as once the app is running we don't want to override all the users
 	}
 	
 }

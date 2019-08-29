@@ -132,8 +132,8 @@ public class BookingServiceTest extends BaseServiceTest {
 		standardRoomThree.setRoomAmenities(Arrays.asList(pillow));
 		roomService.saveRoom(standardRoomThree);
 
-		idOne = new Identification(IdType.IDCard, "oneIdNumber");
-		idTwo = new Identification(IdType.DriversLicense, "twoIdNumber");
+		idOne = new Identification(IdType.ID_CARD, "oneIdNumber");
+		idTwo = new Identification(IdType.DRIVERS_LICENSE, "twoIdNumber");
 
 		bookingService.createIdentification(idOne);
 		bookingService.createIdentification(idTwo);
@@ -154,7 +154,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		reservationOne.setFirstName("firstName");
 		reservationOne.setLastName("lastName");
 		reservationOne.setCreatedBy(user);
-		reservationOne.setReservationStatus(ReservationStatus.UpComing);
+		reservationOne.setReservationStatus(ReservationStatus.UP_COMING);
 		
 		roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2018, Month.JANUARY, 2));
 		roomRateThree = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2018, Month.JANUARY, 3));
@@ -201,7 +201,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		reservationOne.setLastName("lastName");
 		reservationTwo.setRoomRates(Arrays.asList(roomRateThree, roomRateFour));
 		reservationTwo.setCreatedBy(user);
-		reservationTwo.setReservationStatus(ReservationStatus.UpComing);
+		reservationTwo.setReservationStatus(ReservationStatus.UP_COMING);
 
 		reservationTwo.setStartDate(LocalDate.of(2018, Month.JANUARY, 3)); // day 3 overlaps
 		reservationTwo.setEndDate(LocalDate.of(2018, Month.JANUARY, 4));
@@ -232,7 +232,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		reservationOne.setLastName("lastName");
 		reservationTwo.setRoomRates(Arrays.asList(roomRateOne, roomRateTwo));
 		reservationTwo.setCreatedBy(user);
-		reservationTwo.setReservationStatus(ReservationStatus.UpComing);
+		reservationTwo.setReservationStatus(ReservationStatus.UP_COMING);
 
 		reservationTwo.setStartDate(LocalDate.of(2018, Month.JANUARY, 1)); // day 3 overlaps
 		reservationTwo.setEndDate(LocalDate.of(2018, Month.JANUARY, 2));
@@ -265,7 +265,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		reservationOne.setLastName("lastName");
 		reservationTwo.setRoomRates(Arrays.asList(roomRateOne, roomRateTwo, roomRateThree, roomRateFour));
 		reservationTwo.setCreatedBy(user);
-		reservationTwo.setReservationStatus(ReservationStatus.UpComing);
+		reservationTwo.setReservationStatus(ReservationStatus.UP_COMING);
 
 		reservationTwo.setStartDate(LocalDate.of(2018, Month.JANUARY, 1));
 		reservationTwo.setEndDate(LocalDate.of(2018, Month.JANUARY, 4));
@@ -370,7 +370,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		reservationTwo.setFirstName("firstName");
 		reservationTwo.setLastName("lastName");
 		reservationTwo.setCreatedBy(user);
-		reservationTwo.setReservationStatus(ReservationStatus.UpComing);
+		reservationTwo.setReservationStatus(ReservationStatus.UP_COMING);
 		reservationTwo.setStartDate(LocalDate.of(2018, Month.JANUARY, 16));
 		reservationTwo.setEndDate(LocalDate.of(2018, Month.JANUARY, 21));
 		reservationTwo.setRoomRates(Arrays.asList(roomRate16, roomRate17, roomRate18, roomRate19, roomRate20));
@@ -381,7 +381,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		reservationThree.setFirstName("firstName");
 		reservationThree.setLastName("lastName");
 		reservationThree.setCreatedBy(user);
-		reservationThree.setReservationStatus(ReservationStatus.UpComing);
+		reservationThree.setReservationStatus(ReservationStatus.UP_COMING);
 		reservationThree.setStartDate(LocalDate.of(2018, Month.JANUARY, 21));
 		reservationThree.setEndDate(LocalDate.of(2018, Month.FEBRUARY, 1));
 		reservationThree
@@ -393,7 +393,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		reservationFour.setFirstName("firstName");
 		reservationFour.setLastName("lastName");
 		reservationFour.setCreatedBy(user);
-		reservationFour.setReservationStatus(ReservationStatus.UpComing);
+		reservationFour.setReservationStatus(ReservationStatus.UP_COMING);
 		reservationFour.setStartDate(LocalDate.of(2018, Month.JANUARY, 1));
 		reservationFour.setEndDate(LocalDate.of(2018, Month.JANUARY, 4));
 		reservationFour.setRoomRates(Arrays.asList(roomRate1, roomRate2, roomRate3));
@@ -421,7 +421,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		reservationTwo.setFirstName("firstName");
 		reservationTwo.setLastName("lastName");
 		reservationTwo.setCreatedBy(user);
-		reservationTwo.setReservationStatus(ReservationStatus.UpComing);
+		reservationTwo.setReservationStatus(ReservationStatus.UP_COMING);
 		reservationTwo.setStartDate(LocalDate.of(2018, Month.JANUARY, 2));
 		reservationTwo.setEndDate(LocalDate.of(2018, Month.JANUARY, 7));
 		reservationTwo.setRoomRates(new ArrayList<RoomRate>());
@@ -429,7 +429,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		reservationThree.setFirstName("firstName");
 		reservationThree.setLastName("lastName");
 		reservationThree.setCreatedBy(user);
-		reservationThree.setReservationStatus(ReservationStatus.UpComing);
+		reservationThree.setReservationStatus(ReservationStatus.UP_COMING);
 		reservationThree.setStartDate(LocalDate.of(2018, Month.JANUARY, 10));
 		reservationThree.setEndDate(LocalDate.of(2018, Month.JANUARY, 21));
 		reservationThree.setRoomRates(new ArrayList<RoomRate>());
@@ -437,7 +437,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		reservationFour.setFirstName("firstName");
 		reservationFour.setLastName("lastName");
 		reservationFour.setCreatedBy(user);
-		reservationFour.setReservationStatus(ReservationStatus.UpComing);
+		reservationFour.setReservationStatus(ReservationStatus.UP_COMING);
 		reservationFour.setStartDate(LocalDate.of(2018, Month.JANUARY, 2));
 		reservationFour.setEndDate(LocalDate.of(2018, Month.JANUARY, 26));
 		reservationFour.setRoomRates(new ArrayList<RoomRate>());
@@ -553,7 +553,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		
 		bookingService.cancelReservation(cancellation);
 		
-		assertEquals(ReservationStatus.Cancelled, reservationOne.getReservationStatus());
+		assertEquals(ReservationStatus.CANCELLED, reservationOne.getReservationStatus());
 		availableRoomRates = roomService.getAvailableRoomRates(LocalDate.of(2018, Month.JANUARY, 2), LocalDate.of(2018, Month.JANUARY, 4));
 		
 		if(!availableRoomRates.contains(roomRateTwo) || !availableRoomRates.contains(roomRateThree)) {
@@ -839,7 +839,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		bookingService.saveReservation(reservationOne);
 		
 		bookingService.realiseReservation(reservationOne);
-		assertEquals(ReservationStatus.InProgress, reservationOne.getReservationStatus());
+		assertEquals(ReservationStatus.IN_PROGRESS, reservationOne.getReservationStatus());
 		
 		Charge chargeOne = new Charge(Currency.CZK, 100, "chargeOne", "chargeOneDesc");
 		
@@ -870,7 +870,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		bookingService.saveReservation(reservationOne);
 		
 		bookingService.realiseReservation(reservationOne);
-		assertEquals(ReservationStatus.InProgress, reservationOne.getReservationStatus());
+		assertEquals(ReservationStatus.IN_PROGRESS, reservationOne.getReservationStatus());
 		
 		Charge chargeOne = new Charge(Currency.CZK, 100, "chargeOne", "chargeOneDesc");
 		Charge chargeTwo = new Charge(Currency.CZK, 200, "chargeTwo", "chargeTwoDesc");
@@ -893,7 +893,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		
 		Payment payment = new Payment();
 		payment.setReservation(reservationOne);
-		payment.setPaymentType(PaymentType.Cash);
+		payment.setPaymentType(PaymentType.CASH);
 		payment.setReservationCharges(Arrays.asList(reservationChargeOne));
 		invoiceService.savePayment(payment);
 		
@@ -917,9 +917,9 @@ public class BookingServiceTest extends BaseServiceTest {
 		
 		bookingService.realiseReservation(reservationOne);
 		
-		assertEquals(ReservationStatus.InProgress, reservationOne.getReservationStatus());
+		assertEquals(ReservationStatus.IN_PROGRESS, reservationOne.getReservationStatus());
 		bookingService.fulfillReservation(Optional.of(Long.valueOf(reservationOne.getId()).intValue()));
-		assertEquals(ReservationStatus.Fulfilled, reservationOne.getReservationStatus());
+		assertEquals(ReservationStatus.FULFILLED, reservationOne.getReservationStatus());
 	}
 	
 	@Test
@@ -938,7 +938,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		bookingService.saveReservation(reservationOne);
 		
 		bookingService.realiseReservation(reservationOne);
-		assertEquals(ReservationStatus.InProgress, reservationOne.getReservationStatus());
+		assertEquals(ReservationStatus.IN_PROGRESS, reservationOne.getReservationStatus());
 		
 		Charge chargeOne = new Charge(Currency.CZK, 100, "chargeOne", "chargeOneDesc");
 		Charge chargeTwo = new Charge(Currency.CZK, 200, "chargeTwo", "chargeTwoDesc");
@@ -962,11 +962,11 @@ public class BookingServiceTest extends BaseServiceTest {
 		Payment payment = new Payment();
 		payment.setReservation(reservationOne);
 		payment.setReservationCharges(Arrays.asList(reservationChargeOne, reservationChargeTwo));
-		payment.setPaymentType(PaymentType.Cash);
+		payment.setPaymentType(PaymentType.CASH);
 		invoiceService.savePayment(payment);
 		
 		bookingService.fulfillReservation(Optional.of(Long.valueOf(reservationOne.getId()).intValue()));
-		assertEquals(ReservationStatus.Fulfilled, reservationOne.getReservationStatus());
+		assertEquals(ReservationStatus.FULFILLED, reservationOne.getReservationStatus());
 	}
 	
 	@Test(expected = MissingOrInvalidArgumentException.class)

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Immutable
-@NoArgsConstructor 
+@NoArgsConstructor
 @AllArgsConstructor
 public final class ReservationChargeDTO {
 

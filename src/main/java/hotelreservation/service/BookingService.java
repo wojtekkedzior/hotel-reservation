@@ -123,7 +123,7 @@ public class BookingService {
 			}
 		}
 		
-		reservation.setReservationStatus(ReservationStatus.UpComing);
+		reservation.setReservationStatus(ReservationStatus.UP_COMING);
 		
 		reservationRepo.save(reservation);
 	}
@@ -179,11 +179,11 @@ public class BookingService {
 		reservationCancellationRepo.save(reservationCancellation);
 		
 		switch (reservationCancellation.getReservation().getReservationStatus()) {
-		case UpComing:
-			reservationCancellation.getReservation().setReservationStatus(ReservationStatus.Cancelled);
+		case UP_COMING:
+			reservationCancellation.getReservation().setReservationStatus(ReservationStatus.CANCELLED);
 			break;
-		case InProgress:
-			reservationCancellation.getReservation().setReservationStatus(ReservationStatus.Abandoned);
+		case IN_PROGRESS:
+			reservationCancellation.getReservation().setReservationStatus(ReservationStatus.ABANDONED);
 			break;
 		default:
 			break;
@@ -198,7 +198,7 @@ public class BookingService {
 	public void realiseReservation(Reservation reservation) {
 		log.info("Realising reservation: " + reservation.getId());
 		
-		reservation.setReservationStatus(ReservationStatus.InProgress);
+		reservation.setReservationStatus(ReservationStatus.IN_PROGRESS);
 		reservationRepo.save(reservation);
 		
 		log.info("Realised reservation: " + reservation.getId());
@@ -213,7 +213,7 @@ public class BookingService {
 		
 		Reservation reservation = reservationRepo.findById(id).get();
 		
-		if(!reservation.getReservationStatus().equals(ReservationStatus.InProgress)) {
+		if(!reservation.getReservationStatus().equals(ReservationStatus.IN_PROGRESS)) {
 			throw new MissingOrInvalidArgumentException("Reservation in wrong state for fulfillment. Was: " + reservation.getReservationStatus());
 		}
 		
@@ -221,7 +221,7 @@ public class BookingService {
 			throw new MissingOrInvalidArgumentException("Not all reservation charges have been paid for." + reservation.getReservationStatus());
 		}
 		
-		reservation.setReservationStatus(ReservationStatus.Fulfilled);
+		reservation.setReservationStatus(ReservationStatus.FULFILLED);
 		reservationRepo.save(reservation);
 		
 		log.info("Fulfilled reservation: " + reservation.getId());
