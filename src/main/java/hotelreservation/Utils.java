@@ -14,30 +14,31 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Utils {
+	private static final String LOG_MESSAGE = "converted localDate: {} to: {}";
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	public Date asDate(LocalDate localDate) {
 		Date date = Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-		log.info("converted localDate: " + localDate + " to: " + date);
+		log.info(LOG_MESSAGE, localDate, date);
 		return date;
 	}
 
 	public Date asDate(LocalDateTime localDateTime) {
 		Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-		log.info("converted localDate: " + localDateTime + " to: " + date);
+		log.info(LOG_MESSAGE, localDateTime, date);
 		return date;
 	}
 
 	public LocalDate asLocalDate(Date date) {
-		LocalDate d = Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
-		log.info("converted localDate: " + d + " to: " + date);
-		return d;
+		LocalDate localDate = Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+		log.info(LOG_MESSAGE, date, localDate);
+		return localDate;
 	}
 
 	public LocalDateTime asLocalDateTime(Date date) {
-		LocalDateTime d = Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
-		log.info("converted localDate: " + d + " to: " + date);
-		return d;
+		LocalDateTime localDateTime = Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+		log.info(LOG_MESSAGE, date, localDateTime);
+		return localDateTime;
 	}
 
 	public <T> List<T> toList(final Iterable<T> iterable) {

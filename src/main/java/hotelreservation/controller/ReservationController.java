@@ -3,15 +3,7 @@ package hotelreservation.controller;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -47,6 +39,9 @@ import hotelreservation.service.RoomService;
 
 @Controller
 public class ReservationController {
+	public static final String RESERVATION = "reservation";
+	public static final String REDIRECT_DASHBOARD = "redirect:/dashboard";
+
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
@@ -61,9 +56,8 @@ public class ReservationController {
 	@Autowired
 	private InvoiceService invoiceService;
 	
-	// TODO figure out what is this for since I thought that dates worked prior to having this copied and pasted in.
 	@InitBinder
-	public void initBinder(WebDataBinder binder) {
+	protected void initBinder(WebDataBinder binder) {
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true, 10));
 	}
 
@@ -72,7 +66,7 @@ public class ReservationController {
 	public String addReservationModel(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<LocalDate> startDate,
 			@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<LocalDate> endDate, @PathVariable Optional<Integer> id, Model model) {
 		if (!id.isPresent()) {
-			model.addAttribute("reservation", new Reservation());
+			model.addAttribute(RESERVATION, new Reservation());
 			model.addAttribute("room", new Room());
 		} else {
 			Reservation reservation = bookingService.getReservation(id);
@@ -81,11 +75,7 @@ public class ReservationController {
 			Map<Room, List<RoomRate>> roomRatesAsMap = new HashMap<>();
 
 			for (RoomRate roomRate : reservation.getRoomRates()) {
-				if (roomRatesAsMap.containsKey(roomRate.getRoom())) {
-					roomRatesAsMap.get(roomRate.getRoom()).add(roomRate);
-				} else {
-					roomRatesAsMap.put(roomRate.getRoom(), new ArrayList<RoomRate>(Arrays.asList(roomRate)));
-				}
+				roomRatesAsMap.computeIfAbsent(roomRate.getRoom(), k -> new ArrayList<>()).add(roomRate);
 			}
 
 			model.addAttribute("roomRatesPerRoom", roomRatesAsMap);
@@ -109,14 +99,14 @@ public class ReservationController {
 		List<Integer> collect = roomRates.stream().map(r -> r.getRoom().getRoomNumber()).collect(Collectors.toList());
 		model.addAttribute("roomNumbers", collect);
 		
-		return "reservation";
+		return RESERVATION;
 	}
 
 	@GetMapping(value = { "/realiseReservation/{id}" })
 	@PreAuthorize("hasAuthority('realiseReservation')")
 	public String getRealiseReservation(@PathVariable Optional<Integer> id, Model model) {
 		Reservation reservation = bookingService.getReservation(id);
-		model.addAttribute("reservation", reservation);
+		model.addAttribute(RESERVATION, reservation);
 
 		Guest guest = new Guest();
 		guest.setContact(new Contact());
@@ -145,7 +135,7 @@ public class ReservationController {
 	@PreAuthorize("hasAuthority('cancelReservation')")
 	public String cancelReservation(@PathVariable Optional<Integer> id, Model model) {
 		Reservation reservation = bookingService.getReservation(id);
-		model.addAttribute("reservation", reservation);
+		model.addAttribute(RESERVATION, reservation);
 
 		if (reservation.getReservationStatus().equals(ReservationStatus.CANCELLED)) {
 			//To be implemented
@@ -174,7 +164,7 @@ public class ReservationController {
 		log.info("loading checkout Reservation");
 
 		Reservation reservation = bookingService.getReservation(id);
-		model.addAttribute("reservation", reservation);
+		model.addAttribute(RESERVATION, reservation);
 		model.addAttribute("reservationCheckout", new ReservationCheckout());
 		model.addAttribute("reservationPayments", invoiceService.getAllPaymentsForReservation(reservation));
 		model.addAttribute("charges", invoiceService.getAllCharges());
@@ -227,14 +217,14 @@ public class ReservationController {
 
 		bookingService.realiseReservation(reservation);
 
-		return new ModelAndView("redirect:/dashboard");
+		return new ModelAndView(REDIRECT_DASHBOARD);
 	}
 
 	@PostMapping("/reservation")
 	@PreAuthorize("hasAuthority('createReservation')")
 	public ModelAndView saveReservation(@Valid @ModelAttribute Reservation reservation, @RequestParam List<Long> roomRateIds) { //TODO ensure this is provided
 		bookingService.saveReservationAndValidateRoomRates(reservation, roomRateIds);
-		return new ModelAndView("redirect:/dashboard");
+		return new ModelAndView(REDIRECT_DASHBOARD);
 	}
 
 	// TODO only super-admin type user should be able to fully delete a reservation. Move to super admin controller? 
@@ -242,7 +232,6 @@ public class ReservationController {
 	@PreAuthorize("hasAuthority('deleteReservation')")
 	public ModelAndView deleteReservation(@PathVariable Optional<Integer> id) {
 		if (id.isPresent()) {
-			// bookingService.deleteUser(new Long(id.get()));
 		}
 		return new ModelAndView("redirect:/reservation");
 	}
@@ -251,7 +240,7 @@ public class ReservationController {
 	@PreAuthorize("hasAuthority('realiseReservation')")
 	public ModelAndView deleteGuest(@PathVariable Optional<Integer> guestId,  @PathVariable Optional<Integer> reservationId) {
 		if (guestId.isPresent()) {
-			log.info("deleting guest: " + guestId.get() + " from reservation: " + reservationId);
+			log.info("deleting guest: {} from reservation: {}", guestId.get(), reservationId);
 			Guest guestToDelete = guestService.getGuestById(guestId.get());
 			Reservation resFromDB = bookingService.getReservation(reservationId);
 			
@@ -277,7 +266,7 @@ public class ReservationController {
 		reservationCancellation.setReservation(resFromDB);
 		bookingService.cancelReservation(reservationCancellation);
 
-		return new ModelAndView("redirect:/dashboard");
+		return new ModelAndView(REDIRECT_DASHBOARD);
 	}
 
 	@PostMapping("/fulfillReservation/{reservationID}")
@@ -285,6 +274,6 @@ public class ReservationController {
 	public ModelAndView fulfillReservation(@PathVariable Optional<Integer> reservationID) {
 		bookingService.fulfillReservation(reservationID);
 
-		return new ModelAndView("redirect:/dashboard");
+		return new ModelAndView(REDIRECT_DASHBOARD);
 	}
 }

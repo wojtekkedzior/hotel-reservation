@@ -91,13 +91,14 @@ public class RoomService {
 			findByDayBetween = roomRateRepo.findByDayBetween(start, end.minus(Period.ofDays(1)));
 		}
 		
-		log.info("Looking for all RoomRates between: " + start + " and: " + end + ". Found: " + findByDayBetween.size());
+		log.info("Looking for all RoomRates between: {} and: {} -  Found: {}", start, end, findByDayBetween.size());
+
 		return findByDayBetween;
 	}
 	
 	public List<RoomRate> getRoomRates(Room room, LocalDate start, LocalDate end) {
 		List<RoomRate> findByStartDateBetween = roomRateRepo.findByRoomIdAndDayBetween(room.getId(), start, end);
-		log.info("Looking for all RoomRates between: " + start + " and: " + end + " for Room: " + room.getId() + " . Found: " + findByStartDateBetween.size());
+		log.info("Looking for all RoomRates between: {} and: {} for Room: {} - Found: {}", start, end, room.getId(), findByStartDateBetween.size());
 		return findByStartDateBetween;
 	}
 	
@@ -132,7 +133,7 @@ public class RoomService {
 	}
 	
 	public Amenity getAmenityById(long id) {
-		log.info("Looking for Amenity with ID: " + id);
+		log.info("Looking for Amenity with ID: {}", id);
 		return amenityRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
 	}
 	
@@ -153,7 +154,7 @@ public class RoomService {
 	}
 	
 	public AmenityType getAmenityTypeById(long id) {
-		log.info("Looking for AmenityType with ID: " + id);
+		log.info("Looking for AmenityType with ID: {}", id);
 		return amenityTypeRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
 	}
 	
@@ -175,7 +176,7 @@ public class RoomService {
 	}
 	
 	public Room getRoomById(long id) {
-		log.info("Looking for Room with ID: " + id);
+		log.info("Looking for Room with ID: {}", id);
 		return roomRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
 	}
 	
@@ -203,7 +204,7 @@ public class RoomService {
 	}
 	
 	public RoomType getRoomTypeById(long id) {
-		log.info("Looking for RoomType with ID: " + id);
+		log.info("Looking for RoomType with ID: {}", id);
 		return roomTypeRepo.findById(Long.valueOf(id)).orElseThrow(() -> new NotFoundException(id));
 	}
 	
@@ -224,7 +225,7 @@ public class RoomService {
 	}
 
 	public RoomRate getRoomRateById(long id) {
-		log.info("Looking for RoomRate with ID: " + id);
+		log.info("Looking for RoomRate with ID: {}", id);
 		return roomRateRepo.findById(Long.valueOf(id)).orElseThrow(() -> new NotFoundException(id));
 	}
 
@@ -245,7 +246,7 @@ public class RoomService {
 	}
 	
 	public Status getStatusById(long id) {
-		log.info("Looking for Status with ID: " + id);
+		log.info("Looking for Status with ID: {} ", id);
 		return statusRepo.findById(Long.valueOf(id)).orElseThrow(() -> new NotFoundException(id));
 	}
 
@@ -289,10 +290,10 @@ public class RoomService {
 			.collect(Collectors.groupingBy(RoomRate::getRoom, TreeMap::new, Collectors.toList()));
 		
 		for (int i = 0; i < daysBetween;  i++) {
-			for (Room room : roomRatesPerRoom.keySet()) {
+			for (Map.Entry<Room, List<RoomRate>> room : roomRatesPerRoom.entrySet()) {
 				boolean roomRateFound = false;
 				
-				for (RoomRate roomRate : roomRatesPerRoom.get(room)) {
+				for (RoomRate roomRate : roomRatesPerRoom.get(room.getKey())) {
 					if (roomRate.getDay().isEqual(start)) {
 						roomRatesAsMapByDates.computeIfAbsent(start, k -> new LinkedList<>()).add(roomRate);
 						roomRateFound = true;
