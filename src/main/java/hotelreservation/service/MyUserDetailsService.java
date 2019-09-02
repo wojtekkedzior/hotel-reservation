@@ -30,15 +30,15 @@ public class MyUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-		log.info("Login attempt for user: " + userName);
+		log.info("Login attempt for user: {}", userName);
 		User user = userService.getUserByName(userName);
-		log.info("User: " + userName + " found");
+		log.info("User: {} found. ", userName);
 		
 		List<GrantedAuthority> grantedAuthorities = getAuthorities(user.getRoles());
 		user.getRoles().stream().forEach(t -> grantedAuthorities.add(new SimpleGrantedAuthority(t.getName())));
 		
 		if(log.isDebugEnabled()) {
-			log.info("User: " + userName + " found and has the following authorities: " + grantedAuthorities);
+			log.info("User: {} found and has the following authorities: {}", userName, grantedAuthorities);
 		}
 		
 		return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), user.isEnabled(), true, true, true, grantedAuthorities);

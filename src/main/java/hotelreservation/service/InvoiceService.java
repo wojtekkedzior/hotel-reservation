@@ -49,7 +49,7 @@ public class InvoiceService {
 		Reservation reservation = charge.getReservation();
 
 		if (reservation != null && !reservation.getReservationStatus().equals(ReservationStatus.IN_PROGRESS)) {
-			log.warn("Reservation: " + reservation.getId() + " was in wrong state to create charge: " + reservation.getReservationStatus());
+			log.warn("Reservation:{} was in wrong state to create charge: {}", reservation.getId(), reservation.getReservationStatus());
 			throw new MissingOrInvalidArgumentException("Reservation in wrong status: " + reservation.getId() + " " + reservation.getReservationStatus());
 		}
 
@@ -57,9 +57,9 @@ public class InvoiceService {
 	}
 
 	public void savePayment(Payment payment) {
-		log.info("Saving payment: " + payment.getId());
+		log.info("Saving payment: {}", payment.getId());
 		paymentRepo.save(payment);
-		log.info("Payment saved: " + payment.getId());
+		log.info("Payment saved: {}", payment.getId());
 	}
 
 	public List<Charge> getAllCharges() {
@@ -75,17 +75,17 @@ public class InvoiceService {
 	}
 
 	public Charge getChargeById(long id) {
-		log.info("Looking for Charge with ID: " + id);
+		log.info("Looking for Charge with ID: {}", id);
 		return chargeRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
 	}
 
 	public ReservationCharge getReservationChargeById(long id) {
-		log.info("Looking for ReservationCharge with ID: " + id);
+		log.info("Looking for ReservationCharge with ID: {}", id);
 		return reservationChargeRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
 	}
 
 	public Payment getPaymentById(long id) {
-		log.info("Looking for Payment with ID: " + id);
+		log.info("Looking for Payment with ID: {}", id);
 		return paymentRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
 	}
 

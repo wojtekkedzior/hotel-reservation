@@ -113,7 +113,6 @@ public class RoomService {
 			}
 		}
 
-
 		return availableRoomRates;
 	}
 
@@ -283,32 +282,27 @@ public class RoomService {
 		Map<LocalDate, List<RoomRate>> roomRatesAsMapByDates = new TreeMap<>(); 
 		List<RoomRate> availableRoomRates = getAvailableRoomRates(start, end); //this method is wrong. for the 13th to the 15th it should only return rates for the 13th and 14th
 
-		long daysBetween = ChronoUnit.DAYS.between(start, end);
-		
-		Map<Room, List<RoomRate>> roomRatesPerRoom = availableRoomRates
-			.stream()
+		Map<Room, List<RoomRate>> roomRatesPerRoom = availableRoomRates.stream()
 			.collect(Collectors.groupingBy(RoomRate::getRoom, TreeMap::new, Collectors.toList()));
-		
-		for (int i = 0; i < daysBetween;  i++) {
+
+		start.datesUntil(end).forEach(day -> {
 			for (Map.Entry<Room, List<RoomRate>> room : roomRatesPerRoom.entrySet()) {
 				boolean roomRateFound = false;
-				
+
 				for (RoomRate roomRate : roomRatesPerRoom.get(room.getKey())) {
-					if (roomRate.getDay().isEqual(start)) {
-						roomRatesAsMapByDates.computeIfAbsent(start, k -> new LinkedList<>()).add(roomRate);
+					if (roomRate.getDay().isEqual(day)) {
+						roomRatesAsMapByDates.computeIfAbsent(day, k -> new LinkedList<>()).add(roomRate);
 						roomRateFound = true;
 						break;
 					}
 				}
 
 				if (!roomRateFound) {
-					roomRatesAsMapByDates.computeIfAbsent(start, k -> new LinkedList<>()).add(null);
+					roomRatesAsMapByDates.computeIfAbsent(day, k -> new LinkedList<>()).add(null);
 				}
 			}
-			
-			start = start.plus(1, ChronoUnit.DAYS);
-		}
-		
+		});
+
 		return roomRatesAsMapByDates;
 	}
 }

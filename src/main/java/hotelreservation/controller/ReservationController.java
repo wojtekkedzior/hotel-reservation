@@ -70,7 +70,7 @@ public class ReservationController {
 			model.addAttribute("room", new Room());
 		} else {
 			Reservation reservation = bookingService.getReservation(id);
-			model.addAttribute("reservation", reservation == null ? new Reservation() : reservation);
+			model.addAttribute(RESERVATION, reservation == null ? new Reservation() : reservation);
 
 			Map<Room, List<RoomRate>> roomRatesAsMap = new HashMap<>();
 
@@ -227,11 +227,12 @@ public class ReservationController {
 		return new ModelAndView(REDIRECT_DASHBOARD);
 	}
 
-	// TODO only super-admin type user should be able to fully delete a reservation. Move to super admin controller? 
 	@DeleteMapping(value = "/reservationDelete/{id}")
 	@PreAuthorize("hasAuthority('deleteReservation')")
-	public ModelAndView deleteReservation(@PathVariable Optional<Integer> id) {
-		if (id.isPresent()) {
+	public ModelAndView deleteReservation(@PathVariable Optional<Integer> reservationId) {
+		if (reservationId.isPresent()) {
+			log.info("deleting reservation: {}", reservationId);
+			throw new IllegalArgumentException("only a super user can do this");
 		}
 		return new ModelAndView("redirect:/reservation");
 	}

@@ -147,9 +147,9 @@ public class BookingService {
 			throw new MissingOrInvalidArgumentException("Missing reservation id.");
 		}
 		
-		log.info("Getting resrvation: " + reservationId.get());
+		log.info("Getting reservation: {}", reservationId.get());
 		Reservation reservation = reservationRepo.findById(Long.valueOf(reservationId.get())).orElseThrow(() -> new NotFoundException(reservationId.get()));
-		log.info("Got reservation: " + reservation.getId());
+		log.info("Got reservation: {}", reservation.getId());
 		
 		return reservation;
 	}
@@ -160,13 +160,13 @@ public class BookingService {
 
 	public void deleteReservation(Reservation reservation) {
 		if(!reservationRepo.existsById(reservation.getId())) {
-			log.warn("Can't delete reservation that doesn't exist: " + reservation.getId());
+			log.warn("Can't delete reservation that doesn't exist: {}", reservation.getId());
 			throw new NotDeletedException(reservation.getId());
 		}
 
-		log.info("Delete reservation: " + reservation.getId());
+		log.info("Delete reservation: {}", reservation.getId());
 		reservationRepo.delete(reservation);
-		log.info("Deleted reservation: " + reservation.getId());
+		log.info("Deleted reservation: {}", reservation.getId());
 	}
 
 	public List<Reservation> getReservationsByStatus(ReservationStatus reservationStatus) {
@@ -174,7 +174,7 @@ public class BookingService {
 	}
 	
 	public void cancelReservation(ReservationCancellation reservationCancellation) {
-		log.info("Cancelling reservation: " + reservationCancellation.getReservation().getId());
+		log.info("Cancelling reservation: {}", reservationCancellation.getReservation().getId());
 		
 		reservationCancellationRepo.save(reservationCancellation);
 		
@@ -192,16 +192,16 @@ public class BookingService {
 		reservationCancellation.getReservation().setRoomRates(null);
 		reservationRepo.save(reservationCancellation.getReservation());
 		
-		log.info("Cancelled reservation: " + reservationCancellation.getReservation().getId());
+		log.info("Cancelled reservation: {}", reservationCancellation.getReservation().getId());
 	}
 
 	public void realiseReservation(Reservation reservation) {
-		log.info("Realising reservation: " + reservation.getId());
+		log.info("Realising reservation: {}", reservation.getId());
 		
 		reservation.setReservationStatus(ReservationStatus.IN_PROGRESS);
 		reservationRepo.save(reservation);
 		
-		log.info("Realised reservation: " + reservation.getId());
+		log.info("Realised reservation: {}", reservation.getId());
 	}
 
 	public void fulfillReservation(Optional<Integer> reservationID) {
@@ -224,7 +224,7 @@ public class BookingService {
 		reservation.setReservationStatus(ReservationStatus.FULFILLED);
 		reservationRepo.save(reservation);
 		
-		log.info("Fulfilled reservation: " + reservation.getId());
+		log.info("Fulfilled reservation: {}", reservation.getId());
 	}
 
 	public long getReservationCount() {

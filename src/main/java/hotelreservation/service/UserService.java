@@ -87,12 +87,12 @@ public class UserService {
 	}
 
 	public User getUserById(Integer id) {
-		log.info("Looking for User with ID: " + id);
+		log.info("Looking for User with ID: {}", id);
 		return userRepo.findById(Long.valueOf(id)).orElseThrow(() -> new NotFoundException(id));
 	}
 	
 	public Role getRoleById(Integer id) {
-		log.info("Looking for Role with ID: " + id);
+		log.info("Looking for Role with ID: {}", id);
 		return roleRepo.findById(Long.valueOf(id)).orElseThrow(() -> new NotFoundException(id));
 	}
 	

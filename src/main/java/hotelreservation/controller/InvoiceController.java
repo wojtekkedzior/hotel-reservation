@@ -59,7 +59,7 @@ public class InvoiceController {
 	@PostMapping("/createPayment/{reservationId}")
 	@PreAuthorize("hasAuthority('createPayment')")
 	public ModelAndView createPayment(@Valid @ModelAttribute PaymentDTO paymentDto,  @PathVariable Optional<Integer> reservationId) {
-		log.info("creating payment for reservation: " + reservationId);
+		log.info("creating payment for reservation: {}", reservationId);
 		
 		Payment payment = new Payment();
 		payment.setPaymentDate(LocalDateTime.now());
@@ -73,11 +73,6 @@ public class InvoiceController {
 
 		invoiceService.savePayment(payment);
 		
-		//TODO use credit card in reservation?
-		// gather all payment details and call createpayment.  if successful generate invoice and show 'show invoice' button to download/display the invoice
-		//payment needs to have any extra costs
-
-
 		StringBuilder viewName = new StringBuilder("redirect:/checkoutReservation/" );
 
 		if(reservationId.isPresent()) {
@@ -90,7 +85,8 @@ public class InvoiceController {
 	@PostMapping("/addChargeToReservation/{reservationId}")
 	@PreAuthorize("hasAuthority('checkoutReservation')")
 	public ModelAndView addChargeToReservation(@Valid @ModelAttribute ReservationChargeDTO reservationChargeDto, @PathVariable Optional<Integer> reservationId) {
-		
+		log.info("adding charge to reservation: {}", reservationId);
+
 		ReservationCharge reservationCharge = new ReservationCharge();
 		Reservation reservation = bookingService.getReservation(reservationId);
 		reservationCharge.setReservation(reservation);

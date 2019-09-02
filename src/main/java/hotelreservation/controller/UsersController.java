@@ -39,7 +39,7 @@ public class UsersController {
 			} else {
 				model.addAttribute("user", user);
 			}
-			log.info("getting user: " + user);
+			log.info("getting user: {}", user);
 		}
 
 		model.addAttribute("role", new Role()); //TODO this will be a multi select so have to select all available roles
@@ -56,9 +56,9 @@ public class UsersController {
 	@PostMapping("/adduser")
 	@PreAuthorize("hasAuthority('createUser')")
 	public ModelAndView addUser(@Valid @ModelAttribute User user) {
-		log.info("creating user: " + user);
+		log.info("creating user: {}", user);
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		log.info("Authenticated user:  " + authentication + " is creating: " + user);
+		log.info("Authenticated user: {} is creating: {}", authentication, user);
 		
 		userService.saveUser(user, authentication.getName());
 		return new ModelAndView("redirect:/user/" + user.getId());
@@ -71,7 +71,7 @@ public class UsersController {
 	@DeleteMapping(value="/userDelete/{id}")
 	@PreAuthorize("hasAuthority('deleteUser')")
 	public ModelAndView deleteUser(@PathVariable Optional<Integer> id) {
-		log.info("deleting user: " + id);
+		log.info("deleting user: {}", id);
 		if(id.isPresent()) {
 			User userById = userService.getUserById(id.get());
 			userService.deleteUser(userById);
