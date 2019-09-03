@@ -98,17 +98,17 @@ public class BookingService {
 		}
 		
 		Map<LocalDate, RoomRate> roomRatesAsMap = new HashMap<>();
-		
-		for (RoomRate roomRate : roomRates) {
+
+		roomRates.stream().forEach(roomRate -> {
 			roomRatesAsMap.put(roomRate.getDay(), roomRate);
-		}
-		
-		for (int i = 1; i < roomRates.size(); i++) {
-			if(!roomRatesAsMap.containsKey(reservation.getStartDate().plusDays(1))) {
+		});
+
+		roomRates.stream().forEach(roomRate -> {
+			if(!roomRatesAsMap.containsKey(roomRate.getDay())) {
 				throw new MissingOrInvalidArgumentException("Should not be able to save a reservation with non-sequential room rate dates");
 			}
-		}
-		
+		});
+
 		//Check if roomRates are available
 		List<Reservation> findInProgressAndUpComingReservations = reservationRepo.findInProgressAndUpComingReservations();
 		removeReservationIfPresent(reservation, findInProgressAndUpComingReservations);
