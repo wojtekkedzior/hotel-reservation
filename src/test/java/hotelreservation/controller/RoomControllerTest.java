@@ -150,4 +150,71 @@ public class RoomControllerTest {
 		mvc.perform(get("/roomType/1")).andExpect(status().isForbidden());
 		mvc.perform(get("/roomRate/1")).andExpect(status().isForbidden());
 	}
+
+	@Test
+	@WithUserDetails("admin")
+	public void testGetAmenityWithNoId() throws Exception {
+		mvc.perform(get("/amenity/")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("admin")
+	public void testGetAmenity() throws Exception {
+		mvc.perform(get("/amenity/1")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("admin")
+	public void testGetAmenityTypeWithNoId() throws Exception {
+		mvc.perform(get("/amenityType/")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("admin")
+	public void testGetAmenityType() throws Exception {
+		mvc.perform(get("/amenityType/1")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("admin")
+	public void testGetRoomWithNoId() throws Exception {
+		mvc.perform(get("/room/")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("admin")
+	public void testGetRoom() throws Exception {
+		mvc.perform(get("/room/1")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("manager")
+	public void testGetRoomWRateWithNoId() throws Exception {
+		mvc.perform(get("/roomRate/")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("manager")
+	public void testGetRoomRate() throws Exception {
+		mvc.perform(get("/roomRate/1")).andExpect(status().isOk());
+	}
+
+//	@Test
+//	@WithUserDetails("manager")
+//	public void testDeleteAmenityWithNoId() throws Exception {
+//		mvc.perform(delete("/amenityDelete/")).andExpect(status().is3xxRedirection());
+//	}
+//
+//	@Test
+//	@WithUserDetails("manager")
+//	public void testDeleteAmenityTypeWithNoId() throws Exception {
+//		mvc.perform(delete("/amenityTypeDelete/")).andExpect(status().is3xxRedirection());
+//	}
+//
+//	@Test
+//	@WithUserDetails("admin")
+//	public void testDeleteRoomWithNoId() throws Exception {
+//		mvc.perform(delete("/roomRate/")).andExpect(status().is3xxRedirection());
+//	}
+
 }

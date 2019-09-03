@@ -1,6 +1,7 @@
 package hotelreservation.controller;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Optional;
@@ -27,6 +28,11 @@ import hotelreservation.service.RoomService;
 @Controller
 public class RoomController {
 
+	private static final String AMENITY = "amenity";
+	private static final String AMENITY_TYPE = "amenityType";
+	private static final String ROOM_RATE = "roomRate";
+	private static final String ROOM_TYPE = "roomType";
+	private static final String ROOM = "room";
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
@@ -35,36 +41,36 @@ public class RoomController {
 	@GetMapping(value = { "/amenity", "/amenity/{id}" })
 	@PreAuthorize("hasAuthority('createAmenity')")
 	public String getAmenityModel(Model model, @PathVariable Optional<Integer> id) {
-		log.info("Getting Amenity with id: " + id);
-		
+		log.info("Getting Amenity with id: {}", id);
+
 		if (!id.isPresent()) {
-			model.addAttribute("amenity", new Amenity());
-			model.addAttribute("amenityType", new AmenityType());
+			model.addAttribute(AMENITY, new Amenity());
+			model.addAttribute(AMENITY_TYPE, new AmenityType());
 		} else {
 			Amenity amenityById = roomService.getAmenityById(id.get());
-			model.addAttribute("amenity", amenityById);
-			model.addAttribute("amenityType", amenityById.getAmenityType());
+			model.addAttribute(AMENITY, amenityById);
+			model.addAttribute(AMENITY_TYPE, amenityById.getAmenityType());
 		}
 
 		addAmenityAttributes(model);
 
-		return "amenity";
+		return AMENITY;
 	}
 
 	@GetMapping(value = { "/amenityType", "/amenityType/{id}" })
 	@PreAuthorize("hasAuthority('createAmenityType')")
 	public String getAmenityTypeModel(Model model, @PathVariable Optional<Integer> id) {
 		if (!id.isPresent()) {
-			model.addAttribute("amenityType", new AmenityType());
+			model.addAttribute(AMENITY_TYPE, new AmenityType());
 		} else {
 			AmenityType amenityTypeById = roomService.getAmenityTypeById(id.get());
-			model.addAttribute("amenityType", amenityTypeById == null ? new AmenityType() : amenityTypeById);
+			model.addAttribute(AMENITY_TYPE, amenityTypeById == null ? new AmenityType() : amenityTypeById);
 		}
 
-		model.addAttribute("amenity", new Amenity());
+		model.addAttribute(AMENITY, new Amenity());
 		addAmenityAttributes(model);
 
-		return "amenity";
+		return AMENITY;
 	}
 
 	private void addAmenityAttributes(Model model) {
@@ -76,35 +82,35 @@ public class RoomController {
 	@PreAuthorize("hasAuthority('createRoom')")
 	public String roomModel(@PathVariable Optional<Integer> id, Model model) {
 		if (!id.isPresent()) {
-			model.addAttribute("room", new Room());
+			model.addAttribute(ROOM, new Room());
 		} else {
 			Room room = roomService.getRoomById(id.get());
-			model.addAttribute("room", room == null ? new Room() : room);
+			model.addAttribute(ROOM, room == null ? new Room() : room);
 		}
 
-		model.addAttribute("roomType", new RoomType());
-		addRoomAttribbutes(model);
+		model.addAttribute(ROOM_TYPE, new RoomType());
+		addRoomAttributes(model);
 
-		return "room";
+		return ROOM;
 	}
 
 	@GetMapping(value = { "/roomType", "/roomType/{id}" })
 	@PreAuthorize("hasAuthority('createRoomType')")
 	public String roomTypeModel(Model model, @PathVariable Optional<Integer> id) {
 		if (!id.isPresent()) {
-			model.addAttribute("roomType", new RoomType());
+			model.addAttribute(ROOM_TYPE, new RoomType());
 		} else {
 			RoomType roomType = roomService.getRoomTypeById(id.get());
-			model.addAttribute("roomType", roomType == null ? new RoomType() : roomType);
+			model.addAttribute(ROOM_TYPE, roomType == null ? new RoomType() : roomType);
 		}
 
-		model.addAttribute("room", new Room());
-		addRoomAttribbutes(model);
+		model.addAttribute(ROOM, new Room());
+		addRoomAttributes(model);
 
-		return "room";
+		return ROOM;
 	}
 
-	private void addRoomAttribbutes(Model model) {
+	private void addRoomAttributes(Model model) {
 		model.addAttribute("rooms", roomService.getAllRooms());
 		model.addAttribute("roomTypes", roomService.getAllRoomTypes());
 		model.addAttribute("amenities", roomService.getRoomAmenities());
@@ -115,22 +121,16 @@ public class RoomController {
 	@PreAuthorize("hasAuthority('createRoomRate')")
 	public String addRoomRateModel(@PathVariable Optional<Integer> id, Model model) {
 		if (!id.isPresent()) {
-			model.addAttribute("roomRate", new RoomRate());
+			model.addAttribute(ROOM_RATE, new RoomRate());
 		} else {
 			RoomRate roomRate = roomService.getRoomRateById(id.get());
-			model.addAttribute("roomRate", roomRate == null ? new RoomRate() : roomRate);
+			model.addAttribute(ROOM_RATE, roomRate == null ? new RoomRate() : roomRate);
 		}
 
-		Calendar cal = new GregorianCalendar();
-		cal.add(Calendar.DAY_OF_YEAR, 30);
-
-		LocalDate start = LocalDate.now();
-		LocalDate end = LocalDate.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
-
-		model.addAttribute("roomRates", roomService.getRoomRates(start, end));
+		model.addAttribute("roomRates", roomService.getRoomRates(LocalDate.now(), LocalDate.now().plus(30, ChronoUnit.DAYS)));
 		model.addAttribute("rooms", roomService.getAllRooms());
 		model.addAttribute("currencies", Currency.values());
-		return "roomRate";
+		return ROOM_RATE;
 	}
 
 	@PostMapping("/addAmenityType")

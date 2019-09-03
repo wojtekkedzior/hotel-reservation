@@ -174,4 +174,11 @@ public class ReservationControllerTest {
 		mvc.perform(post("/reservation/").flashAttr("reservation", applicationStartup.reservationOne).param("roomRateIds", "123,123"))
 				.andExpect(status().is4xxClientError());
 	}
+
+	@Test
+	@WithUserDetails("manager")
+	public void testGetReservationWithNoId() throws Exception {
+		mvc.perform(get("/reservation/")).andExpect(status().isOk());
+	}
+
 }
