@@ -76,9 +76,7 @@ public class BookingService {
 	}
 
 	public void saveReservation(Reservation reservation) {
-		if(reservation.getStartDate() == null || reservation.getEndDate() == null) {
-			throw new MissingOrInvalidArgumentException("Start and/or end dates cannot be empty");
-		} else if(reservation.getStartDate().isAfter(reservation.getEndDate())) {
+		if(reservation.getStartDate() == null || reservation.getEndDate() == null || reservation.getStartDate().isAfter(reservation.getEndDate())) {
 			throw new MissingOrInvalidArgumentException("Start and/or end dates cannot be empty");
 		}
 		
@@ -99,7 +97,7 @@ public class BookingService {
 			throw new MissingOrInvalidArgumentException("Not enough rates for the given time frame");
 		}
 		
-		Map<LocalDate, RoomRate> roomRatesAsMap = new HashMap<LocalDate, RoomRate>();
+		Map<LocalDate, RoomRate> roomRatesAsMap = new HashMap<>();
 		
 		for (RoomRate roomRate : roomRates) {
 			roomRatesAsMap.put(roomRate.getDay(), roomRate);
@@ -211,8 +209,8 @@ public class BookingService {
 			throw new NotFoundException("Reservation fulfillment reservation is missing. ID " + id);
 		}
 		
-		Reservation reservation = reservationRepo.findById(id).get();
-		
+		Reservation reservation = reservationRepo.findById(id).orElseThrow( () -> new MissingOrInvalidArgumentException("Missing reservation for id: {}" + id));
+
 		if(!reservation.getReservationStatus().equals(ReservationStatus.IN_PROGRESS)) {
 			throw new MissingOrInvalidArgumentException("Reservation in wrong state for fulfillment. Was: " + reservation.getReservationStatus());
 		}
