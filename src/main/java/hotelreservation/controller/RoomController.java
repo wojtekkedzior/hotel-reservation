@@ -1,13 +1,8 @@
 package hotelreservation.controller;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Optional;
-
-import javax.validation.Valid;
-
+import hotelreservation.model.*;
+import hotelreservation.model.enums.Currency;
+import hotelreservation.service.RoomService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +12,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import hotelreservation.model.Amenity;
-import hotelreservation.model.AmenityType;
-import hotelreservation.model.Room;
-import hotelreservation.model.RoomRate;
-import hotelreservation.model.RoomType;
-import hotelreservation.model.enums.Currency;
-import hotelreservation.service.RoomService;
+import javax.validation.Valid;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 @Controller
 public class RoomController {

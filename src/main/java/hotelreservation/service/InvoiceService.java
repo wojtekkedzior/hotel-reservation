@@ -98,7 +98,7 @@ public class InvoiceService {
 	}
 
 	public List<ReservationCharge> getOutstandingCharges(Reservation reservation) {
-		List<ReservationCharge> charges = new ArrayList<ReservationCharge>();
+		List<ReservationCharge> charges = new ArrayList<>();
 
 		for (ReservationCharge reservationCharge : getAllReservationChargesForAReservation(reservation)) {
 			Payment payment = paymentRepo.findByReservationAndReservationCharges(reservation, reservationCharge);
@@ -137,13 +137,13 @@ public class InvoiceService {
 	}
 
 	public long getTotalOfOutstandingCharges(List<Reservation> reservationsInProgress) {
-		final AtomicReference<Long> reference = new AtomicReference<>(0l);
+		final AtomicReference<Long> reference = new AtomicReference<>(0L);
 
-		reservationsInProgress.stream().forEach(reservation -> {
+		reservationsInProgress.forEach(reservation ->
 			reference.accumulateAndGet(getOutstandingCharges(reservation).stream()
 					.mapToLong(x -> x.getQuantity() * x.getCharge().getValue())
-					.sum(), (l1, l2) -> Math.addExact(l1, l2));
-		});
+					.sum(), Math::addExact)
+		);
 
 		return reference.get();
 	}

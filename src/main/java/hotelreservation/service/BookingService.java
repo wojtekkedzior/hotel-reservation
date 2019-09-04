@@ -83,7 +83,7 @@ public class BookingService {
 		if(reservation.getCreatedOn() == null) {
 			reservation.setCreatedOn(LocalDateTime.now());
 		}  else {
-			Reservation reservationInDb = reservationRepo.findById(reservation.getId()).orElseThrow(() -> new MissingOrInvalidArgumentException(reservation.getId()));
+			Reservation reservationInDb = reservationRepo.findById(reservation.getId()).orElseThrow(() -> new MissingOrInvalidArgumentException("Missing reservation id: " + reservation.getId()));
 			reservation.setCreatedOn(reservationInDb.getCreatedOn());
 		}
 		//TODO checjk if roomRates are present
@@ -99,9 +99,9 @@ public class BookingService {
 		
 		Map<LocalDate, RoomRate> roomRatesAsMap = new HashMap<>();
 
-		roomRates.stream().forEach(roomRate -> {
-			roomRatesAsMap.put(roomRate.getDay(), roomRate);
-		});
+		roomRates.stream().forEach(roomRate ->
+			roomRatesAsMap.put(roomRate.getDay(), roomRate)
+		);
 
 		roomRates.stream().forEach(roomRate -> {
 			if(!roomRatesAsMap.containsKey(roomRate.getDay())) {
@@ -206,7 +206,7 @@ public class BookingService {
 		Long id = Long.valueOf(reservationID.orElseThrow(() -> new  MissingOrInvalidArgumentException("Reservation fulfillment ID is missing")));
 		
 		if(!reservationRepo.existsById(id)) {
-			throw new NotFoundException("Reservation fulfillment reservation is missing. ID " + id);
+			throw new NotFoundException(id);
 		}
 		
 		Reservation reservation = reservationRepo.findById(id).orElseThrow( () -> new MissingOrInvalidArgumentException("Missing reservation for id: {}" + id));

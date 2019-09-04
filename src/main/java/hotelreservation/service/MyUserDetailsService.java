@@ -29,7 +29,7 @@ public class MyUserDetailsService implements UserDetailsService {
 	private UserService userService;
 
 	@Override
-	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String userName) {
 		log.info("Login attempt for user: {}", userName);
 		User user = userService.getUserByName(userName);
 		log.info("User: {} found. ", userName);
@@ -52,7 +52,7 @@ public class MyUserDetailsService implements UserDetailsService {
 		List<Privilege> collection = new ArrayList<>();
 		
 		roles.stream()
-		.filter(t -> t.getPrivileges() != null ? true : false)
+		.filter(t -> t.getPrivileges() != null)
 		.forEach(t -> collection.addAll(t.getPrivileges()));
 
 		List<String> privileges = new ArrayList<>();

@@ -97,7 +97,7 @@ public class UserService {
 	}
 	
 	public User getUserByName(String userName) { //TODO write a test
-		return userRepo.findByUserName(userName).orElseThrow(() -> new NotFoundException(userName));
+		return userRepo.findByUserName(userName).orElseThrow(() -> new NotFoundException(0));
 	}
 
 	public void deleteUser(User user) {

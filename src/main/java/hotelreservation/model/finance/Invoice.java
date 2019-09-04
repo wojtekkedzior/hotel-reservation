@@ -29,14 +29,7 @@ public class Invoice {
 	
 	@ManyToOne
 	private User createdBy;
-	
-/*	@ManyToOne
-	private User settledBy;
-	
-	//potentiall not needed as there should be an audit log.
-	@ManyToOne
-	private User adjustedBy;*/
-	
+
 	@ManyToOne
 	private Guest madeOutTo;
 	
