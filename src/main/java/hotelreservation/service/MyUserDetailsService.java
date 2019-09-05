@@ -1,9 +1,8 @@
 package hotelreservation.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
+import hotelreservation.model.Privilege;
+import hotelreservation.model.Role;
+import hotelreservation.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +10,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import hotelreservation.model.Privilege;
-import hotelreservation.model.Role;
-import hotelreservation.model.User;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Service("userDetailsService")
 @Transactional

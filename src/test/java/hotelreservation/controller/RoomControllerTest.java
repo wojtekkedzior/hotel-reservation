@@ -199,22 +199,22 @@ public class RoomControllerTest {
 		mvc.perform(get("/roomRate/1")).andExpect(status().isOk());
 	}
 
-//	@Test
-//	@WithUserDetails("manager")
-//	public void testDeleteAmenityWithNoId() throws Exception {
-//		mvc.perform(delete("/amenityDelete/")).andExpect(status().is3xxRedirection());
-//	}
-//
-//	@Test
-//	@WithUserDetails("manager")
-//	public void testDeleteAmenityTypeWithNoId() throws Exception {
-//		mvc.perform(delete("/amenityTypeDelete/")).andExpect(status().is3xxRedirection());
-//	}
-//
-//	@Test
-//	@WithUserDetails("admin")
-//	public void testDeleteRoomWithNoId() throws Exception {
-//		mvc.perform(delete("/roomRate/")).andExpect(status().is3xxRedirection());
-//	}
+	@Test
+	@WithUserDetails("manager")
+	public void testDeleteAmenityWithNoId() throws Exception {
+		mvc.perform(delete("/amenityDelete/")).andExpect(status().is4xxClientError());
+	}
+
+	@Test
+	@WithUserDetails("manager")
+	public void testDeleteAmenityTypeWithNoId() throws Exception {
+		mvc.perform(delete("/amenityTypeDelete/")).andExpect(status().is4xxClientError());
+	}
+
+	@Test
+	@WithUserDetails("admin")
+	public void testDeleteRoomWithNoId() throws Exception {
+		mvc.perform(delete("/roomRate/")).andExpect(status().is4xxClientError());
+	}
 
 }

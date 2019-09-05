@@ -91,7 +91,7 @@ public class RoomServiceTest extends BaseServiceTest {
 
 		createdRoom.setName("New Best Room");
 		createdRoom = roomService.getRoomById(room.getId());
-		assertEquals(createdRoom.getName(), "New Best Room");
+		assertEquals("New Best Room", createdRoom.getName());
 
 		roomService.deleteRoom(createdRoom);
 		

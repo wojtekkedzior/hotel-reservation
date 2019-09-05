@@ -563,10 +563,10 @@ public class BookingServiceTest extends BaseServiceTest {
 	
 	@Test
 	public void testCancelReservationMidway() {
-		
+
 	}
 
-	@Test 
+	@Test
 	public void testUpdateReservationWithNoRoomRates() {
 		roomService.saveRoomRate(roomRateTwo);
 		roomService.saveRoomRate(roomRateThree);

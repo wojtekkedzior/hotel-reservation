@@ -97,4 +97,22 @@ public class UserControllerTest  {
 		mvc.perform(post("/adduser").flashAttr("user", user)).andExpect(status().isForbidden());
 		mvc.perform(delete("/userDelete/1")).andExpect(status().isForbidden());
 	}
+
+	@Test
+	@WithUserDetails("admin")
+	public void testGetUserWithNoId() throws Exception {
+		mvc.perform(get("/user/")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("admin")
+	public void testGetUser() throws Exception {
+		mvc.perform(get("/user/1")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("admin")
+	public void testDeleteUserWithWrongId() throws Exception {
+		mvc.perform(delete("/userDelete/99")).andExpect(status().is4xxClientError());
+	}
 }

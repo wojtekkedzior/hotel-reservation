@@ -79,8 +79,8 @@ public class MyUserDetailsServiceTest extends BaseServiceTest {
 	@Test
 	public void testUserWithoutPrivileges() {
 		UserDetails userDetails = service.loadUserByUsername("receptionist");
-		assertEquals(userDetails.getUsername(), "receptionist");
-		assertEquals(userDetails.getPassword(), "password");
+		assertEquals("receptionist", userDetails.getUsername());
+		assertEquals("password", userDetails.getPassword());
 		assertTrue(userDetails.isAccountNonExpired());
 		assertTrue(userDetails.isAccountNonLocked());
 		assertTrue(userDetails.isCredentialsNonExpired());
@@ -95,8 +95,8 @@ public class MyUserDetailsServiceTest extends BaseServiceTest {
 		roleRepo.save(role);
 		
 		UserDetails userDetails = service.loadUserByUsername("receptionist");
-		assertEquals(userDetails.getUsername(), "receptionist");
-		assertEquals(userDetails.getPassword(), "password");
+		assertEquals("receptionist", userDetails.getUsername());
+		assertEquals("password", userDetails.getPassword());
 		assertTrue(userDetails.isAccountNonExpired());
 		assertTrue(userDetails.isAccountNonLocked());
 		assertTrue(userDetails.isCredentialsNonExpired());
@@ -113,8 +113,8 @@ public class MyUserDetailsServiceTest extends BaseServiceTest {
 		userRepo.save(user);
 		
 		UserDetails userDetails = service.loadUserByUsername("receptionist");
-		assertEquals(userDetails.getUsername(), "receptionist");
-		assertEquals(userDetails.getPassword(), "password");
+		assertEquals("receptionist", userDetails.getUsername());
+		assertEquals("password", userDetails.getPassword());
 		assertTrue(userDetails.isAccountNonExpired());
 		assertTrue(userDetails.isAccountNonLocked());
 		assertTrue(userDetails.isCredentialsNonExpired());
