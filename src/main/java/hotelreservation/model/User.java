@@ -68,8 +68,8 @@ public class User {
 	@ManyToMany(fetch = FetchType.EAGER)
 	private Collection<Role> roles;
 
-	public User(String usernName, String firstName, String lastName, User createdBy) {
-		this.userName = usernName;
+	public User(String userName, String firstName, String lastName, User createdBy) {
+		this.userName = userName;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.createdBy = createdBy;

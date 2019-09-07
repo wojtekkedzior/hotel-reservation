@@ -1,5 +1,6 @@
 package hotelreservation.service;
 
+import java.io.NotActiveException;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,77 +24,79 @@ import hotelreservation.repository.IdentificationRepo;
 @Service
 @Transactional
 public class GuestService {
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
-	
-	@Autowired
-	private GuestRepo guestRepo;
-	
-	@Autowired
-	private IdentificationRepo identificationRepo;
-	
-	@Autowired
-	private ContactRepo contactRepo;
-	
-	@Autowired
-	private Utils utils;
-	
-	public Contact saveContact(Contact contact) {
-		return contactRepo.save(contact);
-	}
-	
-	public Guest saveGuest(Guest guest) {
-		return guestRepo.save(guest);
-	}
-	
-	public Identification saveIdentification(Identification identification) {
-		return identificationRepo.save(identification);
-	}
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	public Guest getGuestById(long id) {
-		log.info("Looking for Guest with ID: {}", id);
-		return guestRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
-	}
-	
-	public Contact getContactById(long id) {
-		log.info("Looking for Contact with ID: {}", id);
-		return contactRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
-	}
-	
-	public Identification getIdentificationById(long id) {
-		log.info("Looking for Identification with ID: {}", id);
-		return identificationRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
-	}
-	
-	public List<Contact> getAllContacts() {
-		return utils.toList(contactRepo.findAll());
-	}
-	
-	public List<Guest> getAllGuests() {
-		return utils.toList(guestRepo.findAll());
-	}
-	
-	public List<Identification> getAllIdentifications() {
-		return utils.toList(identificationRepo.findAll());
-	}
-	
-	public void deleteGuest(Optional<Integer> id) {
-		if(!guestRepo.existsById(Long.valueOf(id.get()))) {
-			throw new NotDeletedException(id.get());
-		}
-		guestRepo.delete(guestRepo.findById(Long.valueOf(id.get())).get());
-	}
-	
-	public void deleteIdentification(Optional<Integer> id) {
-		if(!identificationRepo.existsById(Long.valueOf(id.get()))) {
-			throw new NotDeletedException(id.get());
-		}
-		identificationRepo.delete(identificationRepo.findById(Long.valueOf(id.get())).get());
-	}
+    @Autowired
+    private GuestRepo guestRepo;
 
-	public void deleteContact(long id) {
-		if(!contactRepo.existsById(id)) {
-			throw new NotDeletedException(id);
-		}
-		contactRepo.deleteById(id);
-	}
+    @Autowired
+    private IdentificationRepo identificationRepo;
+
+    @Autowired
+    private ContactRepo contactRepo;
+
+    @Autowired
+    private Utils utils;
+
+    public Contact saveContact(Contact contact) {
+        return contactRepo.save(contact);
+    }
+
+    public Guest saveGuest(Guest guest) {
+        return guestRepo.save(guest);
+    }
+
+    public Identification saveIdentification(Identification identification) {
+        return identificationRepo.save(identification);
+    }
+
+    public Guest getGuestById(long id) {
+        log.info("Looking for Guest with ID: {}", id);
+        return guestRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
+    }
+
+    public Contact getContactById(long id) {
+        log.info("Looking for Contact with ID: {}", id);
+        return contactRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
+    }
+
+    public Identification getIdentificationById(long id) {
+        log.info("Looking for Identification with ID: {}", id);
+        return identificationRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
+    }
+
+    public List<Contact> getAllContacts() {
+        return utils.toList(contactRepo.findAll());
+    }
+
+    public List<Guest> getAllGuests() {
+        return utils.toList(guestRepo.findAll());
+    }
+
+    public List<Identification> getAllIdentifications() {
+        return utils.toList(identificationRepo.findAll());
+    }
+
+    public void deleteGuest(Optional<Integer> id) {
+        if (!id.isPresent()) {
+            throw new NotDeletedException(0);
+        }
+
+        guestRepo.delete(guestRepo.findById(Long.valueOf(id.get())).orElseThrow(() -> new NotDeletedException(id.get())));
+    }
+
+    public void deleteIdentification(Optional<Integer> id) {
+        if (!id.isPresent()) {
+            throw new NotDeletedException(0);
+        }
+
+        identificationRepo.delete(identificationRepo.findById(Long.valueOf(id.get())).orElseThrow(() -> new NotDeletedException(id.get())));
+    }
+
+    public void deleteContact(long id) {
+        if (!contactRepo.existsById(id)) {
+            throw new NotDeletedException(id);
+        }
+        contactRepo.deleteById(id);
+    }
 }

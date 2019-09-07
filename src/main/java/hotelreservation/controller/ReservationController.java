@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import hotelreservation.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,13 +70,19 @@ public class ReservationController {
 			model.addAttribute(RESERVATION, new Reservation());
 			model.addAttribute("room", new Room());
 		} else {
-			Reservation reservation = bookingService.getReservation(id);
-			model.addAttribute(RESERVATION, reservation == null ? new Reservation() : reservation);
 
 			Map<Room, List<RoomRate>> roomRatesAsMap = new HashMap<>();
 
-			for (RoomRate roomRate : reservation.getRoomRates()) {
-				roomRatesAsMap.computeIfAbsent(roomRate.getRoom(), k -> new ArrayList<>()).add(roomRate);
+			try {
+				Reservation reservation = bookingService.getReservation(id);
+				model.addAttribute(RESERVATION, reservation);
+
+				for (RoomRate roomRate : reservation.getRoomRates()) {
+					roomRatesAsMap.computeIfAbsent(roomRate.getRoom(), k -> new ArrayList<>()).add(roomRate);
+				}
+
+			}catch (NotFoundException e) {
+				model.addAttribute(RESERVATION, new Reservation());
 			}
 
 			model.addAttribute("roomRatesPerRoom", roomRatesAsMap);
@@ -201,7 +208,8 @@ public class ReservationController {
 		}
 		bookingService.saveReservation(reservation);
 
-		return new ModelAndView("redirect:/realiseReservation/" + reservationId.get());
+		return reservationId.isPresent() ? new ModelAndView("redirect:/realiseReservation/" + reservationId.get()) :
+				new ModelAndView("redirect:/reservation");
 	}
 
 	@PostMapping("/realiseReservation/{reservationId}")
@@ -210,13 +218,11 @@ public class ReservationController {
 		Reservation reservation = bookingService.getReservation(reservationId);
 
 		if (reservation.getReservationStatus().equals(ReservationStatus.UP_COMING) || reservation.getReservationStatus().equals(ReservationStatus.IN_PROGRESS)) {
-			// TODO can't realise a cancelled or in progress reservation
-		} else { 
-			// TODO return some erro message
+			log.info("Can't realise a cancelled or In Progress reservation {}", reservation.getId());
+			return new ModelAndView(REDIRECT_DASHBOARD);
 		}
 
 		bookingService.realiseReservation(reservation);
-
 		return new ModelAndView(REDIRECT_DASHBOARD);
 	}
 
@@ -256,7 +262,8 @@ public class ReservationController {
 		
 		log.info("can't delete nonexistant guest");
 
-		return new ModelAndView("redirect:/realiseReservation/" + reservationId.get());
+		return reservationId.isPresent() ? new ModelAndView("redirect:/realiseReservation/" + reservationId.get()) :
+				new ModelAndView("redirect:/reservation");
 	}
 	
 	@PostMapping("/cancelReservation/{reservationID}")

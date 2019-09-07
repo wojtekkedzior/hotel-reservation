@@ -104,12 +104,7 @@ public class UserService {
 		if(!userRepo.existsById(user.getId())) {
 			throw new NotDeletedException(user.getId());
 		}
-
-		try {
-			userRepo.delete(user);
-		} catch (Exception e) {
-			System.err.println(e);
-		}
+		userRepo.delete(user);
 	}
 
 	public void deleteRole(Role role) {
