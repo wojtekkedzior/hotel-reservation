@@ -66,8 +66,7 @@ public class RoomServiceTest extends BaseServiceTest {
 		managerUserType = new Role("manager", "manager desc", true);
 		userService.saveRole(managerUserType);
 
-		createdBy = new User("username", "firstName", "lastName", superAdmin);
-		createdBy.setPassword("password");
+		createdBy = User.builder().userName("receptionist").password("password").firstName("firstName").lastName("lastName").createdBy(superAdmin).build();
 		userService.saveUser(createdBy, superAdmin.getUserName());
 		
 		status = new Status("Status name", "Status Description");

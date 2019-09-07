@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -111,15 +112,15 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		role = new Role("receptionistRole", "desc", true);
 		roleRepo.save(role);
 		
-		user = new User("receptionist", "bobalina", "bobalina", superAdmin);
-		Collection<Role> roles = new ArrayList<Role>();
+		user = User.builder().userName("receptionist").password("password").firstName("bobalina").lastName("bobalina").createdBy(superAdmin).createdOn(LocalDateTime.now()).build();
+		List<Role> roles = new ArrayList<Role>();
 		roles.add(role);
 		user.setRoles(roles);
-		user.setPassword("password");
 		userRepo.save(user);
 		
 		priv1 = new Privilege("priv1");
 		priv2 = new Privilege("priv2");
+
 		
 		privilegeRepo.save(priv1);
 		privilegeRepo.save(priv2);

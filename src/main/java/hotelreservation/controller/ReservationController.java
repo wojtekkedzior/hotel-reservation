@@ -42,6 +42,7 @@ import hotelreservation.service.RoomService;
 public class ReservationController {
 	public static final String RESERVATION = "reservation";
 	public static final String REDIRECT_DASHBOARD = "redirect:/dashboard";
+	public static final String REDIRECT_RESERVATION = "redirect:/reservation";
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -209,7 +210,7 @@ public class ReservationController {
 		bookingService.saveReservation(reservation);
 
 		return reservationId.isPresent() ? new ModelAndView("redirect:/realiseReservation/" + reservationId.get()) :
-				new ModelAndView("redirect:/reservation");
+				new ModelAndView(REDIRECT_RESERVATION);
 	}
 
 	@PostMapping("/realiseReservation/{reservationId}")
@@ -240,7 +241,7 @@ public class ReservationController {
 			log.info("deleting reservation: {}", reservationId);
 			throw new IllegalArgumentException("only a super user can do this");
 		}
-		return new ModelAndView("redirect:/reservation");
+		return new ModelAndView(REDIRECT_RESERVATION);
 	}
 
 	@PostMapping(value = "/deleteContact/{guestId}/reservationId/{reservationId}")
@@ -263,7 +264,7 @@ public class ReservationController {
 		log.info("can't delete nonexistant guest");
 
 		return reservationId.isPresent() ? new ModelAndView("redirect:/realiseReservation/" + reservationId.get()) :
-				new ModelAndView("redirect:/reservation");
+				new ModelAndView(REDIRECT_RESERVATION);
 	}
 	
 	@PostMapping("/cancelReservation/{reservationID}")

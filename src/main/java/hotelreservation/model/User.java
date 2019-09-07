@@ -1,28 +1,23 @@
 package hotelreservation.model;
 
-import java.time.LocalDateTime;
-import java.util.Collection;
-
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode.Exclude;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Entity
 @Data
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "userName" }, name = "uq_userName"))
-@NoArgsConstructor 
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
 
 	@Id
@@ -66,15 +61,5 @@ public class User {
 	//TODO a user must have a role
 //	@NotNull
 	@ManyToMany(fetch = FetchType.EAGER)
-	private Collection<Role> roles;
-
-	public User(String userName, String firstName, String lastName, User createdBy) {
-		this.userName = userName;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.createdBy = createdBy;
-
-		createdOn = LocalDateTime.now();
-		enabled = true;
-	}
+	private List<Role> roles;
 }

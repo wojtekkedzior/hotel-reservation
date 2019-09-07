@@ -1,16 +1,5 @@
 package hotelreservation.service;
 
-import java.io.NotActiveException;
-import java.util.List;
-import java.util.Optional;
-
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import hotelreservation.Utils;
 import hotelreservation.exceptions.NotDeletedException;
 import hotelreservation.exceptions.NotFoundException;
@@ -20,6 +9,14 @@ import hotelreservation.model.Identification;
 import hotelreservation.repository.ContactRepo;
 import hotelreservation.repository.GuestRepo;
 import hotelreservation.repository.IdentificationRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional

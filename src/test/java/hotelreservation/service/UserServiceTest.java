@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.Before;
@@ -81,8 +82,7 @@ public class UserServiceTest extends BaseServiceTest {
 	
 	@Test
 	public void testCRUDUser() {
-		User user = new User("username", "firstName", "lastname", superAdmin);
-		user.setPassword("password");
+		User user = User.builder().userName("username").password("password").firstName("firstName").lastName("lastName").createdBy(superAdmin).build();
 		userService.saveUser(user, superAdmin.getUserName());
 		
 		assertEquals(2, userService.getAllUsers().size());
@@ -98,8 +98,7 @@ public class UserServiceTest extends BaseServiceTest {
 	
 	@Test(expected=NotFoundException.class)
 	public void testSaveUserWithNonExistentUser() {
-		User user = new User("username", "firstName", "lastname", superAdmin);
-		user.setPassword("password");
+		User user = User.builder().userName("username").password("password").firstName("firstName").lastName("lastName").createdBy(superAdmin).build();
 		userService.saveUser(user, "nonExistentUser");
 		
 		assertEquals(1, userService.getAllUsers().size());
@@ -107,9 +106,8 @@ public class UserServiceTest extends BaseServiceTest {
 	
 	@Test
 	public void testSaveUserByExisitngUser() {
-		User user = new User("username", "firstName", "lastname", superAdmin);
-		user.setPassword("password");
-		
+		User user = User.builder().userName("username").password("password").firstName("firstName").lastName("lastName").createdBy(superAdmin).build();
+
 		try {
 			userService.saveUser(user, null);
 			fail();
@@ -120,7 +118,7 @@ public class UserServiceTest extends BaseServiceTest {
 		
 		assertEquals(2, userService.getAllUsers().size());
 		
-		User newUser = new User("new username", "firstName", "lastname", superAdmin);
+		User newUser = User.builder().userName("new username").password("password").firstName("firstName").lastName("lastName").createdBy(superAdmin).build();
 		newUser.setPassword("password");
 		userService.saveUser(newUser, user.getUserName());
 		
@@ -130,7 +128,7 @@ public class UserServiceTest extends BaseServiceTest {
 	
 	@Test
 	public void testSaveUserWithoutPassword() {
-		User user = new User("username", "firstName", "lastname", superAdmin);
+		User user = User.builder().userName("username").firstName("firstName").lastName("lastName").createdBy(superAdmin).build();
 		try {
 			userService.saveUser(user, superAdmin.getUserName());
 			fail();
@@ -223,15 +221,13 @@ public class UserServiceTest extends BaseServiceTest {
 	
 	@Test
 	public void testCreateUserWithDuplicateUserName() {
-		User user = new User("username", "firstName", "lastname", superAdmin);
-		user.setPassword("password");
+		User user = User.builder().userName("username").password("password").firstName("firstName").lastName("lastName").createdOn(LocalDateTime.now()).createdBy(superAdmin).build();
 		userService.saveUser(user, superAdmin.getUserName());
 		
 		assertEquals(2, userService.getAllUsers().size());
 		
-		User userTwo = new User("username", "firstName", "lastname", superAdmin);
-		userTwo.setPassword("password");
-		
+		User userTwo = User.builder().userName("username").password("password").firstName("firstName").lastName("lastName").createdOn(LocalDateTime.now()).createdBy(superAdmin).build();
+
 		try {
 			userService.saveUser(userTwo, superAdmin.getUserName());
 			fail();
