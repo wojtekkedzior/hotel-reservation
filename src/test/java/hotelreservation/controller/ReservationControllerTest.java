@@ -74,6 +74,8 @@ public class ReservationControllerTest {
 		cancellation.setReason("some reason");
 		cancellation.setReservation(applicationStartup.reservationOne);
 		mvc.perform(post("/cancelReservation/1").flashAttr("reservationCancellation", cancellation)).andExpect(status().isForbidden());
+
+
 	}
 
 	@Test
@@ -179,6 +181,32 @@ public class ReservationControllerTest {
 	@WithUserDetails("manager")
 	public void testGetReservationWithNoId() throws Exception {
 		mvc.perform(get("/reservation/")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("receptionist")
+	public void testRealiseReservation() throws Exception  {
+		mvc.perform(post("/realiseReservation/" + applicationStartup.reservationOne.getId())).andExpect(status().is3xxRedirection());
+	}
+
+	@Test
+	@WithUserDetails("receptionist")
+	public void testRealiseReservationWrongStatus() throws Exception  {
+		mvc.perform(post("/realiseReservation/" + applicationStartup.reservationOne.getId())).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/realiseReservation/" + applicationStartup.reservationOne.getId())).andExpect(status().is3xxRedirection());
+	}
+
+	@Test
+	@WithUserDetails("admin")
+	public void testDeleteReservation() throws Exception  {
+		mvc.perform(delete("/reservationDelete/" + applicationStartup.reservationOne.getId())).andExpect(status().is3xxRedirection());
+		mvc.perform(delete("/reservationDelete/" + applicationStartup.reservationOne.getId())).andExpect(status().is3xxRedirection());
+	}
+
+	@Test
+	@WithUserDetails("admin")
+	public void testDeleteNonExistentReservation() throws Exception  {
+		mvc.perform(delete("/reservationDelete/" + 9999)).andExpect(status().is3xxRedirection());
 	}
 
 }

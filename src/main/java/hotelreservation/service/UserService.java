@@ -41,7 +41,7 @@ public class UserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	public void saveUser(User user, String name) {
+	public User saveUser(User user, String name) {
 		if (utils.isNullOrEmpty(name)) {
 			throw new MissingOrInvalidArgumentException("missing name");
 		}
@@ -67,7 +67,7 @@ public class UserService {
 		}
 		
 		user.setCreatedOn(LocalDateTime.now());
-		userRepo.save(user);
+		return userRepo.save(user);
 	}
 	
 	public Role saveRole(Role userType) {

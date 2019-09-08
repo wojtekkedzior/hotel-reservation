@@ -6,8 +6,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
-import java.time.LocalDateTime;
-
+import hotelreservation.ApplicationStartup;
+import hotelreservation.model.ui.UserDTO;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +21,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import hotelreservation.RestExceptionHandler;
-import hotelreservation.model.User;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
@@ -34,25 +33,27 @@ public class UserControllerTest  {
 	@Autowired
 	private UsersController usersController;
 	
-	private User user;
+	private UserDTO userDTO;
+
+	@Autowired
+	private ApplicationStartup applicationStartup;
 
 	@Before
 	public void setup() {
 		this.mvc = standaloneSetup(usersController) .setControllerAdvice(new RestExceptionHandler()).build();// Standalone context
-		user = new User();
-		user.setPassword("password");
-		user.setFirstName("user");
-		user.setLastName("user");
-		user.setUserName("user");
-		user.setCreatedOn(LocalDateTime.now());
-		user.setEnabled(true);
+		userDTO = new UserDTO();
+		userDTO.setPassword("password");
+		userDTO.setFirstName("user");
+		userDTO.setLastName("user");
+		userDTO.setUserName("user");
+		userDTO.setRoles(applicationStartup.admin.getRoles());
 	}
 
 	@Test
 	@WithUserDetails("admin")
 	public void testAdminRolePermissions_allowed() throws Exception {
 		mvc.perform(get("/user/1")).andExpect(status().isOk());
-		mvc.perform(post("/adduser").flashAttr("user", user)).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/adduser").flashAttr("userDTO", userDTO)).andExpect(status().is3xxRedirection());
 		//is in error because of constraint violations
 		mvc.perform(delete("/userDelete/1")).andExpect(status().is4xxClientError());
 	}
@@ -67,7 +68,7 @@ public class UserControllerTest  {
 	@WithUserDetails("manager")
 	public void testManagerRolePermissions_allowed() throws Exception {
 		mvc.perform(get("/user/1")).andExpect(status().isOk());
-		mvc.perform(post("/adduser").flashAttr("user", user)).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/adduser").flashAttr("userDTO", userDTO)).andExpect(status().is3xxRedirection());
 	}
 
 	@Test
@@ -86,7 +87,7 @@ public class UserControllerTest  {
 	@WithUserDetails("receptionist")
 	public void testReceptionistRolePermissions_forbidden() throws Exception {
 		mvc.perform(get("/user/1")).andExpect(status().isForbidden());
-		mvc.perform(post("/adduser").flashAttr("user", user)).andExpect(status().isForbidden());
+		mvc.perform(post("/adduser").flashAttr("userDTO", userDTO)).andExpect(status().isForbidden());
 		mvc.perform(delete("/userDelete/1")).andExpect(status().isForbidden());
 	}
 
@@ -94,7 +95,7 @@ public class UserControllerTest  {
 	@WithMockUser(username = "manager", roles = "MISSING_ROLE")
 	public void testMissingRole() throws Exception {
 		mvc.perform(get("/user/1")).andExpect(status().isForbidden());
-		mvc.perform(post("/adduser").flashAttr("user", user)).andExpect(status().isForbidden());
+		mvc.perform(post("/adduser").flashAttr("userDTO", userDTO)).andExpect(status().isForbidden());
 		mvc.perform(delete("/userDelete/1")).andExpect(status().isForbidden());
 	}
 
