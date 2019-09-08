@@ -54,11 +54,7 @@ public class MyUserDetailsServiceTest extends BaseServiceTest {
         roleRepo.save(role);
 
         user = User.builder().userName("receptionist").password("password").firstName("bobalina")
-                .lastName("bobalina").createdOn(LocalDateTime.now()).createdBy(superAdmin).enabled(true).build();
-
-        List<Role> roles = new ArrayList<Role>();
-        roles.add(role);
-        user.setRoles(roles);
+                .lastName("bobalina").createdOn(LocalDateTime.now()).createdBy(superAdmin).role(role).enabled(true).build();
 
         userRepo.save(user);
 

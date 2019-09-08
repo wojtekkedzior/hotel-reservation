@@ -10,7 +10,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Data
@@ -58,8 +57,7 @@ public class User {
 
 	private LocalDateTime lastloggedOn;
 
-	//TODO a user must have a role
 //	@NotNull
-	@ManyToMany(fetch = FetchType.EAGER)
-	private List<Role> roles;
+	@OneToOne(fetch = FetchType.EAGER)
+	private Role role;
 }

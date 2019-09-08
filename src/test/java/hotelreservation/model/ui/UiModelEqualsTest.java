@@ -26,7 +26,7 @@ public class UiModelEqualsTest {
 		admin.setLastName("admin");
 		admin.setUserName("admin");
 		admin.setPassword("password");
-		admin.setRoles(Arrays.asList(adminRole));
+		admin.setRole(adminRole);
 		admin.setEnabled(true);
 
 		manager = new User();
@@ -35,7 +35,7 @@ public class UiModelEqualsTest {
 		manager.setLastName("Manager");
 		manager.setUserName("manager");
 		manager.setEnabled(true);
-		manager.setRoles(Arrays.asList(managerRole));
+		manager.setRole(managerRole);
 	}
 	
 	@Test
@@ -48,4 +48,8 @@ public class UiModelEqualsTest {
 		EqualsVerifier.forClass(ReservationChargeDTO.class) .verify();
 	}
 
+	@Test
+	public void testReservationUserDTO() {
+		EqualsVerifier.forClass(UserDTO.class) .verify();
+	}
 }

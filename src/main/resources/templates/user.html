@@ -16,7 +16,7 @@
 				</p>
 
 				<p>
-					User Type: <select class="form-control" th:field="${user.roles}" id="dropOperator">
+					User Type: <select class="form-control" th:field="${user.role}" id="dropOperator">
 						<option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
 					</select>
 				</p>

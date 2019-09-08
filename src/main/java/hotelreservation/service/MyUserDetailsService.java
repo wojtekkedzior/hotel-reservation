@@ -1,8 +1,10 @@
 package hotelreservation.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,8 +35,8 @@ public class MyUserDetailsService implements UserDetailsService {
 		User user = userService.getUserByName(userName);
 		log.info("User: {} found. ", userName);
 		
-		List<GrantedAuthority> grantedAuthorities = getAuthorities(user.getRoles());
-		user.getRoles().stream().forEach(t -> grantedAuthorities.add(new SimpleGrantedAuthority(t.getName())));
+		List<GrantedAuthority> grantedAuthorities = getAuthorities(user.getRole());
+		grantedAuthorities.add(new SimpleGrantedAuthority(user.getRole().getName()));
 		
 		if(log.isDebugEnabled()) {
 			log.info("User: {} found and has the following authorities: {}", userName, grantedAuthorities);
@@ -43,25 +45,12 @@ public class MyUserDetailsService implements UserDetailsService {
 		return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), user.isEnabled(), true, true, true, grantedAuthorities);
 	}
 
-	private List<GrantedAuthority> getAuthorities(Collection<Role> roles) {
-		return getGrantedAuthorities(getPrivileges(roles));
-	}
-
-	private List<String> getPrivileges(Collection<Role> roles) {
-		List<Privilege> collection = new ArrayList<>();
-		
-		roles.stream()
-		.filter(t -> t.getPrivileges() != null)
-		.forEach(t -> collection.addAll(t.getPrivileges()));
-
-		List<String> privileges = new ArrayList<>();
-		collection.stream().forEach(t -> privileges.add(t.getName()));
-		return privileges;
-	}
-
-	private List<GrantedAuthority> getGrantedAuthorities(List<String> privileges) {
-		List<GrantedAuthority> authorities = new ArrayList<>();
-		privileges.stream().forEach(t -> authorities.add(new SimpleGrantedAuthority(t)));
-		return authorities;
+	private List<GrantedAuthority> getAuthorities(Role role) {
+		if(role.getPrivileges() == null) {
+			return new ArrayList<GrantedAuthority>();
+		}
+		return role.getPrivileges().stream()
+				.map(privilege -> privilege.getName()).collect(Collectors.toList()).stream()
+				.map(privilegeName -> new SimpleGrantedAuthority(privilegeName)).collect(Collectors.toList());
 	}
 }

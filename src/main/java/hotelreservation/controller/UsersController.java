@@ -66,7 +66,7 @@ public class UsersController {
 				.lastName(userDTO.getLastName())
 				.userName(userDTO.getUserName())
 				.password(userDTO.getPassword())
-				.roles(userDTO.getRoles())
+				.role(userDTO.getRole())
 				.enabled(true)
 				.build();
 

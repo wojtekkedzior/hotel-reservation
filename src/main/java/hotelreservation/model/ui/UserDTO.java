@@ -31,6 +31,6 @@ public final class UserDTO {
 	private String password;
 	
 	@NotNull
-	private List<Role> roles;
+	private Role role;
 
 }

@@ -48,7 +48,7 @@ public class UserControllerTest  {
 		userDTO.setFirstName("user");
 		userDTO.setLastName("user");
 		userDTO.setUserName("user");
-		userDTO.setRoles(applicationStartup.admin.getRoles());
+		userDTO.setRole(applicationStartup.admin.getRole());
 	}
 
 	@Test

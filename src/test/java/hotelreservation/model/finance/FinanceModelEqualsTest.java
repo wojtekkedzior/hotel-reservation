@@ -26,7 +26,7 @@ public class FinanceModelEqualsTest {
 		admin.setLastName("admin");
 		admin.setUserName("admin");
 		admin.setPassword("password");
-		admin.setRoles(Arrays.asList(adminRole));
+		admin.setRole(adminRole);
 		admin.setEnabled(true);
 
 		manager = new User();
@@ -35,7 +35,7 @@ public class FinanceModelEqualsTest {
 		manager.setLastName("Manager");
 		manager.setUserName("manager");
 		manager.setEnabled(true);
-		manager.setRoles(Arrays.asList(managerRole));
+		manager.setRole(managerRole);
 	}
 
 	@Test

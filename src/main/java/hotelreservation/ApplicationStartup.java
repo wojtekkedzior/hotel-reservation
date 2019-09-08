@@ -302,7 +302,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		admin.setLastName("admin");
 		admin.setUserName("admin");
 		admin.setPassword("password");
-		admin.setRoles(Arrays.asList(adminRole));
+		admin.setRole(adminRole);
 		admin.setEnabled(true);
 		userService.saveUser(admin, superAdmin.getUserName());
 		
@@ -312,7 +312,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		manager.setLastName("Manager");
 		manager.setUserName("manager");
 		manager.setEnabled(true);
-		manager.setRoles(Arrays.asList(managerRole));
+		manager.setRole(managerRole);
 		userService.saveUser(manager, superAdmin.getUserName());
 
 		receptionist = new User();
@@ -320,7 +320,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		receptionist.setLastName("receptionist");
 		receptionist.setUserName("receptionist");
 		receptionist.setPassword("password");
-		receptionist.setRoles(Arrays.asList(receptionistRole));
+		receptionist.setRole(receptionistRole);
 		receptionist.setEnabled(true);
 		userService.saveUser(receptionist, superAdmin.getUserName());
 	}
