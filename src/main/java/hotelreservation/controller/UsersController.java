@@ -82,10 +82,11 @@ public class UsersController {
 	@PreAuthorize("hasAuthority('deleteUser')")
 	public ModelAndView deleteUser(@PathVariable Optional<Integer> id) {
 		log.info("deleting user: {}", id);
-		if(id.isPresent()) {
-			User userById = userService.getUserById(id.get());
-			userService.deleteUser(userById);
-		} 
+
+		id.ifPresent(userId -> {
+			userService.deleteUser(userService.getUserById(userId));
+		});
+
 		return new ModelAndView("redirect:/user");
 	}
 }
