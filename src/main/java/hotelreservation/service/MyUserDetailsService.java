@@ -1,11 +1,8 @@
 package hotelreservation.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import hotelreservation.model.Privilege;
+import hotelreservation.model.Role;
+import hotelreservation.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +13,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import hotelreservation.model.Privilege;
-import hotelreservation.model.Role;
-import hotelreservation.model.User;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service("userDetailsService")
 @Transactional
@@ -47,10 +44,10 @@ public class MyUserDetailsService implements UserDetailsService {
 
 	private List<GrantedAuthority> getAuthorities(Role role) {
 		if(role.getPrivileges() == null) {
-			return new ArrayList<GrantedAuthority>();
+			return new ArrayList<>();
 		}
 		return role.getPrivileges().stream()
-				.map(privilege -> privilege.getName()).collect(Collectors.toList()).stream()
-				.map(privilegeName -> new SimpleGrantedAuthority(privilegeName)).collect(Collectors.toList());
+				.map(Privilege::getName).collect(Collectors.toList()).stream()
+				.map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 	}
 }

@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode.Exclude;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "userName" }, name = "uq_userName"))
 @NoArgsConstructor
 @AllArgsConstructor
+@Audited
 @Builder
 public class User {
 
@@ -42,8 +45,6 @@ public class User {
 
 	private boolean enabled;
 
-	//TODO this will be funky for a super admin
-//	@NotNull
 	@OneToOne
 	private User createdBy;
 
@@ -57,7 +58,7 @@ public class User {
 
 	private LocalDateTime lastloggedOn;
 
-//	@NotNull
+	@NotAudited
 	@OneToOne(fetch = FetchType.EAGER)
 	private Role role;
 }
