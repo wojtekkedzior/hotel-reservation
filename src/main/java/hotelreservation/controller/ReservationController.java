@@ -57,6 +57,9 @@ public class ReservationController {
 
 	@Autowired
 	private InvoiceService invoiceService;
+
+	@Autowired
+	private BookingService reservationService;
 	
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
@@ -218,12 +221,11 @@ public class ReservationController {
 	public ModelAndView realiseReservation(@PathVariable Optional<Integer> reservationId) {
 		Reservation reservation = bookingService.getReservation(reservationId);
 
-		if (reservation.getReservationStatus().equals(ReservationStatus.UP_COMING) || reservation.getReservationStatus().equals(ReservationStatus.IN_PROGRESS)) {
-			log.info("Can't realise a cancelled or In Progress reservation {}", reservation.getId());
-			return new ModelAndView(REDIRECT_DASHBOARD);
+		if (reservation.getReservationStatus().equals(ReservationStatus.UP_COMING)) {
+			bookingService.realiseReservation(reservation);
+		} else {
+			log.info("Can't realise a cancelled or In Progress reservation: {} with status: {}", reservation.getId(), reservation.getReservationStatus());
 		}
-
-		bookingService.realiseReservation(reservation);
 		return new ModelAndView(REDIRECT_DASHBOARD);
 	}
 
@@ -238,6 +240,8 @@ public class ReservationController {
 	@PreAuthorize("hasAuthority('deleteReservation')")
 	public ModelAndView deleteReservation(@PathVariable Optional<Integer> reservationId) {
 		if (reservationId.isPresent()) {
+			Reservation resFromDB = bookingService.getReservation(reservationId);
+			bookingService.deleteReservation(resFromDB);
 			log.info("deleting reservation: {}", reservationId);
 			throw new IllegalArgumentException("only a super user can do this");
 		}

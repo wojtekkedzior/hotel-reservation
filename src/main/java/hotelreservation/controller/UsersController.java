@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import hotelreservation.model.ui.UserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,13 +56,22 @@ public class UsersController {
 	
 	@PostMapping("/adduser")
 	@PreAuthorize("hasAuthority('createUser')")
-	public ModelAndView addUser(@Valid @ModelAttribute User user) {
-		log.info("creating user: {}", user);
+	public ModelAndView addUser(@Valid @ModelAttribute UserDTO userDTO) {
+		log.info("creating user: {}", userDTO);
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		log.info("Authenticated user: {} is creating: {}", authentication, user);
-		
-		userService.saveUser(user, authentication.getName());
-		return new ModelAndView("redirect:/user/" + user.getId());
+		log.info("Authenticated user: {} is creating: {}", authentication, userDTO);
+
+		User userToBeCreated = User.builder()
+				.firstName(userDTO.getFirstName())
+				.lastName(userDTO.getLastName())
+				.userName(userDTO.getUserName())
+				.password(userDTO.getPassword())
+				.roles(userDTO.getRoles())
+				.enabled(true)
+				.build();
+
+		User createdUser = userService.saveUser(userToBeCreated, authentication.getName());
+		return new ModelAndView("redirect:/user/" + createdUser.getId());
 	}
 
 	/*
