@@ -22,71 +22,69 @@ import hotelreservation.service.UserService;
 
 @Controller
 public class UsersController {
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private UserService userService;
 
-	@GetMapping(value = { "/user", "/user/{id}" })
-	@PreAuthorize("hasAuthority('createUser')")
-	public String getUsers(@PathVariable Optional<Integer> id, Model model) {
-		if(!id.isPresent()) {
-			User user = new User();
-			model.addAttribute("user", user);
-		} else {
-			User user = userService.getUserById(id.get());
-			if(user == null) {
-				model.addAttribute("user", new User());
-			} else {
-				model.addAttribute("user", user);
-			}
-			log.info("getting user: {}", user);
-		}
+    @GetMapping(value = {"/user", "/user/{id}"})
+    @PreAuthorize("hasAuthority('createUser')")
+    public String getUsers(@PathVariable Optional<Integer> id, Model model) {
+        if (!id.isPresent()) {
+            User user = new User();
+            model.addAttribute("user", user);
+        } else {
+            User user = userService.getUserById(id.get());
+            if (user == null) {
+                model.addAttribute("user", new User());
+            } else {
+                model.addAttribute("user", user);
+            }
+            log.info("getting user: {}", user);
+        }
 
-		model.addAttribute("role", new Role()); //TODO this will be a multi select so have to select all available roles
-		model.addAttribute("users", userService.getAllUsers());
-		model.addAttribute("roles", userService.getAllRoles());
-		
-		return "user";
-	}
-	
-	/*
-	 * ---------------------------------------------------------------------------------------------------------------------------
-	 */
-	
-	@PostMapping("/adduser")
-	@PreAuthorize("hasAuthority('createUser')")
-	public ModelAndView addUser(@Valid @ModelAttribute UserDTO userDTO) {
-		log.info("creating user: {}", userDTO);
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		log.info("Authenticated user: {} is creating: {}", authentication, userDTO);
+        model.addAttribute("role", new Role()); //TODO this will be a multi select so have to select all available roles
+        model.addAttribute("users", userService.getAllUsers());
+        model.addAttribute("roles", userService.getAllRoles());
 
-		User userToBeCreated = User.builder()
-				.firstName(userDTO.getFirstName())
-				.lastName(userDTO.getLastName())
-				.userName(userDTO.getUserName())
-				.password(userDTO.getPassword())
-				.role(userDTO.getRole())
-				.enabled(true)
-				.build();
+        return "user";
+    }
 
-		User createdUser = userService.saveUser(userToBeCreated, authentication.getName());
-		return new ModelAndView("redirect:/user/" + createdUser.getId());
-	}
+    /*
+     * ---------------------------------------------------------------------------------------------------------------------------
+     */
 
-	/*
-	 * ---------------------------------------------------------------------------------------------------------------------------
-	 */
-	
-	@DeleteMapping(value="/userDelete/{id}")
-	@PreAuthorize("hasAuthority('deleteUser')")
-	public ModelAndView deleteUser(@PathVariable Optional<Integer> id) {
-		log.info("deleting user: {}", id);
+    @PostMapping("/adduser")
+    @PreAuthorize("hasAuthority('createUser')")
+    public ModelAndView addUser(@Valid @ModelAttribute UserDTO userDTO) {
+        log.info("creating user: {}", userDTO);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info("Authenticated user: {} is creating: {}", authentication, userDTO);
 
-		id.ifPresent(userId -> {
-			userService.deleteUser(userService.getUserById(userId));
-		});
+        User userToBeCreated = User.builder()
+                .firstName(userDTO.getFirstName())
+                .lastName(userDTO.getLastName())
+                .userName(userDTO.getUserName())
+                .password(userDTO.getPassword())
+                .role(userDTO.getRole())
+                .enabled(true)
+                .build();
 
-		return new ModelAndView("redirect:/user");
-	}
+        User createdUser = userService.saveUser(userToBeCreated, authentication.getName());
+        return new ModelAndView("redirect:/user/" + createdUser.getId());
+    }
+
+    /*
+     * ---------------------------------------------------------------------------------------------------------------------------
+     */
+
+    @DeleteMapping(value = "/userDelete/{id}")
+    @PreAuthorize("hasAuthority('deleteUser')")
+    public ModelAndView deleteUser(@PathVariable Optional<Integer> id) {
+        log.info("deleting user: {}", id);
+
+        id.ifPresent(userId -> userService.deleteUser(userService.getUserById(userId)));
+
+        return new ModelAndView("redirect:/user");
+    }
 }

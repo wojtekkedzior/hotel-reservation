@@ -13,10 +13,12 @@ import hotelreservation.model.enums.Currency;
 import lombok.Data;
 import lombok.EqualsAndHashCode.Exclude;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
 
 @Entity
 @Data
-@NoArgsConstructor 
+@NoArgsConstructor
+@Audited
 public class Charge {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

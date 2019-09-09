@@ -10,10 +10,12 @@ import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode.Exclude;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
 
 @Entity
 @Data
-@NoArgsConstructor 
+@NoArgsConstructor
+@Audited
 public class Contact {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

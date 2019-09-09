@@ -14,22 +14,24 @@ import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode.Exclude;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 @Entity
 @Data
-@NoArgsConstructor 
+@NoArgsConstructor
+@Audited
 public class Stay {
 	
-	//TODO don't worry about the stay for now. 
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Exclude
 	private long id;
 	
-	//Reservation that make up a stay.  This shuld be used to mark a non-consecutive day stay. 
+	//Reservation that make up a stay.  This should be used to mark a non-consecutive day stay.
 	@NotNull
 	@ManyToMany
+	@NotAudited
 	private List<Reservation> reservations; 
 	
 	@NotBlank

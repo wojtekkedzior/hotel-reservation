@@ -16,10 +16,12 @@ import org.hibernate.annotations.LazyCollectionOption;
 import lombok.Data;
 import lombok.EqualsAndHashCode.Exclude;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
 
 @Entity
 @Data
-@NoArgsConstructor 
+@NoArgsConstructor
+@Audited
 public class Role {
 
 	@Id

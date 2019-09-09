@@ -10,10 +10,13 @@ import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode.Exclude;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 @Entity
 @Data
-@NoArgsConstructor 
+@NoArgsConstructor
+@Audited
 public class ReservationCharge {
 	
 	@Id
@@ -25,6 +28,7 @@ public class ReservationCharge {
 	//what is needed is a separate, UI specific, reservationcharge object. it will be somewhat confusing.
 //	@NotNull
 	@OneToOne
+	@NotAudited
 	private Reservation reservation;
 	
 	@NotNull

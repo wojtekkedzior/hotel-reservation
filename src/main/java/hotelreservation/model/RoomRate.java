@@ -17,11 +17,14 @@ import hotelreservation.model.enums.Currency;
 import lombok.Data;
 import lombok.EqualsAndHashCode.Exclude;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 @Entity
 @Data
 @Table(uniqueConstraints=@UniqueConstraint(columnNames = {"room_id" , "day"}, name = "uq_name"))
-@NoArgsConstructor 
+@NoArgsConstructor
+@Audited
 public class RoomRate {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +35,7 @@ public class RoomRate {
 
 	@NotNull
 	@ManyToOne
+	@NotAudited
 	private Room room;
 
 	@NotNull

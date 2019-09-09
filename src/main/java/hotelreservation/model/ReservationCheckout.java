@@ -14,10 +14,13 @@ import hotelreservation.model.finance.Payment;
 import lombok.Data;
 import lombok.EqualsAndHashCode.Exclude;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 @Entity
 @Data
-@NoArgsConstructor 
+@NoArgsConstructor
+@Audited
 public class ReservationCheckout {
 	
 	@Id
@@ -27,6 +30,7 @@ public class ReservationCheckout {
 	
 	@NotNull
 	@OneToOne
+	@NotAudited
 	private Reservation reservation;
 	
 	private String notes;

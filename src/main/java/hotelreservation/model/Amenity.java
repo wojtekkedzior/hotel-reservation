@@ -11,10 +11,13 @@ import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode.Exclude;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 @Entity
 @Data
-@NoArgsConstructor 
+@NoArgsConstructor
+@Audited
 public class Amenity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +33,7 @@ public class Amenity {
 	
 	//TODO add @NotNull
 	@ManyToOne
+    @NotAudited
 	private AmenityType amenityType;
 	
 	public Amenity(String name, String description, AmenityType amenityType) {

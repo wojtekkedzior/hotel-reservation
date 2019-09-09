@@ -18,9 +18,12 @@ import hotelreservation.model.ReservationCharge;
 import hotelreservation.model.enums.PaymentType;
 import lombok.Data;
 import lombok.EqualsAndHashCode.Exclude;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 @Entity
 @Data
+@Audited
 public class Payment {
 	
 	@Id
@@ -38,6 +41,7 @@ public class Payment {
 	
 	@NotNull
 	@ManyToOne
+	@NotAudited
 	private Reservation reservation;
 	
 	private LocalDateTime paymentDate;

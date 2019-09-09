@@ -14,9 +14,11 @@ import hotelreservation.model.User;
 import hotelreservation.model.enums.InvoiceStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode.Exclude;
+import org.hibernate.envers.Audited;
 
 @Data
 @Entity
+@Audited
 public class Invoice {
 
 	@Id

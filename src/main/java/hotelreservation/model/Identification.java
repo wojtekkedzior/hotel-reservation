@@ -13,10 +13,12 @@ import hotelreservation.model.enums.IdType;
 import lombok.Data;
 import lombok.EqualsAndHashCode.Exclude;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
 
 @Entity
 @Data
-@NoArgsConstructor 
+@NoArgsConstructor
+@Audited
 public class Identification {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
