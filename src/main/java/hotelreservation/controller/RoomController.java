@@ -2,6 +2,7 @@ package hotelreservation.controller;
 
 import hotelreservation.model.*;
 import hotelreservation.model.enums.Currency;
+import hotelreservation.model.ui.AmenityDTO;
 import hotelreservation.service.RoomService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -135,8 +136,16 @@ public class RoomController {
 	//TODO lots of these post create duplicate records. need to handle update
 	@PostMapping("/addAmenity")
 	@PreAuthorize("hasAuthority('createAmenity')")
-	public ModelAndView addAmenity(@Valid @ModelAttribute Amenity amenity) {
-		Amenity createAmenity = roomService.saveAmenity(amenity);
+	public ModelAndView addAmenity(@Valid @ModelAttribute AmenityDTO amenityDTO) {
+
+		Amenity createAmenity = Amenity.builder()
+				.description(amenityDTO.getDescription())
+				.amenityType(amenityDTO.getAmenityType())
+				.name(amenityDTO.getName())
+				.build();
+
+		createAmenity = roomService.saveAmenity(createAmenity);
+		log.info("created Amenity: {}", createAmenity);
 		return new ModelAndView("redirect:/amenity/" + createAmenity.getId());
 	}
 

@@ -7,13 +7,15 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode.Exclude;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@NoArgsConstructor 
+@NoArgsConstructor
+@AllArgsConstructor
 public class AmenityType {
 	
 	@Id

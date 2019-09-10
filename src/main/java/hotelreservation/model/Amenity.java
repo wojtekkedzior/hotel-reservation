@@ -8,15 +8,16 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import lombok.Data;
+import lombok.*;
 import lombok.EqualsAndHashCode.Exclude;
-import lombok.NoArgsConstructor;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 
 @Entity
+@Builder
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Audited
 public class Amenity {
 	@Id
