@@ -52,4 +52,14 @@ public class UiModelEqualsTest {
 	public void testReservationUserDTO() {
 		EqualsVerifier.forClass(UserDTO.class) .verify();
 	}
+
+	@Test
+	public void testAmenityDTO() {
+		EqualsVerifier.forClass(AmenityDTO.class) .verify();
+	}
+
+	@Test
+	public void testAmenityTypeDTO() {
+		EqualsVerifier.forClass(AmenityTypeDTO.class) .verify();
+	}
 }

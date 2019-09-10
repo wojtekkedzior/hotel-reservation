@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 import hotelreservation.model.ui.AmenityDTO;
+import hotelreservation.model.ui.AmenityTypeDTO;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,12 +47,14 @@ public class RoomControllerTest {
 	private RoomController roomController;
 	
 	private RoomType roomTypeStandard = new RoomType("roomType", "roomType");
-	private AmenityType amenityType = new AmenityType("amenity", "desc");
-	private AmenityDTO amenityDTO = new AmenityDTO("name", "description", amenityType);
+
+	private AmenityTypeDTO amenityTypeDTO = new AmenityTypeDTO("amenity", "desc");
+	private AmenityDTO amenityDTO;
 
 	@Before
 	public void setup() {
 		this.mvc = standaloneSetup(roomController) .setControllerAdvice(new RestExceptionHandler()).build();// Standalone context
+		amenityDTO = new AmenityDTO("name", "description", applicationStartup.amenityTypeRoomBasic);
 	}
 
 	@Test
@@ -62,7 +65,7 @@ public class RoomControllerTest {
 		mvc.perform(get("/room/1")).andExpect(status().isOk());
 		mvc.perform(get("/roomType/1")).andExpect(status().isOk());
 		
-		mvc.perform(post("/addAmenityType").flashAttr("amenityType", amenityType)).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/addAmenityType").flashAttr("amenityTypeDTO", amenityTypeDTO)).andExpect(status().is3xxRedirection());
 		mvc.perform(post("/addAmenity").flashAttr("amenityDTO", amenityDTO)).andExpect(status().is3xxRedirection());
 		mvc.perform(post("/addRoomType").flashAttr("roomType", roomTypeStandard)).andExpect(status().is3xxRedirection());
 		
@@ -108,7 +111,7 @@ public class RoomControllerTest {
 		mvc.perform(get("/room/1")).andExpect(status().isForbidden());
 		mvc.perform(get("/roomType/1")).andExpect(status().isForbidden());
 		
-		mvc.perform(post("/addAmenityType").flashAttr("amenityType", amenityType)).andExpect(status().isForbidden());
+		mvc.perform(post("/addAmenityType").flashAttr("amenityType", applicationStartup.amenityTypeRoomBasic)).andExpect(status().isForbidden());
 		mvc.perform(post("/addAmenity").flashAttr("amenity", amenityDTO)).andExpect(status().isForbidden());
 		mvc.perform(post("/addRoomType").flashAttr("roomType", roomTypeStandard)).andExpect(status().isForbidden());
 		mvc.perform(post("/addRoom").flashAttr("room", applicationStartup.standardRoomOne)).andExpect(status().isForbidden());
@@ -128,7 +131,7 @@ public class RoomControllerTest {
 		mvc.perform(get("/room/1")).andExpect(status().isForbidden());
 		mvc.perform(get("/roomType/1")).andExpect(status().isForbidden());
 		
-		mvc.perform(post("/addAmenityType").flashAttr("amenityType", amenityType)).andExpect(status().isForbidden());
+		mvc.perform(post("/addAmenityType").flashAttr("amenityType", applicationStartup.amenityTypeRoomBasic)).andExpect(status().isForbidden());
 		mvc.perform(post("/addAmenity").flashAttr("amenity", amenityDTO)).andExpect(status().isForbidden());
 		mvc.perform(post("/addRoomType").flashAttr("roomType", roomTypeStandard)).andExpect(status().isForbidden());
 		mvc.perform(post("/addRoom").flashAttr("room", applicationStartup.standardRoomOne)).andExpect(status().isForbidden());

@@ -3,6 +3,7 @@ package hotelreservation.controller;
 import hotelreservation.model.*;
 import hotelreservation.model.enums.Currency;
 import hotelreservation.model.ui.AmenityDTO;
+import hotelreservation.model.ui.AmenityTypeDTO;
 import hotelreservation.service.RoomService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -128,8 +129,11 @@ public class RoomController {
 
 	@PostMapping("/addAmenityType")
 	@PreAuthorize("hasAuthority('createAmenityType')")
-	public ModelAndView addAmenityType(@Valid @ModelAttribute AmenityType amenityType) {
-		AmenityType createAmenityType = roomService.saveAmenityType(amenityType);
+	public ModelAndView addAmenityType(@Valid @ModelAttribute AmenityTypeDTO amenityTypeDTO) {
+		AmenityType createAmenityType = new AmenityType(amenityTypeDTO.getName(), amenityTypeDTO.getDescription());
+		createAmenityType = roomService.saveAmenityType(createAmenityType);
+
+		log.info("created AmenityType: {}", createAmenityType);
 		return new ModelAndView("redirect:/amenityType/" + createAmenityType.getId());
 	}
 

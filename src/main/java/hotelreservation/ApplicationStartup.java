@@ -64,7 +64,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	private Status underConstruction;
 	private Status notOperational;
 
-	private AmenityType amenityTypeRoomBasic;
+	public AmenityType amenityTypeRoomBasic;
 	private AmenityType amenityTypeRoomLuxury;
 	private AmenityType amenityTypeHotel;
 
