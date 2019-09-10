@@ -4,6 +4,7 @@ import hotelreservation.model.*;
 import hotelreservation.model.enums.Currency;
 import hotelreservation.model.ui.AmenityDTO;
 import hotelreservation.model.ui.AmenityTypeDTO;
+import hotelreservation.model.ui.RoomRateDTO;
 import hotelreservation.service.RoomService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -169,8 +170,18 @@ public class RoomController {
 
 	@PostMapping("/addRoomRate")
 	@PreAuthorize("hasAuthority('createRoomRate')")
-	public ModelAndView addRoomRate(@Valid @ModelAttribute RoomRate roomRate) {
-		roomService.saveRoomRate(roomRate);
+	public ModelAndView addRoomRate(@Valid @ModelAttribute RoomRateDTO roomRateDTO) {
+
+		RoomRate roomRate = RoomRate.builder()
+				.currency(roomRateDTO.getCurrency())
+				.day(roomRateDTO.getDay())
+				.description(roomRateDTO.getDescription())
+				.room(roomRateDTO.getRoom())
+				.value(roomRateDTO.getValue())
+				.build();
+
+		roomRate = roomService.saveRoomRate(roomRate);
+		log.info("Created a RoomRate: {}", roomRate);
 		return new ModelAndView("redirect:/roomRate/" + roomRate.getId());
 	}
 

@@ -14,6 +14,8 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import hotelreservation.model.enums.Currency;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode.Exclude;
 import lombok.NoArgsConstructor;
@@ -24,7 +26,9 @@ import org.hibernate.envers.NotAudited;
 @Data
 @Table(uniqueConstraints=@UniqueConstraint(columnNames = {"room_id" , "day"}, name = "uq_name"))
 @NoArgsConstructor
+@AllArgsConstructor
 @Audited
+@Builder
 public class RoomRate {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

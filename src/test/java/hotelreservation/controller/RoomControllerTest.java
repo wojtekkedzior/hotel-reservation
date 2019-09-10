@@ -12,6 +12,7 @@ import java.time.temporal.ChronoUnit;
 
 import hotelreservation.model.ui.AmenityDTO;
 import hotelreservation.model.ui.AmenityTypeDTO;
+import hotelreservation.model.ui.RoomRateDTO;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,10 +52,13 @@ public class RoomControllerTest {
 	private AmenityTypeDTO amenityTypeDTO = new AmenityTypeDTO("amenity", "desc");
 	private AmenityDTO amenityDTO;
 
+	private RoomRateDTO roomRateDTO;
+
 	@Before
 	public void setup() {
 		this.mvc = standaloneSetup(roomController) .setControllerAdvice(new RestExceptionHandler()).build();// Standalone context
 		amenityDTO = new AmenityDTO("name", "description", applicationStartup.amenityTypeRoomBasic);
+		roomRateDTO = new RoomRateDTO("description", applicationStartup.standardRoomOne, Currency.CZK, 10, LocalDate.now());
 	}
 
 	@Test
@@ -85,22 +89,14 @@ public class RoomControllerTest {
 	@WithUserDetails("admin")
 	public void testAdminRolePermissions_forbidden() throws Exception {
 		mvc.perform(get("/roomRate/1")).andExpect(status().isForbidden());
-	
-		RoomRate roomRate = new RoomRate();
-		roomRate.setRoom(new Room());
-		roomRate.setCurrency(Currency.CZK);
-		roomRate.setValue(1000);
-		roomRate.setDay(LocalDate.now());
-		mvc.perform(post("/addRoomRate").flashAttr("roomRate", roomRate)).andExpect(status().isForbidden());
+		mvc.perform(post("/addRoomRate").flashAttr("roomRateDTO", roomRateDTO)).andExpect(status().isForbidden());
 	}
 
 	@Test
 	@WithUserDetails("manager")
 	public void testManagerRolePermissions_allowed() throws Exception {
 		mvc.perform(get("/roomRate/1")).andExpect(status().isOk());
-		
-		RoomRate roomRate = new RoomRate(applicationStartup.standardRoomOne, Currency.CZK, 10, LocalDate.now().plus(1, ChronoUnit.YEARS));
-		mvc.perform(post("/addRoomRate").flashAttr("roomRate", roomRate)).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/addRoomRate").flashAttr("roomRateDTO", new RoomRateDTO("description", applicationStartup.standardRoomOne, Currency.CZK, 10, LocalDate.now().plus(1, ChronoUnit.YEARS)))).andExpect(status().is3xxRedirection());
 	}
 
 	@Test
@@ -135,7 +131,8 @@ public class RoomControllerTest {
 		mvc.perform(post("/addAmenity").flashAttr("amenity", amenityDTO)).andExpect(status().isForbidden());
 		mvc.perform(post("/addRoomType").flashAttr("roomType", roomTypeStandard)).andExpect(status().isForbidden());
 		mvc.perform(post("/addRoom").flashAttr("room", applicationStartup.standardRoomOne)).andExpect(status().isForbidden());
-		mvc.perform(post("/addRoomRate").flashAttr("roomRate", new RoomRate(applicationStartup.standardRoomOne, Currency.CZK, 10, LocalDate.now()))).andExpect(status().isForbidden());
+
+		mvc.perform(post("/addRoomRate").flashAttr("roomRateDTO", roomRateDTO)).andExpect(status().isForbidden());
 		
 		mvc.perform(delete("/roomDelete/1")).andExpect(status().isForbidden());
 		mvc.perform(delete("/roomTypeDelete/1")).andExpect(status().isForbidden());

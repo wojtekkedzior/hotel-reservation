@@ -218,8 +218,8 @@ public class RoomService {
 	}
 	
 	//---- Room Rate
-	public void saveRoomRate(RoomRate roomRate) {
-		roomRateRepo.save(roomRate);
+	public RoomRate saveRoomRate(RoomRate roomRate) {
+		return roomRateRepo.save(roomRate);
 	}
 
 	public RoomRate getRoomRateById(long id) {
