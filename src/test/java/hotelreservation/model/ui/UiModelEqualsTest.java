@@ -1,13 +1,10 @@
 package hotelreservation.model.ui;
 
-import java.util.Arrays;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import hotelreservation.model.Role;
 import hotelreservation.model.User;
 import nl.jqno.equalsverifier.EqualsVerifier;
+import org.junit.Before;
+import org.junit.Test;
 
 public class UiModelEqualsTest {
 
@@ -49,7 +46,7 @@ public class UiModelEqualsTest {
 	}
 
 	@Test
-	public void testReservationUserDTO() {
+	public void testUserDTO() {
 		EqualsVerifier.forClass(UserDTO.class) .verify();
 	}
 
