@@ -5,6 +5,7 @@ import hotelreservation.model.enums.Currency;
 import hotelreservation.model.ui.AmenityDTO;
 import hotelreservation.model.ui.AmenityTypeDTO;
 import hotelreservation.model.ui.RoomRateDTO;
+import hotelreservation.model.ui.RoomTypeDTO;
 import hotelreservation.service.RoomService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -156,8 +157,9 @@ public class RoomController {
 
 	@PostMapping("/addRoomType")
 	@PreAuthorize("hasAuthority('createRoomType')")
-	public ModelAndView addRoomType(@Valid @ModelAttribute RoomType roomType) {
-		roomService.saveRoomType(roomType);
+	public ModelAndView addRoomType(@Valid @ModelAttribute RoomTypeDTO roomTypeDTO) {
+		RoomType roomType = new RoomType(roomTypeDTO.getName(), roomTypeDTO.getDescription());
+		roomType = roomService.saveRoomType(roomType);
 		return new ModelAndView("redirect:/roomType/" + roomType.getId());
 	}
 

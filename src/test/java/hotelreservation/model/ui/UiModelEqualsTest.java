@@ -65,4 +65,9 @@ public class UiModelEqualsTest {
 	public void testRoomRateDTO() {
 		EqualsVerifier.forClass(RoomRateDTO.class).withPrefabValues(User.class, admin, manager).verify();
 	}
+
+	@Test
+	public void testRoomTypeDTO() {
+		EqualsVerifier.forClass(RoomTypeDTO.class);
+	}
 }
