@@ -68,6 +68,6 @@ public class UiModelEqualsTest {
 
 	@Test
 	public void testRoomTypeDTO() {
-		EqualsVerifier.forClass(RoomTypeDTO.class);
+		EqualsVerifier.forClass(RoomTypeDTO.class).verify();
 	}
 }
