@@ -20,7 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.stream.Collectors;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
@@ -101,7 +100,7 @@ public class ReservationControllerTest {
 	@Test
 	@WithUserDetails("manager")
 	public void testManagerRolePermissions_forbidden() throws Exception {
-		mvc.perform(delete("/reservationDelete/1")).andDo(print()).andExpect(status().isForbidden());
+		mvc.perform(delete("/reservationDelete/1")).andExpect(status().isForbidden());
 	}
 
 	@Test
@@ -192,7 +191,7 @@ public class ReservationControllerTest {
 	@Test
 	@WithUserDetails("admin")
 	public void testDeleteNonExistentReservation() throws Exception  {
-		mvc.perform(delete("/reservationDelete/" + 9999)).andDo(print()).andExpect(status().is4xxClientError());
+		mvc.perform(delete("/reservationDelete/" + 9999)).andExpect(status().is4xxClientError());
 	}
 
 	@Test
