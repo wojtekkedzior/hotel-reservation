@@ -1,19 +1,5 @@
 package hotelreservation.controller;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-
-import javax.validation.Valid;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-
 import hotelreservation.model.Reservation;
 import hotelreservation.model.ReservationCharge;
 import hotelreservation.model.enums.PaymentType;
@@ -22,6 +8,21 @@ import hotelreservation.model.ui.PaymentDTO;
 import hotelreservation.model.ui.ReservationChargeDTO;
 import hotelreservation.service.BookingService;
 import hotelreservation.service.InvoiceService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 
 @Controller
@@ -42,7 +43,7 @@ public class InvoiceController {
 	
 	@GetMapping(value = { "/payment/{id}" })
 	@PreAuthorize("hasAuthority('createPayment')")
-	public String getPayment(@PathVariable Optional<Integer> id, Model model) {
+	public String getPayment(@PathVariable Long id, Model model) {
 		Reservation reservation = bookingService.getReservation(id);
 		
 		model.addAttribute("reservation", reservation);
@@ -58,7 +59,7 @@ public class InvoiceController {
 	
 	@PostMapping("/createPayment/{reservationId}")
 	@PreAuthorize("hasAuthority('createPayment')")
-	public ModelAndView createPayment(@Valid @ModelAttribute PaymentDTO paymentDto,  @PathVariable Optional<Integer> reservationId) {
+	public ModelAndView createPayment(@Valid @ModelAttribute PaymentDTO paymentDto,  @PathVariable Long reservationId) {
 		log.info("creating payment for reservation: {}", reservationId);
 		
 		Payment payment = new Payment();
@@ -75,8 +76,8 @@ public class InvoiceController {
 		
 		StringBuilder viewName = new StringBuilder("redirect:/checkoutReservation/" );
 
-		if(reservationId.isPresent()) {
-			viewName.append(reservationId.get());
+		if(reservationId == null) {
+			viewName.append(reservationId);
 		}
 
 		return new ModelAndView(viewName.toString());
@@ -84,7 +85,7 @@ public class InvoiceController {
 	
 	@PostMapping("/addChargeToReservation/{reservationId}")
 	@PreAuthorize("hasAuthority('checkoutReservation')")
-	public ModelAndView addChargeToReservation(@Valid @ModelAttribute ReservationChargeDTO reservationChargeDto, @PathVariable Optional<Integer> reservationId) {
+	public ModelAndView addChargeToReservation(@Valid @ModelAttribute ReservationChargeDTO reservationChargeDto, @PathVariable Long reservationId) {
 		log.info("adding charge to reservation: {}", reservationId);
 
 		ReservationCharge reservationCharge = new ReservationCharge();
@@ -98,8 +99,8 @@ public class InvoiceController {
 
 		StringBuilder viewName = new StringBuilder("redirect:/checkoutReservation/" );
 
-		if(reservationId.isPresent()) {
-			viewName.append(reservationId.get());
+		if(reservationId == null) {
+			viewName.append(reservationId);
 		}
 
 		return new ModelAndView(viewName.toString());

@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,8 +61,8 @@ public class ReservationController {
 	@PreAuthorize("hasAuthority('createReservation')")
 	@GetMapping(value = { "/reservation", "/reservation/{id}", "/reservation/start/{startDate}/end/{endDate}" })
 	public String addReservationModel(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<LocalDate> startDate,
-			@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<LocalDate> endDate, @PathVariable Optional<Integer> id, Model model) {
-		if (!id.isPresent()) {
+			@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<LocalDate> endDate, @PathVariable(required = false) Long id, Model model) {
+		if (id == null) {
 			model.addAttribute(RESERVATION, new Reservation());
 			model.addAttribute("room", new Room());
 		} else {
@@ -108,7 +107,7 @@ public class ReservationController {
 
 	@GetMapping(value = { "/realiseReservation/{id}" })
 	@PreAuthorize("hasAuthority('realiseReservation')")
-	public String getRealiseReservation(@PathVariable Optional<Integer> id, Model model) {
+	public String getRealiseReservation(@PathVariable Long id, Model model) {
 		Reservation reservation = bookingService.getReservation(id);
 		model.addAttribute(RESERVATION, reservation);
 
@@ -137,7 +136,7 @@ public class ReservationController {
 
 	@GetMapping(value = { "/cancelReservation/{id}" })
 	@PreAuthorize("hasAuthority('cancelReservation')")
-	public String cancelReservation(@PathVariable Optional<Integer> id, Model model) {
+	public String cancelReservation(@PathVariable Long id, Model model) {
 		Reservation reservation = bookingService.getReservation(id);
 		model.addAttribute(RESERVATION, reservation);
 
@@ -164,7 +163,7 @@ public class ReservationController {
 
 	@GetMapping(value = { "/checkoutReservation/{id}" })
 	@PreAuthorize("hasAuthority('checkoutReservation')")
-	public String checkoutReservation(@PathVariable Optional<Integer> id, Model model) {
+	public String checkoutReservation(@PathVariable Long id, Model model) {
 		log.info("loading checkout Reservation");
 
 		Reservation reservation = bookingService.getReservation(id);
@@ -189,7 +188,11 @@ public class ReservationController {
 
 	@PostMapping("/addOccupant/{reservationId}")
 	@PreAuthorize("hasAuthority('realiseReservation')")
-	public ModelAndView addOccupant(@Valid @ModelAttribute GuestDTO guestDTO, @PathVariable Optional<Integer> reservationId) {
+	public ModelAndView addOccupant(@Valid @ModelAttribute GuestDTO guestDTO, @PathVariable Long reservationId) {
+
+		if (reservationId == null) {
+			new ModelAndView(REDIRECT_RESERVATION);
+		}
 
 		Guest guest = Guest.builder()
 				.firstName(guestDTO.getFirstName())
@@ -214,12 +217,12 @@ public class ReservationController {
 		}
 		bookingService.saveReservation(reservation);
 
-		return reservationId.map(integer -> new ModelAndView("redirect:/realiseReservation/" + integer)).orElseGet(() -> new ModelAndView(REDIRECT_RESERVATION));
+		return new ModelAndView("redirect:/realiseReservation/" + reservationId);
 	}
 
 	@PostMapping("/realiseReservation/{reservationId}")
 	@PreAuthorize("hasAuthority('realiseReservation')")
-	public ModelAndView realiseReservation(@PathVariable Optional<Integer> reservationId) {
+	public ModelAndView realiseReservation(@PathVariable Long reservationId) {
 		Reservation reservation = bookingService.getReservation(reservationId);
 
 		if (reservation.getReservationStatus().equals(ReservationStatus.UP_COMING)) {
@@ -237,56 +240,57 @@ public class ReservationController {
 		return new ModelAndView(REDIRECT_DASHBOARD);
 	}
 
-	@DeleteMapping(value = "/reservationDelete/{id}")
+	@DeleteMapping(value = "/reservationDelete/{reservationId}")
 	@PreAuthorize("hasAuthority('deleteReservation')")
-	public ModelAndView deleteReservation(@PathVariable Optional<Integer> reservationId) {
-		if (reservationId.isPresent()) {
-			Reservation resFromDB = bookingService.getReservation(reservationId);
-			bookingService.deleteReservation(resFromDB);
-			log.info("deleting reservation: {}", reservationId);
-			throw new IllegalArgumentException("only a super user can do this");
-		}
+	public ModelAndView deleteReservation(@PathVariable Long reservationId) {
+		Reservation resFromDB = bookingService.getReservation(reservationId);
+		bookingService.deleteReservation(resFromDB);
+		log.info("deleting reservation: {}", reservationId);
+//		TODO throw new IllegalArgumentException("only a super user can do this");
 		return new ModelAndView(REDIRECT_RESERVATION);
 	}
 
 	@PostMapping(value = "/deleteContact/{guestId}/reservationId/{reservationId}")
 	@PreAuthorize("hasAuthority('realiseReservation')")
-	public ModelAndView deleteGuest(@PathVariable Optional<Integer> guestId,  @PathVariable Optional<Integer> reservationId) {
-		if (guestId.isPresent()) {
-			log.info("deleting guest: {} from reservation: {}", guestId.get(), reservationId);
-			Guest guestToDelete = guestService.getGuestById(guestId.get());
-			Reservation resFromDB = bookingService.getReservation(reservationId);
-			
-			if(!resFromDB.getOccupants().contains(guestToDelete)) {
-				throw new IllegalArgumentException("Guest: " + guestToDelete.getId() + " is not in the list of Guests for reservation: " + resFromDB.getId());
-			} else {
-				//TODO can't delete the last occupant or make it so that you can't realise a reservation without an occupant
-				resFromDB.getOccupants().remove(guestToDelete);
-				guestService.deleteGuest(guestId);
-			}
+	public ModelAndView deleteGuest(@PathVariable Long guestId,  @PathVariable Long reservationId) {
+
+		if (reservationId == null) {
+			new ModelAndView(REDIRECT_RESERVATION);
 		}
-		
+
+		log.info("deleting guest: {} from reservation: {}", guestId, reservationId);
+		Guest guestToDelete = guestService.getGuestById(guestId);
+		Reservation resFromDB = bookingService.getReservation(reservationId);
+
+		if(!resFromDB.getOccupants().contains(guestToDelete)) {
+			throw new IllegalArgumentException("Guest: " + guestToDelete.getId() + " is not in the list of Guests for reservation: " + resFromDB.getId());
+		} else {
+			//TODO can't delete the last occupant or make it so that you can't realise a reservation without an occupant
+			resFromDB.getOccupants().remove(guestToDelete);
+			guestService.deleteGuest(guestId);
+		}
+
 		log.info("can't delete nonexistant guest");
 
-		return reservationId.map(integer -> new ModelAndView("redirect:/realiseReservation/" + integer)).orElseGet(() -> new ModelAndView(REDIRECT_RESERVATION));
+		return new ModelAndView("redirect:/realiseReservation/" + reservationId);
 	}
 	
 	@PostMapping("/cancelReservation/{reservationID}")
 	@PreAuthorize("hasAuthority('cancelReservation')")
-	public ModelAndView cancelReservation(@Valid @ModelAttribute ReservationCancellationDTO reservationCancellationDTO, @PathVariable Optional<Integer> reservationID, Authentication authentication) {
-		Reservation resFromDB = bookingService.getReservation(reservationID);
+	public ModelAndView cancelReservation(@Valid @ModelAttribute ReservationCancellationDTO reservationCancellationDTO, @PathVariable Long reservationID) {
+		Reservation reservation = bookingService.getReservation(reservationID);
 
 		org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		User userFromDb = userService.getUserByUserName(principal.getUsername());
 
 		ReservationCancellation cancellation = ReservationCancellation.builder()
-				.reservation(resFromDB)
+				.reservation(reservation)
 				.reason(reservationCancellationDTO.getReason())
 				.cancelledBy(userFromDb)
 				.cancelledOn(LocalDateTime.now())
 				.build();
 
-		cancellation.setReservation(resFromDB);
+		cancellation.setReservation(reservation);
 		bookingService.cancelReservation(cancellation);
 
 		return new ModelAndView(REDIRECT_DASHBOARD);
@@ -294,7 +298,7 @@ public class ReservationController {
 
 	@PostMapping("/fulfillReservation/{reservationID}")
 	@PreAuthorize("hasAuthority('fulfillReservation')")
-	public ModelAndView fulfillReservation(@PathVariable Optional<Integer> reservationID) {
+	public ModelAndView fulfillReservation(@PathVariable Long reservationID) {
 		bookingService.fulfillReservation(reservationID);
 
 		return new ModelAndView(REDIRECT_DASHBOARD);

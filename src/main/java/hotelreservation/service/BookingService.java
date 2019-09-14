@@ -1,15 +1,11 @@
 package hotelreservation.service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
+import hotelreservation.Utils;
+import hotelreservation.exceptions.MissingOrInvalidArgumentException;
+import hotelreservation.exceptions.NotDeletedException;
+import hotelreservation.model.*;
+import hotelreservation.model.enums.ReservationStatus;
+import hotelreservation.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,22 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import hotelreservation.Utils;
-import hotelreservation.exceptions.MissingOrInvalidArgumentException;
-import hotelreservation.exceptions.NotDeletedException;
-import hotelreservation.exceptions.NotFoundException;
-import hotelreservation.model.Contact;
-import hotelreservation.model.Guest;
-import hotelreservation.model.Identification;
-import hotelreservation.model.Reservation;
-import hotelreservation.model.ReservationCancellation;
-import hotelreservation.model.RoomRate;
-import hotelreservation.model.enums.ReservationStatus;
-import hotelreservation.repository.ContactRepo;
-import hotelreservation.repository.GuestRepo;
-import hotelreservation.repository.IdentificationRepo;
-import hotelreservation.repository.ReservationCancellationRepo;
-import hotelreservation.repository.ReservationRepo;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED)
@@ -139,16 +123,33 @@ public class BookingService {
 		return utils.toList(reservationRepo.findAll());
 	}
 
-	public Reservation getReservation(Optional<Integer> reservationId) {
-		if(!reservationId.isPresent()) {
-			log.warn("Missing reservation id.");
-			throw new MissingOrInvalidArgumentException("Missing reservation id.");
+//	public Reservation getReservation(Optional<Integer> reservationId) {
+//		if(!reservationId.isPresent()) {
+//			log.warn("Missing reservation id.");
+//			throw new MissingOrInvalidArgumentException("Missing reservation id.");
+//		}
+//
+//		log.info("Getting reservation: {}", reservationId.get());
+//		Reservation reservation = reservationRepo.findById(Long.valueOf(reservationId.get())).orElseThrow(() -> new NotFoundException(reservationId.get()));
+//		log.info("Got reservation: {}", reservation.getId());
+//
+//		return reservation;
+//	}
+
+	public Reservation getReservation(Long reservationId) {
+//		if(!reservationId.isPresent()) {
+//			log.warn("Missing reservation id.");
+//			throw new MissingOrInvalidArgumentException("Missing reservation id.");
+//		}
+
+		if(reservationId == null) {
+			throw new MissingOrInvalidArgumentException("ReservationID cannot be null");
 		}
-		
-		log.info("Getting reservation: {}", reservationId.get());
-		Reservation reservation = reservationRepo.findById(Long.valueOf(reservationId.get())).orElseThrow(() -> new NotFoundException(reservationId.get()));
+
+		log.info("Getting reservation: {}", reservationId);
+		Reservation reservation = reservationRepo.findById(reservationId).orElseThrow(() -> new MissingOrInvalidArgumentException("missing reservation for id: {} " + reservationId));
 		log.info("Got reservation: {}", reservation.getId());
-		
+
 		return reservation;
 	}
  
@@ -202,14 +203,12 @@ public class BookingService {
 		log.info("Realised reservation: {}", reservation.getId());
 	}
 
-	public void fulfillReservation(Optional<Integer> reservationID) {
-		Long id = Long.valueOf(reservationID.orElseThrow(() -> new  MissingOrInvalidArgumentException("Reservation fulfillment ID is missing")));
-		
-		if(!reservationRepo.existsById(id)) {
-			throw new NotFoundException(id);
+	public void fulfillReservation(Long reservationID) {
+		if(reservationID == null) {
+			throw new MissingOrInvalidArgumentException("Empty ID");
 		}
 		
-		Reservation reservation = reservationRepo.findById(id).orElseThrow( () -> new MissingOrInvalidArgumentException("Missing reservation for id: {}" + id));
+		Reservation reservation = reservationRepo.findById(reservationID).orElseThrow( () -> new MissingOrInvalidArgumentException("Missing reservation for id: {}" + reservationID));
 
 		if(!reservation.getReservationStatus().equals(ReservationStatus.IN_PROGRESS)) {
 			throw new MissingOrInvalidArgumentException("Reservation in wrong state for fulfillment. Was: " + reservation.getReservationStatus());

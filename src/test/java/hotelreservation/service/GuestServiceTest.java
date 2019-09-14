@@ -1,10 +1,11 @@
 package hotelreservation.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Optional;
-
+import hotelreservation.exceptions.NotDeletedException;
+import hotelreservation.exceptions.NotFoundException;
+import hotelreservation.model.Contact;
+import hotelreservation.model.Guest;
+import hotelreservation.model.Identification;
+import hotelreservation.model.enums.IdType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,12 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import hotelreservation.exceptions.NotDeletedException;
-import hotelreservation.exceptions.NotFoundException;
-import hotelreservation.model.Contact;
-import hotelreservation.model.Guest;
-import hotelreservation.model.Identification;
-import hotelreservation.model.enums.IdType;
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -84,7 +83,7 @@ public class GuestServiceTest {
 		guestService.saveContact(contact);
 		guestService.saveIdentification(identification);
 		
-		guestService.deleteGuest(Optional.of(Long.valueOf(guest.getId()).intValue()));
+		guestService.deleteGuest(guest.getId());
 		assertTrue(guestService.getAllGuests().isEmpty());
 	}
 	
@@ -95,7 +94,7 @@ public class GuestServiceTest {
 	
 	@Test(expected = NotFoundException.class)
 	public void testGetNonExistentContact() {
-		guestService.getContactById(99);
+		guestService.getContactById(99L);
 	}
 	
 	@Test(expected = NotFoundException.class)
@@ -105,7 +104,7 @@ public class GuestServiceTest {
 	
 	@Test(expected = NotDeletedException.class)
 	public void testDeleteNonExistentGuest() {
-		guestService.deleteGuest(Optional.of(Integer.valueOf(99)));
+		guestService.deleteGuest(99L);
 	}
 	
 	@Test(expected = NotDeletedException.class)

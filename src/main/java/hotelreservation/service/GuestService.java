@@ -52,7 +52,7 @@ public class GuestService {
         return guestRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
     }
 
-    public Contact getContactById(long id) {
+    public Contact getContactById(Long id) {
         log.info("Looking for Contact with ID: {}", id);
         return contactRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
     }
@@ -74,12 +74,8 @@ public class GuestService {
         return utils.toList(identificationRepo.findAll());
     }
 
-    public void deleteGuest(Optional<Integer> id) {
-        if (!id.isPresent()) {
-            throw new NotDeletedException(0);
-        }
-
-        guestRepo.delete(guestRepo.findById(Long.valueOf(id.get())).orElseThrow(() -> new NotDeletedException(id.get())));
+    public void deleteGuest(Long id) {
+        guestRepo.delete(guestRepo.findById(id).orElseThrow(() -> new NotDeletedException(id)));
     }
 
     public void deleteIdentification(Optional<Integer> id) {

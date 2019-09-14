@@ -1,16 +1,13 @@
 package hotelreservation.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.time.LocalDate;
-import java.time.Month;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
+import hotelreservation.exceptions.MissingOrInvalidArgumentException;
+import hotelreservation.exceptions.NotDeletedException;
+import hotelreservation.model.*;
+import hotelreservation.model.enums.Currency;
+import hotelreservation.model.enums.IdType;
+import hotelreservation.model.enums.PaymentType;
+import hotelreservation.model.enums.ReservationStatus;
+import hotelreservation.model.finance.Payment;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,29 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import hotelreservation.exceptions.MissingOrInvalidArgumentException;
-import hotelreservation.exceptions.NotDeletedException;
-import hotelreservation.exceptions.NotFoundException;
-import hotelreservation.model.Amenity;
-import hotelreservation.model.AmenityType;
-import hotelreservation.model.Charge;
-import hotelreservation.model.Contact;
-import hotelreservation.model.Guest;
-import hotelreservation.model.Identification;
-import hotelreservation.model.Reservation;
-import hotelreservation.model.ReservationCancellation;
-import hotelreservation.model.ReservationCharge;
-import hotelreservation.model.Role;
-import hotelreservation.model.Room;
-import hotelreservation.model.RoomRate;
-import hotelreservation.model.RoomType;
-import hotelreservation.model.Status;
-import hotelreservation.model.User;
-import hotelreservation.model.enums.Currency;
-import hotelreservation.model.enums.IdType;
-import hotelreservation.model.enums.PaymentType;
-import hotelreservation.model.enums.ReservationStatus;
-import hotelreservation.model.finance.Payment;
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -788,9 +769,9 @@ public class BookingServiceTest extends BaseServiceTest {
 		bookingService.saveReservation(reservationOne);
 	}
 	
-	@Test(expected = NotFoundException.class)
+	@Test(expected = MissingOrInvalidArgumentException.class)
 	public void testGetNonExistentReservation() {
-		bookingService.getReservation(Optional.of(99));
+		bookingService.getReservation(99L);
 	}
 	
 	@Test(expected = NotDeletedException.class)
@@ -801,12 +782,12 @@ public class BookingServiceTest extends BaseServiceTest {
 	
 	@Test(expected = MissingOrInvalidArgumentException.class)
 	public void testReservationFulfillmentWithoutID() {
-		bookingService.fulfillReservation(Optional.empty());
+		bookingService.fulfillReservation(null);
 	}
 	
-	@Test(expected = NotFoundException.class)
+	@Test(expected = MissingOrInvalidArgumentException.class)
 	public void testReservationFulfillmentMissingReservation() {
-		bookingService.fulfillReservation(Optional.of(99));
+		bookingService.fulfillReservation(99L);
 	}
 	
 	@Test(expected = MissingOrInvalidArgumentException.class)
@@ -820,7 +801,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
 		bookingService.saveReservation(reservationOne);
 
-		bookingService.fulfillReservation(Optional.of(Long.valueOf(reservationOne.getId()).intValue()));
+		bookingService.fulfillReservation(reservationOne.getId());
 	}
 	
 	@Test(expected = MissingOrInvalidArgumentException.class)
@@ -851,7 +832,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		invoiceService.saveCharge(chargeOne);
 		invoiceService.saveReservationCharge(reservationChargeOne);
 		
-		bookingService.fulfillReservation(Optional.of(Long.valueOf(reservationOne.getId()).intValue()));
+		bookingService.fulfillReservation(reservationOne.getId());
 	}
 	
 	@Test(expected = MissingOrInvalidArgumentException.class)
@@ -897,7 +878,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		payment.setReservationCharges(Arrays.asList(reservationChargeOne));
 		invoiceService.savePayment(payment);
 		
-		bookingService.fulfillReservation(Optional.of(Long.valueOf(reservationOne.getId()).intValue()));
+		bookingService.fulfillReservation(reservationOne.getId());
 	}
 	
 	@Test
@@ -918,7 +899,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		bookingService.realiseReservation(reservationOne);
 		
 		assertEquals(ReservationStatus.IN_PROGRESS, reservationOne.getReservationStatus());
-		bookingService.fulfillReservation(Optional.of(Long.valueOf(reservationOne.getId()).intValue()));
+		bookingService.fulfillReservation(reservationOne.getId());
 		assertEquals(ReservationStatus.FULFILLED, reservationOne.getReservationStatus());
 	}
 	
@@ -965,12 +946,12 @@ public class BookingServiceTest extends BaseServiceTest {
 		payment.setPaymentType(PaymentType.CASH);
 		invoiceService.savePayment(payment);
 		
-		bookingService.fulfillReservation(Optional.of(Long.valueOf(reservationOne.getId()).intValue()));
+		bookingService.fulfillReservation(reservationOne.getId());
 		assertEquals(ReservationStatus.FULFILLED, reservationOne.getReservationStatus());
 	}
 	
 	@Test(expected = MissingOrInvalidArgumentException.class)
 	public void testGetReservationWithEmptyId() {
-		bookingService.getReservation(Optional.empty());
+		bookingService.getReservation(null);
 	}
 }

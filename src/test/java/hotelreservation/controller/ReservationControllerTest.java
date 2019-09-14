@@ -17,10 +17,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
@@ -51,7 +51,7 @@ public class ReservationControllerTest {
 		this.mvc = standaloneSetup(reservationController) .setControllerAdvice(new RestExceptionHandler()).build();// Standalone context
 
 		guestDTO = new GuestDTO("firstName", "lastName", "", applicationStartup.guestOne.getContact(), applicationStartup.guestOne.getIdentification());
-		cancellationDTO = new ReservationCancellationDTO(applicationStartup.reservationOne, "reason", applicationStartup.admin, LocalDateTime.now());
+		cancellationDTO = new ReservationCancellationDTO("reason");
 	}
 
 	@Test
@@ -101,7 +101,7 @@ public class ReservationControllerTest {
 	@Test
 	@WithUserDetails("manager")
 	public void testManagerRolePermissions_forbidden() throws Exception {
-		mvc.perform(delete("/reservationDelete/1")).andExpect(status().isForbidden());
+		mvc.perform(delete("/reservationDelete/1")).andDo(print()).andExpect(status().isForbidden());
 	}
 
 	@Test
@@ -170,12 +170,6 @@ public class ReservationControllerTest {
 	}
 
 	@Test
-	@WithUserDetails("manager")
-	public void testGetReservationWithNoId() throws Exception {
-		mvc.perform(get("/reservation/")).andExpect(status().isOk());
-	}
-
-	@Test
 	@WithUserDetails("receptionist")
 	public void testRealiseReservation() throws Exception  {
 		mvc.perform(post("/realiseReservation/" + applicationStartup.reservationOne.getId())).andExpect(status().is3xxRedirection());
@@ -192,13 +186,19 @@ public class ReservationControllerTest {
 	@WithUserDetails("admin")
 	public void testDeleteReservation() throws Exception  {
 		mvc.perform(delete("/reservationDelete/" + applicationStartup.reservationOne.getId())).andExpect(status().is3xxRedirection());
-		mvc.perform(delete("/reservationDelete/" + applicationStartup.reservationOne.getId())).andExpect(status().is3xxRedirection());
+		mvc.perform(delete("/reservationDelete/" + applicationStartup.reservationOne.getId())).andExpect(status().is4xxClientError());
 	}
 
 	@Test
 	@WithUserDetails("admin")
 	public void testDeleteNonExistentReservation() throws Exception  {
-		mvc.perform(delete("/reservationDelete/" + 9999)).andExpect(status().is3xxRedirection());
+		mvc.perform(delete("/reservationDelete/" + 9999)).andDo(print()).andExpect(status().is4xxClientError());
+	}
+
+	@Test
+	@WithUserDetails("manager")
+	public void testGetReservationWithNoId() throws Exception {
+		mvc.perform(get("/reservation/")).andExpect(status().isOk());
 	}
 
 }

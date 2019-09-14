@@ -1,16 +1,13 @@
 package hotelreservation;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-
+import hotelreservation.model.*;
+import hotelreservation.model.enums.Currency;
+import hotelreservation.model.enums.IdType;
+import hotelreservation.repository.UserRepo;
+import hotelreservation.service.BookingService;
+import hotelreservation.service.InvoiceService;
+import hotelreservation.service.RoomService;
+import hotelreservation.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,27 +17,15 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import hotelreservation.model.Amenity;
-import hotelreservation.model.AmenityType;
-import hotelreservation.model.Charge;
-import hotelreservation.model.Contact;
-import hotelreservation.model.Guest;
-import hotelreservation.model.Identification;
-import hotelreservation.model.Privilege;
-import hotelreservation.model.Reservation;
-import hotelreservation.model.Role;
-import hotelreservation.model.Room;
-import hotelreservation.model.RoomRate;
-import hotelreservation.model.RoomType;
-import hotelreservation.model.Status;
-import hotelreservation.model.User;
-import hotelreservation.model.enums.Currency;
-import hotelreservation.model.enums.IdType;
-import hotelreservation.repository.UserRepo;
-import hotelreservation.service.BookingService;
-import hotelreservation.service.InvoiceService;
-import hotelreservation.service.RoomService;
-import hotelreservation.service.UserService;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 @Component
 @Profile("dev")
@@ -566,7 +551,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		}
 		
 		//Make one reservation InProgress
-		Reservation reservation = bookingService.getReservation(Optional.of(3));
+		Reservation reservation = bookingService.getReservation(3L);
 		bookingService.realiseReservation(reservation);
 	}
 	
