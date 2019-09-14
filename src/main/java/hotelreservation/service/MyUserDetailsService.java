@@ -29,7 +29,7 @@ public class MyUserDetailsService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String userName) {
 		log.info("Login attempt for user: {}", userName);
-		User user = userService.getUserByName(userName);
+		User user = userService.getUserByUserName(userName);
 		log.info("User: {} found. ", userName);
 		
 		List<GrantedAuthority> grantedAuthorities = getAuthorities(user.getRole());

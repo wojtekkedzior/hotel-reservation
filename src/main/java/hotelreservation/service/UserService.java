@@ -1,15 +1,5 @@
 package hotelreservation.service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import hotelreservation.Utils;
 import hotelreservation.exceptions.MissingOrInvalidArgumentException;
 import hotelreservation.exceptions.NotDeletedException;
@@ -20,6 +10,15 @@ import hotelreservation.model.User;
 import hotelreservation.repository.PrivilegeRepo;
 import hotelreservation.repository.RoleRepo;
 import hotelreservation.repository.UserRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Transactional
@@ -50,7 +49,7 @@ public class UserService {
 			throw new MissingOrInvalidArgumentException("Username already exists: " + user.getUserName());
 		}
 
-		User userByUserName = getUserByName(name);
+		User userByUserName = getUserByUserName(name);
 		// TODO ensure that the 'create by' user is actually allowed to create a user of the selected Type
 		user.setCreatedBy(userByUserName);
 
@@ -96,7 +95,7 @@ public class UserService {
 		return roleRepo.findById(Long.valueOf(id)).orElseThrow(() -> new NotFoundException(id));
 	}
 	
-	public User getUserByName(String userName) {
+	public User getUserByUserName(String userName) {
 		return userRepo.findByUserName(userName).orElseThrow(() -> new NotFoundException(0));
 	}
 

@@ -7,16 +7,15 @@ import hotelreservation.model.enums.ReservationStatus;
 import hotelreservation.model.ui.GuestDTO;
 import hotelreservation.model.ui.ReservationCancellationDTO;
 import hotelreservation.model.ui.ReservationChargeDTO;
-import hotelreservation.service.BookingService;
-import hotelreservation.service.GuestService;
-import hotelreservation.service.InvoiceService;
-import hotelreservation.service.RoomService;
+import hotelreservation.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -53,8 +52,8 @@ public class ReservationController {
 	private InvoiceService invoiceService;
 
 	@Autowired
-	private BookingService reservationService;
-	
+	private UserService userService;
+
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true, 10));
@@ -274,15 +273,16 @@ public class ReservationController {
 	
 	@PostMapping("/cancelReservation/{reservationID}")
 	@PreAuthorize("hasAuthority('cancelReservation')")
-	public ModelAndView cancelReservation(@Valid @ModelAttribute ReservationCancellationDTO reservationCancellationDTO, @PathVariable Optional<Integer> reservationID) {
+	public ModelAndView cancelReservation(@Valid @ModelAttribute ReservationCancellationDTO reservationCancellationDTO, @PathVariable Optional<Integer> reservationID, Authentication authentication) {
 		Reservation resFromDB = bookingService.getReservation(reservationID);
 
-//		Authentication authentication = SecurityContextHolder.getContext().getAuthentication().getPrincipal()
+		org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User userFromDb = userService.getUserByUserName(principal.getUsername());
 
 		ReservationCancellation cancellation = ReservationCancellation.builder()
 				.reservation(resFromDB)
 				.reason(reservationCancellationDTO.getReason())
-				.cancelledBy(reservationCancellationDTO.getCancelledBy()) //TODO get user from context
+				.cancelledBy(userFromDb)
 				.cancelledOn(LocalDateTime.now())
 				.build();
 
