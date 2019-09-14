@@ -1,6 +1,5 @@
 package hotelreservation.model.ui;
 
-import hotelreservation.model.Reservation;
 import hotelreservation.model.Role;
 import hotelreservation.model.User;
 import nl.jqno.equalsverifier.EqualsVerifier;
@@ -69,5 +68,10 @@ public class UiModelEqualsTest {
 	@Test
 	public void testRoomTypeDTO() {
 		EqualsVerifier.forClass(RoomTypeDTO.class).verify();
+	}
+
+	@Test
+	public void testRoomDTO() {
+		EqualsVerifier.forClass(RoomDTO.class).withPrefabValues(User.class, admin, manager).verify();
 	}
 }

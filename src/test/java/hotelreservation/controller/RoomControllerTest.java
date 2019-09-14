@@ -1,19 +1,9 @@
 package hotelreservation.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-
-import hotelreservation.model.ui.AmenityDTO;
-import hotelreservation.model.ui.AmenityTypeDTO;
-import hotelreservation.model.ui.RoomRateDTO;
-import hotelreservation.model.ui.RoomTypeDTO;
+import hotelreservation.ApplicationStartup;
+import hotelreservation.RestExceptionHandler;
+import hotelreservation.model.enums.Currency;
+import hotelreservation.model.ui.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,13 +16,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import hotelreservation.ApplicationStartup;
-import hotelreservation.RestExceptionHandler;
-import hotelreservation.model.AmenityType;
-import hotelreservation.model.Room;
-import hotelreservation.model.RoomRate;
-import hotelreservation.model.RoomType;
-import hotelreservation.model.enums.Currency;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
@@ -54,12 +44,14 @@ public class RoomControllerTest {
 	private AmenityDTO amenityDTO;
 
 	private RoomRateDTO roomRateDTO;
+	private RoomDTO roomDTO;
 
 	@Before
 	public void setup() {
 		this.mvc = standaloneSetup(roomController) .setControllerAdvice(new RestExceptionHandler()).build();// Standalone context
 		amenityDTO = new AmenityDTO("name", "description", applicationStartup.amenityTypeRoomBasic);
 		roomRateDTO = new RoomRateDTO("description", applicationStartup.standardRoomOne, Currency.CZK, 10, LocalDate.now());
+		roomDTO = new RoomDTO(1, applicationStartup.operational, "name", "description", null, applicationStartup.roomTypeStandard, LocalDateTime.now(), applicationStartup.admin);
 	}
 
 	@Test
@@ -73,10 +65,8 @@ public class RoomControllerTest {
 		mvc.perform(post("/addAmenityType").flashAttr("amenityTypeDTO", amenityTypeDTO)).andExpect(status().is3xxRedirection());
 		mvc.perform(post("/addAmenity").flashAttr("amenityDTO", amenityDTO)).andExpect(status().is3xxRedirection());
 		mvc.perform(post("/addRoomType").flashAttr("roomTypeDTO", roomTypeStandardDTO)).andExpect(status().is3xxRedirection());
-		
-		Room room = new Room(1, applicationStartup.operational, applicationStartup.roomTypeStandard, applicationStartup.admin);
-		room.setCreatedOn(LocalDateTime.now());
-		mvc.perform(post("/addRoom").flashAttr("room", room)).andExpect(status().is3xxRedirection());
+
+		mvc.perform(post("/addRoom").flashAttr("roomDTO", roomDTO)).andExpect(status().is3xxRedirection());
 		
 		//Some of these deletes will fail because of constraint violations, which is fine.
 		mvc.perform(delete("/roomDelete/1")).andExpect(status().is4xxClientError());
@@ -111,7 +101,7 @@ public class RoomControllerTest {
 		mvc.perform(post("/addAmenityType").flashAttr("amenityType", applicationStartup.amenityTypeRoomBasic)).andExpect(status().isForbidden());
 		mvc.perform(post("/addAmenity").flashAttr("amenity", amenityDTO)).andExpect(status().isForbidden());
 		mvc.perform(post("/addRoomType").flashAttr("roomTypeDTO", roomTypeStandardDTO)).andExpect(status().isForbidden());
-		mvc.perform(post("/addRoom").flashAttr("room", applicationStartup.standardRoomOne)).andExpect(status().isForbidden());
+		mvc.perform(post("/addRoom").flashAttr("roomDTO", roomDTO)).andExpect(status().isForbidden());
 		
 		mvc.perform(delete("/roomDelete/1")).andExpect(status().isForbidden());
 		mvc.perform(delete("/roomTypeDelete/1")).andExpect(status().isForbidden());
@@ -131,7 +121,7 @@ public class RoomControllerTest {
 		mvc.perform(post("/addAmenityType").flashAttr("amenityType", applicationStartup.amenityTypeRoomBasic)).andExpect(status().isForbidden());
 		mvc.perform(post("/addAmenity").flashAttr("amenity", amenityDTO)).andExpect(status().isForbidden());
 		mvc.perform(post("/addRoomType").flashAttr("roomTypeDTO", roomTypeStandardDTO)).andExpect(status().isForbidden());
-		mvc.perform(post("/addRoom").flashAttr("room", applicationStartup.standardRoomOne)).andExpect(status().isForbidden());
+		mvc.perform(post("/addRoom").flashAttr("roomDTO", roomDTO)).andExpect(status().isForbidden());
 
 		mvc.perform(post("/addRoomRate").flashAttr("roomRateDTO", roomRateDTO)).andExpect(status().isForbidden());
 		
