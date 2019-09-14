@@ -1,14 +1,15 @@
 package hotelreservation.controller;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-
 import hotelreservation.exceptions.NotFoundException;
+import hotelreservation.model.*;
+import hotelreservation.model.enums.IdType;
+import hotelreservation.model.enums.ReservationStatus;
+import hotelreservation.model.ui.GuestDTO;
+import hotelreservation.model.ui.ReservationChargeDTO;
+import hotelreservation.service.BookingService;
+import hotelreservation.service.GuestService;
+import hotelreservation.service.InvoiceService;
+import hotelreservation.service.RoomService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,28 +22,19 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import hotelreservation.model.Contact;
-import hotelreservation.model.Guest;
-import hotelreservation.model.Identification;
-import hotelreservation.model.Reservation;
-import hotelreservation.model.ReservationCancellation;
-import hotelreservation.model.ReservationCheckout;
-import hotelreservation.model.Room;
-import hotelreservation.model.RoomRate;
-import hotelreservation.model.enums.IdType;
-import hotelreservation.model.enums.ReservationStatus;
-import hotelreservation.model.ui.ReservationChargeDTO;
-import hotelreservation.service.BookingService;
-import hotelreservation.service.GuestService;
-import hotelreservation.service.InvoiceService;
-import hotelreservation.service.RoomService;
+import javax.validation.Valid;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Controller
 public class ReservationController {
-	public static final String RESERVATION = "reservation";
-	public static final String REDIRECT_DASHBOARD = "redirect:/dashboard";
-	public static final String REDIRECT_RESERVATION = "redirect:/reservation";
+	private static final String RESERVATION = "reservation";
+	private static final String REDIRECT_DASHBOARD = "redirect:/dashboard";
+	private static final String REDIRECT_RESERVATION = "redirect:/reservation";
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -92,16 +84,16 @@ public class ReservationController {
 			model.addAttribute("roomRatesPerRoom", roomRatesAsMap);
 		}
 
-		model.addAttribute("startDate", startDate.isPresent() ? startDate.get() : LocalDate.now());
-		model.addAttribute("endDate", endDate.isPresent() ? endDate.get() :  LocalDate.now());
+		model.addAttribute("startDate", startDate.orElseGet(LocalDate::now));
+		model.addAttribute("endDate", endDate.orElseGet(LocalDate::now));
 
 		if (startDate.isPresent() && endDate.isPresent()) {
 			Map<Room, List<RoomRate>> roomRatesAsMap = roomService.getRoomRatesAsMap(startDate.get(), endDate.get());
 			model.addAttribute("roomRatesPerRoom", roomRatesAsMap);
 		}
 		
-		LocalDate asDateStart = startDate.isPresent() ? startDate.get() : LocalDate.now();
-		LocalDate asDateEnd = endDate.isPresent() ? endDate.get() : asDateStart.plus(1, ChronoUnit.DAYS);
+		LocalDate asDateStart = startDate.orElseGet(LocalDate::now);
+		LocalDate asDateEnd = endDate.orElseGet(() -> asDateStart.plus(1, ChronoUnit.DAYS));
  
 		Map<LocalDate, List<RoomRate>> roomRatesAsMapByDates = roomService.getRoomRatesPerDate(asDateStart, asDateEnd);
 		model.addAttribute("roomRatesAsMapByDates", roomRatesAsMapByDates);
@@ -196,10 +188,19 @@ public class ReservationController {
 
 	@PostMapping("/addOccupant/{reservationId}")
 	@PreAuthorize("hasAuthority('realiseReservation')")
-	public ModelAndView addOccupant(@Valid @ModelAttribute Guest guest, @PathVariable Optional<Integer> reservationId) {
+	public ModelAndView addOccupant(@Valid @ModelAttribute GuestDTO guestDTO, @PathVariable Optional<Integer> reservationId) {
+
+		Guest guest = Guest.builder()
+				.firstName(guestDTO.getFirstName())
+				.lastName(guestDTO.getLastName())
+				.description(guestDTO.getDescription())
+				.contact(guestDTO.getContact())
+				.identification(guestDTO.getIdentification())
+				.build();
+
 		guestService.saveIdentification(guest.getIdentification());
 		guestService.saveContact(guest.getContact());
-		guestService.saveGuest(guest);
+		guest = guestService.saveGuest(guest);
 		
 		Reservation reservation = bookingService.getReservation(reservationId);
 		
@@ -212,8 +213,7 @@ public class ReservationController {
 		}
 		bookingService.saveReservation(reservation);
 
-		return reservationId.isPresent() ? new ModelAndView("redirect:/realiseReservation/" + reservationId.get()) :
-				new ModelAndView(REDIRECT_RESERVATION);
+		return reservationId.map(integer -> new ModelAndView("redirect:/realiseReservation/" + integer)).orElseGet(() -> new ModelAndView(REDIRECT_RESERVATION));
 	}
 
 	@PostMapping("/realiseReservation/{reservationId}")
@@ -267,8 +267,7 @@ public class ReservationController {
 		
 		log.info("can't delete nonexistant guest");
 
-		return reservationId.isPresent() ? new ModelAndView("redirect:/realiseReservation/" + reservationId.get()) :
-				new ModelAndView(REDIRECT_RESERVATION);
+		return reservationId.map(integer -> new ModelAndView("redirect:/realiseReservation/" + integer)).orElseGet(() -> new ModelAndView(REDIRECT_RESERVATION));
 	}
 	
 	@PostMapping("/cancelReservation/{reservationID}")

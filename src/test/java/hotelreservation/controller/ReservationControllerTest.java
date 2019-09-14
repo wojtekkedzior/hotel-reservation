@@ -1,14 +1,10 @@
 package hotelreservation.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-//import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
-
-import java.util.stream.Collectors;
-
+import hotelreservation.ApplicationStartup;
+import hotelreservation.RestExceptionHandler;
+import hotelreservation.model.ReservationCancellation;
+import hotelreservation.model.ui.GuestDTO;
+import hotelreservation.service.BookingService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,10 +17,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import hotelreservation.ApplicationStartup;
-import hotelreservation.RestExceptionHandler;
-import hotelreservation.model.ReservationCancellation;
-import hotelreservation.service.BookingService;
+import java.util.stream.Collectors;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
+
+//import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
@@ -42,10 +41,14 @@ public class ReservationControllerTest {
 	
 	@Autowired
 	private ReservationController reservationController;
+
+	private GuestDTO guestDTO;
 	
 	@Before
 	public void setup() {
 		this.mvc = standaloneSetup(reservationController) .setControllerAdvice(new RestExceptionHandler()).build();// Standalone context
+
+		guestDTO = new GuestDTO("firstName", "lastName", "", applicationStartup.guestOne.getContact(), applicationStartup.guestOne.getIdentification());
 	}
 
 	@Test
@@ -65,7 +68,7 @@ public class ReservationControllerTest {
 		mvc.perform(get("/cancelReservation/1")).andExpect(status().isForbidden());
 		mvc.perform(get("/checkoutReservation/1")).andExpect(status().isForbidden());
 		
-		mvc.perform(post("/addOccupant/1").flashAttr("guest", applicationStartup.guestOne)).andExpect(status().isForbidden());
+		mvc.perform(post("/addOccupant/1").flashAttr("guestDTO", guestDTO)).andExpect(status().isForbidden());
 		mvc.perform(post("/fulfillReservation/1")).andExpect(status().isForbidden());
 		
 		mvc.perform(post("/deleteContact/" + applicationStartup.contactOne.getId() + "/reservationId/" + applicationStartup.reservationOne.getId())).andExpect(status().isForbidden());	
@@ -74,8 +77,6 @@ public class ReservationControllerTest {
 		cancellation.setReason("some reason");
 		cancellation.setReservation(applicationStartup.reservationOne);
 		mvc.perform(post("/cancelReservation/1").flashAttr("reservationCancellation", cancellation)).andExpect(status().isForbidden());
-
-
 	}
 
 	@Test
@@ -89,11 +90,11 @@ public class ReservationControllerTest {
 		
 		mvc.perform(get("/dashboard")).andExpect(status().isOk());
 
-		mvc.perform(post("/addOccupant/1").flashAttr("guest", applicationStartup.guestOne)).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/addOccupant/1").flashAttr("guestDTO", guestDTO)).andExpect(status().is3xxRedirection());
 		mvc.perform(post("/fulfillReservation/1")).andExpect(status().is4xxClientError());
 		
 		//in error due to constraint violation
-		mvc.perform(post("/deleteContact/" + applicationStartup.contactOne.getId() + "/reservationId/" + applicationStartup.reservationOne.getId())).andExpect(status().is4xxClientError());	
+		mvc.perform(post("/deleteContact/5/reservationId/" + applicationStartup.reservationOne.getId())).andExpect(status().is4xxClientError());
 		
 		ReservationCancellation cancellation = new ReservationCancellation();
 		cancellation.setReason("some reason");
@@ -113,17 +114,15 @@ public class ReservationControllerTest {
 		mvc.perform(get("/reservation/1")).andExpect(status().isOk());
 		mvc.perform(get("/realiseReservation/1")).andExpect(status().isOk());
 		mvc.perform(post("/realiseReservation/1")).andExpect(status().is3xxRedirection());
-		//TODO add addOccupant to these tests
-		//		mvc.perform(post("/addOccupant/1")).andExpect(status().is3xxRedirection());
 		mvc.perform(get("/cancelReservation/1")).andExpect(status().isOk());
 		mvc.perform(get("/checkoutReservation/1")).andExpect(status().isOk());
 		mvc.perform(get("/dashboard")).andExpect(status().isOk());
 
-		mvc.perform(post("/addOccupant/1").flashAttr("guest", applicationStartup.guestOne)).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/addOccupant/1").flashAttr("guestDTO", guestDTO)).andExpect(status().is3xxRedirection());
 		mvc.perform(post("/fulfillReservation/1").flashAttr("reservationID", 1)).andExpect(status().is4xxClientError());
 
 		//in error due to constraint violation
-		mvc.perform(post("/deleteContact/" + applicationStartup.contactOne.getId() + "/reservationId/" + applicationStartup.reservationOne.getId())).andExpect(status().is4xxClientError());	
+		mvc.perform(post("/deleteContact/5/reservationId/" + applicationStartup.reservationOne.getId())).andExpect(status().is4xxClientError());
 		
 		ReservationCancellation cancellation = new ReservationCancellation();
 		cancellation.setReason("some reason");
@@ -134,7 +133,7 @@ public class ReservationControllerTest {
 	@Test
 	@WithUserDetails("receptionist")
 	public void testReceptionistRolePermissions_forbidden() throws Exception {
-		mvc.perform(delete("/reservationDelete/{id}", Integer.valueOf(1))).andExpect(status().isForbidden());
+		mvc.perform(delete("/reservationDelete/{id}", 1)).andExpect(status().isForbidden());
 	}
 
 	@Test
@@ -148,7 +147,7 @@ public class ReservationControllerTest {
 		
 		mvc.perform(post("/deleteContact/" + applicationStartup.contactOne.getId() + "/reservationId/" + applicationStartup.reservationOne.getId())).andExpect(status().isForbidden());	
 		
-		mvc.perform(post("/addOccupant/1").flashAttr("guest", applicationStartup.guestOne)).andExpect(status().isForbidden());
+		mvc.perform(post("/addOccupant/1").flashAttr("guestDTO", guestDTO)).andExpect(status().isForbidden());
 		mvc.perform(post("/fulfillReservation/1")).andExpect(status().isForbidden());
 	}
 	
