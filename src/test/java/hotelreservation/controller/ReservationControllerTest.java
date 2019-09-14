@@ -2,8 +2,8 @@ package hotelreservation.controller;
 
 import hotelreservation.ApplicationStartup;
 import hotelreservation.RestExceptionHandler;
-import hotelreservation.model.ReservationCancellation;
 import hotelreservation.model.ui.GuestDTO;
+import hotelreservation.model.ui.ReservationCancellationDTO;
 import hotelreservation.service.BookingService;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,12 +44,14 @@ public class ReservationControllerTest {
 	private ReservationController reservationController;
 
 	private GuestDTO guestDTO;
-	
+	private ReservationCancellationDTO cancellationDTO;
+
 	@Before
 	public void setup() {
 		this.mvc = standaloneSetup(reservationController) .setControllerAdvice(new RestExceptionHandler()).build();// Standalone context
 
 		guestDTO = new GuestDTO("firstName", "lastName", "", applicationStartup.guestOne.getContact(), applicationStartup.guestOne.getIdentification());
+		cancellationDTO = new ReservationCancellationDTO(applicationStartup.reservationOne, "reason", applicationStartup.admin, LocalDateTime.now());
 	}
 
 	@Test
@@ -72,11 +75,7 @@ public class ReservationControllerTest {
 		mvc.perform(post("/fulfillReservation/1")).andExpect(status().isForbidden());
 		
 		mvc.perform(post("/deleteContact/" + applicationStartup.contactOne.getId() + "/reservationId/" + applicationStartup.reservationOne.getId())).andExpect(status().isForbidden());	
-
-		ReservationCancellation cancellation = new ReservationCancellation();
-		cancellation.setReason("some reason");
-		cancellation.setReservation(applicationStartup.reservationOne);
-		mvc.perform(post("/cancelReservation/1").flashAttr("reservationCancellation", cancellation)).andExpect(status().isForbidden());
+		mvc.perform(post("/cancelReservation/1").flashAttr("reservationCancellationDTO", cancellationDTO)).andExpect(status().isForbidden());
 	}
 
 	@Test
@@ -95,11 +94,8 @@ public class ReservationControllerTest {
 		
 		//in error due to constraint violation
 		mvc.perform(post("/deleteContact/5/reservationId/" + applicationStartup.reservationOne.getId())).andExpect(status().is4xxClientError());
-		
-		ReservationCancellation cancellation = new ReservationCancellation();
-		cancellation.setReason("some reason");
-		cancellation.setReservation(applicationStartup.reservationOne);
-		mvc.perform(post("/cancelReservation/1").flashAttr("reservationCancellation", cancellation)).andExpect(status().is3xxRedirection());
+
+		mvc.perform(post("/cancelReservation/1").flashAttr("reservationCancellationDTO", cancellationDTO)).andExpect(status().is3xxRedirection());
 	}
 	
 	@Test
@@ -124,10 +120,7 @@ public class ReservationControllerTest {
 		//in error due to constraint violation
 		mvc.perform(post("/deleteContact/5/reservationId/" + applicationStartup.reservationOne.getId())).andExpect(status().is4xxClientError());
 		
-		ReservationCancellation cancellation = new ReservationCancellation();
-		cancellation.setReason("some reason");
-		cancellation.setReservation(applicationStartup.reservationOne);
-		mvc.perform(post("/cancelReservation/1").flashAttr("reservationCancellation", cancellation)).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/cancelReservation/1").flashAttr("reservationCancellationDTO", cancellationDTO)).andExpect(status().is3xxRedirection());
 	}
 
 	@Test

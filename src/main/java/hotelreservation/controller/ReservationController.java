@@ -5,6 +5,7 @@ import hotelreservation.model.*;
 import hotelreservation.model.enums.IdType;
 import hotelreservation.model.enums.ReservationStatus;
 import hotelreservation.model.ui.GuestDTO;
+import hotelreservation.model.ui.ReservationCancellationDTO;
 import hotelreservation.model.ui.ReservationChargeDTO;
 import hotelreservation.service.BookingService;
 import hotelreservation.service.GuestService;
@@ -25,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -272,11 +274,20 @@ public class ReservationController {
 	
 	@PostMapping("/cancelReservation/{reservationID}")
 	@PreAuthorize("hasAuthority('cancelReservation')")
-	public ModelAndView cancelReservation(@Valid @ModelAttribute ReservationCancellation reservationCancellation, @PathVariable Optional<Integer> reservationID) {
+	public ModelAndView cancelReservation(@Valid @ModelAttribute ReservationCancellationDTO reservationCancellationDTO, @PathVariable Optional<Integer> reservationID) {
 		Reservation resFromDB = bookingService.getReservation(reservationID);
 
-		reservationCancellation.setReservation(resFromDB);
-		bookingService.cancelReservation(reservationCancellation);
+//		Authentication authentication = SecurityContextHolder.getContext().getAuthentication().getPrincipal()
+
+		ReservationCancellation cancellation = ReservationCancellation.builder()
+				.reservation(resFromDB)
+				.reason(reservationCancellationDTO.getReason())
+				.cancelledBy(reservationCancellationDTO.getCancelledBy()) //TODO get user from context
+				.cancelledOn(LocalDateTime.now())
+				.build();
+
+		cancellation.setReservation(resFromDB);
+		bookingService.cancelReservation(cancellation);
 
 		return new ModelAndView(REDIRECT_DASHBOARD);
 	}

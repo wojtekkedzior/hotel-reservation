@@ -79,4 +79,9 @@ public class UiModelEqualsTest {
 	public void testGuestDTO() {
 		EqualsVerifier.forClass(GuestDTO.class).verify();
 	}
+
+	@Test
+	public void testReservationCancellationDTO() {
+		EqualsVerifier.forClass(ReservationCancellationDTO.class).withPrefabValues(User.class, admin, manager).verify();
+	}
 }

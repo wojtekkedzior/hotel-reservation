@@ -1,37 +1,30 @@
-package hotelreservation.model;
+package hotelreservation.model.ui;
 
+import hotelreservation.model.Reservation;
+import hotelreservation.model.User;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode.Exclude;
-import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Immutable;
 
-import javax.persistence.*;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-@Entity
 @Data
-@NoArgsConstructor
+@Immutable
 @AllArgsConstructor
-@Builder
-public class ReservationCancellation {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Exclude
-	private long id;
-	
+public final class ReservationCancellationDTO {
+
 	@NotNull
 	@OneToOne
 	private Reservation reservation;
-	
+
 	@NotNull
 	@NotBlank
 	private String reason;
-	
-	@ManyToOne
+
 	private User cancelledBy;
-	
+
 	private LocalDateTime cancelledOn;
 }
