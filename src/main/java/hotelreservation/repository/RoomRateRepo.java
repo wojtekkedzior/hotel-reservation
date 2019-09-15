@@ -1,12 +1,11 @@
 package hotelreservation.repository;
 
+import hotelreservation.model.RoomRate;
+import org.springframework.data.repository.CrudRepository;
+
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
-
-import org.springframework.data.repository.CrudRepository;
-
-import hotelreservation.model.RoomRate;
 
 public interface RoomRateRepo extends CrudRepository<RoomRate, Long> {
 	

@@ -1,8 +1,7 @@
 package hotelreservation.repository;
 
-import org.springframework.data.repository.CrudRepository;
-
 import hotelreservation.model.Charge;
+import org.springframework.data.repository.CrudRepository;
 
 public interface ChargeRepo extends CrudRepository<Charge, Long>{
 

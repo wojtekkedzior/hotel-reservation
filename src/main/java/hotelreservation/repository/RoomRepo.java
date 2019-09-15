@@ -1,12 +1,11 @@
 package hotelreservation.repository;
 
-import java.util.List;
-
+import hotelreservation.model.Room;
+import hotelreservation.model.Status;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import hotelreservation.model.Room;
-import hotelreservation.model.Status;
+import java.util.List;
 
 @Repository
 public interface RoomRepo extends CrudRepository<Room, Long> {

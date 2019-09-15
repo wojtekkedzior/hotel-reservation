@@ -1,12 +1,11 @@
 package hotelreservation.repository;
 
 
-import java.util.Optional;
-
+import hotelreservation.model.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import hotelreservation.model.User;
+import java.util.Optional;
 
 @Repository
 public interface UserRepo extends CrudRepository<User, Long>{

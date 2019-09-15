@@ -142,6 +142,7 @@ public class RoomControllerTest {
 		mvc.perform(get("/roomRate/1")).andExpect(status().isForbidden());
 	}
 
+
 	@Test
 	@WithUserDetails("admin")
 	public void testGetAmenityWithNoId() throws Exception {
@@ -156,6 +157,13 @@ public class RoomControllerTest {
 
 	@Test
 	@WithUserDetails("admin")
+	public void testGetAmenityWithMissingId() throws Exception {
+		mvc.perform(get("/amenity/99999")).andExpect(status().is4xxClientError());
+	}
+
+	//----------------------------------------------------------------------------
+	@Test
+	@WithUserDetails("admin")
 	public void testGetAmenityTypeWithNoId() throws Exception {
 		mvc.perform(get("/amenityType/")).andExpect(status().isOk());
 	}
@@ -168,15 +176,38 @@ public class RoomControllerTest {
 
 	@Test
 	@WithUserDetails("admin")
+	public void testGetAmenityTypeWithMissingId() throws Exception {
+		mvc.perform(get("/amenityType/99999")).andExpect(status().is4xxClientError());
+	}
+
+
+	//----------------------------------------------------------------------------
+	@Test
+	@WithUserDetails("admin")
 	public void testGetRoomWithNoId() throws Exception {
 		mvc.perform(get("/room/")).andExpect(status().isOk());
 	}
 
 	@Test
 	@WithUserDetails("admin")
-	public void testGetRoom() throws Exception {
-		mvc.perform(get("/room/1")).andExpect(status().isOk());
+	public void testGetRoomWithMissingId() throws Exception {
+		mvc.perform(get("/room/9999")).andExpect(status().is4xxClientError());
 	}
+
+	//------------------------------------------------------------------------------
+	@Test
+	@WithUserDetails("admin")
+	public void testGetRoomTypeWithNoId() throws Exception {
+		mvc.perform(get("/roomType/")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("admin")
+	public void testGetRoomTypeWithMissingId() throws Exception {
+		mvc.perform(get("/roomType/9999")).andExpect(status().is4xxClientError());
+	}
+
+	//----------------------------------------------------------------------------
 
 	@Test
 	@WithUserDetails("manager")
@@ -190,6 +221,14 @@ public class RoomControllerTest {
 		mvc.perform(get("/roomRate/1")).andExpect(status().isOk());
 	}
 
+	@Test
+	@WithUserDetails("manager")
+	public void testGetRoomRateWithMissingId() throws Exception {
+		mvc.perform(get("/roomRate/9999")).andExpect(status().is4xxClientError());
+	}
+
+	//---Delete
+	//----------------------------------------------------------------------------
 	@Test
 	@WithUserDetails("manager")
 	public void testDeleteAmenityWithNoId() throws Exception {
@@ -206,6 +245,80 @@ public class RoomControllerTest {
 	@WithUserDetails("admin")
 	public void testDeleteRoomWithNoId() throws Exception {
 		mvc.perform(delete("/roomRate/")).andExpect(status().is4xxClientError());
+	}
+
+	@Test
+	@WithUserDetails("admin")
+	public void testDeleteRoomTypeWithNoId() throws Exception {
+		mvc.perform(delete("/roomType/")).andExpect(status().is4xxClientError());
+	}
+
+	@Test
+	@WithUserDetails("admin")
+	public void testDeleteRoomRateWithNoId() throws Exception {
+		mvc.perform(delete("/roomDelete/")).andExpect(status().is4xxClientError());
+	}
+
+	//----------------------------------------------------------------------------
+	@Test
+	@WithUserDetails("manager")
+	public void testDeleteAmenityWithMissingId() throws Exception {
+		mvc.perform(delete("/amenityDelete/9999")).andExpect(status().is4xxClientError());
+	}
+
+	@Test
+	@WithUserDetails("manager")
+	public void testDeleteAmenityTypeWithMissingId() throws Exception {
+		mvc.perform(delete("/amenityTypeDelete/9999")).andExpect(status().is4xxClientError());
+	}
+
+	@Test
+	@WithUserDetails("admin")
+	public void testDeleteRoomWithMissingId() throws Exception {
+		mvc.perform(delete("/roomRate/9999")).andExpect(status().is4xxClientError());
+	}
+
+	@Test
+	@WithUserDetails("admin")
+	public void testDeleteRoomTypeMissingNoId() throws Exception {
+		mvc.perform(delete("/roomType/9999")).andExpect(status().is4xxClientError());
+	}
+
+	@Test
+	@WithUserDetails("admin")
+	public void testDeleteRoomRateMissingNoId() throws Exception {
+		mvc.perform(delete("/roomDelete/9999")).andExpect(status().is2xxSuccessful());
+	}
+
+	//----------------------------------------------------------------------------
+	@Test
+	@WithUserDetails("admin")
+	public void testDeleteAmenity() throws Exception {
+		mvc.perform(delete("/amenityDelete/1")).andExpect(status().is3xxRedirection());
+	}
+
+	@Test
+	@WithUserDetails("manager")
+	public void testDeleteAmenityType() throws Exception {
+		mvc.perform(delete("/amenityTypeDelete/1")).andExpect(status().is4xxClientError());
+	}
+
+	@Test
+	@WithUserDetails("admin")
+	public void testDeleteRoom() throws Exception {
+		mvc.perform(delete("/roomRate/1")).andExpect(status().is4xxClientError());
+	}
+
+	@Test
+	@WithUserDetails("admin")
+	public void testDeleteRoomTypeW() throws Exception {
+		mvc.perform(delete("/roomType/1")).andExpect(status().is4xxClientError());
+	}
+
+	@Test
+	@WithUserDetails("admin")
+	public void testDeleteRoomRate() throws Exception {
+		mvc.perform(delete("/roomDelete/1")).andExpect(status().is4xxClientError());
 	}
 
 }

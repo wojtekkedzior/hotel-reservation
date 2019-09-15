@@ -123,25 +123,7 @@ public class BookingService {
 		return utils.toList(reservationRepo.findAll());
 	}
 
-//	public Reservation getReservation(Optional<Integer> reservationId) {
-//		if(!reservationId.isPresent()) {
-//			log.warn("Missing reservation id.");
-//			throw new MissingOrInvalidArgumentException("Missing reservation id.");
-//		}
-//
-//		log.info("Getting reservation: {}", reservationId.get());
-//		Reservation reservation = reservationRepo.findById(Long.valueOf(reservationId.get())).orElseThrow(() -> new NotFoundException(reservationId.get()));
-//		log.info("Got reservation: {}", reservation.getId());
-//
-//		return reservation;
-//	}
-
 	public Reservation getReservation(Long reservationId) {
-//		if(!reservationId.isPresent()) {
-//			log.warn("Missing reservation id.");
-//			throw new MissingOrInvalidArgumentException("Missing reservation id.");
-//		}
-
 		if(reservationId == null) {
 			throw new MissingOrInvalidArgumentException("ReservationID cannot be null");
 		}

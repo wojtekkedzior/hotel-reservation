@@ -205,7 +205,8 @@ public class ReservationController {
 		guestService.saveIdentification(guest.getIdentification());
 		guestService.saveContact(guest.getContact());
 		guest = guestService.saveGuest(guest);
-		
+
+		//TODO get res first before saving any guest stuff
 		Reservation reservation = bookingService.getReservation(reservationId);
 		
 		if(reservation.getOccupants() == null) {
@@ -246,7 +247,7 @@ public class ReservationController {
 		Reservation resFromDB = bookingService.getReservation(reservationId);
 		bookingService.deleteReservation(resFromDB);
 		log.info("deleting reservation: {}", reservationId);
-//		TODO throw new IllegalArgumentException("only a super user can do this");
+		//TODO throw new IllegalArgumentException("only a super user can do this");
 		return new ModelAndView(REDIRECT_RESERVATION);
 	}
 

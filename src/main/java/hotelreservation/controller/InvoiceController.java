@@ -22,7 +22,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 
 @Controller
@@ -37,7 +36,7 @@ public class InvoiceController {
 	
 	@GetMapping(value = { "/invoice/{id}" })
 	@PreAuthorize("hasAuthority('retrieveInvoice')")
-	public String getInvoice(@PathVariable Optional<Integer> id, Model model) {
+	public String getInvoice(@PathVariable Long id, Model model) {
 		return "invoice";
 	}
 	

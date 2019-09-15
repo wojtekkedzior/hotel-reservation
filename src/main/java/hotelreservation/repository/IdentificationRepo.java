@@ -1,8 +1,7 @@
 package hotelreservation.repository;
 
-import org.springframework.data.repository.CrudRepository;
-
 import hotelreservation.model.Identification;
+import org.springframework.data.repository.CrudRepository;
 
 public interface IdentificationRepo  extends CrudRepository<Identification, Long>{
 

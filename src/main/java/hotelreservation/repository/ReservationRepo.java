@@ -1,16 +1,15 @@
 package hotelreservation.repository;
 
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
-
+import hotelreservation.model.Reservation;
+import hotelreservation.model.RoomRate;
+import hotelreservation.model.enums.ReservationStatus;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import hotelreservation.model.Reservation;
-import hotelreservation.model.RoomRate;
-import hotelreservation.model.enums.ReservationStatus;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
 
 @Repository
 public interface ReservationRepo extends CrudRepository<Reservation, Long> {

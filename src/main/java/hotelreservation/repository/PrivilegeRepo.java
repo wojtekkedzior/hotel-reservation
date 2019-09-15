@@ -1,8 +1,7 @@
 package hotelreservation.repository;
 
-import org.springframework.data.repository.CrudRepository;
-
 import hotelreservation.model.Privilege;
+import org.springframework.data.repository.CrudRepository;
 
 public interface PrivilegeRepo extends CrudRepository<Privilege, Long>{
 

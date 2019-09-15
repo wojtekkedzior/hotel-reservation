@@ -1,20 +1,18 @@
 package hotelreservation.model.ui;
 
-import java.util.Date;
-import java.util.List;
+import hotelreservation.model.ReservationCharge;
+import hotelreservation.model.enums.PaymentType;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.annotation.Immutable;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
-
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.annotation.Immutable;
-
-import hotelreservation.model.ReservationCharge;
-import hotelreservation.model.enums.PaymentType;
-import lombok.Data;
+import java.util.Date;
+import java.util.List;
 
 @Data
 /**

@@ -1,8 +1,7 @@
 package hotelreservation.repository.finance;
 
-import org.springframework.data.repository.CrudRepository;
-
 import hotelreservation.model.finance.Payment;
+import org.springframework.data.repository.CrudRepository;
 
 public interface PaymentRepository extends CrudRepository<Payment, Long> {
 

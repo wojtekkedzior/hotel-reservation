@@ -149,7 +149,13 @@ public class ReservationControllerTest {
 		bookingService.realiseReservation(applicationStartup.reservationOne);
 		mvc.perform(post("/fulfillReservation/1")).andExpect(status().is3xxRedirection());
 	}
-	
+
+	@Test
+	@WithUserDetails("manager")
+	public void testFulfillNonExistantReservation() throws Exception {
+		mvc.perform(post("/fulfillReservation/9999")).andExpect(status().is4xxClientError());
+	}
+
 	@Test
 	@WithUserDetails("manager")
 	public void testSaveReservation() throws Exception {
@@ -191,7 +197,7 @@ public class ReservationControllerTest {
 	@Test
 	@WithUserDetails("admin")
 	public void testDeleteNonExistentReservation() throws Exception  {
-		mvc.perform(delete("/reservationDelete/" + 9999)).andExpect(status().is4xxClientError());
+		mvc.perform(delete("/reservationDelete/9999")).andExpect(status().is4xxClientError());
 	}
 
 	@Test

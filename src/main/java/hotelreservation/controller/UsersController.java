@@ -1,10 +1,9 @@
 package hotelreservation.controller;
 
-import java.util.Optional;
-
-import javax.validation.Valid;
-
+import hotelreservation.model.Role;
+import hotelreservation.model.User;
 import hotelreservation.model.ui.UserDTO;
+import hotelreservation.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +15,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import hotelreservation.model.Role;
-import hotelreservation.model.User;
-import hotelreservation.service.UserService;
+import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 public class UsersController {
