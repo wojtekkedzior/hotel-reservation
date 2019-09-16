@@ -10,7 +10,6 @@ import org.springframework.data.annotation.Immutable;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -31,8 +30,6 @@ public final class ReservationDTO {
 	private double discount;
 
 	private User discountAuthorisedBy;
-
-	private LocalDateTime createdOn;
 
 	private LocalDate startDate;
 

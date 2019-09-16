@@ -7,6 +7,7 @@ import hotelreservation.model.enums.ReservationStatus;
 import hotelreservation.model.ui.GuestDTO;
 import hotelreservation.model.ui.ReservationCancellationDTO;
 import hotelreservation.model.ui.ReservationChargeDTO;
+import hotelreservation.model.ui.ReservationDTO;
 import hotelreservation.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -236,7 +237,24 @@ public class ReservationController {
 
 	@PostMapping("/reservation")
 	@PreAuthorize("hasAuthority('createReservation')")
-	public ModelAndView saveReservation(@Valid @ModelAttribute Reservation reservation, @RequestParam List<Long> roomRateIds) { //TODO ensure this is provided
+	public ModelAndView saveReservation(@Valid @ModelAttribute ReservationDTO reservationDTO, @RequestParam List<Long> roomRateIds) {
+
+		org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User user = userService.getUserByUserName(principal.getUsername());
+
+		Reservation reservation = Reservation.builder()
+				.firstName(reservationDTO.getFirstName())
+				.lastName(reservationDTO.getLastName())
+				.occupants(reservationDTO.getOccupants())
+				.roomRates(reservationDTO.getRoomRates())
+				.discount(reservationDTO.getDiscount())
+				.discountAuthorisedBy(reservationDTO.getDiscountAuthorisedBy())
+				.createdBy(user)
+				.startDate(reservationDTO.getStartDate())
+				.endDate(reservationDTO.getEndDate())
+				.reservationStatus(reservationDTO.getReservationStatus())
+				.build();
+;
 		bookingService.saveReservationAndValidateRoomRates(reservation, roomRateIds);
 		return new ModelAndView(REDIRECT_DASHBOARD);
 	}
