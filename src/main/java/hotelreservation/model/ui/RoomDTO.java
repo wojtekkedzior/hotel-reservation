@@ -21,7 +21,7 @@ public final class RoomDTO {
 	private int roomNumber;
 
 	@NotNull
-	private Status status; //as in 'in operation' 'in maintenace' etc
+	private Status status;
 
 	private String name;
 	private String description;

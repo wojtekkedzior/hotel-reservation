@@ -1,6 +1,7 @@
 package hotelreservation.model;
 
 import hotelreservation.model.enums.ReservationStatus;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode.Exclude;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,8 @@ import java.util.List;
 //Arse. Having lombok on Eclipses's classpath causes the equals method to be made up of all the fields regardless of using EqualsAndHashCode. However, running maven clean install with tests 
 //causes the correct generation of equals respecting EqualsAndHashCode.  If you run junit tests from eclipse against the code compiled by maven, she works.  
 //log a bug with lombok
-@NoArgsConstructor 
+@NoArgsConstructor
+@Builder
 public class Reservation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
