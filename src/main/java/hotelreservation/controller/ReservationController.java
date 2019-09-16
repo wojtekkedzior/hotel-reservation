@@ -238,7 +238,6 @@ public class ReservationController {
 	@PostMapping("/reservation")
 	@PreAuthorize("hasAuthority('createReservation')")
 	public ModelAndView saveReservation(@Valid @ModelAttribute ReservationDTO reservationDTO, @RequestParam List<Long> roomRateIds) {
-
 		org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		User user = userService.getUserByUserName(principal.getUsername());
 
@@ -254,7 +253,7 @@ public class ReservationController {
 				.endDate(reservationDTO.getEndDate())
 				.reservationStatus(reservationDTO.getReservationStatus())
 				.build();
-;
+
 		bookingService.saveReservationAndValidateRoomRates(reservation, roomRateIds);
 		return new ModelAndView(REDIRECT_DASHBOARD);
 	}
@@ -265,7 +264,6 @@ public class ReservationController {
 		Reservation resFromDB = bookingService.getReservation(reservationId);
 		bookingService.deleteReservation(resFromDB);
 		log.info("deleting reservation: {}", reservationId);
-		//TODO throw new IllegalArgumentException("only a super user can do this");
 		return new ModelAndView(REDIRECT_RESERVATION);
 	}
 
