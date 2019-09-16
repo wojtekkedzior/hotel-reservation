@@ -8,8 +8,4 @@ public class NotFoundExceptionTest {
 	public void testNotFoundException() {
 	}
 
-	@Test
-	public void testToString() {
-	}
-
 }

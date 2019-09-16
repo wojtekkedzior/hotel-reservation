@@ -1,14 +1,16 @@
 package hotelreservation.exceptions;
 
+import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@RequiredArgsConstructor
 @ToString
+@EqualsAndHashCode
+@RequiredArgsConstructor
 @ResponseStatus(value=HttpStatus.NOT_FOUND, reason="No such Element")  // 404
-public class NotFoundException extends RuntimeException {
+public final class NotFoundException extends RuntimeException {
 
 	private static final long serialVersionUID = 7864223292536407819L;
 

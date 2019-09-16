@@ -8,8 +8,4 @@ public class PaymentNotCreatedExceptionTest {
 	public void testPaymentNotCreatedException() {
 	}
 
-	@Test
-	public void testToString() {
-	}
-
 }

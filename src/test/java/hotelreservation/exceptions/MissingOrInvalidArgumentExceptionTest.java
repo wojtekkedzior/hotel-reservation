@@ -12,8 +12,5 @@ public class MissingOrInvalidArgumentExceptionTest {
 	public void testMissingOrInvalidArgumentExceptionString() {
 	}
 
-	@Test
-	public void testToString() {
-	}
 
 }
