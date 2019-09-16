@@ -1,6 +1,7 @@
 package hotelreservation.model;
 
 import hotelreservation.model.enums.ReservationStatus;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode.Exclude;
@@ -21,6 +22,7 @@ import java.util.List;
 //causes the correct generation of equals respecting EqualsAndHashCode.  If you run junit tests from eclipse against the code compiled by maven, she works.  
 //log a bug with lombok
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class Reservation {
 	@Id

@@ -84,4 +84,10 @@ public class UiModelEqualsTest {
 	public void testReservationCancellationDTO() {
 		EqualsVerifier.forClass(ReservationCancellationDTO.class).withPrefabValues(User.class, admin, manager).verify();
 	}
+
+	@Test
+	public void testReservationDTO() {
+		EqualsVerifier.forClass(ReservationCancellationDTO.class).withPrefabValues(User.class, admin, manager).verify();
+//		EqualsVerifier.forClass(Reservation.class).withPrefabValues(User.class, admin, manager).withIgnoredFields("occupants", "roomRates", "discountAuthorisedBy").verify();
+	}
 }
