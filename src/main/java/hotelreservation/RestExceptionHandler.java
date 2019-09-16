@@ -44,13 +44,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
 		StringBuilder output = new StringBuilder();
 
-		//TODO get the names of the fields and log them along with the validation errors
 		for (String string : validationList) {
 			output.append(string);
 			output.append("\n");
 		}
 		
 		log.info(ex.getMessage());
+		log.info("Validations: {}", output);
 		
 		//log the field and exception here otherwise it's hard to figure out what is missing
 		return new ResponseEntity<>(output, status);

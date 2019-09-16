@@ -19,12 +19,6 @@ public class HotelReservationAccessDeniedHandler implements AccessDeniedHandler 
 	@Override
 	public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
 		log.info("Access Denied for user: {}  while trying to hit: {}", request.getRemoteUser() , request.getContextPath());
-
-		if(log.isDebugEnabled()) {
-			log.debug(request.toString());
-			log.debug(accessDeniedException.toString());
-		}
-		
 		response.sendError(HttpServletResponse.SC_FORBIDDEN, accessDeniedException.getMessage());
 	}
 

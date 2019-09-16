@@ -15,13 +15,7 @@ public class AuthenticationFailureEventListener implements ApplicationListener<A
 	@Override
 	public void onApplicationEvent(AuthenticationFailureBadCredentialsEvent event) {
 		WebAuthenticationDetails auth = (WebAuthenticationDetails) event.getAuthentication().getDetails();
-		
-		log.info("Failure for user: {} with authoritites: {}",  event.getAuthentication().getName(), event.getAuthentication().getAuthorities());
-
-		if(log.isDebugEnabled()) {
-			log.debug(event.toString());
-			log.debug(auth.toString());
-		}
+		log.info("Failure for user: {} with authorities: {}",  event.getAuthentication().getName(), event.getAuthentication().getAuthorities());
 	}
 
 }
