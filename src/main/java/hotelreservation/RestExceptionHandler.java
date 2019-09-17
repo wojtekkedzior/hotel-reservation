@@ -29,7 +29,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 				.map(FieldError::toString).collect(Collectors.toList());
 
 		StringBuilder output = new StringBuilder();
-        validationList.forEach(s -> output.append(s).append("\n"));;
+        validationList.forEach(s -> output.append(s).append("\n"));
 
 		log.info(ex.getMessage());
 		log.info("Validations: {}", validationList);
