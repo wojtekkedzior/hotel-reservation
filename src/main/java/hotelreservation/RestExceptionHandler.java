@@ -1,15 +1,14 @@
 package hotelreservation;
 
-import hotelreservation.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -30,31 +29,21 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 		return null;
 	}
 
-	@ExceptionHandler(NotFoundException.class)
-	protected ResponseEntity<Object> handleNoSuchElementException(NotFoundException ex) {
-		log.info(ex.getMessage());
-		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-	}
-
 	@Override
 	protected ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers, HttpStatus status,
 			WebRequest request) {
 		List<String> validationList = ex.getBindingResult().getFieldErrors().stream()
-				.map(e -> e.toString()).collect(Collectors.toList());
-
-		ex.getBindingResult().getFieldErrors().stream().map(DefaultMessageSourceResolvable::getArguments).collect(Collectors.toList());
+				.map(FieldError::toString).collect(Collectors.toList());
 
 		StringBuilder output = new StringBuilder();
 
-		for (String string : validationList) {
-			output.append(string);
-			output.append("\n");
-		}
-		
+        validationList.forEach(s -> {
+            output.append(s).append("\n");
+        });
+
 		log.info(ex.getMessage());
-		log.info("Validations: {}", output);
+		log.info("Validations: {}", validationList);
 		
-		//log the field and exception here otherwise it's hard to figure out what is missing
 		return new ResponseEntity<>(output, status);
 	}
 	
