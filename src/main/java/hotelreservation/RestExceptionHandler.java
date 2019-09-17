@@ -40,7 +40,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	protected ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers, HttpStatus status,
 			WebRequest request) {
 		List<String> validationList = ex.getBindingResult().getFieldErrors().stream()
-				.map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList());
+				.map(e -> e.toString()).collect(Collectors.toList());
+
+		ex.getBindingResult().getFieldErrors().stream().map(DefaultMessageSourceResolvable::getArguments).collect(Collectors.toList());
 
 		StringBuilder output = new StringBuilder();
 
