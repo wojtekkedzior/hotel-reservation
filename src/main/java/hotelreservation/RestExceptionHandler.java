@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,12 +22,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	@ExceptionHandler(EntityNotFoundException.class)
-	protected ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex) {
-		log.info(ex.getMessage());
-		return null;
-	}
-
 	@Override
 	protected ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers, HttpStatus status,
 			WebRequest request) {
@@ -36,10 +29,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 				.map(FieldError::toString).collect(Collectors.toList());
 
 		StringBuilder output = new StringBuilder();
-
-        validationList.forEach(s -> {
-            output.append(s).append("\n");
-        });
+        validationList.forEach(s -> output.append(s).append("\n"));;
 
 		log.info(ex.getMessage());
 		log.info("Validations: {}", validationList);
