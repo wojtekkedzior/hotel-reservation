@@ -19,9 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
-	private HotelReservationAccessDeniedHandler accessDeniedHandler;
-	
-	@Autowired
 	private UserDetailsService userDetailsService;
 
 	@Override
@@ -35,8 +32,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.logoutUrl("/logout")
 			.logoutSuccessUrl("/login")
 			.permitAll()
-		.and().exceptionHandling()
-			.accessDeniedHandler(accessDeniedHandler)
 		.and()
 			.csrf().disable();
 	}

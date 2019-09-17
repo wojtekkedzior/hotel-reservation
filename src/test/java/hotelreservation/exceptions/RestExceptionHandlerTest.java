@@ -8,12 +8,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -46,4 +48,12 @@ public class RestExceptionHandlerTest {
                 .andExpect(content().string(containsString("[guestDTO.identification,identification]; arguments []; default message [identification]]; default message [must not be null]")))
                 .andExpect(content().string(containsString("[guestDTO.firstName,firstName]; arguments []; default message [firstName]]; default message [must not be blank]")));
     }
+
+    @Test
+    @WithMockUser(username = "blah", roles = "MISSING_ROLE")
+    public void testAccesDeniedExceptionHandler() throws Exception {
+        mvc.perform(get("/reservation/1")).andExpect(status().isForbidden());
+    }
+
+
 }
