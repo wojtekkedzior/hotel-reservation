@@ -28,8 +28,10 @@ public final class ReservationDTO {
 
 	private User discountAuthorisedBy;
 
+	@NotNull
 	private LocalDate startDate;
 
+	@NotNull
 	private LocalDate endDate;
 
 	private ReservationStatus reservationStatus;

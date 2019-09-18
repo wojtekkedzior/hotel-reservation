@@ -1,20 +1,15 @@
 package hotelreservation.model.ui;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.Immutable;
+
+import javax.validation.constraints.NotNull;
 
 @Data
 @Immutable
-@RequiredArgsConstructor
-@AllArgsConstructor
-@Builder
 public final class AmenityTypeDTO {
 
-	private Long id;
-
+	@NotNull
 	private String name;
 
 	private String description;

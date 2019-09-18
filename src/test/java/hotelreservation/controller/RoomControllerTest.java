@@ -98,8 +98,8 @@ public class RoomControllerTest {
 		mvc.perform(get("/room/1")).andExpect(status().isForbidden());
 		mvc.perform(get("/roomType/1")).andExpect(status().isForbidden());
 		
-		mvc.perform(post("/addAmenityType").flashAttr("amenityType", applicationStartup.amenityTypeRoomBasic)).andExpect(status().isForbidden());
-		mvc.perform(post("/addAmenity").flashAttr("amenity", amenityDTO)).andExpect(status().isForbidden());
+		mvc.perform(post("/addAmenityType").flashAttr("amenityTypeDTO", amenityTypeDTO)).andExpect(status().isForbidden());
+		mvc.perform(post("/addAmenity").flashAttr("amenityDTO", amenityDTO)).andExpect(status().isForbidden());
 		mvc.perform(post("/addRoomType").flashAttr("roomTypeDTO", roomTypeStandardDTO)).andExpect(status().isForbidden());
 		mvc.perform(post("/addRoom").flashAttr("roomDTO", roomDTO)).andExpect(status().isForbidden());
 		
@@ -118,8 +118,8 @@ public class RoomControllerTest {
 		mvc.perform(get("/room/1")).andExpect(status().isForbidden());
 		mvc.perform(get("/roomType/1")).andExpect(status().isForbidden());
 		
-		mvc.perform(post("/addAmenityType").flashAttr("amenityType", applicationStartup.amenityTypeRoomBasic)).andExpect(status().isForbidden());
-		mvc.perform(post("/addAmenity").flashAttr("amenity", amenityDTO)).andExpect(status().isForbidden());
+		mvc.perform(post("/addAmenityType").flashAttr("amenityTypeDTO", amenityTypeDTO)).andExpect(status().isForbidden());
+		mvc.perform(post("/addAmenity").flashAttr("amenityDTO", amenityDTO)).andExpect(status().isForbidden());
 		mvc.perform(post("/addRoomType").flashAttr("roomTypeDTO", roomTypeStandardDTO)).andExpect(status().isForbidden());
 		mvc.perform(post("/addRoom").flashAttr("roomDTO", roomDTO)).andExpect(status().isForbidden());
 
@@ -141,7 +141,6 @@ public class RoomControllerTest {
 		mvc.perform(get("/roomType/1")).andExpect(status().isForbidden());
 		mvc.perform(get("/roomRate/1")).andExpect(status().isForbidden());
 	}
-
 
 	@Test
 	@WithUserDetails("admin")
@@ -179,7 +178,6 @@ public class RoomControllerTest {
 	public void testGetAmenityTypeWithMissingId() throws Exception {
 		mvc.perform(get("/amenityType/99999")).andExpect(status().is4xxClientError());
 	}
-
 
 	//----------------------------------------------------------------------------
 	@Test

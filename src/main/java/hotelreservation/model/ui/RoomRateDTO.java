@@ -18,6 +18,7 @@ public final class RoomRateDTO {
 
 	private String description;
 
+	@NotNull
 	private Room room;
 
 	@NotNull
