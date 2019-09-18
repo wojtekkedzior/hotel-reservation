@@ -1,7 +1,6 @@
 package hotelreservation.model.ui;
 
 import hotelreservation.model.Guest;
-import hotelreservation.model.RoomRate;
 import hotelreservation.model.User;
 import hotelreservation.model.enums.ReservationStatus;
 import lombok.AllArgsConstructor;
@@ -24,8 +23,6 @@ public final class ReservationDTO {
 	private String lastName;
 
 	private List<Guest> occupants;
-
-	private List<RoomRate> roomRates;
 
 	private double discount;
 

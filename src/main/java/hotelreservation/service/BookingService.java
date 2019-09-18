@@ -16,7 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED)
@@ -215,11 +219,7 @@ public class BookingService {
 			throw new MissingOrInvalidArgumentException("No RoomRates were selected for reservation: " + reservation.getId());
 		}
 		
-		List<RoomRate> roomRates = new ArrayList<>();
-		
-		roomRateIds.stream().forEach(id -> roomRates.add(roomService.getRoomRateById(id)));
-		reservation.setRoomRates(roomRates);
-		
+		reservation.setRoomRates(roomRateIds.stream().map(id -> roomService.getRoomRateById(id)).collect(Collectors.toList()));
 		saveReservation(reservation);
 	}
 }

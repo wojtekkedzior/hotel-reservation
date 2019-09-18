@@ -6,6 +6,7 @@ import hotelreservation.model.ui.GuestDTO;
 import hotelreservation.model.ui.ReservationCancellationDTO;
 import hotelreservation.model.ui.ReservationDTO;
 import hotelreservation.service.BookingService;
+import hotelreservation.service.RoomService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +18,10 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.stream.Collectors;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -34,6 +39,9 @@ public class ReservationControllerTest {
 
 	@Autowired
 	private BookingService bookingService;
+
+	@Autowired
+	private RoomService roomService;
 	
 	@Autowired
 	private ApplicationStartup applicationStartup;
@@ -56,7 +64,6 @@ public class ReservationControllerTest {
 				applicationStartup.reservationOne.getFirstName(),
 				applicationStartup.reservationOne.getLastName(),
 				applicationStartup.reservationOne.getOccupants(),
-				applicationStartup.reservationOne.getRoomRates(),
 				applicationStartup.reservationOne.getDiscount(),
 				applicationStartup.reservationOne.getDiscountAuthorisedBy(),
 				applicationStartup.reservationOne.getStartDate(),
@@ -170,13 +177,25 @@ public class ReservationControllerTest {
 	@Test
 	@WithUserDetails("manager")
 	public void testSaveReservation() throws Exception {
-		//TODO this test is wrong.  We need to fetch some unsued roomRates and try to create a new reservation with those.
-//		String collect = applicationStartup.reservationOne.getRoomRates().stream()
-//		        .map( n -> String.valueOf(n.getId()) )
-//		        .collect( Collectors.joining( "," ) );
-//
-//		mvc.perform(post("/reservation/").flashAttr("reservationDTO", reservationDTO).param("roomRateIds", collect))
-//				.andExpect(status().is3xxRedirection());
+		LocalDate startDate = LocalDate.of(2019, Month.MAY, 3);
+		LocalDate endDate = LocalDate.of(2019, Month.MAY, 5);
+
+		ReservationDTO reservationDTO = new ReservationDTO(
+				applicationStartup.reservationOne.getFirstName(),
+				applicationStartup.reservationOne.getLastName(),
+				applicationStartup.reservationOne.getOccupants(),
+				applicationStartup.reservationOne.getDiscount(),
+				applicationStartup.reservationOne.getDiscountAuthorisedBy(),
+				startDate,
+				endDate,
+				applicationStartup.reservationOne.getReservationStatus());
+
+		String collect = roomService.getRoomRates(applicationStartup.standardRoomOne, startDate, endDate.minusDays(1)).stream()
+		        .map( n -> String.valueOf(n.getId()) )
+		        .collect(Collectors.joining( "," ));
+
+		mvc.perform(post("/reservation/").flashAttr("reservationDTO", reservationDTO).param("roomRateIds", collect))
+				.andExpect(status().is3xxRedirection());
 	}
 	
 	@Test

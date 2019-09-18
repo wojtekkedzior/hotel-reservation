@@ -245,7 +245,6 @@ public class ReservationController {
 				.firstName(reservationDTO.getFirstName())
 				.lastName(reservationDTO.getLastName())
 				.occupants(reservationDTO.getOccupants())
-				.roomRates(reservationDTO.getRoomRates())
 				.discount(reservationDTO.getDiscount())
 				.discountAuthorisedBy(reservationDTO.getDiscountAuthorisedBy())
 				.createdBy(user)
