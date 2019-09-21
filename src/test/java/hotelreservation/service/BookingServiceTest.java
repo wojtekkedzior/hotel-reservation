@@ -510,7 +510,7 @@ public class BookingServiceTest extends BaseServiceTest {
 	}
 	
 	@Test
-	public void testCancelReservation() {
+	public void testCancelReservationBeforeStartOfReservation() {
 		roomService.saveRoomRate(roomRateTwo);
 		roomService.saveRoomRate(roomRateThree);
 
@@ -544,6 +544,43 @@ public class BookingServiceTest extends BaseServiceTest {
 	
 	@Test
 	public void testCancelReservationMidway() {
+		roomService.saveRoomRate(roomRateTwo);
+		roomService.saveRoomRate(roomRateThree);
+
+		reservationOne.setStartDate(LocalDate.of(2018, Month.JANUARY, 2));
+		reservationOne.setEndDate(LocalDate.of(2018, Month.JANUARY, 4));
+
+		List<RoomRate> roomRates = new ArrayList<RoomRate>();
+		roomRates.add(roomRateTwo);
+		roomRates.add(roomRateThree);
+		reservationOne.setRoomRates(roomRates);
+		bookingService.saveReservation(reservationOne);
+
+		assertTrue(bookingService.getAllReservations().size() == 1);
+
+		List<RoomRate> availableRoomRates = roomService.getAvailableRoomRates(LocalDate.of(2018, Month.JANUARY, 2), LocalDate.of(2018, Month.JANUARY, 3));
+
+		if(availableRoomRates.contains(roomRateTwo) || availableRoomRates.contains(roomRateThree)) {
+			fail();
+		}
+
+		bookingService.realiseReservation(reservationOne);
+
+		assertEquals(ReservationStatus.IN_PROGRESS, bookingService.getReservation(reservationOne.getId()).getReservationStatus());
+
+
+		ReservationCancellation cancellation = new ReservationCancellation();
+		cancellation.setReason("canceled");
+		cancellation.setReservation(reservationOne);
+
+		bookingService.cancelReservation(cancellation);
+
+		assertEquals(ReservationStatus.ABANDONED, reservationOne.getReservationStatus());
+		availableRoomRates = roomService.getAvailableRoomRates(LocalDate.of(2018, Month.JANUARY, 2), LocalDate.of(2018, Month.JANUARY, 4));
+
+		if(!availableRoomRates.contains(roomRateTwo) || !availableRoomRates.contains(roomRateThree)) {
+			fail();  //TODO this is not correct
+		}
 
 	}
 

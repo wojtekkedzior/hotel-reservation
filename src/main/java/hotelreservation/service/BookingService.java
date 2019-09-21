@@ -175,6 +175,8 @@ public class BookingService {
 		}
 		
 		reservationCancellation.getReservation().setRoomRates(null);
+
+
 		reservationRepo.save(reservationCancellation.getReservation());
 		
 		log.info("Cancelled reservation: {}", reservationCancellation.getReservation().getId());
