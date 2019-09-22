@@ -207,7 +207,7 @@ public class RoomController {
 
 	@DeleteMapping(value = "/amenityTypeDelete/{id}")
 	@PreAuthorize("hasAuthority('deleteAmenityType')")
-	public ModelAndView deleteAminityType(@PathVariable(required = false) Long id) {
+	public ModelAndView deleteAmenityType(@PathVariable(required = false) Long id) {
 		if (id != null) {
 			roomService.deleteAmenityType(id);
 		}

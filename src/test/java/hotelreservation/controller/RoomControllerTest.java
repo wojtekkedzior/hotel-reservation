@@ -164,7 +164,7 @@ public class RoomControllerTest {
 	@Test
 	@WithUserDetails("admin")
 	public void testGetAmenityTypeWithNoId() throws Exception {
-		mvc.perform(get("/amenityType/")).andExpect(status().isOk());
+		mvc.perform(get("/amenityType/ ")).andExpect(status().isOk());
 	}
 
 	@Test
@@ -183,7 +183,7 @@ public class RoomControllerTest {
 	@Test
 	@WithUserDetails("admin")
 	public void testGetRoomWithNoId() throws Exception {
-		mvc.perform(get("/room/")).andExpect(status().isOk());
+		mvc.perform(get("/room/ ")).andExpect(status().isOk());
 	}
 
 	@Test
@@ -196,7 +196,7 @@ public class RoomControllerTest {
 	@Test
 	@WithUserDetails("admin")
 	public void testGetRoomTypeWithNoId() throws Exception {
-		mvc.perform(get("/roomType/")).andExpect(status().isOk());
+		mvc.perform(get("/roomType/ ")).andExpect(status().isOk());
 	}
 
 	@Test
@@ -210,7 +210,7 @@ public class RoomControllerTest {
 	@Test
 	@WithUserDetails("manager")
 	public void testGetRoomWRateWithNoId() throws Exception {
-		mvc.perform(get("/roomRate/")).andExpect(status().isOk());
+		mvc.perform(get("/roomRate/ ")).andExpect(status().isOk());
 	}
 
 	@Test
@@ -228,64 +228,33 @@ public class RoomControllerTest {
 	//---Delete
 	//----------------------------------------------------------------------------
 	@Test
-	@WithUserDetails("manager")
+	@WithUserDetails("admin")
 	public void testDeleteAmenityWithNoId() throws Exception {
-		mvc.perform(delete("/amenityDelete/")).andExpect(status().is4xxClientError());
+		mvc.perform(delete("/amenityDelete/ ")).andExpect(status().is3xxRedirection());
 	}
 
 	@Test
-	@WithUserDetails("manager")
+	@WithUserDetails("admin")
 	public void testDeleteAmenityTypeWithNoId() throws Exception {
-		mvc.perform(delete("/amenityTypeDelete/")).andExpect(status().is4xxClientError());
+		mvc.perform(delete("/amenityTypeDelete/ ")).andExpect(status().is3xxRedirection());
 	}
 
 	@Test
 	@WithUserDetails("admin")
 	public void testDeleteRoomWithNoId() throws Exception {
-		mvc.perform(delete("/roomRate/")).andExpect(status().is4xxClientError());
+		mvc.perform(delete("/roomRateDelete/ ")).andExpect(status().is3xxRedirection());
 	}
 
 	@Test
 	@WithUserDetails("admin")
 	public void testDeleteRoomTypeWithNoId() throws Exception {
-		mvc.perform(delete("/roomType/")).andExpect(status().is4xxClientError());
+		mvc.perform(delete("/roomTypeDelete/ ")).andExpect(status().is3xxRedirection());
 	}
 
 	@Test
 	@WithUserDetails("admin")
 	public void testDeleteRoomRateWithNoId() throws Exception {
-		mvc.perform(delete("/roomDelete/")).andExpect(status().is4xxClientError());
-	}
-
-	//----------------------------------------------------------------------------
-	@Test
-	@WithUserDetails("manager")
-	public void testDeleteAmenityWithMissingId() throws Exception {
-		mvc.perform(delete("/amenityDelete/9999")).andExpect(status().is4xxClientError());
-	}
-
-	@Test
-	@WithUserDetails("manager")
-	public void testDeleteAmenityTypeWithMissingId() throws Exception {
-		mvc.perform(delete("/amenityTypeDelete/")).andExpect(status().is4xxClientError());
-	}
-
-	@Test
-	@WithUserDetails("admin")
-	public void testDeleteRoomWithMissingId() throws Exception {
-		mvc.perform(delete("/roomRate/9999")).andExpect(status().is4xxClientError());
-	}
-
-	@Test
-	@WithUserDetails("admin")
-	public void testDeleteRoomTypeMissingId() throws Exception {
-		mvc.perform(delete("/roomType/9999")).andExpect(status().is4xxClientError());
-	}
-
-	@Test
-	@WithUserDetails("admin")
-	public void testDeleteRoomRateMissingNoId() throws Exception {
-		mvc.perform(delete("/roomDelete/9999")).andExpect(status().is2xxSuccessful());
+		mvc.perform(delete("/roomDelete/ ")).andExpect(status().is3xxRedirection());
 	}
 
 	//----------------------------------------------------------------------------
@@ -309,7 +278,7 @@ public class RoomControllerTest {
 
 	@Test
 	@WithUserDetails("admin")
-	public void testDeleteRoomTypeW() throws Exception {
+	public void testDeleteRoomType() throws Exception {
 		mvc.perform(delete("/roomType/1")).andExpect(status().is4xxClientError());
 	}
 

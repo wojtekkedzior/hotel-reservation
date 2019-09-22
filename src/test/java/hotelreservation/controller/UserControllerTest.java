@@ -100,7 +100,7 @@ public class UserControllerTest  {
 	@Test
 	@WithUserDetails("admin")
 	public void testGetUserWithNoId() throws Exception {
-		mvc.perform(get("/user/")).andExpect(status().isOk());
+		mvc.perform(get("/user/ ")).andExpect(status().is2xxSuccessful());
 	}
 
 	@Test
@@ -118,6 +118,6 @@ public class UserControllerTest  {
     @Test
     @WithUserDetails("admin")
     public void testDeleteUserWithNoId() throws Exception {
-        mvc.perform(delete("/userDelete/ ")).andExpect(status().is4xxClientError());
+        mvc.perform(delete("/userDelete/ ")).andExpect(status().is3xxRedirection());
     }
 }

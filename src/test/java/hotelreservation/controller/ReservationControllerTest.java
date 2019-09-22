@@ -234,7 +234,6 @@ public class ReservationControllerTest {
 	@Test
 	@WithUserDetails("manager")
 	public void testGetReservationWithNoId() throws Exception {
-		mvc.perform(get("/reservation/")).andExpect(status().isOk());
+		mvc.perform(get("/reservation/ ")).andExpect(status().isOk());
 	}
-
 }
