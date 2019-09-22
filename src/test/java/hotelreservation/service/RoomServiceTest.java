@@ -110,11 +110,9 @@ public class RoomServiceTest extends BaseServiceTest {
 		RoomType updatedRoomType = roomService.getRoomTypeById(roomType.getId());
 		assertEquals(roomType, updatedRoomType);
 
-		//TODO something odd here with the contraint as if you delete the roomtype it's ok untill you try to retrive all room types
-		
 		roomService.deleteRoomById(room.getId());
 		roomService.deleteRoomType(roomType.getId());
-		
+
 		assertTrue(roomService.getAllRoomTypes().isEmpty());
 	}
 	
