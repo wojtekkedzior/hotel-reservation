@@ -82,16 +82,16 @@ public class BookingService {
 		if(roomRates == null || roomRates.isEmpty()) {
 			throw new MissingOrInvalidArgumentException("Can't have no room rates when updating a reservation");
 		} else if(roomRates.size() != ChronoUnit.DAYS.between(reservation.getStartDate(), reservation.getEndDate())) {
-			throw new MissingOrInvalidArgumentException("Not enough rates for the given time frame");
+			throw new MissingOrInvalidArgumentException("Not enough rates for the given time frame. Found: " + roomRates.size() + " expected: " + ChronoUnit.DAYS.between(reservation.getStartDate(), reservation.getEndDate()));
 		}
 		
 		Map<LocalDate, RoomRate> roomRatesAsMap = new HashMap<>();
 
-		roomRates.stream().forEach(roomRate ->
+		roomRates.forEach(roomRate ->
 			roomRatesAsMap.put(roomRate.getDay(), roomRate)
 		);
 
-		roomRates.stream().forEach(roomRate -> {
+		roomRates.forEach(roomRate -> {
 			if(!roomRatesAsMap.containsKey(roomRate.getDay())) {
 				throw new MissingOrInvalidArgumentException("Should not be able to save a reservation with non-sequential room rate dates");
 			}
@@ -173,10 +173,12 @@ public class BookingService {
 		default:
 			break;
 		}
-		
-		reservationCancellation.getReservation().setRoomRates(null);
 
+		List<RoomRate> roomRatesUsed = reservationCancellation.getReservation().getRoomRates().stream()
+				.filter(roomRate -> roomRate.getDay().isBefore(LocalDate.now()) || roomRate.getDay().isEqual(LocalDate.now()))
+				.collect(Collectors.toList());
 
+		reservationCancellation.getReservation().setRoomRates(roomRatesUsed);
 		reservationRepo.save(reservationCancellation.getReservation());
 		
 		log.info("Cancelled reservation: {}", reservationCancellation.getReservation().getId());

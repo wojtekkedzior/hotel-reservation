@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -35,10 +36,10 @@ public class BookingServiceTest extends BaseServiceTest {
 
 	@Autowired
 	private BookingService bookingService;
-	
+
 	@Autowired
 	private InvoiceService invoiceService;
-	
+
 	private Room standardRoomOne;
 	private Room standardRoomTwo;
 	private Room standardRoomThree;
@@ -141,7 +142,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		roomRateThree = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2018, Month.JANUARY, 3));
 	}
 
-	@Test
+	@Test(expected = MissingOrInvalidArgumentException.class)
 	public void testCreateReservation_MissingMiddleDay() {
 		roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2018, Month.JANUARY, 2));
 		// no rate for the last day
@@ -155,15 +156,10 @@ public class BookingServiceTest extends BaseServiceTest {
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateFour));
 
-		try {
-			bookingService.saveReservation(reservationOne);
-			fail("Should not be able to save a reservation with non-sequential room rate dates");
-		} catch (Exception e) {
-
-		}
+		bookingService.saveReservation(reservationOne);
 	}
 
-	@Test
+	@Test(expected = MissingOrInvalidArgumentException.class)
 	public void testCreateReservation_OverLapExistingReservation_OnEndDate() {
 		roomService.saveRoomRate(roomRateTwo);
 		roomService.saveRoomRate(roomRateThree);
@@ -187,14 +183,10 @@ public class BookingServiceTest extends BaseServiceTest {
 		reservationTwo.setStartDate(LocalDate.of(2018, Month.JANUARY, 3)); // day 3 overlaps
 		reservationTwo.setEndDate(LocalDate.of(2018, Month.JANUARY, 4));
 
-		try {
-			bookingService.saveReservation(reservationTwo);
-			fail("No rooms available for the given day");
-		} catch (Exception e) {
-		}
+		bookingService.saveReservation(reservationTwo);
 	}
 
-	@Test
+	@Test(expected = MissingOrInvalidArgumentException.class)
 	public void testCreateReservation_OverLapExistingReservation_OnStartDate() {
 		roomService.saveRoomRate(roomRateTwo);
 		roomService.saveRoomRate(roomRateThree);
@@ -218,14 +210,10 @@ public class BookingServiceTest extends BaseServiceTest {
 		reservationTwo.setStartDate(LocalDate.of(2018, Month.JANUARY, 1)); // day 3 overlaps
 		reservationTwo.setEndDate(LocalDate.of(2018, Month.JANUARY, 2));
 		
-		try {
-			bookingService.saveReservation(reservationTwo);
-			fail("No rooms available for the given day");
-		} catch (Exception e) {
-		}
+		bookingService.saveReservation(reservationTwo);
 	}
 
-	@Test
+	@Test(expected = MissingOrInvalidArgumentException.class)
 	public void testCreateReservation_OverLapWholeExistingReservation() {
 		roomService.saveRoomRate(roomRateTwo);
 		roomService.saveRoomRate(roomRateThree);
@@ -251,11 +239,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		reservationTwo.setStartDate(LocalDate.of(2018, Month.JANUARY, 1));
 		reservationTwo.setEndDate(LocalDate.of(2018, Month.JANUARY, 4));
 
-		try {
-			bookingService.saveReservation(reservationTwo);
-			fail("No rooms available for the given day");
-		} catch (Exception e) {
-		}
+		bookingService.saveReservation(reservationTwo);
 	}
 
 	@Test
@@ -479,7 +463,7 @@ public class BookingServiceTest extends BaseServiceTest {
 
 		reservationOne.setStartDate(LocalDate.of(2018, Month.JANUARY, 2));
 		reservationOne.setEndDate(LocalDate.of(2018, Month.JANUARY, 3));
-		reservationOne.setRoomRates(Arrays.asList(roomRateTwo));
+		reservationOne.setRoomRates(Collections.singletonList(roomRateTwo));
 
 		LocalDate startDate = LocalDate.of(2018, Month.JANUARY, 1);
 		LocalDate endDate = LocalDate.of(2018, Month.JANUARY, 4);
@@ -489,7 +473,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		bookingService.saveReservation(reservationOne);
 
 		assertEquals(1, roomService.getAvailableRoomRates(startDate, endDate).size());
-		assertTrue(roomService.getAvailableRoomRates(startDate, endDate).get(0).equals(roomRateThree));
+		assertEquals(roomService.getAvailableRoomRates(startDate, endDate).get(0), roomRateThree);
 	}
 	
 	@Test
@@ -502,8 +486,8 @@ public class BookingServiceTest extends BaseServiceTest {
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
 		bookingService.saveReservation(reservationOne);
-		
-		assertTrue(bookingService.getAllReservations().size() == 1);
+
+		assertEquals(1, bookingService.getAllReservations().size());
 		
 		bookingService.deleteReservation(reservationOne);
 		assertTrue(bookingService.getAllReservations().isEmpty());
@@ -519,8 +503,8 @@ public class BookingServiceTest extends BaseServiceTest {
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
 		bookingService.saveReservation(reservationOne);
-		
-		assertTrue(bookingService.getAllReservations().size() == 1);
+
+		assertEquals(1, bookingService.getAllReservations().size());
 		
 		List<RoomRate> availableRoomRates = roomService.getAvailableRoomRates(LocalDate.of(2018, Month.JANUARY, 2), LocalDate.of(2018, Month.JANUARY, 3));
 
@@ -544,47 +528,41 @@ public class BookingServiceTest extends BaseServiceTest {
 	
 	@Test
 	public void testCancelReservationMidway() {
-		roomService.saveRoomRate(roomRateTwo);
-		roomService.saveRoomRate(roomRateThree);
-
-		reservationOne.setStartDate(LocalDate.of(2018, Month.JANUARY, 2));
-		reservationOne.setEndDate(LocalDate.of(2018, Month.JANUARY, 4));
+		LocalDate yesterday = LocalDate.now().minusDays(1);
+		LocalDate today = LocalDate.now();
+		LocalDate tomorrow = LocalDate.now().plusDays(1);
+		LocalDate dayAfterTomorrow = LocalDate.now().plusDays(2);
 
 		List<RoomRate> roomRates = new ArrayList<RoomRate>();
-		roomRates.add(roomRateTwo);
-		roomRates.add(roomRateThree);
+		roomRates.add(roomService.saveRoomRate(new RoomRate(standardRoomOne, Currency.CZK, 1000, yesterday)));
+		roomRates.add(roomService.saveRoomRate(new RoomRate(standardRoomOne, Currency.CZK, 1000, today)));
+		roomRates.add(roomService.saveRoomRate(new RoomRate(standardRoomOne, Currency.CZK, 1000, tomorrow)));
+
+		reservationOne.setStartDate(yesterday);
+		reservationOne.setEndDate(dayAfterTomorrow);
 		reservationOne.setRoomRates(roomRates);
 		bookingService.saveReservation(reservationOne);
 
-		assertTrue(bookingService.getAllReservations().size() == 1);
-
-		List<RoomRate> availableRoomRates = roomService.getAvailableRoomRates(LocalDate.of(2018, Month.JANUARY, 2), LocalDate.of(2018, Month.JANUARY, 3));
-
-		if(availableRoomRates.contains(roomRateTwo) || availableRoomRates.contains(roomRateThree)) {
-			fail();
-		}
+		assertEquals(1, bookingService.getAllReservations().size());
+		List<RoomRate> availableRoomRates = roomService.getAvailableRoomRates(yesterday, dayAfterTomorrow);
+		assertEquals(0, availableRoomRates.size());
 
 		bookingService.realiseReservation(reservationOne);
-
 		assertEquals(ReservationStatus.IN_PROGRESS, bookingService.getReservation(reservationOne.getId()).getReservationStatus());
-
 
 		ReservationCancellation cancellation = new ReservationCancellation();
 		cancellation.setReason("canceled");
 		cancellation.setReservation(reservationOne);
 
 		bookingService.cancelReservation(cancellation);
-
 		assertEquals(ReservationStatus.ABANDONED, reservationOne.getReservationStatus());
-		availableRoomRates = roomService.getAvailableRoomRates(LocalDate.of(2018, Month.JANUARY, 2), LocalDate.of(2018, Month.JANUARY, 4));
 
-		if(!availableRoomRates.contains(roomRateTwo) || !availableRoomRates.contains(roomRateThree)) {
-			fail();  //TODO this is not correct
-		}
-
+		availableRoomRates = roomService.getAvailableRoomRates(yesterday, dayAfterTomorrow);
+		assertEquals(1, availableRoomRates.size());
+		assertEquals(tomorrow, availableRoomRates.get(0).getDay());
 	}
 
-	@Test
+	@Test(expected=MissingOrInvalidArgumentException.class)
 	public void testUpdateReservationWithNoRoomRates() {
 		roomService.saveRoomRate(roomRateTwo);
 		roomService.saveRoomRate(roomRateThree);
@@ -594,16 +572,12 @@ public class BookingServiceTest extends BaseServiceTest {
 
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
 		bookingService.saveReservation(reservationOne);
-		
 		reservationOne.setRoomRates(new ArrayList<RoomRate>());
-		
-		try {
-			bookingService.saveReservation(reservationOne);
-			fail();
-		} catch(MissingOrInvalidArgumentException e) {}
+
+		bookingService.saveReservation(reservationOne);
 	}
-	
-	@Test 
+
+	@Test()
 	public void testUpdateReservationWithDifferentRates() {
 		roomService.saveRoomRate(roomRateTwo);
 		roomService.saveRoomRate(roomRateThree);
@@ -621,6 +595,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		
 		try {
 			bookingService.saveReservation(reservationOne);
+			fail();
 		} catch(MissingOrInvalidArgumentException e) {}
 		
 		List<RoomRate> availableRoomRates = roomService.getAvailableRoomRates(LocalDate.of(2018, Month.JANUARY, 2), LocalDate.of(2018, Month.JANUARY, 4));
@@ -712,8 +687,8 @@ public class BookingServiceTest extends BaseServiceTest {
 		assertEquals(1, availableRoomRates.size());
 		assertTrue(availableRoomRates.contains(roomRateTwo));
 	}
-	
-	@Test 
+
+	@Test(expected = MissingOrInvalidArgumentException.class)
 	public void testUpdateReservationWithEmptyStartDate() {
 		roomService.saveRoomRate(roomRateTwo);
 		roomService.saveRoomRate(roomRateThree);
@@ -725,14 +700,10 @@ public class BookingServiceTest extends BaseServiceTest {
 		bookingService.saveReservation(reservationOne);
 		
 		reservationOne.setStartDate(null);
-		
-		try {
-			bookingService.saveReservation(reservationOne);
-			fail();
-		} catch(MissingOrInvalidArgumentException e) {}
+		bookingService.saveReservation(reservationOne);
 	}
-	
-	@Test 
+
+	@Test(expected = MissingOrInvalidArgumentException.class)
 	public void testUpdateReservationWithEmptyEndDate() {
 		roomService.saveRoomRate(roomRateTwo);
 		roomService.saveRoomRate(roomRateThree);
@@ -744,14 +715,10 @@ public class BookingServiceTest extends BaseServiceTest {
 		bookingService.saveReservation(reservationOne);
 		
 		reservationOne.setEndDate(null);
-		
-		try {
-			bookingService.saveReservation(reservationOne);
-			fail();
-		} catch(MissingOrInvalidArgumentException e) {}
+		bookingService.saveReservation(reservationOne);
 	}
-	
-	@Test 
+
+	@Test(expected = MissingOrInvalidArgumentException.class)
 	public void testUpdateReservationWithStartDateBeforeEndDate() {
 		roomService.saveRoomRate(roomRateTwo);
 		roomService.saveRoomRate(roomRateThree);
@@ -763,11 +730,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		bookingService.saveReservation(reservationOne);
 		
 		reservationOne.setStartDate(LocalDate.of(2018, Month.JANUARY, 4));
-		
-		try {
-			bookingService.saveReservation(reservationOne);
-			fail();
-		} catch(MissingOrInvalidArgumentException e) {}
+		bookingService.saveReservation(reservationOne);
 	}
 	
 	@Test(expected=MissingOrInvalidArgumentException.class)
