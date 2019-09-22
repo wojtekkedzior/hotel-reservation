@@ -181,7 +181,7 @@ public class RoomService {
 	
 	public RoomType getRoomTypeById(long id) {
 		log.info("Looking for RoomType with ID: {}", id);
-		return roomTypeRepo.findById(Long.valueOf(id)).orElseThrow(() -> new NotFoundException(id));
+		return roomTypeRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
 	}
 	
 	public List<RoomType> getAllRoomTypes() {
@@ -202,7 +202,7 @@ public class RoomService {
 
 	public RoomRate getRoomRateById(long id) {
 		log.info("Looking for RoomRate with ID: {}", id);
-		return roomRateRepo.findById(Long.valueOf(id)).orElseThrow(() -> new NotFoundException(id));
+		return roomRateRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
 	}
 
 	public List<RoomRate> getAllRoomRates() { 
@@ -223,7 +223,7 @@ public class RoomService {
 	
 	public Status getStatusById(long id) {
 		log.info("Looking for Status with ID: {} ", id);
-		return statusRepo.findById(Long.valueOf(id)).orElseThrow(() -> new NotFoundException(id));
+		return statusRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
 	}
 
 	public List<Status> getAllStatuses() {

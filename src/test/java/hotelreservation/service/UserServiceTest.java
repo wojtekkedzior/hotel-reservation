@@ -43,7 +43,7 @@ public class UserServiceTest extends BaseServiceTest {
 		Role userType = new Role("UserType name", "UserTypeDescription", true);
 		userService.saveRole(userType);
 
-		assertTrue(userService.getAllRoles().size() == 1);
+		assertEquals(1, userService.getAllRoles().size());
 	}
 
 	@Test
@@ -72,7 +72,7 @@ public class UserServiceTest extends BaseServiceTest {
 		userService.saveRole(receptionUserType);
 		
 		List<Role> target =  userService.getAllRoles();
-		assertTrue(target.size() == 4);
+		assertEquals(4, target.size());
 		
 		assertTrue(target.contains(superAdminUserType));
 		assertTrue(target.contains(adminUserType));
@@ -91,7 +91,7 @@ public class UserServiceTest extends BaseServiceTest {
 		
 		assertEquals(2, userService.getAllUsers().size());
 		
-		userService.deleteUser(user);
+		userService.deleteUser(user.getId());
 		assertEquals(1, userService.getAllUsers().size());
 		assertEquals(superAdmin, userService.getAllUsers().get(0));
 	}
@@ -111,7 +111,7 @@ public class UserServiceTest extends BaseServiceTest {
 		try {
 			userService.saveUser(user, null);
 			fail();
-		} catch (MissingOrInvalidArgumentException e) {
+		} catch (MissingOrInvalidArgumentException ignored) {
 		}
 		
 		userService.saveUser(user, superAdmin.getUserName());
@@ -132,7 +132,7 @@ public class UserServiceTest extends BaseServiceTest {
 		try {
 			userService.saveUser(user, superAdmin.getUserName());
 			fail();
-		} catch (MissingOrInvalidArgumentException e) {
+		} catch (MissingOrInvalidArgumentException ignored) {
 		}
 		
 		user.setPassword("");
@@ -140,7 +140,7 @@ public class UserServiceTest extends BaseServiceTest {
 		try {
 			userService.saveUser(user, superAdmin.getUserName());
 			fail();
-		} catch (MissingOrInvalidArgumentException e) {
+		} catch (MissingOrInvalidArgumentException ignored) {
 		}
 	}
 	
@@ -152,7 +152,7 @@ public class UserServiceTest extends BaseServiceTest {
 		try {
 			userService.saveUser(user, superAdmin.getUserName());
 			fail();
-		} catch (MissingOrInvalidArgumentException e) {
+		} catch (MissingOrInvalidArgumentException ignored) {
 		}
 		
 		user.setUserName("");
@@ -160,7 +160,7 @@ public class UserServiceTest extends BaseServiceTest {
 		try {
 			userService.saveUser(user, superAdmin.getUserName());
 			fail();
-		} catch (MissingOrInvalidArgumentException e) {
+		} catch (MissingOrInvalidArgumentException ignored) {
 		}
 	}
 	
@@ -201,7 +201,7 @@ public class UserServiceTest extends BaseServiceTest {
 	
 	@Test(expected = NotFoundException.class)
 	public void testGetNonExistentUserType() {
-		userService.getUserById(99);
+		userService.getUserById(99L);
 	}
 	
 	@Test(expected = NotFoundException.class)
@@ -211,7 +211,7 @@ public class UserServiceTest extends BaseServiceTest {
 	
 	@Test(expected = NotDeletedException.class)
 	public void testDeleteNonExistentUser() {
-		userService.deleteUser(new User());
+		userService.deleteUser(99L);
 	}
 	
 	@Test(expected = NotDeletedException.class)
@@ -231,7 +231,7 @@ public class UserServiceTest extends BaseServiceTest {
 		try {
 			userService.saveUser(userTwo, superAdmin.getUserName());
 			fail();
-		} catch (Exception MissingOrInvalidArgumentException) {
+		} catch (Exception ignored) {
 		}
 		
 		assertEquals(2, userService.getAllUsers().size());

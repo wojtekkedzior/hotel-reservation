@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.util.Optional;
 
 @Controller
 public class UsersController {
@@ -27,17 +26,12 @@ public class UsersController {
 
     @GetMapping(value = {"/user", "/user/{id}"})
     @PreAuthorize("hasAuthority('createUser')")
-    public String getUsers(@PathVariable Optional<Integer> id, Model model) {
-        if (!id.isPresent()) {
-            User user = new User();
-            model.addAttribute("user", user);
+    public String getUsers(@PathVariable(required = false) Long id, Model model) {
+        if (id == null) {
+            model.addAttribute("user", new User());
         } else {
-            User user = userService.getUserById(id.get());
-            if (user == null) {
-                model.addAttribute("user", new User());
-            } else {
-                model.addAttribute("user", user);
-            }
+            User user = userService.getUserById(id);
+            model.addAttribute("user", user);
             log.info("getting user: {}", user);
         }
 
@@ -78,10 +72,11 @@ public class UsersController {
 
     @DeleteMapping(value = "/userDelete/{id}")
     @PreAuthorize("hasAuthority('deleteUser')")
-    public ModelAndView deleteUser(@PathVariable Optional<Integer> id) {
-        log.info("deleting user: {}", id);
-
-        id.ifPresent(userId -> userService.deleteUser(userService.getUserById(userId)));
+    public ModelAndView deleteUser(@PathVariable(required = false) Long id) {
+        if (id != null) {
+            log.info("deleting user: {}", id);
+            userService.deleteUser(id);
+        }
 
         return new ModelAndView("redirect:/user");
     }

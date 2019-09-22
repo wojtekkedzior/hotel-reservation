@@ -85,9 +85,9 @@ public class UserService {
 		return utils.toList(userRepo.findAll());
 	}
 
-	public User getUserById(Integer id) {
-		log.info("Looking for User with ID: {}", id);
-		return userRepo.findById(Long.valueOf(id)).orElseThrow(() -> new NotFoundException(id));
+	public User getUserById(Long userId) {
+		log.info("Looking for User with ID: {}", userId);
+		return userRepo.findById(userId).orElseThrow(() -> new NotFoundException(userId));
 	}
 	
 	public Role getRoleById(Integer id) {
@@ -99,11 +99,11 @@ public class UserService {
 		return userRepo.findByUserName(userName).orElseThrow(() -> new NotFoundException(0));
 	}
 
-	public void deleteUser(User user) {
-		if(!userRepo.existsById(user.getId())) {
-			throw new NotDeletedException(user.getId());
+	public void deleteUser(Long userId) {
+		if(!userRepo.existsById(userId)) {
+			throw new NotDeletedException(userId);
 		}
-		userRepo.delete(user);
+		userRepo.deleteById(userId);
 	}
 
 	public void deleteRole(Role role) {
