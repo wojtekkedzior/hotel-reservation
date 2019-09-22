@@ -113,4 +113,10 @@ public class UserControllerTest  {
 	public void testDeleteUserWithWrongId() throws Exception {
 		mvc.perform(delete("/userDelete/99")).andExpect(status().is2xxSuccessful());
 	}
+
+    @Test
+    @WithUserDetails("admin")
+    public void testDeleteUserWithNoId() throws Exception {
+        mvc.perform(delete("/userDelete/")).andExpect(status().is2xxSuccessful());
+    }
 }
