@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
@@ -37,7 +38,7 @@ public class UserControllerTest  {
 
 	@Before
 	public void setup() {
-		this.mvc = standaloneSetup(usersController) .setControllerAdvice(new RestExceptionHandler()).build();// Standalone context
+		this.mvc = standaloneSetup(usersController).setControllerAdvice(new RestExceptionHandler()).build();// Standalone context
 		userDTO = new UserDTO();
 		userDTO.setPassword("password");
 		userDTO.setFirstName("user");
@@ -117,6 +118,6 @@ public class UserControllerTest  {
     @Test
     @WithUserDetails("admin")
     public void testDeleteUserWithNoId() throws Exception {
-        mvc.perform(delete("/userDelete/")).andExpect(status().is2xxSuccessful());
+        mvc.perform(delete("/userDelete/")).andExpect(status().is4xxClientError());
     }
 }

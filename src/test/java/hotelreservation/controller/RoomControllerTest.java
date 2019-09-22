@@ -267,7 +267,7 @@ public class RoomControllerTest {
 	@Test
 	@WithUserDetails("manager")
 	public void testDeleteAmenityTypeWithMissingId() throws Exception {
-		mvc.perform(delete("/amenityTypeDelete/9999")).andExpect(status().is4xxClientError());
+		mvc.perform(delete("/amenityTypeDelete/")).andExpect(status().is4xxClientError());
 	}
 
 	@Test
@@ -278,7 +278,7 @@ public class RoomControllerTest {
 
 	@Test
 	@WithUserDetails("admin")
-	public void testDeleteRoomTypeMissingNoId() throws Exception {
+	public void testDeleteRoomTypeMissingId() throws Exception {
 		mvc.perform(delete("/roomType/9999")).andExpect(status().is4xxClientError());
 	}
 
