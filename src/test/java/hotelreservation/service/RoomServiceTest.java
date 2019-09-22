@@ -10,9 +10,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import hotelreservation.exceptions.MissingOrInvalidArgumentException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -209,34 +211,27 @@ public class RoomServiceTest extends BaseServiceTest {
 		assertEquals(0, roomService.getAllStatuses().size());
 	}
 
-	@Test
+	@Test(expected = Exception.class)
 	public void testAddDuplicateRoomRate() {
 		RoomRate roomRate = new RoomRate(room, Currency.CZK, 1000, LocalDate.of(2017, Month.MARCH, 15));
 		roomService.saveRoomRate(roomRate);
+		assertEquals(1, roomService.getAllRoomRates().size());
 
-		assertTrue(roomService.getAllRoomRates().size() == 1);
-
-		RoomRate roomRate1 = new RoomRate(room, Currency.CZK, 1000, LocalDate.of(2017, Month.MARCH, 15));
-
-		try {
-			roomService.saveRoomRate(roomRate1);
-			fail();
-		} catch (Exception e) {
-		}
+		roomService.saveRoomRate( new RoomRate(room, Currency.CZK, 1000, LocalDate.of(2017, Month.MARCH, 15)));
 	}
 
 	@Test
 	public void testGetRoomByStatus() {
-		assertTrue(roomService.getByRoomsByStatus(status).size() == 1);
+		assertEquals(1, roomService.getByRoomsByStatus(status).size());
 	}
 
 	@Test(expected = NotFoundException.class)
-	public void testGetNonExistantAmenity() {
+	public void testGetNonExistentAmenity() {
 		roomService.getAmenityById(99);
 	}
 
 	@Test(expected = NotFoundException.class)
-	public void testGetNonExistantAmenityType() {
+	public void testGetNonExistentAmenityType() {
 		roomService.getAmenityTypeById(99);
 	}
 	
@@ -259,8 +254,7 @@ public class RoomServiceTest extends BaseServiceTest {
 	public void testGetNonExistentStatus() {
 		roomService.getStatusById(99);
 	}
-	
-	
+
 	@Test(expected = NotDeletedException.class)
 	public void testDeleteNonExistentAmenity() {
 		roomService.deleteAmenity(99);
@@ -291,7 +285,6 @@ public class RoomServiceTest extends BaseServiceTest {
 		roomService.deleteStatus(99);
 	}
 	
-	@SuppressWarnings("LongLiteralEndingWithLowercaseL")
 	@Test(expected = NotDeletedException.class)
 	public void testDeleteNonExistentRoomTypeById() {
 		roomService.deleteRoomType(99L);
@@ -444,7 +437,7 @@ public class RoomServiceTest extends BaseServiceTest {
 		Room standardRoomThree = new Room(3, operational, roomTypeStandard, createdBy);
 		standardRoomThree.setName("Room 1");
 		standardRoomThree.setDescription("The Best Room Description");
-		standardRoomThree.setRoomAmenities(Arrays.asList(pillow));
+		standardRoomThree.setRoomAmenities(Collections.singletonList(pillow));
 		roomService.saveRoom(standardRoomThree);
 		
 		RoomRate roomRate1 = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2018, Month.JANUARY, 2));
@@ -493,7 +486,17 @@ public class RoomServiceTest extends BaseServiceTest {
 		Map<LocalDate, List<RoomRate>> roomRatesPerDate = roomService.getRoomRatesPerDate(start, end);
 		assertEquals(0, roomRatesPerDate.size());
 	}
-	
+
+	@Test(expected = MissingOrInvalidArgumentException.class)
+	public void testGetRoomRatesEndBeforeStart() {
+		saveRooms();
+
+		LocalDate start = LocalDate.of(2018, Month.JANUARY, 4);
+		LocalDate end = LocalDate.of(2018, Month.JANUARY, 2);
+
+		roomService.getRoomRatesPerDate(start, end);
+	}
+
 	private void saveRooms() {
 		managerUserType = new Role("manager", "manager desc", true);
 		userService.saveRole(managerUserType);
@@ -513,13 +516,13 @@ public class RoomServiceTest extends BaseServiceTest {
 		standardRoomOne = new Room(1, operational, roomTypeStandard, createdBy);
 		standardRoomOne.setName("Room 1");
 		standardRoomOne.setDescription("The Best Room Description");
-		standardRoomOne.setRoomAmenities(Arrays.asList(pillow));
+		standardRoomOne.setRoomAmenities(Collections.singletonList(pillow));
 		roomService.saveRoom(standardRoomOne);
 		
 		standardRoomTwo = new Room(2, operational, roomTypeStandard, createdBy);
 		standardRoomTwo.setName("Room 2");
 		standardRoomTwo.setDescription("The Best Room Description");
-		standardRoomTwo.setRoomAmenities(Arrays.asList(pillow));
+		standardRoomTwo.setRoomAmenities(Collections.singletonList(pillow));
 		roomService.saveRoom(standardRoomTwo);
 	}
 	

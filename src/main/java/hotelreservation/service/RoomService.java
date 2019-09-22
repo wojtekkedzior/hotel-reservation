@@ -1,6 +1,7 @@
 package hotelreservation.service;
 
 import hotelreservation.Utils;
+import hotelreservation.exceptions.MissingOrInvalidArgumentException;
 import hotelreservation.exceptions.NotDeletedException;
 import hotelreservation.exceptions.NotFoundException;
 import hotelreservation.model.*;
@@ -62,18 +63,13 @@ public class RoomService {
 		return utils.toList(roomRepo.findByStatus(status));
 	}
 
-	//TODO how do we handle the case where start=end?  with this implementation it will blow up - should also add a test for that.
 	public List<RoomRate> getRoomRates(LocalDate start, LocalDate end) {
-		List<RoomRate> findByDayBetween;
-		
-		if(start.isEqual(end)) {
-			findByDayBetween = roomRateRepo.findByDayBetween(start, end);
-		} else {
-			findByDayBetween = roomRateRepo.findByDayBetween(start, end.minus(Period.ofDays(1)));
+		if(end.isBefore(start)) {
+			throw new MissingOrInvalidArgumentException("End date:" + end + " cannot be before start date: " + start);
 		}
-		
-		log.info("Looking for all RoomRates between: {} and: {} -  Found: {}", start, end, findByDayBetween.size());
 
+		List<RoomRate> findByDayBetween = start.isEqual(end) ? roomRateRepo.findByDay(start) : roomRateRepo.findByDayBetween(start, end.minus(Period.ofDays(1)));
+		log.info("Looking for all RoomRates between: {} and: {} -  Found: {}", start, end, findByDayBetween.size());
 		return findByDayBetween;
 	}
 	
