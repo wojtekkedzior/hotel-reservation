@@ -178,7 +178,7 @@ public class UserServiceTest extends BaseServiceTest {
 		
 		assertEquals(role, userService.getRoleById(Long.valueOf(role.getId()).intValue()));
 		
-		userService.deleteRole(role);
+		userService.deleteUserRole(role.getId());
 		assertEquals(1, userService.getAllUsers().size());
 		assertEquals(superAdmin, userService.getAllUsers().get(0));
 	}
@@ -200,12 +200,7 @@ public class UserServiceTest extends BaseServiceTest {
 	}
 	
 	@Test(expected = NotFoundException.class)
-	public void testGetNonExistentUserType() {
-		userService.getUserById(99L);
-	}
-	
-	@Test(expected = NotFoundException.class)
-	public void testGetNonExistentRoleRate() {
+	public void testGetNonExistentRole() {
 		userService.getRoleById(99);
 	}
 	
@@ -216,7 +211,7 @@ public class UserServiceTest extends BaseServiceTest {
 	
 	@Test(expected = NotDeletedException.class)
 	public void testDeleteNonExistentRole() {
-		userService.deleteRole(new Role());
+		userService.deleteUserRole(99L);
 	}
 	
 	@Test

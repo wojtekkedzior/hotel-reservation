@@ -48,7 +48,7 @@ public class AuditTest {
     @Test
     public void testPrivilege() {
         AuditQuery query = reader.createQuery().forRevisionsOfEntity(Privilege.class, true);
-        assertEquals(22, query.getResultList().size());
+        assertEquals(23, query.getResultList().size());
     }
 
     @Test

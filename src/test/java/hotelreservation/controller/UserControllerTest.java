@@ -54,6 +54,7 @@ public class UserControllerTest  {
 		mvc.perform(post("/adduser").flashAttr("userDTO", userDTO)).andExpect(status().is3xxRedirection());
 		//is in error because of constraint violations
 		mvc.perform(delete("/userDelete/1")).andExpect(status().is4xxClientError());
+		mvc.perform(delete("/userRoleDelete/1")).andExpect(status().is4xxClientError());
 	}
 
 	@Test
@@ -73,6 +74,7 @@ public class UserControllerTest  {
 	@WithUserDetails("manager")
 	public void testManagerRolePermissions_forbidden() throws Exception {
 		mvc.perform(delete("/userDelete/1")).andExpect(status().isForbidden());
+		mvc.perform(delete("/userRoleDelete/1")).andExpect(status().isForbidden());
 	}
 
 	@Test
@@ -87,6 +89,7 @@ public class UserControllerTest  {
 		mvc.perform(get("/user/1")).andExpect(status().isForbidden());
 		mvc.perform(post("/adduser").flashAttr("userDTO", userDTO)).andExpect(status().isForbidden());
 		mvc.perform(delete("/userDelete/1")).andExpect(status().isForbidden());
+		mvc.perform(delete("/userRoleDelete/1")).andExpect(status().isForbidden());
 	}
 
 	@Test
@@ -95,6 +98,7 @@ public class UserControllerTest  {
 		mvc.perform(get("/user/1")).andExpect(status().isForbidden());
 		mvc.perform(post("/adduser").flashAttr("userDTO", userDTO)).andExpect(status().isForbidden());
 		mvc.perform(delete("/userDelete/1")).andExpect(status().isForbidden());
+
 	}
 
 	@Test
@@ -120,4 +124,22 @@ public class UserControllerTest  {
     public void testDeleteUserWithNoId() throws Exception {
         mvc.perform(delete("/userDelete/ ")).andExpect(status().is3xxRedirection());
     }
+
+	@Test
+	@WithUserDetails("admin")
+	public void testDeleteUserRole() throws Exception {
+		mvc.perform(delete("/userRoleDelete/ ")).andExpect(status().is3xxRedirection());
+	}
+
+	@Test
+	@WithUserDetails("admin")
+	public void testDeleteUserRoleWithNoId() throws Exception {
+		mvc.perform(delete("/userRoleDelete/ ")).andExpect(status().is3xxRedirection());
+	}
+
+	@Test
+	@WithUserDetails("admin")
+	public void testDeleteUserRoleWithNonExistentID() throws Exception {
+		mvc.perform(delete("/userRoleDelete/9999")).andExpect(status().is2xxSuccessful());
+	}
 }

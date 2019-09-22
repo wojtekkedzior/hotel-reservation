@@ -80,4 +80,15 @@ public class UsersController {
 
         return new ModelAndView("redirect:/user");
     }
+
+    @DeleteMapping(value = "/userRoleDelete/{id}")
+    @PreAuthorize("hasAuthority('deleteUserRole')")
+    public ModelAndView deleteUserRole(@PathVariable(required = false) Long id) {
+        if (id != null) {
+            log.info("deleting user role: {}", id);
+            userService.deleteUserRole(id);
+        }
+
+        return new ModelAndView("redirect:/user");
+    }
 }

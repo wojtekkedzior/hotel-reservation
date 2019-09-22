@@ -125,7 +125,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	
 	@Autowired
 	private UserRepo userRepo;
-	
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
@@ -201,6 +201,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		Privilege deleteReservation = new Privilege("deleteReservation");
 		Privilege createUser = new Privilege("createUser");
 		Privilege deleteUser = new Privilege("deleteUser");
+		Privilege deleteUserRole = new Privilege("deleteUserRole");
 		Privilege viewAdmin = new Privilege("viewAdmin");
 		Privilege viewReservationDashBoard = new Privilege("viewReservationDashBoard");
 		Privilege createPayment = new Privilege("createPayment");
@@ -225,6 +226,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		userService.savePrivilege(viewAdmin);
 		userService.savePrivilege(createUser);
 		userService.savePrivilege(deleteUser);
+		userService.savePrivilege(deleteUserRole);
 		userService.savePrivilege(viewReservationDashBoard);
 		userService.savePrivilege(createPayment);
 
@@ -245,6 +247,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		adminPrivileges.add(viewAdmin);
 		adminPrivileges.add(createUser);
 		adminPrivileges.add(deleteUser);
+		adminPrivileges.add(deleteUserRole);
 		adminPrivileges.add(viewReservationDashBoard);
 		
 		managerPrivileges.add(getReservation);

@@ -106,15 +106,24 @@ public class UserService {
 		userRepo.deleteById(userId);
 	}
 
-	public void deleteRole(Role role) {
-		if(!roleRepo.existsById(role.getId())) {
-			throw new NotDeletedException(role.getId());
-		}
-		
-		roleRepo.delete(role);
-	}
+//	public void deleteRole(Role role) {
+//		if(!roleRepo.existsById(role.getId())) {
+//			throw new NotDeletedException(role.getId());
+//		}
+//
+//		roleRepo.delete(role);
+//	}
 
 	public List<Privilege> getAllPrivileges() {
 		return utils.toList(privilegeRepo.findAll());
+	}
+
+	public void deleteUserRole(Long id) {
+		if(!roleRepo.existsById(id)) {
+			throw new NotDeletedException(id);
+		}
+
+		roleRepo.deleteById(id);
+
 	}
 }
