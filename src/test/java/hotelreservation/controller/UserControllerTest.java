@@ -118,6 +118,6 @@ public class UserControllerTest  {
     @Test
     @WithUserDetails("admin")
     public void testDeleteUserWithNoId() throws Exception {
-        mvc.perform(delete("/userDelete/")).andExpect(status().is4xxClientError());
+        mvc.perform(delete("/userDelete/ ")).andExpect(status().is4xxClientError());
     }
 }
