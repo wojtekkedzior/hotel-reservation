@@ -35,7 +35,6 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private Role adminRole;
-
 	private Role managerRole;
 	private Role receptionistRole;
 
@@ -132,8 +131,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	@Override
 	public void onApplicationEvent(ApplicationReadyEvent event) {
 		log.debug("loading test data - start");
-		
-		createAdminUser();
+
+//		createAdminUser();
 		addPrivileges();
 		addStatuses();
 		addCharges();
@@ -161,6 +160,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		superAdmin.setUserName("superAdmin");
 		superAdmin.setFirstName("firstName");
 		superAdmin.setLastName("lastName");
+		superAdmin.setRole(adminRole);
 		superAdmin.setCreatedOn(LocalDateTime.now());
 		superAdmin.setPassword(passwordEncoder.encode("password"));
 		userRepo.save(superAdmin);
@@ -285,6 +285,15 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		userService.saveRole(managerRole);
 		userService.saveRole(receptionistRole);
 
+		superAdmin = new User();
+		superAdmin.setUserName("superAdmin");
+		superAdmin.setFirstName("firstName");
+		superAdmin.setLastName("lastName");
+		superAdmin.setRole(adminRole);
+		superAdmin.setCreatedOn(LocalDateTime.now());
+		superAdmin.setPassword(passwordEncoder.encode("password"));
+		userRepo.save(superAdmin);
+
 		admin = new User();
 		admin.setFirstName("admin");
 		admin.setLastName("admin");
@@ -292,6 +301,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		admin.setPassword("password");
 		admin.setRole(adminRole);
 		admin.setEnabled(true);
+		admin.setCreatedBy(superAdmin);
 		userService.saveUser(admin, superAdmin.getUserName());
 		
 		manager = new User();
@@ -301,6 +311,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		manager.setUserName("manager");
 		manager.setEnabled(true);
 		manager.setRole(managerRole);
+		manager.setCreatedBy(admin);
 		userService.saveUser(manager, superAdmin.getUserName());
 
 		receptionist = new User();
@@ -310,7 +321,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		receptionist.setPassword("password");
 		receptionist.setRole(receptionistRole);
 		receptionist.setEnabled(true);
-		userService.saveUser(receptionist, superAdmin.getUserName());
+		receptionist.setCreatedBy(manager);
+		userService.saveUser(receptionist, manager.getUserName());
 	}
 
 	private void addRoomamenitites() {

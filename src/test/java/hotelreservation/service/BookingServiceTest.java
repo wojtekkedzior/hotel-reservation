@@ -82,6 +82,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		user.setUserName("username");
 		user.setFirstName("firstName");
 		user.setLastName("lastName");
+		user.setRole(managerUserType);
 		userService.saveUser(user, superAdmin.getUserName());
 
 		amenityTypeRoomBasic = new AmenityType("Basic", "Basic Room amenity Type");

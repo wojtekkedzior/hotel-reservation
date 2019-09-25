@@ -100,7 +100,6 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		priv1 = new Privilege("priv1");
 		priv2 = new Privilege("priv2");
 
-		
 		privilegeRepo.save(priv1);
 		privilegeRepo.save(priv2);
 		
@@ -116,6 +115,7 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		user.setUserName("username");
 		user.setFirstName("firstName");
 		user.setLastName("lastName");
+		user.setRole(managerUserType);
 		userService.saveUser(user, superAdmin.getUserName());
 
 		amenityTypeRoomBasic = new AmenityType("Basic", "Basic Room amenity Type");

@@ -40,18 +40,32 @@ public class UserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	public User saveUser(User user, String name) {
-		if (utils.isNullOrEmpty(name)) {
-			throw new MissingOrInvalidArgumentException("missing name");
+	public User saveUser(User user, String createdByName) {
+		if (utils.isNullOrEmpty(createdByName)) {
+			throw new MissingOrInvalidArgumentException("missing createdByName");
 		}
 		
 		if(userRepo.findByUserName(user.getUserName()).isPresent()) {
 			throw new MissingOrInvalidArgumentException("Username already exists: " + user.getUserName());
 		}
 
-		User userByUserName = getUserByUserName(name);
-		// TODO ensure that the 'create by' user is actually allowed to create a user of the selected Type
-		user.setCreatedBy(userByUserName);
+		User createdByUser = getUserByUserName(createdByName);
+
+		if(user.getRole() == null) {
+			throw new MissingOrInvalidArgumentException("No role for given user");
+		}
+
+		if(createdByUser.getRole().getName().equals("admin")) {
+			if(!user.getRole().getName().equals("manager") && !user.getRole().getName().equals("admin")) {
+				throw new MissingOrInvalidArgumentException("Create by user: " + createdByUser.getId() + " as an admin can only create manager or admin roles, but tried to create: " + user.getRole());
+			}
+		} else if(createdByUser.getRole().getName().equals("manager")) { //A manager role can only create receptionists
+			if(!user.getRole().getName().equals("receptionist")) {
+				throw new MissingOrInvalidArgumentException("Create by user: " + createdByUser.getId() + " as a manager can only create receptionist roles, but tried to create: " + user.getRole());
+			}
+		}
+
+		user.setCreatedBy(createdByUser);
 
 		String password = user.getPassword();
 		
@@ -90,9 +104,9 @@ public class UserService {
 		return userRepo.findById(userId).orElseThrow(() -> new NotFoundException(userId));
 	}
 	
-	public Role getRoleById(Integer id) {
+	public Role getRoleById(Long id) {
 		log.info("Looking for Role with ID: {}", id);
-		return roleRepo.findById(Long.valueOf(id)).orElseThrow(() -> new NotFoundException(id));
+		return roleRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
 	}
 	
 	public User getUserByUserName(String userName) {
@@ -106,14 +120,6 @@ public class UserService {
 		userRepo.deleteById(userId);
 	}
 
-//	public void deleteRole(Role role) {
-//		if(!roleRepo.existsById(role.getId())) {
-//			throw new NotDeletedException(role.getId());
-//		}
-//
-//		roleRepo.delete(role);
-//	}
-
 	public List<Privilege> getAllPrivileges() {
 		return utils.toList(privilegeRepo.findAll());
 	}
@@ -124,6 +130,5 @@ public class UserService {
 		}
 
 		roleRepo.deleteById(id);
-
 	}
 }

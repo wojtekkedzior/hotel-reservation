@@ -60,5 +60,6 @@ public class User {
 
 	@NotAudited
 	@OneToOne(fetch = FetchType.EAGER)
+	@NotNull
 	private Role role;
 }

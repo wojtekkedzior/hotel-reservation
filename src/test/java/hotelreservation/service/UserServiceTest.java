@@ -1,20 +1,5 @@
 package hotelreservation.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
 import hotelreservation.exceptions.MissingOrInvalidArgumentException;
 import hotelreservation.exceptions.NotDeletedException;
 import hotelreservation.exceptions.NotFoundException;
@@ -22,6 +7,18 @@ import hotelreservation.model.Privilege;
 import hotelreservation.model.Role;
 import hotelreservation.model.User;
 import hotelreservation.repository.PrivilegeRepo;
+import hotelreservation.repository.RoleRepo;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -32,7 +29,11 @@ public class UserServiceTest extends BaseServiceTest {
 	
 	@Autowired
 	private PrivilegeRepo privilegeRepo;
-	
+
+	@Autowired
+	private RoleRepo roleRepo;
+
+
 	@Before
 	public void setup() {
 		createAdminUser();
@@ -43,18 +44,18 @@ public class UserServiceTest extends BaseServiceTest {
 		Role userType = new Role("UserType name", "UserTypeDescription", true);
 		userService.saveRole(userType);
 
-		assertEquals(1, userService.getAllRoles().size());
+		assertEquals(2, userService.getAllRoles().size());
 	}
 
 	@Test
 	public void testDisabledUser() {
 		Role role = new Role("Role Name", "RoleDescription", true);
-		userService.saveRole(role);
+		role = userService.saveRole(role);
 
-		assertTrue(userService.getAllRoles().get(0).isEnabled());
+		assertTrue(userService.getRoleById(role.getId()).isEnabled());
 		role.setEnabled(false);
 
-		assertFalse(userService.getAllRoles().get(0).isEnabled());
+		assertFalse(userService.getRoleById(role.getId()).isEnabled());
 	}
 	
 	@Test
@@ -71,18 +72,18 @@ public class UserServiceTest extends BaseServiceTest {
 		userService.saveRole(managerUserType);
 		userService.saveRole(receptionUserType);
 		
-		List<Role> target =  userService.getAllRoles();
-		assertEquals(4, target.size());
+		List<Role> roles =  userService.getAllRoles();
+		assertEquals(5, roles.size());
 		
-		assertTrue(target.contains(superAdminUserType));
-		assertTrue(target.contains(adminUserType));
-		assertTrue(target.contains(managerUserType));
-		assertTrue(target.contains(receptionUserType));
+		assertTrue(roles.contains(superAdminUserType));
+		assertTrue(roles.contains(adminUserType));
+		assertTrue(roles.contains(managerUserType));
+		assertTrue(roles.contains(receptionUserType));
 	}
 	
 	@Test
 	public void testCRUDUser() {
-		User user = User.builder().userName("username").password("password").firstName("firstName").lastName("lastName").createdBy(superAdmin).build();
+		User user = User.builder().userName("username").password("password").firstName("firstName").lastName("lastName").role(adminRole).createdBy(superAdmin).build();
 		userService.saveUser(user, superAdmin.getUserName());
 		
 		assertEquals(2, userService.getAllUsers().size());
@@ -98,15 +99,23 @@ public class UserServiceTest extends BaseServiceTest {
 	
 	@Test(expected=NotFoundException.class)
 	public void testSaveUserWithNonExistentUser() {
-		User user = User.builder().userName("username").password("password").firstName("firstName").lastName("lastName").createdBy(superAdmin).build();
+		User user = User.builder().userName("username").password("password").firstName("firstName").lastName("lastName").role(adminRole).createdBy(superAdmin).build();
 		userService.saveUser(user, "nonExistentUser");
 		
+		assertEquals(1, userService.getAllUsers().size());
+	}
+
+	@Test(expected=MissingOrInvalidArgumentException.class)
+	public void testSaveUserWithNoRole() {
+		User user = User.builder().userName("username").password("password").firstName("firstName").lastName("lastName").createdBy(superAdmin).build();
+		userService.saveUser(user, superAdmin.getUserName());
+
 		assertEquals(1, userService.getAllUsers().size());
 	}
 	
 	@Test
 	public void testSaveUserByExisitngUser() {
-		User user = User.builder().userName("username").password("password").firstName("firstName").lastName("lastName").createdBy(superAdmin).build();
+		User user = User.builder().userName("username").password("password").firstName("firstName").lastName("lastName").role(adminRole).createdBy(superAdmin).build();
 
 		try {
 			userService.saveUser(user, null);
@@ -118,7 +127,7 @@ public class UserServiceTest extends BaseServiceTest {
 		
 		assertEquals(2, userService.getAllUsers().size());
 		
-		User newUser = User.builder().userName("new username").password("password").firstName("firstName").lastName("lastName").createdBy(superAdmin).build();
+		User newUser = User.builder().userName("new username").password("password").firstName("firstName").lastName("lastName").role(adminRole).createdBy(superAdmin).build();
 		newUser.setPassword("password");
 		userService.saveUser(newUser, user.getUserName());
 		
@@ -128,7 +137,7 @@ public class UserServiceTest extends BaseServiceTest {
 	
 	@Test
 	public void testSaveUserWithoutPassword() {
-		User user = User.builder().userName("username").firstName("firstName").lastName("lastName").createdBy(superAdmin).build();
+		User user = User.builder().userName("username").firstName("firstName").lastName("lastName").role(adminRole).createdBy(superAdmin).build();
 		try {
 			userService.saveUser(user, superAdmin.getUserName());
 			fail();
@@ -169,14 +178,14 @@ public class UserServiceTest extends BaseServiceTest {
 		Role role = new Role("role name", "role desc", true);
 		userService.saveRole(role);
 		
-		assertEquals(1, userService.getAllRoles().size());
+		assertEquals(2, userService.getAllRoles().size());
 		
 		role.setName("updatedName");
 		
-		assertEquals(1, userService.getAllRoles().size());
-		assertEquals("updatedName", userService.getAllRoles().get(0).getName());
+		assertEquals(2, userService.getAllRoles().size());
+		assertEquals("updatedName", userService.getAllRoles().get(1).getName());
 		
-		assertEquals(role, userService.getRoleById(Long.valueOf(role.getId()).intValue()));
+		assertEquals(role, userService.getRoleById(role.getId()));
 		
 		userService.deleteUserRole(role.getId());
 		assertEquals(1, userService.getAllUsers().size());
@@ -201,7 +210,7 @@ public class UserServiceTest extends BaseServiceTest {
 	
 	@Test(expected = NotFoundException.class)
 	public void testGetNonExistentRole() {
-		userService.getRoleById(99);
+		userService.getRoleById(99L);
 	}
 	
 	@Test(expected = NotDeletedException.class)
@@ -216,12 +225,12 @@ public class UserServiceTest extends BaseServiceTest {
 	
 	@Test
 	public void testCreateUserWithDuplicateUserName() {
-		User user = User.builder().userName("username").password("password").firstName("firstName").lastName("lastName").createdOn(LocalDateTime.now()).createdBy(superAdmin).build();
+		User user = User.builder().userName("username").password("password").firstName("firstName").lastName("lastName").role(adminRole).createdOn(LocalDateTime.now()).createdBy(superAdmin).build();
 		userService.saveUser(user, superAdmin.getUserName());
 		
 		assertEquals(2, userService.getAllUsers().size());
 		
-		User userTwo = User.builder().userName("username").password("password").firstName("firstName").lastName("lastName").createdOn(LocalDateTime.now()).createdBy(superAdmin).build();
+		User userTwo = User.builder().userName("username").password("password").firstName("firstName").lastName("lastName").role(adminRole).createdOn(LocalDateTime.now()).createdBy(superAdmin).build();
 
 		try {
 			userService.saveUser(userTwo, superAdmin.getUserName());
@@ -230,5 +239,31 @@ public class UserServiceTest extends BaseServiceTest {
 		}
 		
 		assertEquals(2, userService.getAllUsers().size());
+	}
+
+	@Test(expected = MissingOrInvalidArgumentException.class)
+	public void testUserWithAdminRoleCantCreateReceptionist() {
+		Role receptionistRole = new Role("receptionist", "receptionist", true);
+		roleRepo.save(receptionistRole);
+
+		User receptionist = User.builder().userName("username").password("password").firstName("firstName").lastName("lastName").role(receptionistRole).createdOn(LocalDateTime.now()).createdBy(superAdmin).build();
+		userService.saveUser(receptionist, superAdmin.getUserName());
+	}
+
+	@Test(expected = MissingOrInvalidArgumentException.class)
+	public void testUserWithManagerRoleCanCreateOnlyReceptionist() {
+		Role receptionistRole = new Role("receptionist", "receptionist", true);
+		Role managerRole = new Role("manager", "manager", true);
+		roleRepo.save(receptionistRole);
+		roleRepo.save(managerRole);
+
+		User manager = User.builder().userName("username").password("password").firstName("firstName").lastName("lastName").role(managerRole).createdOn(LocalDateTime.now()).createdBy(superAdmin).build();
+		userService.saveUser(manager, superAdmin.getUserName());
+
+		User receptionist = User.builder().userName("username").password("password").firstName("firstName").lastName("lastName").role(receptionistRole).createdOn(LocalDateTime.now()).createdBy(manager).build();
+		userService.saveUser(receptionist, manager.getUserName());
+
+		User newAdmin = User.builder().userName("username").password("password").firstName("firstName").lastName("lastName").role(adminRole).createdOn(LocalDateTime.now()).createdBy(manager).build();
+		userService.saveUser(newAdmin, superAdmin.getUserName());
 	}
 }
