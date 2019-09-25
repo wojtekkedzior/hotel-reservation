@@ -98,7 +98,6 @@ public class UserControllerTest  {
 		mvc.perform(get("/user/1")).andExpect(status().isForbidden());
 		mvc.perform(post("/adduser").flashAttr("userDTO", userDTO)).andExpect(status().isForbidden());
 		mvc.perform(delete("/userDelete/1")).andExpect(status().isForbidden());
-
 	}
 
 	@Test

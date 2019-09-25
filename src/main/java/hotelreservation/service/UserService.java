@@ -59,10 +59,8 @@ public class UserService {
 			if(!user.getRole().getName().equals("manager") && !user.getRole().getName().equals("admin")) {
 				throw new MissingOrInvalidArgumentException("Create by user: " + createdByUser.getId() + " as an admin can only create manager or admin roles, but tried to create: " + user.getRole());
 			}
-		} else if(createdByUser.getRole().getName().equals("manager")) { //A manager role can only create receptionists
-			if(!user.getRole().getName().equals("receptionist")) {
+		} else if(createdByUser.getRole().getName().equals("manager")  && !user.getRole().getName().equals("receptionist")) { //A manager role can only create receptionists
 				throw new MissingOrInvalidArgumentException("Create by user: " + createdByUser.getId() + " as a manager can only create receptionist roles, but tried to create: " + user.getRole());
-			}
 		}
 
 		user.setCreatedBy(createdByUser);
