@@ -355,7 +355,7 @@ public class RoomServiceTest extends BaseServiceTest {
 	public void testGetRoomRatesPerDateFirstRoomRateEmpty() {
 		saveRooms();
 //		commented out on purpose to show which rate is excluded
-//		roomService.saveRoomRate(new RoomRate(standardRoomOne, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2))));
+//		roomService.saveRoomRate(new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2018, Month.JANUARY, 2)));
 		RoomRate roomRate1 = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2018, Month.JANUARY, 3));
 		roomService.saveRoomRate(roomRate1);
 		
@@ -441,7 +441,7 @@ public class RoomServiceTest extends BaseServiceTest {
 		RoomRate roomRate1 = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2018, Month.JANUARY, 2));
 		roomService.saveRoomRate(roomRate1);
 //		commented out on purpose to show which rate is excluded
-//		roomService.saveRoomRate(new RoomRate(standardRoomTwo, Currency.CZK, 1000, dateConvertor.asDate(LocalDate.of(2018, Month.JANUARY, 2))));
+//		roomService.saveRoomRate(new RoomRate(standardRoomTwo, Currency.CZK, 1000, LocalDate.of(2018, Month.JANUARY, 2)));
 		RoomRate roomRate2 = new RoomRate(standardRoomThree, Currency.CZK, 1000, LocalDate.of(2018, Month.JANUARY, 2));
 		roomService.saveRoomRate(roomRate2);
 		

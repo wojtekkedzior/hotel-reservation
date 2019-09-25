@@ -19,11 +19,6 @@ public class Application extends org.springframework.boot.web.servlet.support.Sp
 		SpringApplication.run(Application.class, args);
 	}
 
-	@Bean
-	public Utils dateConvertor() {
-		return new Utils();
-	}
-	
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(Application.class);
