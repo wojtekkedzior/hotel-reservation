@@ -67,7 +67,7 @@ public class UserControllerTest  {
 	@WithUserDetails("manager")
 	public void testManagerRolePermissions_allowed() throws Exception {
 		mvc.perform(get("/user/1")).andExpect(status().isOk());
-		mvc.perform(post("/adduser").flashAttr("userDTO", userDTO)).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/adduser").flashAttr("userDTO", userDTO)).andExpect(status().is4xxClientError());
 	}
 
 	@Test
