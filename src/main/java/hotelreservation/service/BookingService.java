@@ -107,7 +107,7 @@ public class BookingService {
 		}
 	}
 	
-	public List<Reservation> getAllReservations() {
+	List<Reservation> getAllReservations() {
 		return utils.toList(reservationRepo.findAll());
 	}
 
@@ -207,7 +207,7 @@ public class BookingService {
 			throw new MissingOrInvalidArgumentException("No RoomRates were selected for reservation: " + reservation.getId());
 		}
 		
-		reservation.setRoomRates(roomRateIds.stream().map(id -> roomService.getRoomRateById(id)).collect(Collectors.toList()));
+		reservation.setRoomRates(roomRateIds.stream().map(roomService::getRoomRateById).collect(Collectors.toList()));
 		saveReservation(reservation);
 	}
 }
