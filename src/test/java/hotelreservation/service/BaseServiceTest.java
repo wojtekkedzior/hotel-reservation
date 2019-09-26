@@ -33,11 +33,6 @@ public class BaseServiceTest {
                 .password(passwordEncoder.encode("superAdminPassword")).createdOn(LocalDateTime.now())
                 .build();
 
-        //		superAdmin.setUserName("superAdmin");
-//		superAdmin.setFirstName("adminFirstName");
-//		superAdmin.setLastName("adminLastName");
-//		superAdmin.setPassword(passwordEncoder.encode("superAdminPassword"));
-//		superAdmin.setCreatedOn(LocalDateTime.now());
         userRepo.save(superAdmin);
     }
 }

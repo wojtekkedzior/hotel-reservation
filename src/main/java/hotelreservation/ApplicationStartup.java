@@ -132,13 +132,12 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	public void onApplicationEvent(ApplicationReadyEvent event) {
 		log.debug("loading test data - start");
 
-//		createAdminUser();
 		addPrivileges();
 		addStatuses();
 		addCharges();
 
 		addAmenityTypes();
-		addamenities();
+		addAmenities();
 
 		addRoomTypes();
 		addRooms();
@@ -155,17 +154,6 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		log.debug("loading test data - end");
 	}
 	
-	public void createAdminUser() {
-		superAdmin = new User();
-		superAdmin.setUserName("superAdmin");
-		superAdmin.setFirstName("firstName");
-		superAdmin.setLastName("lastName");
-		superAdmin.setRole(adminRole);
-		superAdmin.setCreatedOn(LocalDateTime.now());
-		superAdmin.setPassword(passwordEncoder.encode("password"));
-		userRepo.save(superAdmin);
-	}
-
 	private void addCharges() {
 		coke = new Charge(Currency.CZK, 50, "coke", "coke desc");
 		roomServiceDelivery = new Charge(Currency.CZK, 1000, "room service delivery", "room service delivery desc");
@@ -176,7 +164,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		invoiceService.saveCharge(brokenTable);
 	}
 
-	private void addamenities() {
+	private void addAmenities() {
 		addHotelamenitites();
 		addRoomamenitites();
 	}
