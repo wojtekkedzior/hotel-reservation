@@ -13,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Optional;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -60,7 +58,7 @@ public class GuestServiceTest {
 		guestService.saveIdentification(identification);
 		assertEquals(identification, guestService.getIdentificationById(identification.getId()));
 		
-		guestService.deleteIdentification(Optional.of(Long.valueOf(identification.getId()).intValue()));
+		guestService.deleteIdentification(identification.getId());
 		assertTrue(guestService.getAllIdentifications().isEmpty());
 	}
 	
@@ -109,7 +107,7 @@ public class GuestServiceTest {
 	
 	@Test(expected = NotDeletedException.class)
 	public void testDeleteNonExistentIdentification() {
-		guestService.deleteIdentification(Optional.of(Integer.valueOf(99)));
+		guestService.deleteIdentification((99L));
 	}
 	
 	@Test(expected = NotDeletedException.class)

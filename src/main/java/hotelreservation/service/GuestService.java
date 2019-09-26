@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -70,12 +69,12 @@ public class GuestService {
         guestRepo.delete(guestRepo.findById(id).orElseThrow(() -> new NotDeletedException(id)));
     }
 
-    public void deleteIdentification(Optional<Integer> id) {
-        if (!id.isPresent()) {
+    public void deleteIdentification(Long id) {
+        if (id == null) {
             throw new NotDeletedException(0);
         }
 
-        identificationRepo.delete(identificationRepo.findById(Long.valueOf(id.get())).orElseThrow(() -> new NotDeletedException(id.get())));
+        identificationRepo.delete(identificationRepo.findById(Long.valueOf(id)).orElseThrow(() -> new NotDeletedException(id)));
     }
 
     public void deleteContact(long id) {
