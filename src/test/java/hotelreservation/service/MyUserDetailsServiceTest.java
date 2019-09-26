@@ -1,14 +1,12 @@
 package hotelreservation.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
+import hotelreservation.exceptions.NotFoundException;
+import hotelreservation.model.Privilege;
+import hotelreservation.model.Role;
+import hotelreservation.model.User;
+import hotelreservation.repository.PrivilegeRepo;
+import hotelreservation.repository.RoleRepo;
+import hotelreservation.repository.UserRepo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,13 +15,11 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import hotelreservation.exceptions.NotFoundException;
-import hotelreservation.model.Privilege;
-import hotelreservation.model.Role;
-import hotelreservation.model.User;
-import hotelreservation.repository.PrivilegeRepo;
-import hotelreservation.repository.RoleRepo;
-import hotelreservation.repository.UserRepo;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest

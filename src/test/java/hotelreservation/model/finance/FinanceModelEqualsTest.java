@@ -1,13 +1,10 @@
 package hotelreservation.model.finance;
 
-import java.util.Arrays;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import hotelreservation.model.Role;
 import hotelreservation.model.User;
 import nl.jqno.equalsverifier.EqualsVerifier;
+import org.junit.Before;
+import org.junit.Test;
 
 public class FinanceModelEqualsTest {
 

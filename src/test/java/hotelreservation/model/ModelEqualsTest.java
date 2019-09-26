@@ -1,11 +1,8 @@
 package hotelreservation.model;
 
-import java.util.Arrays;
-
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Before;
 import org.junit.Test;
-
-import nl.jqno.equalsverifier.EqualsVerifier;
 
 public class ModelEqualsTest {
 

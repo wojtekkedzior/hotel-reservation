@@ -1,20 +1,10 @@
 package hotelreservation.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 import hotelreservation.exceptions.MissingOrInvalidArgumentException;
+import hotelreservation.exceptions.NotDeletedException;
+import hotelreservation.exceptions.NotFoundException;
+import hotelreservation.model.*;
+import hotelreservation.model.enums.Currency;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,17 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import hotelreservation.exceptions.NotDeletedException;
-import hotelreservation.exceptions.NotFoundException;
-import hotelreservation.model.Amenity;
-import hotelreservation.model.AmenityType;
-import hotelreservation.model.Role;
-import hotelreservation.model.Room;
-import hotelreservation.model.RoomRate;
-import hotelreservation.model.RoomType;
-import hotelreservation.model.Status;
-import hotelreservation.model.User;
-import hotelreservation.model.enums.Currency;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest

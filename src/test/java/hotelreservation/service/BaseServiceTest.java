@@ -1,14 +1,13 @@
 package hotelreservation.service;
 
-import java.time.LocalDateTime;
-
 import hotelreservation.model.Role;
+import hotelreservation.model.User;
 import hotelreservation.repository.RoleRepo;
+import hotelreservation.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import hotelreservation.model.User;
-import hotelreservation.repository.UserRepo;
+import java.time.LocalDateTime;
 
 public class BaseServiceTest {
 
