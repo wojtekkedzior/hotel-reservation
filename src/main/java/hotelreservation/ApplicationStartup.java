@@ -151,7 +151,6 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		addReservations(6);
 		createMultiRoomReservation();
 
-		
 		log.debug("loading test data - end");
 	}
 	
