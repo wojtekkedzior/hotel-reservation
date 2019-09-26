@@ -28,6 +28,4 @@ public class Application extends org.springframework.boot.web.servlet.support.Sp
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(Application.class);
 	}
-	
-	
 }
