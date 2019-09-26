@@ -9,6 +9,8 @@ import hotelreservation.model.Identification;
 import hotelreservation.repository.ContactRepo;
 import hotelreservation.repository.GuestRepo;
 import hotelreservation.repository.IdentificationRepo;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,21 +21,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 @Transactional
 public class GuestService {
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
-
-    @Autowired
-    private GuestRepo guestRepo;
-
-    @Autowired
-    private IdentificationRepo identificationRepo;
-
-    @Autowired
-    private ContactRepo contactRepo;
-
-    @Autowired
-    private Utils utils;
+    private final GuestRepo guestRepo;
+    private final IdentificationRepo identificationRepo;
+    private final ContactRepo contactRepo;
+    private final Utils utils;
 
     public Contact saveContact(Contact contact) {
         return contactRepo.save(contact);

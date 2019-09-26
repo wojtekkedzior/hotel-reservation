@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @RequiredArgsConstructor
 @ResponseStatus(value=HttpStatus.NO_CONTENT, reason="Nothing to delete")  // 204
 public final class NotDeletedException extends RuntimeException {

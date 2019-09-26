@@ -6,6 +6,8 @@ import hotelreservation.exceptions.NotDeletedException;
 import hotelreservation.exceptions.NotFoundException;
 import hotelreservation.model.*;
 import hotelreservation.repository.*;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,33 +21,18 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 @Transactional
 public class RoomService {
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
-
-	@Autowired
-	private RoomRepo roomRepo;
-
-	@Autowired
-	private RoomTypeRepo roomTypeRepo;
-
-	@Autowired
-	private StatusRepo statusRepo;
-
-	@Autowired
-	private AmenityTypeRepo amenityTypeRepo;
-
-	@Autowired
-	private AmenityRepo amenityRepo;
-
-	@Autowired
-	private RoomRateRepo roomRateRepo;
-	
-	@Autowired
-	private ReservationRepo reservationRepo;
-	
-	@Autowired
-	private Utils utils;
+	private final RoomRepo roomRepo;
+	private final RoomTypeRepo roomTypeRepo;
+	private final StatusRepo statusRepo;
+	private final AmenityTypeRepo amenityTypeRepo;
+	private final AmenityRepo amenityRepo;
+	private final RoomRateRepo roomRateRepo;
+	private final ReservationRepo reservationRepo;
+	private final Utils utils;
 
 	public List<Amenity> getRoomAmenities() {
 		List<Amenity> roomAmenities = new ArrayList<>();

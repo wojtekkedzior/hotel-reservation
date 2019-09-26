@@ -6,6 +6,8 @@ import hotelreservation.exceptions.NotDeletedException;
 import hotelreservation.model.*;
 import hotelreservation.model.enums.ReservationStatus;
 import hotelreservation.repository.*;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,33 +25,18 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 @Transactional(propagation = Propagation.REQUIRED)
 public class BookingService {
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
-
-	@Autowired
-	private GuestRepo guestRepo;
-
-	@Autowired
-	private ContactRepo contactRepo;
-
-	@Autowired
-	private IdentificationRepo identificationRepo;
-
-	@Autowired
-	private ReservationRepo reservationRepo;
-	
-	@Autowired
-	private ReservationCancellationRepo reservationCancellationRepo;
-	
-	@Autowired
-	private Utils utils;
-
-	@Autowired
-	private InvoiceService invoiceService;
-	
-	@Autowired
-	private RoomService roomService;
+	private final GuestRepo guestRepo;
+	private final ContactRepo contactRepo;
+	private final IdentificationRepo identificationRepo;
+	private final ReservationRepo reservationRepo;
+	private final ReservationCancellationRepo reservationCancellationRepo;
+	private final Utils utils;
+	private final InvoiceService invoiceService;
+	private final RoomService roomService;
 	
 	public void createContact(Contact contact) {
 		contactRepo.save(contact);

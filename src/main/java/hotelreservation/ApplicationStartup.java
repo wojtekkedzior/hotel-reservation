@@ -148,10 +148,10 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		addGuests();
 
 		addReservation();
-		addReservations(6);
+		addReservations();
 		createMultiRoomReservation();
 
-		
+
 		log.debug("loading test data - end");
 	}
 	
@@ -219,9 +219,9 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		userService.savePrivilege(viewReservationDashBoard);
 		userService.savePrivilege(createPayment);
 
-		Collection<Privilege> adminPrivileges = new ArrayList<Privilege>();
-		Collection<Privilege> managerPrivileges = new ArrayList<Privilege>();
-		Collection<Privilege> receptionistPrivileges = new ArrayList<Privilege>();
+		Collection<Privilege> adminPrivileges = new ArrayList<>();
+		Collection<Privilege> managerPrivileges = new ArrayList<>();
+		Collection<Privilege> receptionistPrivileges = new ArrayList<>();
 
 		adminPrivileges.add(deleteRoom);
 		adminPrivileges.add(deleteRoomType);
@@ -513,7 +513,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		reservationOne.setFirstName("firstName");
 		reservationOne.setLastName("lastName");
 		reservationOne.setOccupants(Arrays.asList(guestTwo, guestThree));
-		reservationOne.setRoomRates(new ArrayList<RoomRate>());
+		reservationOne.setRoomRates(new ArrayList<>());
 
 		List<RoomRate> roomRatesForAllRooms = roomService.getRoomRates(LocalDate.of(YEAR, Month.MARCH, 1), LocalDate.of(YEAR, Month.MARCH, 31));
 		
@@ -528,8 +528,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		bookingService.saveReservation(reservationOne);
 	}
 	
-	private void addReservations(int reservations) {
-		for (int i = 2; i <= reservations; i++) {
+	private void addReservations() {
+		for (int i = 2; i <= 6; i++) {
 			LocalDate startDate = LocalDate.of(YEAR, Month.MARCH, 3);
 			LocalDate endDate = LocalDate.of(YEAR, Month.MARCH, 20);
 
@@ -539,7 +539,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 			reservation.setFirstName("firstName");
 			reservation.setLastName("lastName"); 
 			reservation.setOccupants(Arrays.asList(guestTwo, guestThree));
-			reservation.setRoomRates(new ArrayList<RoomRate>());
+			reservation.setRoomRates(new ArrayList<>());
 
 			List<RoomRate> roomRatesForAllRooms = roomService.getAvailableRoomRates(LocalDate.of(YEAR, Month.MARCH, 1), LocalDate.of(YEAR, Month.MARCH, 31));
 
@@ -569,7 +569,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		reservation.setFirstName("firstName");
 		reservation.setLastName("lastName");
 		reservation.setOccupants(Arrays.asList(guestTwo, guestThree));
-		reservation.setRoomRates(new ArrayList<RoomRate>());
+		reservation.setRoomRates(new ArrayList<>());
 
 		List<RoomRate> roomRatesForAllRooms = roomService.getRoomRates(LocalDate.of(YEAR, Month.APRIL, 1), LocalDate.of(YEAR, Month.APRIL, 4));
 		

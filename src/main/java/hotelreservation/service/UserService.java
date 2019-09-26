@@ -10,6 +10,9 @@ import hotelreservation.model.User;
 import hotelreservation.repository.PrivilegeRepo;
 import hotelreservation.repository.RoleRepo;
 import hotelreservation.repository.UserRepo;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.envers.Audited;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,24 +24,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 @Transactional
 public class UserService {
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
-
-	@Autowired
-	private UserRepo userRepo;
-
-	@Autowired
-	private RoleRepo roleRepo;
-	
-	@Autowired
-	private PrivilegeRepo privilegeRepo;
-	
-	@Autowired
-	private Utils utils;
-
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+	private final UserRepo userRepo;
+	private final RoleRepo roleRepo;
+	private final PrivilegeRepo privilegeRepo;
+	private final Utils utils;
+	private final PasswordEncoder passwordEncoder;
 
 	public User saveUser(User user, String createdByName) {
 		if (utils.isNullOrEmpty(createdByName)) {

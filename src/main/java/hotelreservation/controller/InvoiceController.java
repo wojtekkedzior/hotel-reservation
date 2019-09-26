@@ -8,6 +8,7 @@ import hotelreservation.model.ui.PaymentDTO;
 import hotelreservation.model.ui.ReservationChargeDTO;
 import hotelreservation.service.BookingService;
 import hotelreservation.service.InvoiceService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +26,12 @@ import java.time.LocalDateTime;
 
 
 @Controller
+@RequiredArgsConstructor
 public class InvoiceController {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
-	
-	@Autowired
-	private InvoiceService invoiceService;
+	private final InvoiceService invoiceService;
+	private final BookingService bookingService;
 
-	@Autowired
-	private BookingService bookingService;
-	
 	@GetMapping(value = { "/invoice/{id}" })
 	@PreAuthorize("hasAuthority('retrieveInvoice')")
 	public String getInvoice(@PathVariable Long id, Model model) {

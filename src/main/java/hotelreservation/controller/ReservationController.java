@@ -9,6 +9,8 @@ import hotelreservation.model.ui.ReservationCancellationDTO;
 import hotelreservation.model.ui.ReservationChargeDTO;
 import hotelreservation.model.ui.ReservationDTO;
 import hotelreservation.service.*;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,27 +34,18 @@ import java.util.stream.Collectors;
 
 
 @Controller
+@RequiredArgsConstructor
+@Slf4j
 public class ReservationController {
 	private static final String RESERVATION = "reservation";
 	private static final String REDIRECT_DASHBOARD = "redirect:/dashboard";
 	private static final String REDIRECT_RESERVATION = "redirect:/reservation";
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
-
-	@Autowired
-	private RoomService roomService;
-
-	@Autowired
-	private BookingService bookingService;
-
-	@Autowired
-	private GuestService guestService;
-
-	@Autowired
-	private InvoiceService invoiceService;
-
-	@Autowired
-	private UserService userService;
+	private final RoomService roomService;
+	private final BookingService bookingService;
+	private final GuestService guestService;
+	private final InvoiceService invoiceService;
+	private final UserService userService;
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {

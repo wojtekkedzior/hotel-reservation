@@ -12,6 +12,8 @@ import hotelreservation.model.finance.Payment;
 import hotelreservation.repository.ChargeRepo;
 import hotelreservation.repository.PaymentRepo;
 import hotelreservation.repository.ReservationChargeRepo;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,21 +25,14 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 @Transactional
 public class InvoiceService {
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
-
-	@Autowired
-	private PaymentRepo paymentRepo;
-
-	@Autowired
-	private ReservationChargeRepo reservationChargeRepo;
-
-	@Autowired
-	private ChargeRepo chargeRepo;
-
-	@Autowired
-	private Utils utils;
+	private final PaymentRepo paymentRepo;
+	private final ReservationChargeRepo reservationChargeRepo;
+	private final ChargeRepo chargeRepo;
+	private final Utils utils;
 
 	public void saveCharge(Charge charge) {
 		chargeRepo.save(charge);

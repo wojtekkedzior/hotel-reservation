@@ -5,6 +5,8 @@ import hotelreservation.model.enums.ReservationStatus;
 import hotelreservation.service.BookingService;
 import hotelreservation.service.InvoiceService;
 import hotelreservation.service.RoomService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,18 +18,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
+@Slf4j
 public class AdminController {
-	
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
-
-	@Autowired
-	private RoomService roomService;
-
-	@Autowired
-	private BookingService bookingService;
-
-	@Autowired
-	private InvoiceService invoiceService;
+	private final RoomService roomService;
+	private final BookingService bookingService;
+	private final InvoiceService invoiceService;
 
 	@GetMapping("/admin")
 	@PreAuthorize("hasAuthority('viewAdmin')")

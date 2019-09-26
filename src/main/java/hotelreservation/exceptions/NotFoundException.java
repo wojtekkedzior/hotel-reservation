@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @RequiredArgsConstructor
 @ResponseStatus(value=HttpStatus.NOT_FOUND, reason="No such Element")  // 404
 public final class NotFoundException extends RuntimeException {
