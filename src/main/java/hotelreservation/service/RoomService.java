@@ -56,18 +56,32 @@ public class RoomService {
 		log.info("Looking for all RoomRates between: {} and: {} -  Found: {}", start, end, findByDayBetween.size());
 		return findByDayBetween;
 	}
-	
+
 	public List<RoomRate> getRoomRates(Room room, LocalDate start, LocalDate end) {
 		List<RoomRate> findByStartDateBetween = roomRateRepo.findByRoomIdAndDayBetween(room.getId(), start, end);
 		log.info("Looking for all RoomRates between: {} and: {} for Room: {} - Found: {}", start, end, room.getId(), findByStartDateBetween.size());
 		return findByStartDateBetween;
 	}
-	
-	public List<RoomRate> getAvailableRoomRates(LocalDate start, LocalDate end) { //TODO add a variant of this method but for a particular room //TODO finally figure out how to use a join and apply it here
+
+	public List<RoomRate> getAvailableRoomRates(LocalDate start, LocalDate end) {
 		List<RoomRate> availableRoomRates = new ArrayList<>();
 		List<Reservation> activeReservation = reservationRepo.findInProgressAndUpComingReservations();
 		List<RoomRate> availableRoomRatesForAllRooms = getRoomRates(start, end);
 		
+		for (RoomRate roomRate : availableRoomRatesForAllRooms) {
+			if(activeReservation.stream().noneMatch(r -> r.getRoomRates().contains(roomRate))) {
+				availableRoomRates.add(roomRate);
+			}
+		}
+
+		return availableRoomRates;
+	}
+
+	public List<RoomRate> getAvailableRoomRates(Room room, LocalDate start, LocalDate end) {
+		List<RoomRate> availableRoomRates = new ArrayList<>();
+		List<Reservation> activeReservation = reservationRepo.findInProgressAndUpComingReservations();
+		List<RoomRate> availableRoomRatesForAllRooms = getRoomRates(room, start, end);
+
 		for (RoomRate roomRate : availableRoomRatesForAllRooms) {
 			if(activeReservation.stream().noneMatch(r -> r.getRoomRates().contains(roomRate))) {
 				availableRoomRates.add(roomRate);

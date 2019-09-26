@@ -74,7 +74,7 @@ public class GuestService {
             throw new NotDeletedException(0);
         }
 
-        identificationRepo.delete(identificationRepo.findById(Long.valueOf(id)).orElseThrow(() -> new NotDeletedException(id)));
+        identificationRepo.delete(identificationRepo.findById(id).orElseThrow(() -> new NotDeletedException(id)));
     }
 
     public void deleteContact(long id) {
