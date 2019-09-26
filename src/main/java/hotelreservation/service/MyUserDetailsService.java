@@ -3,8 +3,9 @@ package hotelreservation.service;
 import hotelreservation.model.Privilege;
 import hotelreservation.model.Role;
 import hotelreservation.model.User;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,12 +18,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service("userDetailsService")
-@RequiredArgsConstructor
-@Slf4j
 @Transactional
 public class MyUserDetailsService implements UserDetailsService {
 	
-	private final UserService userService;
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
+
+	@Autowired
+	private UserService userService;
 
 	@Override
 	public UserDetails loadUserByUsername(String userName) {
@@ -32,11 +34,7 @@ public class MyUserDetailsService implements UserDetailsService {
 		
 		List<GrantedAuthority> grantedAuthorities = getAuthorities(user.getRole());
 		grantedAuthorities.add(new SimpleGrantedAuthority(user.getRole().getName()));
-		
-		if(log.isDebugEnabled()) {
-			log.info("User: {} found and has the following authorities: {}", userName, grantedAuthorities);
-		}
-		
+
 		return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), user.isEnabled(), true, true, true, grantedAuthorities);
 	}
 
