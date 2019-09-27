@@ -261,12 +261,12 @@ public class RoomService {
                 .collect(Collectors.groupingBy(RoomRate::getRoom, TreeMap::new, Collectors.toList()));
 
         start.datesUntil(end)
-                .forEach(day -> roomRatesPerRoom
-                        .forEach((room, roomRates) -> roomRates.stream()
-                        .filter(roomRate -> roomRate.getDay().isEqual(day))
-                        .findFirst()
-                        .ifPresentOrElse(roomRate -> roomRatesAsMapByDates.computeIfAbsent(day, k -> new LinkedList<>()).add(roomRate),
-                                               () -> roomRatesAsMapByDates.computeIfAbsent(day, k -> new LinkedList<>()).add(null))));
+            .forEach(day -> roomRatesPerRoom
+                .forEach((room, roomRates) -> roomRates.stream()
+                .filter(roomRate -> roomRate.getDay().isEqual(day))
+                .findFirst()
+                .ifPresentOrElse(roomRate -> roomRatesAsMapByDates.computeIfAbsent(day, k -> new LinkedList<>()).add(roomRate),
+                                       () -> roomRatesAsMapByDates.computeIfAbsent(day, k -> new LinkedList<>()).add(null))));
 
         return roomRatesAsMapByDates;
     }
