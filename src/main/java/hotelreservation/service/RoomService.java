@@ -77,20 +77,6 @@ public class RoomService {
         return availableRoomRates;
     }
 
-    public List<RoomRate> getAvailableRoomRates(Room room, LocalDate start, LocalDate end) {
-        List<RoomRate> availableRoomRates = new ArrayList<>();
-        List<Reservation> activeReservation = reservationRepo.findInProgressAndUpComingReservations();
-        List<RoomRate> availableRoomRatesForAllRooms = getRoomRates(room, start, end);
-
-        for (RoomRate roomRate : availableRoomRatesForAllRooms) {
-            if (activeReservation.stream().noneMatch(r -> r.getRoomRates().contains(roomRate))) {
-                availableRoomRates.add(roomRate);
-            }
-        }
-
-        return availableRoomRates;
-    }
-
     public Map<Room, List<RoomRate>> getRoomRatesAsMap(LocalDate startDate, LocalDate endDate) {
         Map<Room, List<RoomRate>> ratesForAllRooms = new HashMap<>();
 

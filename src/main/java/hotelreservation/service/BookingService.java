@@ -15,10 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,22 +57,17 @@ public class BookingService {
 			Reservation reservationInDb = reservationRepo.findById(reservation.getId()).orElseThrow(() -> new MissingOrInvalidArgumentException("Missing reservation id: " + reservation.getId()));
 			reservation.setCreatedOn(reservationInDb.getCreatedOn());
 		}
-		//TODO checjk if roomRates are present
-		
-		//Check if room rates have sequential days
+
 		List<RoomRate> roomRates = reservation.getRoomRates();
-		
+
 		if(roomRates == null || roomRates.isEmpty()) {
 			throw new MissingOrInvalidArgumentException("Can't have no room rates when updating a reservation");
 		} else if(roomRates.size() != ChronoUnit.DAYS.between(reservation.getStartDate(), reservation.getEndDate())) {
 			throw new MissingOrInvalidArgumentException("Not enough rates for the given time frame. Found: " + roomRates.size() + " expected: " + ChronoUnit.DAYS.between(reservation.getStartDate(), reservation.getEndDate()));
 		}
-		
-		Map<LocalDate, RoomRate> roomRatesAsMap = new HashMap<>();
 
-		roomRates.forEach(roomRate ->
-			roomRatesAsMap.put(roomRate.getDay(), roomRate)
-		);
+		//Check if room rates have sequential days
+		Map<LocalDate, RoomRate> roomRatesAsMap = roomRates.stream().collect(Collectors.toMap(RoomRate::getDay, Function.identity()));
 
 		roomRates.forEach(roomRate -> {
 			if(!roomRatesAsMap.containsKey(roomRate.getDay())) {
