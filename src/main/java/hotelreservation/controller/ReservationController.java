@@ -180,10 +180,7 @@ public class ReservationController {
 	@PostMapping("/addOccupant/{reservationId}")
 	@PreAuthorize("hasAuthority('realiseReservation')")
 	public ModelAndView addOccupant(@Valid @ModelAttribute GuestDTO guestDTO, @PathVariable Long reservationId) {
-
-		if (reservationId == null) {
-			new ModelAndView(REDIRECT_RESERVATION);
-		}
+		Reservation reservation = bookingService.getReservation(reservationId);
 
 		Guest guest = Guest.builder()
 				.firstName(guestDTO.getFirstName())
@@ -197,13 +194,8 @@ public class ReservationController {
 		guestService.saveContact(guest.getContact());
 		guest = guestService.saveGuest(guest);
 
-		//TODO get res first before saving any guest stuff
-		Reservation reservation = bookingService.getReservation(reservationId);
-		
 		if(reservation.getOccupants() == null) {
-			List<Guest> occupants = new ArrayList<>();
-			occupants.add(guest);
-			reservation.setOccupants(occupants);
+			reservation.setOccupants(Collections.singletonList(guest));
 		} else {
 			reservation.getOccupants().add(guest);
 		}
@@ -250,20 +242,15 @@ public class ReservationController {
 	@DeleteMapping(value = "/reservationDelete/{reservationId}")
 	@PreAuthorize("hasAuthority('deleteReservation')")
 	public ModelAndView deleteReservation(@PathVariable Long reservationId) {
+		log.info("deleting reservation: {}", reservationId);
 		Reservation resFromDB = bookingService.getReservation(reservationId);
 		bookingService.deleteReservation(resFromDB);
-		log.info("deleting reservation: {}", reservationId);
 		return new ModelAndView(REDIRECT_RESERVATION);
 	}
 
 	@PostMapping(value = "/deleteContact/{guestId}/reservationId/{reservationId}")
 	@PreAuthorize("hasAuthority('realiseReservation')")
 	public ModelAndView deleteGuest(@PathVariable Long guestId,  @PathVariable Long reservationId) {
-
-		if (reservationId == null) {
-			new ModelAndView(REDIRECT_RESERVATION);
-		}
-
 		log.info("deleting guest: {} from reservation: {}", guestId, reservationId);
 		Guest guestToDelete = guestService.getGuestById(guestId);
 		Reservation resFromDB = bookingService.getReservation(reservationId);
@@ -272,11 +259,10 @@ public class ReservationController {
 			throw new IllegalArgumentException("Guest: " + guestToDelete.getId() + " is not in the list of Guests for reservation: " + resFromDB.getId());
 		} else {
 			//TODO can't delete the last occupant or make it so that you can't realise a reservation without an occupant
+			log.info("Deleting guest: {} for reservation: {}", guestToDelete, reservationId);
 			resFromDB.getOccupants().remove(guestToDelete);
 			guestService.deleteGuest(guestId);
 		}
-
-		log.info("can't delete nonexistant guest");
 
 		return new ModelAndView("redirect:/realiseReservation/" + reservationId);
 	}
