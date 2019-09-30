@@ -55,28 +55,18 @@ public class InvoiceController {
 	
 	@PostMapping("/createPayment/{reservationId}")
 	@PreAuthorize("hasAuthority('createPayment')")
-	public ModelAndView createPayment(@Valid @ModelAttribute PaymentDTO paymentDto,  @PathVariable Long reservationId) {
+	public ModelAndView createPayment(@Valid @ModelAttribute PaymentDTO paymentDto, @PathVariable Long reservationId) {
 		log.info("creating payment for reservation: {}", reservationId);
 		
 		Payment payment = new Payment();
 		payment.setPaymentDate(LocalDateTime.now());
-		
-		//TODO is the reservationID param usefull here?
-		Reservation reservation = bookingService.getReservation(reservationId);
-		payment.setReservation(reservation);
-		
+		payment.setReservation(bookingService.getReservation(reservationId));
 		payment.setPaymentType(paymentDto.getPaymentType());
 		payment.setReservationCharges(paymentDto.getReservationCharges());
 
 		invoiceService.savePayment(payment);
-		
-		StringBuilder viewName = new StringBuilder("redirect:/checkoutReservation/" );
 
-		if(reservationId == null) {
-			viewName.append(reservationId);
-		}
-
-		return new ModelAndView(viewName.toString());
+		return new ModelAndView("redirect:/checkoutReservation/" + reservationId);
 	}
 	
 	@PostMapping("/addChargeToReservation/{reservationId}")
@@ -87,18 +77,11 @@ public class InvoiceController {
 		ReservationCharge reservationCharge = new ReservationCharge();
 		Reservation reservation = bookingService.getReservation(reservationId);
 		reservationCharge.setReservation(reservation);
-
 		reservationCharge.setQuantity(reservationChargeDto.getQuantity());
 		reservationCharge.setCharge(reservationChargeDto.getCharge());
 		
 		invoiceService.saveReservationCharge(reservationCharge);
 
-		StringBuilder viewName = new StringBuilder("redirect:/checkoutReservation/" );
-
-		if(reservationId == null) {
-			viewName.append(reservationId);
-		}
-
-		return new ModelAndView(viewName.toString());
+		return new ModelAndView("redirect:/checkoutReservation/" + reservationId);
 	}
 }
