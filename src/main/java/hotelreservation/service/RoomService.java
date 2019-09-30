@@ -32,15 +32,11 @@ public class RoomService {
     private final Utils utils;
 
     public List<Amenity> getRoomAmenities() {
-        List<Amenity> roomAmenities = new ArrayList<>();
-
-        List<AmenityType> amenityTypes = utils.toList(amenityTypeRepo.findAll());
-
-        amenityTypes.stream()
+        return utils.toList(amenityTypeRepo.findAll()).stream()
                 .filter(t -> t.getName().equals("Hotel"))
-                .forEach(t -> roomAmenities.addAll(amenityRepo.findByAmenityType(t)));
-
-        return roomAmenities;
+                .map(amenityRepo::findByAmenityType)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
     }
 
     public List<Room> getByRoomsByStatus(Status status) {
