@@ -57,9 +57,9 @@ public class InvoiceController {
 	@PreAuthorize("hasAuthority('createPayment')")
 	public ModelAndView createPayment(@Valid @ModelAttribute PaymentDTO paymentDto, @PathVariable Long reservationId) {
 		log.info("creating payment for reservation: {}", reservationId);
-		
+
 		Payment payment = new Payment();
-		payment.setPaymentDate(LocalDateTime.now());
+		payment.setPaymentDate(LocalDateTime.now()) ;
 		payment.setReservation(bookingService.getReservation(reservationId));
 		payment.setPaymentType(paymentDto.getPaymentType());
 		payment.setReservationCharges(paymentDto.getReservationCharges());
