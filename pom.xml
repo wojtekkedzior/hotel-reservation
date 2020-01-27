@@ -16,7 +16,7 @@
         <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
         <sonar.host.url>http://192.168.1.99:9000</sonar.host.url>
-        <sonar.exclusions>**/*ApplicationStartup.java, **/repository/**, **/model/**</sonar.exclusions>
+        <sonar.exclusions>**/*Application.java, **/*ApplicationStartup.java, **/repository/**, **/model/**</sonar.exclusions>
     </properties>
 
     <dependencies>
@@ -209,5 +209,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
