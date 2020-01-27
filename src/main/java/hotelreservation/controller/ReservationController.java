@@ -88,10 +88,10 @@ public class ReservationController {
  
 		Map<LocalDate, List<RoomRate>> roomRatesAsMapByDates = roomService.getRoomRatesPerDate(asDateStart, asDateEnd);
 		model.addAttribute("roomRatesAsMapByDates", roomRatesAsMapByDates);
-		
-		List<RoomRate> roomRates = roomRatesAsMapByDates.get(asDateStart);
-		List<Integer> collect = roomRates.stream().map(r -> r.getRoom().getRoomNumber()).collect(Collectors.toList());
-		model.addAttribute("roomNumbers", collect);
+
+		model.addAttribute("roomNumbers", roomRatesAsMapByDates.get(asDateStart).stream()
+				.map(r -> r.getRoom().getRoomNumber())
+				.collect(Collectors.toList()));
 		
 		return RESERVATION;
 	}

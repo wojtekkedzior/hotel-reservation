@@ -4,6 +4,7 @@ import hotelreservation.model.Guest;
 import hotelreservation.model.User;
 import hotelreservation.model.enums.ReservationStatus;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Immutable;
 

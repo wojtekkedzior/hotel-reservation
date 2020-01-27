@@ -447,7 +447,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		LocalDate date = LocalDate.of(2019, Month.JANUARY, 1);
 		int value = 1000;
 
-		for (int days = 1; days <= 365; days++) {
+		for (int days = 1; days <= 730; days++) {
 			if (date.getDayOfWeek().equals(DayOfWeek.FRIDAY) || date.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
 				value = 1999;
 			} else if (date.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
