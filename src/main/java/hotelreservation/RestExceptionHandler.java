@@ -25,19 +25,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	@Override
 	protected ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers, HttpStatus status,
 			WebRequest request) {
-		StringBuilder output = new StringBuilder();
 
-		List<StringBuilder> collect = ex.getBindingResult().getFieldErrors().stream()
+		List<String> collect = ex.getBindingResult().getFieldErrors().stream()
 				.map(FieldError::toString)
-				.collect(Collectors.toList())
-				.stream()
-				.map(output::append)
 				.collect(Collectors.toList());
 
 		log.info(ex.getMessage());
-		log.info("Validations: {}", output);
-		
-		return new ResponseEntity<>(output, status);
+		log.info("Validations: {}", collect);
+
+		return new ResponseEntity<>(collect, status);
 	}
 	
 	@ExceptionHandler(AccessDeniedException.class)
