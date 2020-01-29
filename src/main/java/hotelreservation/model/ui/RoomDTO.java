@@ -31,9 +31,9 @@ public final class RoomDTO {
 	@NotNull
 	private RoomType roomType;
 
-	@NotNull
+//	@NotNull
 	private LocalDateTime createdOn;
 
-	@NotNull
+//	@NotNull
 	private User createdBy;
 }

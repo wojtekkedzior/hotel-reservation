@@ -514,6 +514,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		reservationOne.setLastName("lastName");
 		reservationOne.setOccupants(Arrays.asList(guestTwo, guestThree));
 		reservationOne.setRoomRates(new ArrayList<>());
+		reservationOne.setCreatedBy(manager);
 
 		List<RoomRate> roomRatesForAllRooms = roomService.getRoomRates(LocalDate.of(YEAR, Month.MARCH, 1), LocalDate.of(YEAR, Month.MARCH, 31));
 		
@@ -540,6 +541,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 			reservation.setLastName("lastName"); 
 			reservation.setOccupants(Arrays.asList(guestTwo, guestThree));
 			reservation.setRoomRates(new ArrayList<>());
+			reservation.setCreatedBy(manager);
 
 			List<RoomRate> roomRatesForAllRooms = roomService.getAvailableRoomRates(LocalDate.of(YEAR, Month.MARCH, 1), LocalDate.of(YEAR, Month.MARCH, 31));
 
@@ -570,6 +572,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		reservation.setLastName("lastName");
 		reservation.setOccupants(Arrays.asList(guestTwo, guestThree));
 		reservation.setRoomRates(new ArrayList<>());
+		reservation.setCreatedBy(manager);
 
 		List<RoomRate> roomRatesForAllRooms = roomService.getRoomRates(LocalDate.of(YEAR, Month.APRIL, 1), LocalDate.of(YEAR, Month.APRIL, 4));
 		

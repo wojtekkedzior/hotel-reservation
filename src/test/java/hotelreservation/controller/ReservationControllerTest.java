@@ -64,8 +64,6 @@ public class ReservationControllerTest {
 				applicationStartup.reservationOne.getFirstName(),
 				applicationStartup.reservationOne.getLastName(),
 				applicationStartup.reservationOne.getOccupants(),
-				applicationStartup.reservationOne.getDiscount(),
-				applicationStartup.reservationOne.getDiscountAuthorisedBy(),
 				applicationStartup.reservationOne.getStartDate(),
 				applicationStartup.reservationOne.getEndDate(),
 				applicationStartup.reservationOne.getReservationStatus());
@@ -184,8 +182,6 @@ public class ReservationControllerTest {
 				applicationStartup.reservationOne.getFirstName(),
 				applicationStartup.reservationOne.getLastName(),
 				applicationStartup.reservationOne.getOccupants(),
-				applicationStartup.reservationOne.getDiscount(),
-				applicationStartup.reservationOne.getDiscountAuthorisedBy(),
 				startDate,
 				endDate,
 				applicationStartup.reservationOne.getReservationStatus());

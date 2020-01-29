@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -33,7 +33,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 		log.info(ex.getMessage());
 		log.info("Validations: {}", collect);
 
-		return new ResponseEntity<>(collect, status);
+		return new ResponseEntity<>(status);
 	}
 	
 	@ExceptionHandler(AccessDeniedException.class)
