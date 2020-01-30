@@ -6,7 +6,6 @@ import lombok.ToString;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ToString
 @EqualsAndHashCode(callSuper = false)
 @RequiredArgsConstructor
 @ResponseStatus(value=HttpStatus.PRECONDITION_REQUIRED, reason="No charges for payment")  // 428

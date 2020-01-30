@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 
-@ToString
 @EqualsAndHashCode(callSuper = false)
 @RequiredArgsConstructor
 @ResponseStatus(value=HttpStatus.NO_CONTENT, reason="Nothing to delete")  // 204
