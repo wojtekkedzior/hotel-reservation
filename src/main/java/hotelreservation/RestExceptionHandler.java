@@ -33,7 +33,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 		log.info(ex.getMessage());
 		log.info("Validations: {}", collect);
 
-		return new ResponseEntity<>(status);
+		return new ResponseEntity<>(collect, status);
 	}
 	
 	@ExceptionHandler(AccessDeniedException.class)
