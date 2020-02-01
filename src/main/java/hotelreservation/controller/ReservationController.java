@@ -28,6 +28,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Controller
@@ -53,46 +54,56 @@ public class ReservationController {
 	@GetMapping(value = { "/reservation", "/reservation/{id}", "/reservation/start/{startDate}/end/{endDate}" })
 	public String addReservationModel(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<LocalDate> startDate,
 			@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<LocalDate> endDate, @PathVariable(required = false) Long id, Model model) {
+		LocalDate asDateStart = null;
+		LocalDate asDateEnd = null;
+
 		if (id == null) {
 			model.addAttribute(RESERVATION, new Reservation());
 			model.addAttribute("room", new Room());
+
+			asDateStart = startDate.orElseGet(LocalDate::now);
+			LocalDate finalAsDateStart = asDateStart;
+			asDateEnd = endDate.orElseGet(() -> finalAsDateStart.plusDays(1));
 		} else {
 
-			Map<Room, List<RoomRate>> roomRatesAsMap = new HashMap<>();
+//			Map<Room, List<RoomRate>> roomRatesAsMap = new HashMap<>();
 
 			try {
 				Reservation reservation = bookingService.getReservation(id);
+
+				asDateStart = reservation.getStartDate();
+				asDateEnd = reservation.getEndDate();
+
 				model.addAttribute(RESERVATION, reservation);
 
-				for (RoomRate roomRate : reservation.getRoomRates()) {
-					roomRatesAsMap.computeIfAbsent(roomRate.getRoom(), k -> new ArrayList<>()).add(roomRate);
-				}
+//				for (RoomRate roomRate : reservation.getRoomRates()) {
+//					roomRatesAsMap.computeIfAbsent(roomRate.getRoom(), k -> new ArrayList<>()).add(roomRate);
+//				}
 
 			}catch (NotFoundException e) {
+				//TODO this should be an error
 				model.addAttribute(RESERVATION, new Reservation());
 			}
 
-			model.addAttribute("roomRatesPerRoom", roomRatesAsMap);
+//			model.addAttribute("roomRatesPerRoom", roomRatesAsMap);
 		}
 
-		model.addAttribute("startDate", startDate.orElseGet(LocalDate::now));
-		model.addAttribute("endDate", endDate.orElseGet(LocalDate::now));
+		model.addAttribute("startDate", asDateStart);
+		model.addAttribute("endDate", asDateEnd);
 
-		if (startDate.isPresent() && endDate.isPresent()) {
-			Map<Room, List<RoomRate>> roomRatesAsMap = roomService.getRoomRatesAsMap(startDate.get(), endDate.get());
-			model.addAttribute("roomRatesPerRoom", roomRatesAsMap);
-		}
-		
-		LocalDate asDateStart = startDate.orElseGet(LocalDate::now);
-		LocalDate asDateEnd = endDate.orElseGet(() -> asDateStart.plus(1, ChronoUnit.DAYS));
- 
+//		if (startDate.isPresent() && endDate.isPresent()) {
+//			Map<Room, List<RoomRate>> roomRatesAsMap = roomService.getRoomRatesAsMap(asDateStart, asDateEnd);
+//			model.addAttribute("roomRatesPerRoom", roomRatesAsMap);
+//		}
+
 		Map<LocalDate, List<RoomRate>> roomRatesAsMapByDates = roomService.getRoomRatesPerDate(asDateStart, asDateEnd);
 		model.addAttribute("roomRatesAsMapByDates", roomRatesAsMapByDates);
 
 		model.addAttribute("roomNumbers", roomRatesAsMapByDates.get(asDateStart).stream()
+				.filter(r -> r != null)
 				.map(r -> r.getRoom().getRoomNumber())
 				.collect(Collectors.toList()));
-		
+
 		return RESERVATION;
 	}
 

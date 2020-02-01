@@ -78,7 +78,7 @@
 						 	 <td th:text="${day.key}"/>
 						  
 						  	<th:block th:each="roomRate : ${day.value}">
-					   			<td th:id="${roomRate.id}" th:text="${roomRate != null} ? ${roomRate.value} : 'no rate' " onclick="test(this)"/>  
+					   			<td th:id="${roomRate != null} ? ${roomRate.id} : 'no id'" th:text="${roomRate != null} ? ${roomRate.value} : 'no rate' " onclick="test(this)"/>
 						   	</th:block> 
 						</tr>
 					</table>
