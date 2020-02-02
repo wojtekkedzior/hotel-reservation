@@ -116,24 +116,26 @@ public class ReservationController {
 		return RESERVATION;
 	}
 
-	@PreAuthorize("hasAuthority('createReservation')")
+	@PreAuthorize("hasAuthority('createReservation')")  //wrong, this should be view Reservation
 	@GetMapping(value = {"/reservation/{id}" })
 	public String getExistingReservation(@PathVariable(required = false) Long id, Model model) {
 		Map<Room, List<RoomRate>> roomRatesAsMap = new HashMap<>();
 
-//		try {
 			Reservation reservation = bookingService.getReservation(id);
 			model.addAttribute(RESERVATION, reservation);
 
 			for (RoomRate roomRate : reservation.getRoomRates()) {
 				roomRatesAsMap.computeIfAbsent(roomRate.getRoom(), k -> new ArrayList<>()).add(roomRate);
 			}
-//
-//		}catch (NotFoundException e) {
-//			model.addAttribute(RESERVATION, new Reservation());
-//		}
+
+		model.addAttribute("startDate", reservation.getStartDate());
+		model.addAttribute("endDate", reservation.getEndDate());
 
 		model.addAttribute("roomRatesPerRoom", roomRatesAsMap);
+//		model.addAttribute("roomNumbers", roomRatesAsMap.get(reservation.getStartDate()).stream()
+//				.filter(r -> r != null)
+//				.map(r -> r.getRoom().getRoomNumber())
+//				.collect(Collectors.toList()));
 
 		return RESERVATION;
 	}
