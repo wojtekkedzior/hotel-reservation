@@ -51,42 +51,51 @@ public class ReservationController {
 	}
 
 	@PreAuthorize("hasAuthority('createReservation')")
-	@GetMapping(value = { "/reservation", "/reservation/{id}", "/reservation/start/{startDate}/end/{endDate}" })
+	@GetMapping(value = { "/reservation", "/reservation/start/{startDate}/end/{endDate}" })
 	public String addReservationModel(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<LocalDate> startDate,
-			@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<LocalDate> endDate, @PathVariable(required = false) Long id, Model model) {
+			@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<LocalDate> endDate, Model model) {
 		LocalDate asDateStart = null;
 		LocalDate asDateEnd = null;
 
-		if (id == null) {
-			model.addAttribute(RESERVATION, new Reservation());
-			model.addAttribute("room", new Room());
+		model.addAttribute(RESERVATION, new Reservation());
+		model.addAttribute("room", new Room());
 
-			asDateStart = startDate.orElseGet(LocalDate::now);
-			LocalDate finalAsDateStart = asDateStart;
-			asDateEnd = endDate.orElseGet(() -> finalAsDateStart.plusDays(1));
-		} else {
+		asDateStart = startDate.orElseGet(LocalDate::now);
+		LocalDate finalAsDateStart = asDateStart;
+		asDateEnd = endDate.orElseGet(() -> finalAsDateStart.plusDays(1));
 
-//			Map<Room, List<RoomRate>> roomRatesAsMap = new HashMap<>();
+		model.addAttribute(RESERVATION, new Reservation());
 
-			try {
-				Reservation reservation = bookingService.getReservation(id);
-
-				asDateStart = reservation.getStartDate();
-				asDateEnd = reservation.getEndDate();
-
-				model.addAttribute(RESERVATION, reservation);
-
-//				for (RoomRate roomRate : reservation.getRoomRates()) {
-//					roomRatesAsMap.computeIfAbsent(roomRate.getRoom(), k -> new ArrayList<>()).add(roomRate);
-//				}
-
-			}catch (NotFoundException e) {
-				//TODO this should be an error
-				model.addAttribute(RESERVATION, new Reservation());
-			}
-
-//			model.addAttribute("roomRatesPerRoom", roomRatesAsMap);
-		}
+//		if (id == null) {
+//			model.addAttribute(RESERVATION, new Reservation());
+//			model.addAttribute("room", new Room());
+//
+//			asDateStart = startDate.orElseGet(LocalDate::now);
+//			LocalDate finalAsDateStart = asDateStart;
+//			asDateEnd = endDate.orElseGet(() -> finalAsDateStart.plusDays(1));
+//		} else {
+//
+////			Map<Room, List<RoomRate>> roomRatesAsMap = new HashMap<>();
+//
+//			try {
+//				Reservation reservation = bookingService.getReservation(id);
+//
+//				asDateStart = reservation.getStartDate();
+//				asDateEnd = reservation.getEndDate();
+//
+//				model.addAttribute(RESERVATION, reservation);
+//
+////				for (RoomRate roomRate : reservation.getRoomRates()) {
+////					roomRatesAsMap.computeIfAbsent(roomRate.getRoom(), k -> new ArrayList<>()).add(roomRate);
+////				}
+//
+//			}catch (NotFoundException e) {
+//				//TODO this should be an error
+//				model.addAttribute(RESERVATION, new Reservation());
+//			}
+//
+////			model.addAttribute("roomRatesPerRoom", roomRatesAsMap);
+//		}
 
 		model.addAttribute("startDate", asDateStart);
 		model.addAttribute("endDate", asDateEnd);
@@ -106,6 +115,32 @@ public class ReservationController {
 
 		return RESERVATION;
 	}
+
+	@PreAuthorize("hasAuthority('createReservation')")
+	@GetMapping(value = {"/reservation/{id}" })
+	public String getExistingReservation(@PathVariable(required = false) Long id, Model model) {
+		Map<Room, List<RoomRate>> roomRatesAsMap = new HashMap<>();
+
+//		try {
+			Reservation reservation = bookingService.getReservation(id);
+			model.addAttribute(RESERVATION, reservation);
+
+			for (RoomRate roomRate : reservation.getRoomRates()) {
+				roomRatesAsMap.computeIfAbsent(roomRate.getRoom(), k -> new ArrayList<>()).add(roomRate);
+			}
+//
+//		}catch (NotFoundException e) {
+//			model.addAttribute(RESERVATION, new Reservation());
+//		}
+
+		model.addAttribute("roomRatesPerRoom", roomRatesAsMap);
+
+		return RESERVATION;
+	}
+
+
+
+
 
 	@GetMapping(value = { "/realiseReservation/{id}" })
 	@PreAuthorize("hasAuthority('realiseReservation')")
@@ -275,7 +310,7 @@ public class ReservationController {
 
 		return new ModelAndView("redirect:/realiseReservation/" + reservationId);
 	}
-	
+
 	@PostMapping("/cancelReservation/{reservationID}")
 	@PreAuthorize("hasAuthority('cancelReservation')")
 	public ModelAndView cancelReservation(@Valid @ModelAttribute ReservationCancellationDTO reservationCancellationDTO, @PathVariable Long reservationID) {
