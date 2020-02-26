@@ -267,16 +267,16 @@ public class RoomControllerTest {
 	}
 
 	@Test
-	@WithUserDetails("manager")
+	@WithUserDetails("admin")
 	public void testDeleteAmenityType() throws Exception {
 		mvc.perform(delete("/amenityTypeDelete/1")).andExpect(status().is4xxClientError());
 
-		MvcResult room = mvc.perform(post("/addAmenityType").flashAttr("amenityTypeDTO", this.amenityTypeDTO)).andExpect(status().is3xxRedirection()).andReturn();
+		MvcResult result = mvc.perform(post("/addAmenityType").flashAttr("amenityTypeDTO", this.amenityTypeDTO)).andExpect(status().is3xxRedirection()).andReturn();
 
 		int amenityTypeId = Integer.parseInt(
 				String.valueOf(
-						room.getModelAndView().getViewName()
-								.charAt(room.getModelAndView().getViewName().length() - 1)));
+						result.getModelAndView().getViewName()
+								.charAt(result.getModelAndView().getViewName().length() - 1)));
 
 		mvc.perform(delete("/amenityTypeDelete/"+ amenityTypeId)).andExpect(status().is3xxRedirection());
 	}
@@ -286,12 +286,12 @@ public class RoomControllerTest {
 	public void testDeleteRoom() throws Exception {
 		mvc.perform(delete("/roomRate/1")).andExpect(status().is4xxClientError());
 
-		MvcResult room = mvc.perform(post("/addRoom").flashAttr("roomDTO", this.roomDTO)).andExpect(status().is3xxRedirection()).andReturn();
+		MvcResult result = mvc.perform(post("/addRoom").flashAttr("roomDTO", this.roomDTO)).andExpect(status().is3xxRedirection()).andReturn();
 
 		int roomId = Integer.parseInt(
 				String.valueOf(
-						room.getModelAndView().getViewName()
-								.charAt(room.getModelAndView().getViewName().length() - 1)));
+						result.getModelAndView().getViewName()
+								.charAt(result.getModelAndView().getViewName().length() - 1)));
 
 		mvc.perform(delete("/roomDelete/"+ roomId)).andExpect(status().is3xxRedirection());
 	}
@@ -301,12 +301,12 @@ public class RoomControllerTest {
 	public void testDeleteRoomType() throws Exception {
 		mvc.perform(delete("/roomType/1")).andExpect(status().is4xxClientError());
 
-		MvcResult room = mvc.perform(post("/addRoomType").flashAttr("roomTypeDTO", this.roomTypeStandardDTO)).andExpect(status().is3xxRedirection()).andReturn();
+		MvcResult result = mvc.perform(post("/addRoomType").flashAttr("roomTypeDTO", this.roomTypeStandardDTO)).andExpect(status().is3xxRedirection()).andReturn();
 
 		int roomTypeId = Integer.parseInt(
 				String.valueOf(
-						room.getModelAndView().getViewName()
-								.charAt(room.getModelAndView().getViewName().length() - 1)));
+						result.getModelAndView().getViewName()
+								.charAt(result.getModelAndView().getViewName().length() - 1)));
 
 		mvc.perform(delete("/roomTypeDelete/"+ roomTypeId)).andExpect(status().is3xxRedirection());
 	}
