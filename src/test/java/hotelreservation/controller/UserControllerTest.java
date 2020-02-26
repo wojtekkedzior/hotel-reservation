@@ -14,6 +14,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -53,7 +54,6 @@ public class UserControllerTest  {
 		mvc.perform(post("/adduser").flashAttr("userDTO", userDTO)).andExpect(status().is3xxRedirection());
 		//is in error because of constraint violations
 		mvc.perform(delete("/userDelete/1")).andExpect(status().is4xxClientError());
-		mvc.perform(delete("/userRoleDelete/1")).andExpect(status().is4xxClientError());
 	}
 
 	@Test
@@ -73,7 +73,6 @@ public class UserControllerTest  {
 	@WithUserDetails("manager")
 	public void testManagerRolePermissions_forbidden() throws Exception {
 		mvc.perform(delete("/userDelete/1")).andExpect(status().isForbidden());
-		mvc.perform(delete("/userRoleDelete/1")).andExpect(status().isForbidden());
 	}
 
 	@Test
@@ -88,7 +87,6 @@ public class UserControllerTest  {
 		mvc.perform(get("/user/1")).andExpect(status().isForbidden());
 		mvc.perform(post("/adduser").flashAttr("userDTO", userDTO)).andExpect(status().isForbidden());
 		mvc.perform(delete("/userDelete/1")).andExpect(status().isForbidden());
-		mvc.perform(delete("/userRoleDelete/1")).andExpect(status().isForbidden());
 	}
 
 	@Test
@@ -125,19 +123,16 @@ public class UserControllerTest  {
 
 	@Test
 	@WithUserDetails("admin")
-	public void testDeleteUserRole() throws Exception {
-		mvc.perform(delete("/userRoleDelete/ ")).andExpect(status().is3xxRedirection());
-	}
+	public void testDeleteUser() throws Exception {
+		mvc.perform(delete("/userDelete/ ")).andExpect(status().is3xxRedirection());
 
-	@Test
-	@WithUserDetails("admin")
-	public void testDeleteUserRoleWithNoId() throws Exception {
-		mvc.perform(delete("/userRoleDelete/ ")).andExpect(status().is3xxRedirection());
-	}
+		MvcResult room = mvc.perform(post("/adduser").flashAttr("userDTO", userDTO)).andExpect(status().is3xxRedirection()).andExpect(status().is3xxRedirection()).andReturn();
 
-	@Test
-	@WithUserDetails("admin")
-	public void testDeleteUserRoleWithNonExistentID() throws Exception {
-		mvc.perform(delete("/userRoleDelete/9999")).andExpect(status().is2xxSuccessful());
+		int userId = Integer.parseInt(
+				String.valueOf(
+						room.getModelAndView().getViewName()
+								.charAt(room.getModelAndView().getViewName().length() - 1)));
+
+		mvc.perform(delete("/userDelete/"+ userId)).andExpect(status().is3xxRedirection());
 	}
 }
