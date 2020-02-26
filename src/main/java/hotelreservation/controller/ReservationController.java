@@ -84,8 +84,8 @@ public class ReservationController {
 		reservation.getRoomRates().stream().
 				forEach(roomRate -> roomRatesAsMap.computeIfAbsent(roomRate.getRoom(), k -> new ArrayList<>()).add(roomRate));
 
-		model.addAttribute("startDate", reservation.getStartDate());
-		model.addAttribute("endDate", reservation.getEndDate());
+		model.addAttribute(START_DATE, reservation.getStartDate());
+		model.addAttribute(END_DATE, reservation.getEndDate());
 		model.addAttribute("roomRatesPerRoom", roomRatesAsMap);
 
 		return RESERVATION;
@@ -99,8 +99,8 @@ public class ReservationController {
 		Reservation reservation = bookingService.getReservation(id);
 		model.addAttribute(RESERVATION, reservation);
 
-		model.addAttribute("startDate", reservation.getStartDate());
-		model.addAttribute("endDate", reservation.getEndDate());
+		model.addAttribute(START_DATE, reservation.getStartDate());
+		model.addAttribute(END_DATE, reservation.getEndDate());
 		model.addAttribute("roomRatesPerRoom", roomRatesAsMap);
 
 		return RESERVATION;
