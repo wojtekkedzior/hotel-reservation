@@ -22,7 +22,6 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
@@ -265,6 +264,13 @@ public class RoomControllerTest {
 	public void testDeleteAmenity() throws Exception {
 		mvc.perform(delete("/amenityDelete/1")).andExpect(status().is3xxRedirection());
 
+	}
+
+	@Test
+	@WithUserDetails("manager")
+	public void testDeleteAmenityType() throws Exception {
+		mvc.perform(delete("/amenityTypeDelete/1")).andExpect(status().is4xxClientError());
+
 		MvcResult room = mvc.perform(post("/addAmenityType").flashAttr("amenityTypeDTO", this.amenityTypeDTO)).andExpect(status().is3xxRedirection()).andReturn();
 
 		int amenityTypeId = Integer.parseInt(
@@ -273,12 +279,6 @@ public class RoomControllerTest {
 								.charAt(room.getModelAndView().getViewName().length() - 1)));
 
 		mvc.perform(delete("/amenityTypeDelete/"+ amenityTypeId)).andExpect(status().is3xxRedirection());
-	}
-
-	@Test
-	@WithUserDetails("manager")
-	public void testDeleteAmenityType() throws Exception {
-		mvc.perform(delete("/amenityTypeDelete/1")).andExpect(status().is4xxClientError());
 	}
 
 	@Test
