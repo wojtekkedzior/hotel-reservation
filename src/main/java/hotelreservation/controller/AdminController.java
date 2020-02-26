@@ -4,6 +4,7 @@ import hotelreservation.model.Reservation;
 import hotelreservation.model.enums.ReservationStatus;
 import hotelreservation.service.BookingService;
 import hotelreservation.service.InvoiceService;
+import hotelreservation.service.RoomRateService;
 import hotelreservation.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import java.util.List;
 @Slf4j
 public class AdminController {
 	private final RoomService roomService;
+	private final RoomRateService roomRateService;
 	private final BookingService bookingService;
 	private final InvoiceService invoiceService;
 
@@ -29,7 +31,7 @@ public class AdminController {
 
 		model.addAttribute("numberOfRooms", roomService.getRoomsCount());
 		model.addAttribute("numberOfReservations", bookingService.getReservationCount());
-		model.addAttribute("numberOfRoomRates", roomService.getRoomRateCount());
+		model.addAttribute("numberOfRoomRates", roomRateService.getRoomRateCount());
 
 		List<Reservation> findByStartDate = bookingService.getReservationsStartingToday();
 		model.addAttribute("reservationsStartingToday", findByStartDate);
