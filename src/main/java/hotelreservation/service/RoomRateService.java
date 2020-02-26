@@ -82,7 +82,7 @@ public class RoomRateService {
 
     private List<RoomRate> filterAvailableRoomRates(LocalDate start, LocalDate end, List<Reservation> reservations) {
         Set<RoomRate> takenRoomRates = reservations.stream()
-                .map(r -> r.getRoomRates())
+                .map(Reservation::getRoomRates)
                 .flatMap(List::stream)
                 .collect(Collectors.toSet());
 

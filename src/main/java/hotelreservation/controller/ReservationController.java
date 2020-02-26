@@ -1,7 +1,5 @@
 package hotelreservation.controller;
 
-import hotelreservation.exceptions.MissingOrInvalidArgumentException;
-import hotelreservation.exceptions.NotFoundException;
 import hotelreservation.model.*;
 import hotelreservation.model.enums.IdType;
 import hotelreservation.model.enums.ReservationStatus;
@@ -23,14 +21,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 @Controller
@@ -40,6 +35,8 @@ public class ReservationController {
 	private static final String RESERVATION = "reservation";
 	private static final String REDIRECT_DASHBOARD = "redirect:/dashboard";
 	private static final String REDIRECT_RESERVATION = "redirect:/reservation";
+	public static final String START_DATE = "startDate";
+	public static final String END_DATE = "endDate";
 
 	private final RoomRateService roomRateService;
 	private final BookingService bookingService;
@@ -62,14 +59,14 @@ public class ReservationController {
 		LocalDate asDateStart = startDate.orElseGet(LocalDate::now);
 		LocalDate asDateEnd = endDate.orElseGet(() -> asDateStart.plusDays(1));
 
-		model.addAttribute("startDate", asDateStart);
-		model.addAttribute("endDate", asDateEnd);
+		model.addAttribute(START_DATE, asDateStart);
+		model.addAttribute(END_DATE, asDateEnd);
 
 		Map<LocalDate, List<RoomRate>> roomRatesAsMapByDates = roomRateService.getRoomRatesPerDate(asDateStart, asDateEnd);
 		model.addAttribute("roomRatesAsMapByDates", roomRatesAsMapByDates);
 
 		model.addAttribute("roomNumbers", roomRatesAsMapByDates.get(asDateStart).stream()
-				.filter(r -> r != null)
+				.filter(Objects::nonNull)
 				.map(r -> r.getRoom().getRoomNumber())
 				.collect(Collectors.toList()));
 
@@ -84,9 +81,8 @@ public class ReservationController {
 		Reservation reservation = bookingService.getReservation(id);
 		model.addAttribute(RESERVATION, reservation);
 
-		for (RoomRate roomRate : reservation.getRoomRates()) {
-			roomRatesAsMap.computeIfAbsent(roomRate.getRoom(), k -> new ArrayList<>()).add(roomRate);
-		}
+		reservation.getRoomRates().stream().
+				forEach(roomRate -> roomRatesAsMap.computeIfAbsent(roomRate.getRoom(), k -> new ArrayList<>()).add(roomRate));
 
 		model.addAttribute("startDate", reservation.getStartDate());
 		model.addAttribute("endDate", reservation.getEndDate());
@@ -103,58 +99,12 @@ public class ReservationController {
 		Reservation reservation = bookingService.getReservation(id);
 		model.addAttribute(RESERVATION, reservation);
 
-		for (RoomRate roomRate : reservation.getRoomRates()) {
-			roomRatesAsMap.computeIfAbsent(roomRate.getRoom(), k -> new ArrayList<>()).add(roomRate);
-		}
-
 		model.addAttribute("startDate", reservation.getStartDate());
 		model.addAttribute("endDate", reservation.getEndDate());
 		model.addAttribute("roomRatesPerRoom", roomRatesAsMap);
 
 		return RESERVATION;
 	}
-
-
-
-
-	//		if (id == null) {
-//			model.addAttribute(RESERVATION, new Reservation());
-//			model.addAttribute("room", new Room());
-//
-//			asDateStart = startDate.orElseGet(LocalDate::now);
-//			LocalDate finalAsDateStart = asDateStart;
-//			asDateEnd = endDate.orElseGet(() -> finalAsDateStart.plusDays(1));
-//		} else {
-//
-////			Map<Room, List<RoomRate>> roomRatesAsMap = new HashMap<>();
-//
-//			try {
-//				Reservation reservation = bookingService.getReservation(id);
-//
-//				asDateStart = reservation.getStartDate();
-//				asDateEnd = reservation.getEndDate();
-//
-//				model.addAttribute(RESERVATION, reservation);
-//
-////				for (RoomRate roomRate : reservation.getRoomRates()) {
-////					roomRatesAsMap.computeIfAbsent(roomRate.getRoom(), k -> new ArrayList<>()).add(roomRate);
-////				}
-//
-//			}catch (NotFoundException e) {
-//				//TODO this should be an error
-//				model.addAttribute(RESERVATION, new Reservation());
-//			}
-//
-////			model.addAttribute("roomRatesPerRoom", roomRatesAsMap);
-//		}
-
-//		if (startDate.isPresent() && endDate.isPresent()) {
-//			Map<Room, List<RoomRate>> roomRatesAsMap = roomService.getRoomRatesAsMap(asDateStart, asDateEnd);
-//			model.addAttribute("roomRatesPerRoom", roomRatesAsMap);
-//		}
-
-
-
 
 	@GetMapping(value = { "/realiseReservation/{id}" })
 	@PreAuthorize("hasAuthority('realiseReservation')")

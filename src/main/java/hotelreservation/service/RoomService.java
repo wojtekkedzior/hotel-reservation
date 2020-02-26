@@ -1,7 +1,6 @@
 package hotelreservation.service;
 
 import hotelreservation.Utils;
-import hotelreservation.exceptions.MissingOrInvalidArgumentException;
 import hotelreservation.exceptions.NotDeletedException;
 import hotelreservation.exceptions.NotFoundException;
 import hotelreservation.model.*;
@@ -10,12 +9,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StopWatch;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
-import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,17 +37,6 @@ public class RoomService {
     public List<Room> getByRoomsByStatus(Status status) {
         return utils.toList(roomRepo.findByStatus(status));
     }
-
-//    public List<RoomRate> getRoomRates(LocalDate start, LocalDate end) {
-//        if (end.isBefore(start)) {
-//            throw new MissingOrInvalidArgumentException("End date:" + end + " cannot be before start date: " + start);
-//        }
-//
-//        List<RoomRate> findByDayBetween = start.isEqual(end) ? roomRateRepo.findByDay(start) : roomRateRepo.findByDayBetween(start, end.minus(Period.ofDays(1)));
-//        log.info("Looking for all RoomRates between: {} and: {} -  Found: {}", start, end, findByDayBetween.size());
-//        return findByDayBetween;
-//    }
-
 
     //---- Amenity
     public Amenity saveAmenity(Amenity amenity) {
@@ -169,6 +154,5 @@ public class RoomService {
     public long getRoomsCount() {
         return roomRepo.count();
     }
-
 
 }
