@@ -199,7 +199,7 @@ public class RoomController {
 
 	@DeleteMapping(value = "/amenityDelete/{id}")
 	@PreAuthorize("hasAuthority('deleteAmenity')")
-	public ModelAndView deleteAmenity(@PathVariable(required = false) Long id) {
+	public ModelAndView deleteAmenity(@PathVariable Long id) {
 		if (id != null) {
 			roomService.deleteAmenity(id);
 		}
@@ -208,7 +208,7 @@ public class RoomController {
 
 	@DeleteMapping(value = "/amenityTypeDelete/{id}")
 	@PreAuthorize("hasAuthority('deleteAmenityType')")
-	public ModelAndView deleteAmenityType(@PathVariable(required = false) Long id) {
+	public ModelAndView deleteAmenityType(@PathVariable Long id) {
 		if (id != null) {
 			roomService.deleteAmenityType(id);
 		}
