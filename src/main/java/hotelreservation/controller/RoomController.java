@@ -217,7 +217,7 @@ public class RoomController {
 
 	@DeleteMapping(value = "/roomDelete/{id}")
 	@PreAuthorize("hasAuthority('deleteRoom')")
-	public ModelAndView deleteRoom(@PathVariable(required = false) Long id) {
+	public ModelAndView deleteRoom(@PathVariable Long id) {
 		if (id != null) {
 			roomService.deleteRoomById(id);
 		}
@@ -226,7 +226,7 @@ public class RoomController {
 
 	@DeleteMapping(value = "/roomTypeDelete/{id}")
 	@PreAuthorize("hasAuthority('deleteRoomType')")
-	public ModelAndView deleteRoomType(@PathVariable(required = false) Long id) {
+	public ModelAndView deleteRoomType(@PathVariable Long id) {
 		if (id != null) {
 			roomService.deleteRoomType(id);
 		}

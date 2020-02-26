@@ -15,9 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -79,15 +77,17 @@ public class BookingService {
 		//Check if roomRates are available
 		List<Reservation> findInProgressAndUpComingReservations = reservationRepo.findInProgressAndUpComingReservations();
 		removeReservationIfPresent(reservation, findInProgressAndUpComingReservations);
-		
-		for (Reservation reservation2 : findInProgressAndUpComingReservations) {
-			for (RoomRate roomRate : roomRates) {
-				if(reservation2.getRoomRates().contains(roomRate)) {
-					throw new MissingOrInvalidArgumentException("No rooms available for the given day");
-				} 
-			}
+
+		if (roomRates.stream()
+				.filter(roomRate -> findInProgressAndUpComingReservations.stream()
+						.map(Reservation::getRoomRates)
+						.flatMap(List::stream)
+						.collect(Collectors.toList())
+						.contains(roomRate))
+				.count() > 0 ) {
+			throw new MissingOrInvalidArgumentException("No rooms available for the given day");
 		}
-		
+
 		reservation.setReservationStatus(ReservationStatus.UP_COMING);
 		
 		reservationRepo.save(reservation);

@@ -15,12 +15,14 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
@@ -262,6 +264,15 @@ public class RoomControllerTest {
 	@WithUserDetails("admin")
 	public void testDeleteAmenity() throws Exception {
 		mvc.perform(delete("/amenityDelete/1")).andExpect(status().is3xxRedirection());
+
+		MvcResult room = mvc.perform(post("/addAmenityType").flashAttr("amenityTypeDTO", this.amenityTypeDTO)).andExpect(status().is3xxRedirection()).andReturn();
+
+		int amenityTypeId = Integer.parseInt(
+				String.valueOf(
+						room.getModelAndView().getViewName()
+								.charAt(room.getModelAndView().getViewName().length() - 1)));
+
+		mvc.perform(delete("/amenityTypeDelete/"+ amenityTypeId)).andExpect(status().is3xxRedirection());
 	}
 
 	@Test
@@ -274,12 +285,30 @@ public class RoomControllerTest {
 	@WithUserDetails("admin")
 	public void testDeleteRoom() throws Exception {
 		mvc.perform(delete("/roomRate/1")).andExpect(status().is4xxClientError());
+
+		MvcResult room = mvc.perform(post("/addRoom").flashAttr("roomDTO", this.roomDTO)).andExpect(status().is3xxRedirection()).andReturn();
+
+		int roomId = Integer.parseInt(
+				String.valueOf(
+						room.getModelAndView().getViewName()
+								.charAt(room.getModelAndView().getViewName().length() - 1)));
+
+		mvc.perform(delete("/roomDelete/"+ roomId)).andExpect(status().is3xxRedirection());
 	}
 
 	@Test
 	@WithUserDetails("admin")
 	public void testDeleteRoomType() throws Exception {
 		mvc.perform(delete("/roomType/1")).andExpect(status().is4xxClientError());
+
+		MvcResult room = mvc.perform(post("/addRoomType").flashAttr("roomTypeDTO", this.roomTypeStandardDTO)).andExpect(status().is3xxRedirection()).andReturn();
+
+		int roomTypeId = Integer.parseInt(
+				String.valueOf(
+						room.getModelAndView().getViewName()
+								.charAt(room.getModelAndView().getViewName().length() - 1)));
+
+		mvc.perform(delete("/roomTypeDelete/"+ roomTypeId)).andExpect(status().is3xxRedirection());
 	}
 
 	@Test
@@ -287,5 +316,4 @@ public class RoomControllerTest {
 	public void testDeleteRoomRate() throws Exception {
 		mvc.perform(delete("/roomDelete/1")).andExpect(status().is4xxClientError());
 	}
-
 }
