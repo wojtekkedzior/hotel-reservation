@@ -33,8 +33,8 @@ public class BookingService {
 	private final ReservationCancellationRepo reservationCancellationRepo;
 	private final Utils utils;
 	private final InvoiceService invoiceService;
-	private final RoomService roomService;
-	
+	private final RoomRateService roomRateService;
+
 	public void createContact(Contact contact) {
 		contactRepo.save(contact);
 	}
@@ -202,7 +202,7 @@ public class BookingService {
 			throw new MissingOrInvalidArgumentException("No RoomRates were selected for reservation: " + reservation.getId());
 		}
 		
-		reservation.setRoomRates(roomRateIds.stream().map(roomService::getRoomRateById).collect(Collectors.toList()));
+		reservation.setRoomRates(roomRateIds.stream().map(roomRateService::getRoomRateById).collect(Collectors.toList()));
 		saveReservation(reservation);
 	}
 }

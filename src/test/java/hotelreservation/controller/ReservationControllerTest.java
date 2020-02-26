@@ -6,7 +6,7 @@ import hotelreservation.model.ui.GuestDTO;
 import hotelreservation.model.ui.ReservationCancellationDTO;
 import hotelreservation.model.ui.ReservationDTO;
 import hotelreservation.service.BookingService;
-import hotelreservation.service.RoomService;
+import hotelreservation.service.RoomRateService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,7 +41,7 @@ public class ReservationControllerTest {
 	private BookingService bookingService;
 
 	@Autowired
-	private RoomService roomService;
+	private RoomRateService roomRateService;
 	
 	@Autowired
 	private ApplicationStartup applicationStartup;
@@ -186,7 +186,7 @@ public class ReservationControllerTest {
 				endDate,
 				applicationStartup.reservationOne.getReservationStatus());
 
-		String collect = roomService.getRoomRates(applicationStartup.standardRoomOne, startDate, endDate.minusDays(1)).stream()
+		String collect = roomRateService.getRoomRates(applicationStartup.standardRoomOne, startDate, endDate.minusDays(1)).stream()
 		        .map( n -> String.valueOf(n.getId()) )
 		        .collect(Collectors.joining( "," ));
 
@@ -230,6 +230,6 @@ public class ReservationControllerTest {
 	@Test
 	@WithUserDetails("manager")
 	public void testGetReservationWithNoId() throws Exception {
-		mvc.perform(get("/reservation/ ")).andExpect(status().isOk());
+		mvc.perform(get("/reservation/ ")).andExpect(status().is4xxClientError());
 	}
 }

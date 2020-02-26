@@ -4,10 +4,9 @@ import hotelreservation.model.*;
 import hotelreservation.model.enums.Currency;
 import hotelreservation.model.enums.IdType;
 import hotelreservation.repository.UserRepo;
-import hotelreservation.service.BookingService;
-import hotelreservation.service.InvoiceService;
-import hotelreservation.service.RoomService;
-import hotelreservation.service.UserService;
+import hotelreservation.service.*;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +28,7 @@ import java.util.List;
 
 @Component
 @Profile("dev")
+@RequiredArgsConstructor
 public class ApplicationStartup implements ApplicationListener<ApplicationReadyEvent> {
 	private static final int YEAR = 2019;
 
@@ -110,24 +110,14 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	// Reservations
 	public Reservation reservationOne;
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
+	private final RoomService roomService;
+	private final RoomRateService roomRateService;
+	private final BookingService bookingService;
+	private final InvoiceService invoiceService;
+	private final UserRepo userRepo;
+	private final PasswordEncoder passwordEncoder;
 
-	@Autowired
-	private RoomService roomService;
-
-	@Autowired
-	private BookingService bookingService;
-
-	@Autowired
-	private InvoiceService invoiceService;
-	
-	@Autowired
-	private UserRepo userRepo;
-
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-	
 	@Override
 	public void onApplicationEvent(ApplicationReadyEvent event) {
 		log.debug("loading test data - start");
@@ -150,7 +140,6 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		addReservation();
 		addReservations();
 		createMultiRoomReservation();
-
 
 		log.debug("loading test data - end");
 	}
@@ -454,13 +443,13 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 				value = 1500;
 			}
 
-			roomService.saveRoomRate(new RoomRate(standardRoomOne, Currency.CZK, value, date));
-			roomService.saveRoomRate(new RoomRate(standardRoomTwo, Currency.CZK, value, date));
-			roomService.saveRoomRate(new RoomRate(standardRoomThree, Currency.CZK, value, date));
+			roomRateService.saveRoomRate(new RoomRate(standardRoomOne, Currency.CZK, value, date));
+			roomRateService.saveRoomRate(new RoomRate(standardRoomTwo, Currency.CZK, value, date));
+			roomRateService.saveRoomRate(new RoomRate(standardRoomThree, Currency.CZK, value, date));
 
-			roomService.saveRoomRate(new RoomRate(luxuryRoomOne, Currency.CZK, value * 2, date));
-			roomService.saveRoomRate(new RoomRate(luxuryRoomTwo, Currency.CZK, value * 2, date));
-			roomService.saveRoomRate(new RoomRate(luxuryRoomThree, Currency.CZK, value * 2, date));
+			roomRateService.saveRoomRate(new RoomRate(luxuryRoomOne, Currency.CZK, value * 2, date));
+			roomRateService.saveRoomRate(new RoomRate(luxuryRoomTwo, Currency.CZK, value * 2, date));
+			roomRateService.saveRoomRate(new RoomRate(luxuryRoomThree, Currency.CZK, value * 2, date));
 			
 			date = date.plus(1,  ChronoUnit.DAYS);
 			value = 1000;
@@ -516,7 +505,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		reservationOne.setRoomRates(new ArrayList<>());
 		reservationOne.setCreatedBy(manager);
 
-		List<RoomRate> roomRatesForAllRooms = roomService.getRoomRates(LocalDate.of(YEAR, Month.MARCH, 1), LocalDate.of(YEAR, Month.MARCH, 31));
+		List<RoomRate> roomRatesForAllRooms = roomRateService.getRoomRates(LocalDate.of(YEAR, Month.MARCH, 1), LocalDate.of(YEAR, Month.MARCH, 31));
 		
 		for (RoomRate roomRate : roomRatesForAllRooms) {
 			if (roomRate.getRoom().getId() == 1 
@@ -543,7 +532,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 			reservation.setRoomRates(new ArrayList<>());
 			reservation.setCreatedBy(manager);
 
-			List<RoomRate> roomRatesForAllRooms = roomService.getAvailableRoomRates(LocalDate.of(YEAR, Month.MARCH, 1), LocalDate.of(YEAR, Month.MARCH, 31));
+			List<RoomRate> roomRatesForAllRooms = roomRateService.getAvailableRoomRates(LocalDate.of(YEAR, Month.MARCH, 1), LocalDate.of(YEAR, Month.MARCH, 31));
 
 			for (RoomRate roomRate : roomRatesForAllRooms) {
 				if (roomRate.getRoom().getId() == i // this is the room ID 
@@ -574,7 +563,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		reservation.setRoomRates(new ArrayList<>());
 		reservation.setCreatedBy(manager);
 
-		List<RoomRate> roomRatesForAllRooms = roomService.getRoomRates(LocalDate.of(YEAR, Month.APRIL, 1), LocalDate.of(YEAR, Month.APRIL, 4));
+		List<RoomRate> roomRatesForAllRooms = roomRateService.getRoomRates(LocalDate.of(YEAR, Month.APRIL, 1), LocalDate.of(YEAR, Month.APRIL, 4));
 		
 		for (RoomRate roomRate : roomRatesForAllRooms) {
 			if (roomRate.getRoom().getId() == 1 
@@ -584,7 +573,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 			}
 		}
 		
-		roomRatesForAllRooms = roomService.getAvailableRoomRates(LocalDate.of(YEAR, Month.APRIL, 4), LocalDate.of(YEAR, Month.APRIL, 5));
+		roomRatesForAllRooms = roomRateService.getAvailableRoomRates(LocalDate.of(YEAR, Month.APRIL, 4), LocalDate.of(YEAR, Month.APRIL, 5));
 
 		for (RoomRate roomRate : roomRatesForAllRooms) {
 			if (roomRate.getRoom().getId() == 2 

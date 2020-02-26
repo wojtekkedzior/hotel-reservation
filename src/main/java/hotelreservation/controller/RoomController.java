@@ -3,6 +3,7 @@ package hotelreservation.controller;
 import hotelreservation.model.*;
 import hotelreservation.model.enums.Currency;
 import hotelreservation.model.ui.*;
+import hotelreservation.service.RoomRateService;
 import hotelreservation.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ public class RoomController {
 	private static final String ROOM = "room";
 
 	private final RoomService roomService;
+	private final RoomRateService roomRateService;
 
 	@GetMapping(value = { "/amenity", "/amenity/{amenityId}" })
 	@PreAuthorize("hasAuthority('createAmenity')")
@@ -116,11 +118,11 @@ public class RoomController {
 		if (id == null) {
 			model.addAttribute(ROOM_RATE, new RoomRate());
 		} else {
-			RoomRate roomRate = roomService.getRoomRateById(id);
+			RoomRate roomRate = roomRateService.getRoomRateById(id);
 			model.addAttribute(ROOM_RATE, roomRate == null ? new RoomRate() : roomRate);
 		}
 
-		model.addAttribute("roomRates", roomService.getRoomRates(LocalDate.now(), LocalDate.now().plus(30, ChronoUnit.DAYS)));
+		model.addAttribute("roomRates", roomRateService.getRoomRates(LocalDate.now(), LocalDate.now().plus(30, ChronoUnit.DAYS)));
 		model.addAttribute("rooms", roomService.getAllRooms());
 		model.addAttribute("currencies", Currency.values());
 		return ROOM_RATE;
@@ -190,7 +192,7 @@ public class RoomController {
 				.value(roomRateDTO.getValue())
 				.build();
 
-		roomRate = roomService.saveRoomRate(roomRate);
+		roomRate = roomRateService.saveRoomRate(roomRate);
 		log.info("Created a RoomRate: {}", roomRate);
 		return new ModelAndView("redirect:/roomRate/" + roomRate.getId());
 	}
@@ -235,7 +237,7 @@ public class RoomController {
 	@PreAuthorize("hasAuthority('deleteRoomRate')")
 	public ModelAndView deleteRoomRate(@PathVariable(required = false) Long id) {
 		if (id != null) {
-			roomService.deleteRoomRate(id);
+			roomRateService.deleteRoomRate(id);
 		}
 		// TODO wha thappens with all the histortical bookings that refer to this room rate?
 		return new ModelAndView("redirect:/roomRate");

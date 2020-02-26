@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -45,6 +46,9 @@ public class InvoiceServiceTest extends BaseServiceTest {
 	
 	@Autowired
 	private RoomService roomService;
+
+	@Autowired
+	private RoomRateService roomRateService;
 
 	@Autowired
 	private UserService userService;
@@ -77,9 +81,9 @@ public class InvoiceServiceTest extends BaseServiceTest {
 
 	private Contact contactOne;
 	private Contact contactTwo;
-	
+
 	private List<Privilege> privileges;
-	
+
 	private Charge chargeOne;
 	private Charge chargeTwo;
 	private Charge chargeThree;
@@ -102,8 +106,8 @@ public class InvoiceServiceTest extends BaseServiceTest {
 
 		privilegeRepo.save(priv1);
 		privilegeRepo.save(priv2);
-		
-		privileges = new ArrayList<Privilege>();
+
+		privileges = new ArrayList<>();
 		privileges.add(priv1);
 		privileges.add(priv2);
 		
@@ -133,19 +137,19 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		standardRoomOne = new Room(1, operational, roomTypeStandard, user);
 		standardRoomOne.setName("Room 1");
 		standardRoomOne.setDescription("The Best Room Description");
-		standardRoomOne.setRoomAmenities(Arrays.asList(pillow));
+		standardRoomOne.setRoomAmenities(Collections.singletonList(pillow));
 		roomService.saveRoom(standardRoomOne);
-		
+
 		standardRoomTwo = new Room(2, operational, roomTypeStandard, user);
 		standardRoomTwo.setName("Room 2");
 		standardRoomTwo.setDescription("The Best Room Description");
-		standardRoomTwo.setRoomAmenities(Arrays.asList(pillow));
+		standardRoomTwo.setRoomAmenities(Collections.singletonList(pillow));
 		roomService.saveRoom(standardRoomTwo);
 		
 		standardRoomThree = new Room(3, operational, roomTypeStandard, user);
 		standardRoomThree.setName("Room 3");
 		standardRoomThree.setDescription("The Best Room Description");
-		standardRoomThree.setRoomAmenities(Arrays.asList(pillow));
+		standardRoomThree.setRoomAmenities(Collections.singletonList(pillow));
 		roomService.saveRoom(standardRoomThree);
 
 		idOne = new Identification(IdType.ID_CARD, "oneIdNumber");
@@ -170,15 +174,15 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		reservationOne.setReservationStatus(ReservationStatus.UP_COMING);
 		reservationOne.setStartDate(LocalDate.of(2018, Month.JANUARY, 2));
 		reservationOne.setEndDate(LocalDate.of(2018, Month.JANUARY, 4));
-		reservationOne.setRoomRates(new ArrayList<RoomRate>());
+		reservationOne.setRoomRates(new ArrayList<>());
 		
 		RoomRate roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2018, Month.JANUARY, 2));
 		RoomRate roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2018, Month.JANUARY, 3));
 
-		roomService.saveRoomRate(roomRateOne);
-		roomService.saveRoomRate(roomRateTwo);
+		roomRateService.saveRoomRate(roomRateOne);
+		roomRateService.saveRoomRate(roomRateTwo);
 		
-		List<RoomRate> roomRates = new ArrayList<RoomRate>();
+		List<RoomRate> roomRates = new ArrayList<>();
 		roomRates.add(roomRateOne);
 		roomRates.add(roomRateTwo);
 		
@@ -215,7 +219,7 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		
 		Payment payment = new Payment();
 		payment.setReservation(reservationOne);
-		payment.setReservationCharges(Arrays.asList(reservationChargeOne));
+		payment.setReservationCharges(Collections.singletonList(reservationChargeOne));
 		payment.setPaymentType(PaymentType.CASH);
 		invoiceService.savePayment(payment);
 		
@@ -246,7 +250,7 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		
 		Payment payment = new Payment();
 		payment.setReservation(reservationOne);
-		payment.setReservationCharges(Arrays.asList(reservationChargeOne));
+		payment.setReservationCharges(Collections.singletonList(reservationChargeOne));
 		payment.setPaymentType(PaymentType.CASH);
 		invoiceService.savePayment(payment);
 		
@@ -290,7 +294,7 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		Payment payment = new Payment();
 		payment.setPaymentType(PaymentType.CASH);
 		payment.setReservation(reservationOne);
-		payment.setReservationCharges(Arrays.asList(reservationChargeOne));
+		payment.setReservationCharges(Collections.singletonList(reservationChargeOne));
 		invoiceService.savePayment(payment);
 		
 		assertEquals(1, invoiceService.getAllPayments().size());
@@ -343,15 +347,15 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		reservationOne.setReservationStatus(ReservationStatus.UP_COMING);
 		reservationOne.setStartDate(LocalDate.of(2018, Month.JANUARY, 4));
 		reservationOne.setEndDate(LocalDate.of(2018, Month.JANUARY, 6));
-		reservationOne.setRoomRates(new ArrayList<RoomRate>());
+		reservationOne.setRoomRates(new ArrayList<>());
 		
 		RoomRate roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2018, Month.JANUARY, 4));
 		RoomRate roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2018, Month.JANUARY, 5));
 
-		roomService.saveRoomRate(roomRateOne);
-		roomService.saveRoomRate(roomRateTwo);
+		roomRateService.saveRoomRate(roomRateOne);
+		roomRateService.saveRoomRate(roomRateTwo);
 		
-		List<RoomRate> roomRates = new ArrayList<RoomRate>();
+		List<RoomRate> roomRates = new ArrayList<>();
 		roomRates.add(roomRateOne);
 		roomRates.add(roomRateTwo);
 		
@@ -382,10 +386,10 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		RoomRate roomRateOne = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2018, Month.JANUARY, 4));
 		RoomRate roomRateTwo = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2018, Month.JANUARY, 5));
 
-		roomService.saveRoomRate(roomRateOne);
-		roomService.saveRoomRate(roomRateTwo);
+		roomRateService.saveRoomRate(roomRateOne);
+		roomRateService.saveRoomRate(roomRateTwo);
 		
-		List<RoomRate> roomRates = new ArrayList<RoomRate>();
+		List<RoomRate> roomRates = new ArrayList<>();
 		roomRates.add(roomRateOne);
 		roomRates.add(roomRateTwo);
 		
@@ -411,15 +415,15 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		reservationTwo.setReservationStatus(ReservationStatus.UP_COMING);
 		reservationTwo.setStartDate(LocalDate.of(2018, Month.JANUARY, 6));
 		reservationTwo.setEndDate(LocalDate.of(2018, Month.JANUARY, 8));
-		reservationTwo.setRoomRates(new ArrayList<RoomRate>());
+		reservationTwo.setRoomRates(new ArrayList<>());
 		
 		RoomRate roomRateThree = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2018, Month.JANUARY, 6));
 		RoomRate roomRateFour = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2018, Month.JANUARY, 7));
 
-		roomService.saveRoomRate(roomRateThree);
-		roomService.saveRoomRate(roomRateFour);
+		roomRateService.saveRoomRate(roomRateThree);
+		roomRateService.saveRoomRate(roomRateFour);
 		
-		List<RoomRate> roomRatesTwo = new ArrayList<RoomRate>();
+		List<RoomRate> roomRatesTwo = new ArrayList<>();
 		roomRatesTwo.add(roomRateThree);
 		roomRatesTwo.add(roomRateFour);
 		reservationTwo.setRoomRates(roomRatesTwo);
@@ -440,7 +444,7 @@ public class InvoiceServiceTest extends BaseServiceTest {
 		invoiceService.saveReservationCharge(rc1);
 		invoiceService.saveReservationCharge(rc2);
 		
-		List<Reservation> reservationsInProgress = new ArrayList<Reservation>();
+		List<Reservation> reservationsInProgress = new ArrayList<>();
 		reservationsInProgress.add(reservationOne);
 		reservationsInProgress.add(reservationTwo);
 		
