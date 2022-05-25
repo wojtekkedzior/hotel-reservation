@@ -958,4 +958,21 @@ public class BookingServiceTest extends BaseServiceTest {
 	public void testGetReservationWithEmptyId() {
 		bookingService.getReservation(null);
 	}
+	
+	@Test(expected = MissingOrInvalidArgumentException.class)
+	public void testSaveReservationWithNoAvailableRooms() {
+		roomRateService.saveRoomRate(roomRateTwo);
+		roomRateService.saveRoomRate(roomRateThree);
+		reservationOne.setStartDate(LocalDate.of(2018, Month.JANUARY, 2));
+		reservationOne.setEndDate(LocalDate.of(2018, Month.JANUARY, 4));
+		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
+		bookingService.saveReservation(reservationOne);
+		
+		//First reservation takes up all the roomrates
+		Reservation resTwo = new Reservation();
+		resTwo.setStartDate(LocalDate.of(2018, Month.JANUARY, 2));
+		resTwo.setEndDate(LocalDate.of(2018, Month.JANUARY, 4));
+		resTwo.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
+		bookingService.saveReservation(resTwo);
+	}
 }
