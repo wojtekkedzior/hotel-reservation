@@ -1,23 +1,35 @@
 package hotelreservation.service;
 
-import hotelreservation.Utils;
-import hotelreservation.exceptions.MissingOrInvalidArgumentException;
-import hotelreservation.exceptions.NotDeletedException;
-import hotelreservation.model.*;
-import hotelreservation.model.enums.ReservationStatus;
-import hotelreservation.repository.*;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import hotelreservation.Utils;
+import hotelreservation.exceptions.MissingOrInvalidArgumentException;
+import hotelreservation.exceptions.NotDeletedException;
+import hotelreservation.model.Contact;
+import hotelreservation.model.Guest;
+import hotelreservation.model.Identification;
+import hotelreservation.model.Reservation;
+import hotelreservation.model.ReservationCancellation;
+import hotelreservation.model.RoomRate;
+import hotelreservation.model.enums.ReservationStatus;
+import hotelreservation.repository.ContactRepo;
+import hotelreservation.repository.GuestRepo;
+import hotelreservation.repository.IdentificationRepo;
+import hotelreservation.repository.ReservationCancellationRepo;
+import hotelreservation.repository.ReservationRepo;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
@@ -65,14 +77,13 @@ public class BookingService {
 			throw new MissingOrInvalidArgumentException("Not enough rates for the given time frame. Found: " + roomRates.size() + " expected: " + ChronoUnit.DAYS.between(reservation.getStartDate(), reservation.getEndDate()));
 		}
 
-		//Check if room rates have sequential days
 		Map<LocalDate, RoomRate> roomRatesAsMap = roomRates.stream().collect(Collectors.toMap(RoomRate::getDay, Function.identity()));
 
-		roomRates.forEach(roomRate -> {
-			if(!roomRatesAsMap.containsKey(roomRate.getDay())) {
+		for (int i = 0; i < roomRates.size(); i++) {
+			if (!roomRatesAsMap.containsKey(reservation.getStartDate().plus(1, ChronoUnit.DAYS))) {
 				throw new MissingOrInvalidArgumentException("Should not be able to save a reservation with non-sequential room rate dates");
 			}
-		});
+		}
 
 		//Check if roomRates are available
 		List<Reservation> findInProgressAndUpComingReservations = reservationRepo.findInProgressAndUpComingReservations();

@@ -467,7 +467,7 @@ public class BookingServiceTest extends BaseServiceTest {
 
 		reservationOne.setStartDate(LocalDate.of(2018, Month.JANUARY, 2));
 		reservationOne.setEndDate(LocalDate.of(2018, Month.JANUARY, 3));
-		reservationOne.setRoomRates(Collections.singletonList(roomRateTwo));
+		reservationOne.setRoomRates(Collections.singletonList(roomRateThree));
 
 		LocalDate startDate = LocalDate.of(2018, Month.JANUARY, 1);
 		LocalDate endDate = LocalDate.of(2018, Month.JANUARY, 4);
@@ -477,7 +477,7 @@ public class BookingServiceTest extends BaseServiceTest {
 		bookingService.saveReservation(reservationOne);
 
 		assertEquals(1, roomRateService.getAvailableRoomRates(startDate, endDate).size());
-		assertEquals(roomRateService.getAvailableRoomRates(startDate, endDate).get(0), roomRateThree);
+		assertEquals(roomRateService.getAvailableRoomRates(startDate, endDate).get(0), roomRateTwo);
 	}
 	
 	@Test
@@ -974,5 +974,43 @@ public class BookingServiceTest extends BaseServiceTest {
 		resTwo.setEndDate(LocalDate.of(2018, Month.JANUARY, 4));
 		resTwo.setRoomRates(Arrays.asList(roomRateTwo, roomRateThree));
 		bookingService.saveReservation(resTwo);
+	}
+	
+	@Test(expected = MissingOrInvalidArgumentException.class)
+	public void testSaveReservationWithNoRoomRates() {
+		reservationOne.setStartDate(LocalDate.of(2018, Month.JANUARY, 2));
+		reservationOne.setEndDate(LocalDate.of(2018, Month.JANUARY, 3));
+		reservationOne.setRoomRates(null);
+		bookingService.saveReservation(reservationOne);
+	}
+	
+	@Test(expected = MissingOrInvalidArgumentException.class)
+	public void testSaveReservationWithEmptyRoomRates() {
+		reservationOne.setStartDate(LocalDate.of(2018, Month.JANUARY, 2));
+		reservationOne.setEndDate(LocalDate.of(2018, Month.JANUARY, 3));
+		reservationOne.setRoomRates(Arrays.asList());
+		bookingService.saveReservation(reservationOne);
+	}
+	
+	@Test(expected = MissingOrInvalidArgumentException.class)
+	public void testSaveReservationWithNasdoRoomRates() {
+		reservationOne.setStartDate(LocalDate.of(2018, Month.JANUARY, 2));
+		reservationOne.setEndDate(LocalDate.of(2018, Month.JANUARY, 4));
+		
+		reservationOne.setRoomRates(Arrays.asList(roomRateTwo));
+		bookingService.saveReservation(reservationOne);
+	}
+	
+	@Test(expected = MissingOrInvalidArgumentException.class)
+	public void testSaveReservationWithNonSequentialDayRoomRates() {
+		roomRateService.saveRoomRate(roomRateTwo);
+		
+		RoomRate notInSync = new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2018, Month.JANUARY, 5));
+		roomRateService.saveRoomRate(notInSync);
+		
+		reservationOne.setStartDate(LocalDate.of(2018, Month.JANUARY, 2));
+		reservationOne.setEndDate(LocalDate.of(2018, Month.JANUARY, 4));
+		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, notInSync));
+		bookingService.saveReservation(reservationOne);
 	}
 }
