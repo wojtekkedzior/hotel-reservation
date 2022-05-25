@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 import java.time.LocalDate;
@@ -236,4 +237,12 @@ public class ReservationControllerTest {
 	public void testGetReservationWithNoId() throws Exception {
 		mvc.perform(get("/reservation/ ")).andDo(print()).andExpect(status().is5xxServerError());
 	}
+	
+	
+	@Test
+	@WithUserDetails("manager")
+	public void testGetExistingReservationForEdit() throws Exception {
+		mvc.perform(get("/editReservation/"+applicationStartup.reservationOne.getId())).andExpect(status().isOk()).andExpect(view().name("reservation"));
+	}
+	
 }
