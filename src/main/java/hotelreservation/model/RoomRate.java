@@ -56,3 +56,4 @@ public class RoomRate {
 	
 	//TODO add active/inactive to disable a room rate
 }
+

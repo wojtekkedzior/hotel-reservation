@@ -73,7 +73,7 @@
 						<td><label>Check-out</label></td>
 					</tr>
 
-					<tr th:each="reservation, iterstat: ${inProgressReservations}">
+					<tr th:each="reservation, iterstat: ${endingToday}">
 						<td><a th:href="@{/reservation/}+${reservation.id}" th:text="${reservation.id}"> </a></td>
 						<td th:text="${reservation.firstName}"></td>
 						<td th:text="${reservation.lastName}"></td>

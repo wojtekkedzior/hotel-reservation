@@ -7,9 +7,12 @@ import hotelreservation.service.RoomRateService;
 import hotelreservation.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -183,7 +186,6 @@ public class RoomController {
 	@PostMapping("/addRoomRate")
 	@PreAuthorize("hasAuthority('createRoomRate')")
 	public ModelAndView addRoomRate(@Valid @ModelAttribute RoomRateDTO roomRateDTO) {
-
 		RoomRate roomRate = RoomRate.builder()
 				.currency(roomRateDTO.getCurrency())
 				.day(roomRateDTO.getDay())
@@ -200,45 +202,36 @@ public class RoomController {
 	@DeleteMapping(value = "/amenityDelete/{id}")
 	@PreAuthorize("hasAuthority('deleteAmenity')")
 	public ModelAndView deleteAmenity(@PathVariable Long id) {
-		if (id != null) {
-			roomService.deleteAmenity(id);
-		}
+		roomService.deleteAmenity(id);
 		return new ModelAndView("redirect:/amenity");
 	}
 
 	@DeleteMapping(value = "/amenityTypeDelete/{id}")
 	@PreAuthorize("hasAuthority('deleteAmenityType')")
 	public ModelAndView deleteAmenityType(@PathVariable Long id) {
-		if (id != null) {
-			roomService.deleteAmenityType(id);
-		}
+		roomService.deleteAmenityType(id);
 		return new ModelAndView("redirect:/amenity");
 	}
 
 	@DeleteMapping(value = "/roomDelete/{id}")
 	@PreAuthorize("hasAuthority('deleteRoom')")
 	public ModelAndView deleteRoom(@PathVariable Long id) {
-		if (id != null) {
-			roomService.deleteRoomById(id);
-		}
+		roomService.deleteRoomById(id);
 		return new ModelAndView("redirect:/room");
 	}
 
 	@DeleteMapping(value = "/roomTypeDelete/{id}")
 	@PreAuthorize("hasAuthority('deleteRoomType')")
 	public ModelAndView deleteRoomType(@PathVariable Long id) {
-		if (id != null) {
-			roomService.deleteRoomType(id);
-		}
+		roomService.deleteRoomType(id);
 		return new ModelAndView("redirect:/room");
 	}
 
 	@DeleteMapping(value = "/roomRateDelete/{id}")
 	@PreAuthorize("hasAuthority('deleteRoomRate')")
-	public ModelAndView deleteRoomRate(@PathVariable(required = false) Long id) {
-		if (id != null) {
-			roomRateService.deleteRoomRate(id);
-		}
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "this is the reason")
+	public ModelAndView deleteRoomRate(@PathVariable Long id) {
+		roomRateService.deleteRoomRate(id);
 		// TODO wha thappens with all the histortical bookings that refer to this room rate?
 		return new ModelAndView("redirect:/roomRate");
 	}

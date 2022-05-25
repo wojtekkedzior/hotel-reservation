@@ -1,15 +1,13 @@
 package hotelreservation.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode.Exclude;
-import lombok.NoArgsConstructor;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode.Exclude;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
@@ -21,8 +19,6 @@ public class RoomType {
 	@Exclude
 	private long id;
 
-	@NotNull
-	@NotBlank
 	private String name;
 	
 	private String description;

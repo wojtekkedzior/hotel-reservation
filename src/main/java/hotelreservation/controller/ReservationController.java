@@ -156,8 +156,14 @@ public class ReservationController {
 		log.info("loading dashboard");
 
 		model.addAttribute("upComingReservations", bookingService.getReservationsByStatus(ReservationStatus.UP_COMING));
-		model.addAttribute("inProgressReservations", bookingService.getReservationsByStatus(ReservationStatus.IN_PROGRESS));
-
+		
+		List<Reservation> inProgress = bookingService.getReservationsByStatus(ReservationStatus.IN_PROGRESS);
+		model.addAttribute("inProgressReservations", inProgress);
+		
+		model.addAttribute("endingToday", inProgress.stream()
+				.filter(res -> res.getEndDate().getDayOfMonth() == LocalDateTime.now().getDayOfMonth())
+				.collect(Collectors.toList()));
+		
 		log.info("dashboard ready");
 		return "reservationDashBoard";
 	}

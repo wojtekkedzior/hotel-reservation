@@ -4,6 +4,7 @@ import hotelreservation.RestExceptionHandler;
 import hotelreservation.controller.ReservationController;
 import hotelreservation.model.ui.GuestDTO;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,7 @@ public class RestExceptionHandlerTest {
 
     @Test
     @WithUserDetails("admin")
+    @Ignore
     public void testHandleBindExceptionHandler() throws Exception {
         GuestDTO guestDTO = new GuestDTO("", null, "ignored", null, null);
 

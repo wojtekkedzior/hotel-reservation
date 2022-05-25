@@ -1,5 +1,19 @@
 package hotelreservation.service;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import hotelreservation.Utils;
 import hotelreservation.exceptions.MissingOrInvalidArgumentException;
 import hotelreservation.exceptions.NotDeletedException;
@@ -11,13 +25,6 @@ import hotelreservation.repository.ReservationRepo;
 import hotelreservation.repository.RoomRateRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +34,9 @@ public class RoomRateService {
     private final RoomRateRepo roomRateRepo;
     private final ReservationRepo reservationRepo;
     private final Utils utils;
+    
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     public RoomRate saveRoomRate(RoomRate roomRate) {
         return roomRateRepo.save(roomRate);
@@ -122,9 +132,6 @@ public class RoomRateService {
 
         return roomRatesAsMapByDates;
     }
-
-
-
 }
 
 

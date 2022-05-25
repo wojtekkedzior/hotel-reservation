@@ -1,21 +1,7 @@
 package hotelreservation;
 
-import hotelreservation.model.*;
-import hotelreservation.model.enums.Currency;
-import hotelreservation.model.enums.IdType;
-import hotelreservation.repository.UserRepo;
-import hotelreservation.service.*;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Profile;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
-
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,11 +12,59 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Profile;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
+
+import hotelreservation.model.Amenity;
+import hotelreservation.model.AmenityType;
+import hotelreservation.model.Charge;
+import hotelreservation.model.Contact;
+import hotelreservation.model.Guest;
+import hotelreservation.model.Identification;
+import hotelreservation.model.Privilege;
+import hotelreservation.model.Reservation;
+import hotelreservation.model.Role;
+import hotelreservation.model.Room;
+import hotelreservation.model.RoomRate;
+import hotelreservation.model.RoomType;
+import hotelreservation.model.Status;
+import hotelreservation.model.User;
+import hotelreservation.model.enums.Currency;
+import hotelreservation.model.enums.IdType;
+import hotelreservation.model.enums.ReservationStatus;
+import hotelreservation.repository.AmenityRepo;
+import hotelreservation.repository.AmenityTypeRepo;
+import hotelreservation.repository.ContactRepo;
+import hotelreservation.repository.GuestRepo;
+import hotelreservation.repository.IdentificationRepo;
+import hotelreservation.repository.PrivilegeRepo;
+import hotelreservation.repository.ReservationRepo;
+import hotelreservation.repository.RoleRepo;
+import hotelreservation.repository.RoomRateRepo;
+import hotelreservation.repository.RoomRepo;
+import hotelreservation.repository.StatusRepo;
+import hotelreservation.repository.UserRepo;
+import hotelreservation.service.BookingService;
+import hotelreservation.service.InvoiceService;
+import hotelreservation.service.RoomRateService;
+import hotelreservation.service.RoomService;
+import hotelreservation.service.UserService;
+import lombok.RequiredArgsConstructor;
+
 @Component
 @Profile("dev")
 @RequiredArgsConstructor
 public class ApplicationStartup implements ApplicationListener<ApplicationReadyEvent> {
-	private static final int YEAR = 2019;
+	private static final int YEAR = 2022;
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -117,31 +151,50 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	private final InvoiceService invoiceService;
 	private final UserRepo userRepo;
 	private final PasswordEncoder passwordEncoder;
-
+	
 	@Override
 	public void onApplicationEvent(ApplicationReadyEvent event) {
-		log.debug("loading test data - start");
+		log.info("loading test data - start");
 
+		log.info("startPriv");
 		addPrivileges();
+		log.info("endPriv");
 		addStatuses();
+		log.info("endstatus");
 		addCharges();
+		log.info("endChargers");
 
 		addAmenityTypes();
+		log.info("end ammentityTypes");
 		addAmenities();
+		log.info("end ammentirtes");
 
 		addRoomTypes();
+		log.info("end roomtTypes");
 		addRooms();
+		log.info("end rooms");
 
 		addRoomRates();
+		log.info("end roomsrates");
 		addContacts();
 		addIdentifications();
 		addGuests();
+		
+		addAllReservations();
 
-		addReservation();
-		addReservations();
-		createMultiRoomReservation();
-
-		log.debug("loading test data - end");
+		log.info("loading test data - end");
+	}
+	
+	private void addAllReservations() {
+		List<Reservation> reservations = new ArrayList<>();
+		reservations.add(addReservation());
+		reservations.addAll(addReservations());
+		reservations.add(createMultiRoomReservation());
+		reservationRepo.saveAll(reservations);
+		
+		//Make one reservation InProgress
+		Reservation reservation1 = bookingService.getReservation(3L);
+		bookingService.realiseReservation(reservation1);
 	}
 	
 	private void addCharges() {
@@ -154,10 +207,20 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		invoiceService.saveCharge(brokenTable);
 	}
 
-	private void addAmenities() {
-		addHotelamenitites();
-		addRoomamenitites();
-	}
+	private final PrivilegeRepo privilegeRepo;
+	private final AmenityRepo amenityRepo;
+	private final AmenityTypeRepo amenityTypeRepo;
+	private final StatusRepo statusRepo;
+	private final RoomRepo roomRepo;
+	private final RoomRateRepo roomRateRepo;
+	private final RoleRepo roleRepo;
+	private final ContactRepo contactRepo;
+	private final IdentificationRepo identificationRepo;
+	private final GuestRepo guestRepo;
+	private final ReservationRepo reservationRepo;
+	
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 	
 	private void addPrivileges() {
 		Privilege createAmenity = new Privilege("createAmenity");
@@ -184,30 +247,14 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		Privilege viewReservationDashBoard = new Privilege("viewReservationDashBoard");
 		Privilege createPayment = new Privilege("createPayment");
 		
-		userService.savePrivilege(createAmenity);
-		userService.savePrivilege(createAmenityType);
-		userService.savePrivilege(createRoom);
-		userService.savePrivilege(createRoomType);
-		userService.savePrivilege(createRoomRate);
-		userService.savePrivilege(deleteAmenity);
-		userService.savePrivilege(deleteAmenityType);
-		userService.savePrivilege(deleteRoom);
-		userService.savePrivilege(deleteRoomType);
-		userService.savePrivilege(deleteRoomRate);
-		userService.savePrivilege(getReservation);
-		userService.savePrivilege(createReservation);
-		userService.savePrivilege(cancelReservation);
-		userService.savePrivilege(realiseReservation);
-		userService.savePrivilege(checkoutReservation);
-		userService.savePrivilege(fulfillReservation);
-		userService.savePrivilege(deleteReservation);
-		userService.savePrivilege(viewAdmin);
-		userService.savePrivilege(createUser);
-		userService.savePrivilege(deleteUser);
-		userService.savePrivilege(deleteUserRole);
-		userService.savePrivilege(viewReservationDashBoard);
-		userService.savePrivilege(createPayment);
-
+		List<Privilege> privileges = Arrays.asList(createAmenity, createAmenityType, createRoom, createRoomType, createRoomRate, deleteAmenity, deleteAmenityType, deleteRoom,deleteRoomType,
+				deleteRoomRate, getReservation, createReservation, cancelReservation, realiseReservation, checkoutReservation, fulfillReservation, deleteReservation, createUser, deleteUser,
+				deleteUserRole, viewAdmin,  viewReservationDashBoard, createPayment);
+		
+		// This is slow than the JDBC template, but it's easier as the lists are reused later on.  Stuff written using the updateBatch function is not connected to the Hibernate session
+		// So i'd have to go and fetch all the privileges. This whole functions costs about 5s in AWS
+		privilegeRepo.saveAll(privileges);
+		
 		Collection<Privilege> adminPrivileges = new ArrayList<>();
 		Collection<Privilege> managerPrivileges = new ArrayList<>();
 		Collection<Privilege> receptionistPrivileges = new ArrayList<>();
@@ -259,9 +306,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		managerRole.setPrivileges(managerPrivileges);
 		receptionistRole.setPrivileges(receptionistPrivileges);
 
-		userService.saveRole(adminRole);
-		userService.saveRole(managerRole);
-		userService.saveRole(receptionistRole);
+		roleRepo.saveAll(Arrays.asList(adminRole, managerRole, receptionistRole));
 
 		superAdmin = new User();
 		superAdmin.setUserName("superAdmin");
@@ -302,8 +347,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		receptionist.setCreatedBy(manager);
 		userService.saveUser(receptionist, manager.getUserName());
 	}
-
-	private void addRoomamenitites() {
+	
+	private void addAmenities() {
 		pillow = new Amenity("pillow", "pillow", amenityTypeRoomBasic);
 		phone = new Amenity("phone", "phone", amenityTypeRoomBasic);
 		blanket = new Amenity("blanket", "blanket", amenityTypeRoomBasic);
@@ -315,32 +360,16 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		internet = new Amenity("internet", "internet", amenityTypeRoomLuxury);
 		rainShower = new Amenity("rainShower", "rainShower", amenityTypeRoomLuxury);
 		bathtub = new Amenity("bathtub", "bathtub", amenityTypeRoomLuxury);
-
-		roomService.saveAmenity(pillow);
-		roomService.saveAmenity(phone);
-		roomService.saveAmenity(blanket);
-		roomService.saveAmenity(safebox);
-		roomService.saveAmenity(tv);
-
-		roomService.saveAmenity(hairDryer);
-		roomService.saveAmenity(miniBar);
-		roomService.saveAmenity(internet);
-		roomService.saveAmenity(rainShower);
-		roomService.saveAmenity(bathtub);
-	}
-
-	private void addHotelamenitites() {
+		
+		// addHotelamenitites
 		wifi = new Amenity("wifi", "wifi", amenityTypeHotel);
 		spaPool = new Amenity("spaPool", "spaPool", amenityTypeHotel);
 		pool = new Amenity("pool", "pool", amenityTypeHotel);
 		sauna = new Amenity("sauna", "sauna", amenityTypeHotel);
 		conferenceRoom = new Amenity("conferenceRoom", "conferenceRoom", amenityTypeHotel);
 
-		roomService.saveAmenity(wifi);
-		roomService.saveAmenity(spaPool);
-		roomService.saveAmenity(pool);
-		roomService.saveAmenity(sauna);
-		roomService.saveAmenity(conferenceRoom);
+		List<Amenity> amenities = Arrays.asList(pillow, phone, blanket, safebox, tv, hairDryer, miniBar, internet, rainShower, bathtub, wifi, spaPool, pool, sauna, conferenceRoom);
+		amenityRepo.saveAll(amenities);
 	}
 
 	private void addAmenityTypes() {
@@ -348,9 +377,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		amenityTypeRoomLuxury = new AmenityType("Luxury", "Luxury Room amenity Type");
 		amenityTypeHotel = new AmenityType("Hotel", "Hotel amenity Type");
 
-		roomService.saveAmenityType(amenityTypeRoomBasic);
-		roomService.saveAmenityType(amenityTypeRoomLuxury);
-		roomService.saveAmenityType(amenityTypeHotel);
+		List<AmenityType> amenityTypes = Arrays.asList(amenityTypeRoomBasic, amenityTypeRoomLuxury, amenityTypeHotel);
+		amenityTypeRepo.saveAll(amenityTypes);
 	}
 
 	private void addStatuses() {
@@ -358,11 +386,9 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		underMaintenance = new Status("Under Maintenance", "Room is under maintenance");
 		underConstruction = new Status("Under Conctruction", "Room is under cunstruction");
 		notOperational = new Status("Not Operational", "Room is not operational");
-
-		roomService.saveStatus(operational);
-		roomService.saveStatus(underMaintenance);
-		roomService.saveStatus(underConstruction);
-		roomService.saveStatus(notOperational);
+		
+		List<Status> statuses = Arrays.asList(operational, underMaintenance, underConstruction, notOperational);
+		statusRepo.saveAll(statuses);
 	}
 
 	private void addRoomTypes() {
@@ -374,98 +400,106 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	}
 
 	private void addRooms() {
+		List<Amenity> standardRoomAmenitites = Arrays.asList(pillow, safebox, blanket);
+		List<Amenity> luxuryRoomAmenitites = Arrays.asList(pillow, phone, safebox, blanket, internet, rainShower);
+		
 		standardRoomOne = new Room(1, operational, roomTypeStandard, admin);
 		standardRoomOne.setName("Room 1");
 		standardRoomOne.setDescription("The Best Room Description");
-		List<Amenity> standardRoomOneAmenitites = new ArrayList<>();
-		standardRoomOneAmenitites.add(pillow);
-		standardRoomOneAmenitites.add(phone);
-		standardRoomOneAmenitites.add(blanket);
-		standardRoomOne.setRoomAmenities(standardRoomOneAmenitites);
-		roomService.saveRoom(standardRoomOne);
+		standardRoomOne.setRoomAmenities(standardRoomAmenitites);
 
 		standardRoomTwo = new Room(2, operational, roomTypeStandard, admin);
 		standardRoomTwo.setName("Room 2");
 		standardRoomTwo.setDescription("The Second Best Room Description");
-		List<Amenity> standardRoomTwoAmenitites = new ArrayList<>();
-		standardRoomTwoAmenitites.add(pillow);
-		standardRoomTwoAmenitites.add(safebox);
-		standardRoomTwoAmenitites.add(blanket);
-		standardRoomTwo.setRoomAmenities(standardRoomTwoAmenitites);
-		roomService.saveRoom(standardRoomTwo);
+		standardRoomTwo.setRoomAmenities(standardRoomAmenitites);
 		
 		standardRoomThree = new Room(3, operational, roomTypeStandard, admin);
 		standardRoomThree.setName("Room 3");
 		standardRoomThree.setDescription("The Third Best Room Description");
-		standardRoomThree.setRoomAmenities(standardRoomTwoAmenitites);
-		roomService.saveRoom(standardRoomThree);
+		standardRoomThree.setRoomAmenities(standardRoomAmenitites);
 
 		// Luxury Rooms
 		luxuryRoomOne = new Room(11, operational, roomTypeLuxury, admin);
 		luxuryRoomOne.setName("Room 11");
 		luxuryRoomOne.setDescription("The Best Luxury Room Description");
-		List<Amenity> luxuryRoomOneAmenitites = new ArrayList<>();
-		luxuryRoomOneAmenitites.add(pillow);
-		luxuryRoomOneAmenitites.add(phone);
-		luxuryRoomOneAmenitites.add(blanket);
-		luxuryRoomOneAmenitites.add(internet);
-		luxuryRoomOneAmenitites.add(rainShower);
-		luxuryRoomOne.setRoomAmenities(luxuryRoomOneAmenitites);
-		roomService.saveRoom(luxuryRoomOne);
+		luxuryRoomOne.setRoomAmenities(luxuryRoomAmenitites);
 
 		luxuryRoomTwo = new Room(22, operational, roomTypeLuxury, admin);
 		luxuryRoomTwo.setName("Room 22");
 		luxuryRoomTwo.setDescription("The Second Best Luxury Room Description");
-		List<Amenity> luxuryRoomTwoAmenitites = new ArrayList<>();
-		luxuryRoomTwoAmenitites.add(pillow);
-		luxuryRoomTwoAmenitites.add(safebox);
-		luxuryRoomTwoAmenitites.add(blanket);
-		luxuryRoomTwoAmenitites.add(bathtub);
-		luxuryRoomTwoAmenitites.add(miniBar);
-		luxuryRoomTwo.setRoomAmenities(luxuryRoomTwoAmenitites);
-		roomService.saveRoom(luxuryRoomTwo);
+		luxuryRoomTwo.setRoomAmenities(luxuryRoomAmenitites);
 		
 		luxuryRoomThree = new Room(33, operational, roomTypeLuxury, admin);
 		luxuryRoomThree.setName("Room 33");
 		luxuryRoomThree.setDescription("The Thid Best Luxury Room Description");
-		luxuryRoomThree.setRoomAmenities(luxuryRoomTwoAmenitites);
-		roomService.saveRoom(luxuryRoomThree);
+		luxuryRoomThree.setRoomAmenities(luxuryRoomAmenitites);
+		
+		roomRepo.saveAll(Arrays.asList(standardRoomOne, standardRoomTwo, standardRoomThree, luxuryRoomOne, luxuryRoomTwo, luxuryRoomThree));
 	}
-
+    
 	private void addRoomRates() {
-		LocalDate date = LocalDate.of(2019, Month.JANUARY, 1);
+		LocalDate date = LocalDate.of(2022, Month.MAY, 1);
 		int value = 1000;
-
+		List<RoomRate> roomRates = new ArrayList<RoomRate>();
+		
 		for (int days = 1; days <= 730; days++) {
 			if (date.getDayOfWeek().equals(DayOfWeek.FRIDAY) || date.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
 				value = 1999;
 			} else if (date.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
 				value = 1500;
 			}
-
-			roomRateService.saveRoomRate(new RoomRate(standardRoomOne, Currency.CZK, value, date));
-			roomRateService.saveRoomRate(new RoomRate(standardRoomTwo, Currency.CZK, value, date));
-			roomRateService.saveRoomRate(new RoomRate(standardRoomThree, Currency.CZK, value, date));
-
-			roomRateService.saveRoomRate(new RoomRate(luxuryRoomOne, Currency.CZK, value * 2, date));
-			roomRateService.saveRoomRate(new RoomRate(luxuryRoomTwo, Currency.CZK, value * 2, date));
-			roomRateService.saveRoomRate(new RoomRate(luxuryRoomThree, Currency.CZK, value * 2, date));
 			
+			roomRates.add(new RoomRate(standardRoomOne, Currency.CZK, value, date));
+			roomRates.add(new RoomRate(standardRoomTwo, Currency.CZK, value, date));
+			roomRates.add(new RoomRate(standardRoomThree, Currency.CZK, value, date));
+			
+			roomRates.add(new RoomRate(luxuryRoomOne, Currency.CZK, value * 2, date));
+			roomRates.add(new RoomRate(luxuryRoomTwo, Currency.CZK, value * 2, date));
+			roomRates.add(new RoomRate(luxuryRoomThree, Currency.CZK, value * 2, date));
+
 			date = date.plus(1,  ChronoUnit.DAYS);
 			value = 1000;
 		}
+		
+		roomRateRepo.saveAll(roomRates);
+//	    String sql = "INSERT INTO `room_rate` (ROOM_ID, CURRENCY, VALUE, DAY) VALUES(?,?,?,?)";
+//	    StopWatch timer = new StopWatch();
+//	    timer.start(); 
+//	    log.info("batchInsert start");
+//	    
+//        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+//          @Override
+//          public void setValues(PreparedStatement ps, int i) throws SQLException {
+//        	  
+//        	RoomRate roomRate = roomRates.get(i);
+//            ps.setLong(1, roomRate.getRoom().getId());
+//            ps.setString(2, roomRate.getCurrency().toString());
+//            ps.setLong(3, roomRate.getValue());
+//            ps.setDate(4, java.sql.Date.valueOf(roomRate.getDay()));
+//          }
+//          @Override
+//          public int getBatchSize() {
+//            return roomRates.size();
+//          }
+//        });
+//	    
+//        timer.stop();
+//        log.info("batchInsert -> Total time in seconds: " + timer.getTotalTimeSeconds());
+//        
+//        List<RoomRate> findAll = (List<RoomRate>) roomRateRepo.findAll();
+//        log.error("found: " + findAll.size());
+        
+//        roomRateService.saveRoomRate(new RoomRate(standardRoomOne, Currency.CZK, 1000, date.plusWeeks(5)));
+        
 	}
-
+	
 	private void addContacts() {
 		contactOne = new Contact("address1", "Country1");
 		contactTwo = new Contact("address2", "Country2");
 		contactThree = new Contact("address3", "Country3");
 		contactFour = new Contact("address4", "Country4");
 
-		bookingService.createContact(contactOne);
-		bookingService.createContact(contactTwo);
-		bookingService.createContact(contactThree);
-		bookingService.createContact(contactFour);
+		contactRepo.saveAll(Arrays.asList(contactOne, contactTwo, contactThree, contactFour));
 	}
 
 	private void addIdentifications() {
@@ -473,11 +507,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		idTwo = new Identification(IdType.DRIVERS_LICENSE, "twoIdNumber");
 		idThree = new Identification(IdType.PASSPORT, "threeIdNumber");
 		idFour = new Identification(IdType.ID_CARD, "fourIdNumber");
-
-		bookingService.createIdentification(idOne);
-		bookingService.createIdentification(idTwo);
-		bookingService.createIdentification(idThree);
-		bookingService.createIdentification(idFour);
+		
+		identificationRepo.saveAll(Arrays.asList(idOne, idTwo, idThree, idFour));
 	}
 
 	private void addGuests() {
@@ -486,15 +517,12 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		guestThree = new Guest("GuestThree First Name", "GuestThree Last Name", contactThree, idThree);
 		guestFour = new Guest("GuestFour First Name", "GuestFour Last Name", contactFour, idFour);
 
-		bookingService.createGuest(guestOne);
-		bookingService.createGuest(guestTwo);
-		bookingService.createGuest(guestThree);
-		bookingService.createGuest(guestFour);
+		guestRepo.saveAll(Arrays.asList(guestOne, guestTwo, guestThree, guestFour));
 	}
 
-	private void addReservation() {
-		LocalDate startDate = LocalDate.of(YEAR, Month.MARCH, 3);
-		LocalDate endDate = LocalDate.of(YEAR, Month.MARCH, 20);
+	private Reservation addReservation() {
+		LocalDate startDate = LocalDate.of(YEAR, Month.JUNE, 3);
+		LocalDate endDate = LocalDate.of(YEAR, Month.JUNE, 20);
 
 		reservationOne = new Reservation();
 		reservationOne.setStartDate(startDate);
@@ -504,8 +532,10 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		reservationOne.setOccupants(Arrays.asList(guestTwo, guestThree));
 		reservationOne.setRoomRates(new ArrayList<>());
 		reservationOne.setCreatedBy(manager);
+		reservationOne.setReservationStatus(ReservationStatus.UP_COMING);
+		reservationOne.setCreatedOn(LocalDateTime.now());
 
-		List<RoomRate> roomRatesForAllRooms = roomRateService.getRoomRates(LocalDate.of(YEAR, Month.MARCH, 1), LocalDate.of(YEAR, Month.MARCH, 31));
+		List<RoomRate> roomRatesForAllRooms = roomRateService.getRoomRates(LocalDate.of(YEAR, Month.JUNE, 1), LocalDate.of(YEAR, Month.JUNE, 30));
 		
 		for (RoomRate roomRate : roomRatesForAllRooms) {
 			if (roomRate.getRoom().getId() == 1 
@@ -515,13 +545,16 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 				reservationOne.getRoomRates().add(roomRate);
 			}
 		}
-		bookingService.saveReservation(reservationOne);
+		
+		return reservationOne;
 	}
 	
-	private void addReservations() {
+	private List<Reservation> addReservations() {
+		List<Reservation> reservations = new ArrayList<>();
+		
 		for (int i = 2; i <= 6; i++) {
-			LocalDate startDate = LocalDate.of(YEAR, Month.MARCH, 3);
-			LocalDate endDate = LocalDate.of(YEAR, Month.MARCH, 20);
+			LocalDate startDate = LocalDate.of(YEAR, Month.JUNE, 3);
+			LocalDate endDate = LocalDate.of(YEAR, Month.JUNE, 20);
 
 			Reservation reservation = new Reservation();
 			reservation.setStartDate(startDate);
@@ -531,8 +564,10 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 			reservation.setOccupants(Arrays.asList(guestTwo, guestThree));
 			reservation.setRoomRates(new ArrayList<>());
 			reservation.setCreatedBy(manager);
+			reservation.setReservationStatus(ReservationStatus.UP_COMING);
+			reservation.setCreatedOn(LocalDateTime.now());
 
-			List<RoomRate> roomRatesForAllRooms = roomRateService.getAvailableRoomRates(LocalDate.of(YEAR, Month.MARCH, 1), LocalDate.of(YEAR, Month.MARCH, 31));
+			List<RoomRate> roomRatesForAllRooms = roomRateService.getAvailableRoomRates(LocalDate.of(YEAR, Month.JUNE, 1), LocalDate.of(YEAR, Month.JUNE, 30));
 
 			for (RoomRate roomRate : roomRatesForAllRooms) {
 				if (roomRate.getRoom().getId() == i // this is the room ID 
@@ -541,18 +576,16 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 					reservation.getRoomRates().add(roomRate);
 				}
 			}
-			
-			bookingService.saveReservation(reservation);	
+
+			reservations.add(reservation);
 		}
 		
-		//Make one reservation InProgress
-		Reservation reservation = bookingService.getReservation(3L);
-		bookingService.realiseReservation(reservation);
+		return reservations;
 	}
 	
-	private void createMultiRoomReservation () {
-		LocalDate startDate = LocalDate.of(YEAR, Month.APRIL, 1);
-		LocalDate endDate = LocalDate.of(YEAR, Month.APRIL, 5);
+	private Reservation createMultiRoomReservation () {
+		LocalDate startDate = LocalDate.of(YEAR, Month.JULY, 1);
+		LocalDate endDate = LocalDate.of(YEAR, Month.JULY, 5);
 		
 		Reservation reservation = new Reservation();
 		reservation.setStartDate(startDate);
@@ -562,8 +595,10 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		reservation.setOccupants(Arrays.asList(guestTwo, guestThree));
 		reservation.setRoomRates(new ArrayList<>());
 		reservation.setCreatedBy(manager);
+		reservation.setReservationStatus(ReservationStatus.UP_COMING);
+		reservation.setCreatedOn(LocalDateTime.now());
 
-		List<RoomRate> roomRatesForAllRooms = roomRateService.getRoomRates(LocalDate.of(YEAR, Month.APRIL, 1), LocalDate.of(YEAR, Month.APRIL, 4));
+		List<RoomRate> roomRatesForAllRooms = roomRateService.getRoomRates(LocalDate.of(YEAR, Month.JULY, 1), LocalDate.of(YEAR, Month.JULY, 4));
 		
 		for (RoomRate roomRate : roomRatesForAllRooms) {
 			if (roomRate.getRoom().getId() == 1 
@@ -573,7 +608,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 			}
 		}
 		
-		roomRatesForAllRooms = roomRateService.getAvailableRoomRates(LocalDate.of(YEAR, Month.APRIL, 4), LocalDate.of(YEAR, Month.APRIL, 5));
+		roomRatesForAllRooms = roomRateService.getAvailableRoomRates(LocalDate.of(YEAR, Month.JULY, 4), LocalDate.of(YEAR, Month.JULY, 5));
 
 		for (RoomRate roomRate : roomRatesForAllRooms) {
 			if (roomRate.getRoom().getId() == 2 
@@ -583,6 +618,6 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 			}
 		}
 		
-		bookingService.saveReservation(reservation);	
+		return reservation;
 	}
 }

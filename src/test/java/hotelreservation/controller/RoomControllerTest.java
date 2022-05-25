@@ -1,9 +1,15 @@
 package hotelreservation.controller;
 
-import hotelreservation.ApplicationStartup;
-import hotelreservation.RestExceptionHandler;
-import hotelreservation.model.enums.Currency;
-import hotelreservation.model.ui.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,13 +23,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
+import hotelreservation.ApplicationStartup;
+import hotelreservation.RestExceptionHandler;
+import hotelreservation.model.enums.Currency;
+import hotelreservation.model.ui.AmenityDTO;
+import hotelreservation.model.ui.AmenityTypeDTO;
+import hotelreservation.model.ui.RoomDTO;
+import hotelreservation.model.ui.RoomRateDTO;
+import hotelreservation.model.ui.RoomTypeDTO;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
@@ -72,9 +79,9 @@ public class RoomControllerTest {
 		//Some of these deletes will fail because of constraint violations, which is fine.
 		mvc.perform(delete("/roomDelete/1")).andExpect(status().is4xxClientError());
 		mvc.perform(delete("/roomTypeDelete/1")).andExpect(status().is4xxClientError());
-		mvc.perform(delete("/amenityDelete/1")).andExpect(status().is3xxRedirection());
+		mvc.perform(delete("/amenityDelete/1")).andExpect(status().is4xxClientError());
 		mvc.perform(delete("/amenityTypeDelete/1")).andExpect(status().is4xxClientError());
-		mvc.perform(delete("/roomRateDelete/1")).andExpect(status().is3xxRedirection());
+		mvc.perform(delete("/roomRateDelete/1")).andExpect(status().is4xxClientError());
 	}
 
 	@Test
@@ -88,7 +95,8 @@ public class RoomControllerTest {
 	@WithUserDetails("manager")
 	public void testManagerRolePermissions_allowed() throws Exception {
 		mvc.perform(get("/roomRate/1")).andExpect(status().isOk());
-		mvc.perform(post("/addRoomRate").flashAttr("roomRateDTO", new RoomRateDTO("description", applicationStartup.standardRoomOne, Currency.CZK, 10, LocalDate.now().plus(1, ChronoUnit.YEARS)))).andExpect(status().is3xxRedirection());
+		mvc.perform(post("/addRoomRate").flashAttr("roomRateDTO", new RoomRateDTO("description", applicationStartup.standardRoomOne, Currency.CZK, 10, LocalDate.now().plus(1, ChronoUnit.YEARS))))
+		.andExpect(status().is4xxClientError());
 	}
 
 	@Test
@@ -231,38 +239,38 @@ public class RoomControllerTest {
 	@Test
 	@WithUserDetails("admin")
 	public void testDeleteAmenityWithNoId() throws Exception {
-		mvc.perform(delete("/amenityDelete/ ")).andExpect(status().is3xxRedirection());
+		mvc.perform(delete("/amenityDelete/ ")).andExpect(status().is5xxServerError());
 	}
 
 	@Test
 	@WithUserDetails("admin")
 	public void testDeleteAmenityTypeWithNoId() throws Exception {
-		mvc.perform(delete("/amenityTypeDelete/ ")).andExpect(status().is3xxRedirection());
+		mvc.perform(delete("/amenityTypeDelete/ ")).andExpect(status().is5xxServerError());
 	}
 
 	@Test
 	@WithUserDetails("admin")
 	public void testDeleteRoomWithNoId() throws Exception {
-		mvc.perform(delete("/roomRateDelete/ ")).andExpect(status().is3xxRedirection());
+		mvc.perform(delete("/roomRateDelete/ ")).andExpect(status().is5xxServerError());
 	}
 
 	@Test
 	@WithUserDetails("admin")
 	public void testDeleteRoomTypeWithNoId() throws Exception {
-		mvc.perform(delete("/roomTypeDelete/ ")).andExpect(status().is3xxRedirection());
+		mvc.perform(delete("/roomTypeDelete/ ")).andExpect(status().is5xxServerError());
 	}
 
 	@Test
 	@WithUserDetails("admin")
 	public void testDeleteRoomRateWithNoId() throws Exception {
-		mvc.perform(delete("/roomDelete/ ")).andExpect(status().is3xxRedirection());
+		mvc.perform(delete("/roomDelete/ ")).andExpect(status().is5xxServerError());
 	}
 
 	//----------------------------------------------------------------------------
 	@Test
 	@WithUserDetails("admin")
 	public void testDeleteAmenity() throws Exception {
-		mvc.perform(delete("/amenityDelete/1")).andExpect(status().is3xxRedirection());
+		mvc.perform(delete("/amenityDelete/1")).andExpect(status().is4xxClientError());
 
 	}
 

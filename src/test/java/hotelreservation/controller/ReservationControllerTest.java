@@ -1,12 +1,16 @@
 package hotelreservation.controller;
 
-import hotelreservation.ApplicationStartup;
-import hotelreservation.RestExceptionHandler;
-import hotelreservation.model.ui.GuestDTO;
-import hotelreservation.model.ui.ReservationCancellationDTO;
-import hotelreservation.model.ui.ReservationDTO;
-import hotelreservation.service.BookingService;
-import hotelreservation.service.RoomRateService;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
+
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.stream.Collectors;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,13 +23,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDate;
-import java.time.Month;
-import java.util.stream.Collectors;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
+import hotelreservation.ApplicationStartup;
+import hotelreservation.RestExceptionHandler;
+import hotelreservation.model.ui.GuestDTO;
+import hotelreservation.model.ui.ReservationCancellationDTO;
+import hotelreservation.model.ui.ReservationDTO;
+import hotelreservation.service.BookingService;
+import hotelreservation.service.RoomRateService;
 
 //import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -175,8 +179,8 @@ public class ReservationControllerTest {
 	@Test
 	@WithUserDetails("manager")
 	public void testSaveReservation() throws Exception {
-		LocalDate startDate = LocalDate.of(2019, Month.MAY, 3);
-		LocalDate endDate = LocalDate.of(2019, Month.MAY, 5);
+		LocalDate startDate = LocalDate.of(2022, Month.MAY, 3);
+		LocalDate endDate = LocalDate.of(2022, Month.MAY, 5);
 
 		ReservationDTO reservationDTO = new ReservationDTO(
 				applicationStartup.reservationOne.getFirstName(),
@@ -230,6 +234,6 @@ public class ReservationControllerTest {
 	@Test
 	@WithUserDetails("manager")
 	public void testGetReservationWithNoId() throws Exception {
-		mvc.perform(get("/reservation/ ")).andExpect(status().is4xxClientError());
+		mvc.perform(get("/reservation/ ")).andDo(print()).andExpect(status().is5xxServerError());
 	}
 }

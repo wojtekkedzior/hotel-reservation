@@ -1,11 +1,13 @@
 package hotelreservation;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableMBeanExport;
+import org.springframework.core.env.Environment;
 import org.springframework.jmx.support.RegistrationPolicy;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -35,4 +37,14 @@ public class Application extends org.springframework.boot.web.servlet.support.Sp
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(Application.class);
 	}
+	
+	@Autowired
+    private Environment environment;
+
+    public void getActiveProfiles() {
+        for (String profileName : environment.getActiveProfiles()) {
+            System.out.println("WW Currently active profile - " + profileName);
+        }  
+    }
+    
 }

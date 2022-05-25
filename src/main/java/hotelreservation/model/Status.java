@@ -21,8 +21,6 @@ public class Status {
 	@Exclude
 	private long id;
 
-	@NotNull
-	@NotBlank
 	private String name;
 	
 	private String description;

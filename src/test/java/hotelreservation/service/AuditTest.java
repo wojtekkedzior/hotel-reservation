@@ -1,8 +1,9 @@
 package hotelreservation.service;
 
-import hotelreservation.model.*;
-import hotelreservation.model.finance.Invoice;
-import hotelreservation.model.finance.Payment;
+import static org.junit.Assert.assertEquals;
+
+import javax.persistence.EntityManager;
+
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.query.AuditQuery;
@@ -14,15 +15,23 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.persistence.EntityManager;
-
-import static org.junit.Assert.assertEquals;
+import hotelreservation.model.Amenity;
+import hotelreservation.model.Charge;
+import hotelreservation.model.Contact;
+import hotelreservation.model.Guest;
+import hotelreservation.model.Identification;
+import hotelreservation.model.Privilege;
+import hotelreservation.model.ReservationCheckout;
+import hotelreservation.model.RoomRate;
+import hotelreservation.model.Stay;
+import hotelreservation.model.User;
+import hotelreservation.model.finance.Invoice;
+import hotelreservation.model.finance.Payment;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @ActiveProfiles("dev")
 public class AuditTest {
-
     @Autowired
     private EntityManager entityManager;
 
