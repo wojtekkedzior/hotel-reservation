@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 import java.time.LocalDate;
@@ -13,6 +14,7 @@ import java.time.Month;
 import java.util.stream.Collectors;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import hotelreservation.ApplicationStartup;
 import hotelreservation.RestExceptionHandler;
@@ -60,18 +63,22 @@ public class ReservationControllerTest {
 
 	@Before
 	public void setup() {
-		this.mvc = standaloneSetup(reservationController) .setControllerAdvice(new RestExceptionHandler()).build();// Standalone context
+		//resolves a circular dependancy when addReservations retruns the "reservation" view
+        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+        viewResolver.setPrefix("/WEB-INF/templates/view/");
+ 
+		this.mvc = standaloneSetup(reservationController).setViewResolvers(viewResolver).setControllerAdvice(new RestExceptionHandler()).build();// Standalone context
 
 		guestDTO = new GuestDTO("firstName", "lastName", "", applicationStartup.guestOne.getContact(), applicationStartup.guestOne.getIdentification());
 		cancellationDTO = new ReservationCancellationDTO("reason");
 
 		reservationDTO = new ReservationDTO(
-				applicationStartup.reservationOne.getFirstName(),
-				applicationStartup.reservationOne.getLastName(),
-				applicationStartup.reservationOne.getOccupants(),
-				applicationStartup.reservationOne.getStartDate(),
-				applicationStartup.reservationOne.getEndDate(),
-				applicationStartup.reservationOne.getReservationStatus());
+			applicationStartup.reservationOne.getFirstName(),
+			applicationStartup.reservationOne.getLastName(),
+			applicationStartup.reservationOne.getOccupants(),
+			applicationStartup.reservationOne.getStartDate(),
+			applicationStartup.reservationOne.getEndDate(),
+			applicationStartup.reservationOne.getReservationStatus());
 	}
 
 	@Test
@@ -243,6 +250,27 @@ public class ReservationControllerTest {
 	@WithUserDetails("manager")
 	public void testGetExistingReservationForEdit() throws Exception {
 		mvc.perform(get("/editReservation/"+applicationStartup.reservationOne.getId())).andExpect(status().isOk()).andExpect(view().name("reservation"));
+	}
+	
+	@Test
+	@WithUserDetails("receptionist")
+	public void testAddReservation() throws Exception {
+		mvc.perform(get("/reservation")).andExpect(status().isOk())
+		.andExpect(model().attributeExists("roomNumbers"))
+		.andExpect(model().attributeExists("startDate"))
+		.andExpect(model().attributeExists("endDate"))
+		.andExpect(view().name("reservation"));
+	}
+	
+	@Test
+	@WithUserDetails("receptionist")
+	public void testAddReservationWithDates() throws Exception {
+		mvc.perform(get("/reservation/start/" + LocalDate.of(2022, Month.MAY, 1) + "/end/" + LocalDate.of(2022, Month.MAY, 2)))
+		.andExpect(status().isOk())
+		.andExpect(model().attributeExists("roomNumbers"))
+		.andExpect(model().attributeExists("startDate"))
+		.andExpect(model().attributeExists("endDate"))
+		.andExpect(view().name("reservation"));
 	}
 	
 }
