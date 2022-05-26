@@ -43,7 +43,6 @@ public class BookingService {
 	private final ReservationCancellationRepo reservationCancellationRepo;
 	private final Utils utils;
 	private final InvoiceService invoiceService;
-	private final RoomRateService roomRateService;
 
 	public void createContact(Contact contact) {
 		contactRepo.save(contact);
@@ -161,7 +160,8 @@ public class BookingService {
 			reservationCancellation.getReservation().setReservationStatus(ReservationStatus.ABANDONED);
 			break;
 		default:
-			break;
+			throw new MissingOrInvalidArgumentException("Cannot cancel a reservation: " + reservationCancellation.getReservation().getId() + 
+					" because it's in status of: " + reservationCancellation.getReservation().getReservationStatus());
 		}
 
 		List<RoomRate> roomRatesUsed = reservationCancellation.getReservation().getRoomRates().stream()
@@ -206,15 +206,6 @@ public class BookingService {
 
 	public long getReservationCount() {
 		return reservationRepo.count();
-	}
-
-	public void saveReservationAndValidateRoomRates(Reservation reservation, List<Long> roomRateIds) {
-		if(roomRateIds == null || roomRateIds.isEmpty()) {
-			throw new MissingOrInvalidArgumentException("No RoomRates were selected for reservation: " + reservation.getId());
-		}
-		
-		reservation.setRoomRates(roomRateIds.stream().map(roomRateService::getRoomRateById).collect(Collectors.toList()));
-		saveReservation(reservation);
 	}
 }
 

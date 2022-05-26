@@ -565,6 +565,28 @@ public class BookingServiceTest extends BaseServiceTest {
 		assertEquals(1, availableRoomRates.size());
 		assertEquals(tomorrow, availableRoomRates.get(0).getDay());
 	}
+	
+	@Test(expected=MissingOrInvalidArgumentException.class)
+	public void testCancelReservationInWrongState() {
+		reservationOne.setStartDate(LocalDate.of(2018, Month.JANUARY, 2));
+		reservationOne.setEndDate(LocalDate.of(2018, Month.JANUARY, 3));
+		List<RoomRate> roomRates = new ArrayList<>();
+		roomRates.add(roomRateService.saveRoomRate(new RoomRate(standardRoomOne, Currency.CZK, 1000, LocalDate.of(2018, Month.JANUARY, 3))));
+		reservationOne.setRoomRates(roomRates);
+		bookingService.saveReservation(reservationOne);
+
+		bookingService.realiseReservation(reservationOne);
+		assertEquals(ReservationStatus.IN_PROGRESS, bookingService.getReservation(reservationOne.getId()).getReservationStatus());
+
+		ReservationCancellation cancellation = new ReservationCancellation();
+		cancellation.setReason("canceled");
+		cancellation.setReservation(reservationOne);
+
+		bookingService.cancelReservation(cancellation);
+		assertEquals(ReservationStatus.ABANDONED, reservationOne.getReservationStatus());
+		
+		bookingService.cancelReservation(cancellation);
+	}
 
 	@Test(expected=MissingOrInvalidArgumentException.class)
 	public void testUpdateReservationWithNoRoomRates() {
@@ -1013,4 +1035,5 @@ public class BookingServiceTest extends BaseServiceTest {
 		reservationOne.setRoomRates(Arrays.asList(roomRateTwo, notInSync));
 		bookingService.saveReservation(reservationOne);
 	}
+	
 }

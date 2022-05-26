@@ -247,9 +247,10 @@ public class ReservationController {
 				.startDate(reservationDTO.getStartDate())
 				.endDate(reservationDTO.getEndDate())
 				.reservationStatus(reservationDTO.getReservationStatus())
+				.roomRates(roomRateIds.stream().map(roomRateService::getRoomRateById).collect(Collectors.toList()))
 				.build();
 
-		bookingService.saveReservationAndValidateRoomRates(reservation, roomRateIds);
+		bookingService.saveReservation(reservation);
 		return new ModelAndView(REDIRECT_DASHBOARD);
 	}
 
