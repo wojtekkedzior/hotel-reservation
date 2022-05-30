@@ -1,7 +1,5 @@
 package hotelreservation;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,15 +12,11 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StopWatch;
 
 import hotelreservation.model.Amenity;
 import hotelreservation.model.AmenityType;
@@ -218,9 +212,6 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 	private final IdentificationRepo identificationRepo;
 	private final GuestRepo guestRepo;
 	private final ReservationRepo reservationRepo;
-	
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 	
 	private void addPrivileges() {
 		Privilege createAmenity = new Privilege("createAmenity");

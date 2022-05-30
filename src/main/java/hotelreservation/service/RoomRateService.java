@@ -9,8 +9,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,9 +33,6 @@ public class RoomRateService {
     private final ReservationRepo reservationRepo;
     private final Utils utils;
     
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
     public RoomRate saveRoomRate(RoomRate roomRate) {
         return roomRateRepo.save(roomRate);
     }

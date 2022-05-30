@@ -1,8 +1,10 @@
 package hotelreservation.service;
 
-import hotelreservation.exceptions.NotDeletedException;
-import hotelreservation.exceptions.NotFoundException;
-import hotelreservation.model.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.time.LocalDateTime;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,11 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import hotelreservation.exceptions.NotDeletedException;
+import hotelreservation.exceptions.NotFoundException;
+import hotelreservation.model.Amenity;
+import hotelreservation.model.AmenityType;
+import hotelreservation.model.Role;
+import hotelreservation.model.Room;
+import hotelreservation.model.RoomType;
+import hotelreservation.model.Status;
+import hotelreservation.model.User;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest

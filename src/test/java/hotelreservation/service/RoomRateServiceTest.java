@@ -369,12 +369,8 @@ public class RoomRateServiceTest extends BaseServiceTest {
     }
 
     private Map<Room, List<RoomRate>> getRoomRatesAsMap(LocalDate startDate, LocalDate endDate) {
-        Map<Room, List<RoomRate>> ratesForAllRooms = new HashMap<>();
-
-        Map<Room, List<RoomRate>> roomRatesPerRoom = roomRateService.getAvailableRoomRates(startDate, endDate).stream()
+		return roomRateService.getAvailableRoomRates(startDate, endDate).stream()
                 .collect(Collectors.groupingBy(RoomRate::getRoom, HashMap::new, Collectors.toList()));
-
-        return roomRatesPerRoom;
     }
 
     private void saveRooms() {
