@@ -18,7 +18,7 @@ public interface ReservationRepo extends CrudRepository<Reservation, Long> {
 	
 	List<Reservation> findByStartDateBetween(Date start, Date end);
 	
-	@Query(value="select * from reservation where reservation_status = 'UP_COMING' or reservation_status = 'IN_PROGRESS' or reservation_status = 'ABANDONED' ", nativeQuery=true)
+	@Query(value="select * from \"reservation\" where \"reservation_status\" = 'UP_COMING' or \"reservation_status\" = 'IN_PROGRESS' or \"reservation_status\" = 'ABANDONED' ", nativeQuery=true)
 	List<Reservation> findInProgressAndUpComingReservations();
 	
 //	@Query("SELECT e FROM MyEntity e WHERE e.validFrom < CURRENT_DATE")
