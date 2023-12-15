@@ -1,27 +1,10 @@
 package hotelreservation.model;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-
-import hotelreservation.model.enums.ReservationStatus;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.metamodel.ListAttribute;
 import jakarta.persistence.metamodel.SingularAttribute;
 import jakarta.persistence.metamodel.StaticMetamodel;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode.Exclude;
-import lombok.NoArgsConstructor;
 
 @StaticMetamodel(Room.class)
 public class Room_ {

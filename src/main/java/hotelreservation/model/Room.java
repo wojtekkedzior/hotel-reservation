@@ -3,9 +3,6 @@ package hotelreservation.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -42,7 +39,7 @@ public class Room implements Comparable<Room> {
 	private String description;
 	
 	@ManyToMany
-	@LazyCollection(LazyCollectionOption.FALSE)
+//	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Amenity> roomAmenities;
 	
 	@NotNull

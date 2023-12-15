@@ -4,8 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import hotelreservation.model.enums.ReservationStatus;
@@ -47,12 +45,12 @@ public class Reservation {
 	//TODO need to figure out how to do the occupants and mainguests better
 //	@NotNull
 	@ManyToMany
-	@LazyCollection(LazyCollectionOption.FALSE)
+//	@LazyCollection(LazyCollectionOption.FALSE)
 	@Exclude
 	private List<Guest> occupants;
 	
 	@ManyToMany
-	@LazyCollection(LazyCollectionOption.FALSE)
+//	@LazyCollection(LazyCollectionOption.FALSE)
 	@Exclude
 	private List<RoomRate> roomRates;
 	
