@@ -5,6 +5,10 @@ import nl.jqno.equalsverifier.Warning;
 import org.junit.Test;
 
 public class VerifyTest {
+	
+	// https://stackoverflow.com/questions/41265266/how-to-solve-inaccessibleobjectexception-unable-to-make-member-accessible-m
+	// add --add-opens java.base/java.lang=ALL-UNNAMED to the VM arguments to make this test pass
+	// might consider redoing this
 
     @Test
     public void verifyMissingOrInvalidArgument() {
@@ -25,5 +29,4 @@ public class VerifyTest {
     public void verifyPaymentNotCreatedException() {
         EqualsVerifier.forClass(PaymentNotCreatedException.class).suppress(Warning.ALL_FIELDS_SHOULD_BE_USED).verify();
     }
-
 }
