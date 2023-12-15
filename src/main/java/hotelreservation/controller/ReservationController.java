@@ -1,15 +1,19 @@
 package hotelreservation.controller;
 
-import hotelreservation.model.*;
-import hotelreservation.model.enums.IdType;
-import hotelreservation.model.enums.ReservationStatus;
-import hotelreservation.model.ui.GuestDTO;
-import hotelreservation.model.ui.ReservationCancellationDTO;
-import hotelreservation.model.ui.ReservationChargeDTO;
-import hotelreservation.model.ui.ReservationDTO;
-import hotelreservation.service.*;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,15 +21,38 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.Valid;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import hotelreservation.model.Contact;
+import hotelreservation.model.Guest;
+import hotelreservation.model.Identification;
+import hotelreservation.model.Reservation;
+import hotelreservation.model.ReservationCancellation;
+import hotelreservation.model.ReservationCheckout;
+import hotelreservation.model.Room;
+import hotelreservation.model.RoomRate;
+import hotelreservation.model.User;
+import hotelreservation.model.enums.IdType;
+import hotelreservation.model.enums.ReservationStatus;
+import hotelreservation.model.ui.GuestDTO;
+import hotelreservation.model.ui.ReservationCancellationDTO;
+import hotelreservation.model.ui.ReservationChargeDTO;
+import hotelreservation.model.ui.ReservationDTO;
+import hotelreservation.service.BookingService;
+import hotelreservation.service.GuestService;
+import hotelreservation.service.InvoiceService;
+import hotelreservation.service.RoomRateService;
+import hotelreservation.service.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
 @Controller

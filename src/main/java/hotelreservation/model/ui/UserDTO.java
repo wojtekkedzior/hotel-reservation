@@ -1,11 +1,11 @@
 package hotelreservation.model.ui;
 
-import hotelreservation.model.Role;
-import lombok.Data;
 import org.springframework.data.annotation.Immutable;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import hotelreservation.model.Role;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
 @Data
 @Immutable

@@ -1,16 +1,21 @@
 package hotelreservation.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode.Exclude;
-import lombok.NoArgsConstructor;
+import java.util.Collection;
+
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.util.Collection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+import lombok.EqualsAndHashCode.Exclude;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data

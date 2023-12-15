@@ -22,7 +22,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	@Override
 	protected ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers, HttpStatus status,
 			WebRequest request) {
 

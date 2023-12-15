@@ -3,8 +3,6 @@ package hotelreservation.controller;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-import javax.validation.Valid;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -30,6 +28,7 @@ import hotelreservation.model.ui.RoomRateDTO;
 import hotelreservation.model.ui.RoomTypeDTO;
 import hotelreservation.service.RoomRateService;
 import hotelreservation.service.RoomService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
