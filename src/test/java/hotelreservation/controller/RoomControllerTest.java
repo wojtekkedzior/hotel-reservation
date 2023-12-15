@@ -96,7 +96,8 @@ public class RoomControllerTest {
 	public void testManagerRolePermissions_allowed() throws Exception {
 		mvc.perform(get("/roomRate/1")).andExpect(status().isOk());
 		mvc.perform(post("/addRoomRate").flashAttr("roomRateDTO", new RoomRateDTO("description", applicationStartup.standardRoomOne, Currency.CZK, 10, LocalDate.now().plus(1, ChronoUnit.YEARS))))
-		.andExpect(status().is4xxClientError());
+		.andExpect(status().is3xxRedirection());
+//		.andExpect(status().is4xxClientError());
 	}
 
 	@Test

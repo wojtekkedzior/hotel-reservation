@@ -1,17 +1,25 @@
 package hotelreservation.model;
 
+import java.time.LocalDateTime;
+
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode.Exclude;
 import lombok.NoArgsConstructor;
-import org.hibernate.envers.Audited;
-import org.hibernate.envers.NotAudited;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -45,13 +53,13 @@ public class User {
 
 	private boolean enabled;
 
-	@OneToOne
+	@ManyToOne
 	private User createdBy;
 
 	@NotNull
 	private LocalDateTime createdOn;
 
-	@OneToOne
+	@ManyToOne
 	private User disabledBy;
 
 	private LocalDateTime disabledOn;
@@ -59,7 +67,9 @@ public class User {
 	private LocalDateTime lastloggedOn;
 
 	@NotAudited
-	@OneToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER)
+//	@JoinColumn(name = "t_comment")
+//	@ManyToOne(fetch = FetchType.EAGER)
 	@NotNull
 	private Role role;
 }

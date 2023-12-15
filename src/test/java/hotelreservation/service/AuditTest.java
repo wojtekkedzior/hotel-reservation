@@ -2,7 +2,6 @@ package hotelreservation.service;
 
 import static org.junit.Assert.assertEquals;
 
-import javax.persistence.EntityManager;
 
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
@@ -27,6 +26,7 @@ import hotelreservation.model.Stay;
 import hotelreservation.model.User;
 import hotelreservation.model.finance.Invoice;
 import hotelreservation.model.finance.Payment;
+import jakarta.persistence.EntityManager;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest

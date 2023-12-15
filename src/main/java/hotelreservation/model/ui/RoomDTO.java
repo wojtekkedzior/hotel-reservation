@@ -1,16 +1,17 @@
 package hotelreservation.model.ui;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.data.annotation.Immutable;
+
 import hotelreservation.model.Amenity;
 import hotelreservation.model.RoomType;
 import hotelreservation.model.Status;
 import hotelreservation.model.User;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.data.annotation.Immutable;
-
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Immutable

@@ -3,13 +3,12 @@ package hotelreservation.model.ui;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
-
 import org.springframework.data.annotation.Immutable;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import hotelreservation.model.Guest;
 import hotelreservation.model.enums.ReservationStatus;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

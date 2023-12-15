@@ -1,16 +1,21 @@
 package hotelreservation.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode.Exclude;
-import lombok.NoArgsConstructor;
+import java.time.LocalDate;
+import java.util.List;
+
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
-import java.util.List;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+import lombok.EqualsAndHashCode.Exclude;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
