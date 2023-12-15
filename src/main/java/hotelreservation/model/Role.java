@@ -2,8 +2,6 @@ package hotelreservation.model;
 
 import java.util.Collection;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.envers.Audited;
 
 import jakarta.persistence.Entity;
@@ -36,7 +34,7 @@ public class Role {
 	private boolean enabled;
 
 	@ManyToMany
-	@LazyCollection(LazyCollectionOption.FALSE)
+//	@LazyCollection(LazyCollectionOption.FALSE)
 	private Collection<Privilege> privileges;
 
 	public Role(String name, String description, boolean enabled) {
