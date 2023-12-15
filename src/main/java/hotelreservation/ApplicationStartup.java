@@ -55,7 +55,7 @@ import hotelreservation.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 @Component
-@Profile("asdasdas")
+@Profile("dev")
 @RequiredArgsConstructor
 public class ApplicationStartup implements ApplicationListener<ApplicationReadyEvent> {
 	private static final int YEAR = 2022;
