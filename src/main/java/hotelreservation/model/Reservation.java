@@ -44,15 +44,18 @@ public class Reservation {
 	private String lastName;
 	
 	//TODO need to figure out how to do the occupants and mainguests better
-//	@NotNull
+//	@NotNull TODO: A list the occupants must not be null. otherwise who is the booking for?
+	
 	@ManyToMany (fetch = FetchType.EAGER)
 	@Exclude
 	private List<Guest> occupants;
 	
 	@ManyToMany (fetch = FetchType.EAGER)
 	@Exclude
+//	TODO the roomrates list but be not null.  What is the point of creating a reservation without rooms (which means room rates)?
 	private List<RoomRate> roomRates;
 	
+	//TODO a discount needs to be an object of its own and it needs a 'type of discount'.  Maybe it could/should could be part of a ReservationCharge?
 	private double discount;
 	
 	@ManyToOne
