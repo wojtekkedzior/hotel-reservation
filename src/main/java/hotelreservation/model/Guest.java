@@ -6,7 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -37,11 +37,11 @@ public class Guest {
 	
 	private String description;
 	
-	@OneToOne
+	@ManyToOne
 	@NotNull
 	private Contact contact;
 	
-	@OneToOne
+	@ManyToOne
 	@NotNull
 	private Identification identification;
 	

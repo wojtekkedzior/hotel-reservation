@@ -10,6 +10,7 @@ import hotelreservation.model.enums.ReservationStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -44,13 +45,11 @@ public class Reservation {
 	
 	//TODO need to figure out how to do the occupants and mainguests better
 //	@NotNull
-	@ManyToMany
-//	@LazyCollection(LazyCollectionOption.FALSE)
+	@ManyToMany (fetch = FetchType.EAGER)
 	@Exclude
 	private List<Guest> occupants;
 	
-	@ManyToMany
-//	@LazyCollection(LazyCollectionOption.FALSE)
+	@ManyToMany (fetch = FetchType.EAGER)
 	@Exclude
 	private List<RoomRate> roomRates;
 	
