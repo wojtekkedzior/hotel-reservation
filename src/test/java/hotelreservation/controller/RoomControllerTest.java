@@ -240,31 +240,31 @@ public class RoomControllerTest {
 	@Test
 	@WithUserDetails("admin")
 	public void testDeleteAmenityWithNoId() throws Exception {
-		mvc.perform(delete("/amenityDelete/ ")).andExpect(status().is5xxServerError());
+		mvc.perform(delete("/amenityDelete/ ")).andExpect(status().is4xxClientError());
 	}
 
 	@Test
 	@WithUserDetails("admin")
 	public void testDeleteAmenityTypeWithNoId() throws Exception {
-		mvc.perform(delete("/amenityTypeDelete/ ")).andExpect(status().is5xxServerError());
+		mvc.perform(delete("/amenityTypeDelete/ ")).andExpect(status().is4xxClientError());
 	}
 
 	@Test
 	@WithUserDetails("admin")
 	public void testDeleteRoomWithNoId() throws Exception {
-		mvc.perform(delete("/roomRateDelete/ ")).andExpect(status().is5xxServerError());
+		mvc.perform(delete("/roomRateDelete/ ")).andExpect(status().is4xxClientError());
 	}
 
 	@Test
 	@WithUserDetails("admin")
 	public void testDeleteRoomTypeWithNoId() throws Exception {
-		mvc.perform(delete("/roomTypeDelete/ ")).andExpect(status().is5xxServerError());
+		mvc.perform(delete("/roomTypeDelete/ ")).andExpect(status().is4xxClientError());
 	}
 
 	@Test
 	@WithUserDetails("admin")
 	public void testDeleteRoomRateWithNoId() throws Exception {
-		mvc.perform(delete("/roomDelete/ ")).andExpect(status().is5xxServerError());
+		mvc.perform(delete("/roomDelete/ ")).andExpect(status().is4xxClientError());
 	}
 
 	//----------------------------------------------------------------------------

@@ -240,9 +240,8 @@ public class ReservationControllerTest {
 	@Test
 	@WithUserDetails("manager")
 	public void testGetReservationWithNoId() throws Exception {
-		mvc.perform(get("/reservation/ ")).andExpect(status().is5xxServerError());
+		mvc.perform(get("/reservation/ ")).andExpect(status().is4xxClientError());
 	}
-	
 	
 	@Test
 	@WithUserDetails("manager")
@@ -270,5 +269,4 @@ public class ReservationControllerTest {
 		.andExpect(model().attributeExists("endDate"))
 		.andExpect(view().name("reservation"));
 	}
-	
 }
