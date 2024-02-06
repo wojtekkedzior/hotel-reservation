@@ -16,4 +16,4 @@ jobs:
         run: |
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
-      - run: mvn -B package --file pom.xml
+      - run: /home/wojtek/mvn38/apache-maven-3.8.6/bin/mvn clean install
