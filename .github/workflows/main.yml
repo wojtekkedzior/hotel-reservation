@@ -16,4 +16,4 @@ jobs:
         run: |
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
-      - run: /home/wojtek/mvn38/apache-maven-3.8.6/bin/mvn -X clean install
+      - run: /home/wojtek/mvn38/apache-maven-3.8.6/bin/mvn -U clean install
