@@ -5,4 +5,13 @@ jobs:
   build:
     runs-on: self-hosted
     steps:
-      - run: mvn -U clean install
+      - run: mvn -U clean build
+  test:
+    runs-on: self-hosted
+    steps:
+      - run: mvn -U test
+  install:
+    runs-on: self-hosted
+    steps:
+      - run: mvn -U install
+      
