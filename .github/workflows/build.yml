@@ -5,7 +5,7 @@ jobs:
   build:
     runs-on: self-hosted
     steps:
-      - run: mvn -U clean build
+      - run: mvn -U clean compile
   test:
     needs: build
     runs-on: self-hosted
