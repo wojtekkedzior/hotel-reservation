@@ -7,7 +7,7 @@ jobs:
     steps:
       - run: mvn -U clean build
   test:
-     needs: build
+    needs: build
     runs-on: self-hosted
     steps:
       - run: mvn -U test
