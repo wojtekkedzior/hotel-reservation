@@ -1,0 +1,8 @@
+name: build
+run-name: build
+on: [push]
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - run: /home/wojtek/mvn38/apache-maven-3.8.6/bin/mvn -U clean install
