@@ -5,7 +5,7 @@ jobs:
   build:
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4.1.1
       - run: mvn -U clean compile
   test:
     needs: build
