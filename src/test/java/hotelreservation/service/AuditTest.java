@@ -51,7 +51,7 @@ public class AuditTest {
     @Test
     public void testRoomRate() {
         AuditQuery query = reader.createQuery().forRevisionsOfEntity(RoomRate.class, true);
-        assertEquals(4380, query.getResultList().size());
+        assertEquals(10950, query.getResultList().size());
     }
 
     @Test

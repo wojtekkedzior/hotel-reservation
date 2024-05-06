@@ -433,7 +433,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 		int value = 1000;
 		List<RoomRate> roomRates = new ArrayList<RoomRate>();
 		
-		for (int days = 1; days <= 730; days++) {
+		for (int days = 1; days <= 1825; days++) {
 			if (date.getDayOfWeek().equals(DayOfWeek.FRIDAY) || date.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
 				value = 1999;
 			} else if (date.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
